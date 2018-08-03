@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Calcs.CrossRef"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Calcs"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding CrossRefItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsSelected}"/>
+                            <TextBlock Text="{Binding Name}" Width="200"/>
+                            <TextBlock Text="Min: "/>
+                            <TextBox Text="{Binding MinVal}" Width="100"/>
+                            <TextBlock Text="Max: "/>
+                            <TextBox Text="{Binding MaxVal}" Width="100" IsEnabled="{Binding StepsFullyFixed}"/>
+                            <TextBlock Text="Steps: "/>
+                            <CheckBox IsChecked="{Binding FixedSteps}"/>
+                            <TextBox Text="{Binding Steps}" Width="100"/>
+                            <TextBlock Text="Step size: "/>
+                            <CheckBox IsChecked="{Binding FixedStepSize}"/>
+                            <TextBox Text="{Binding Step}"/>
+                        </StackPanel>
+
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+            <Button Content="Run calcs"  Command="{Binding Test}" Height="50"></Button>
+        </StackPanel>
+        
+    </Grid>
+</UserControl>

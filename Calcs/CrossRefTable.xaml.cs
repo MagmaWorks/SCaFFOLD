@@ -16,16 +16,12 @@ using System.Windows.Shapes;
 namespace Calcs
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for CrossRefTable.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class CrossRefTable : UserControl
     {
-        public MainWindow()
+        public CrossRefTable()
         {
-            CalculationViewModel myCalcViewModel = new CalculationViewModel(new TestCalcs.Moment());
-
-            this.DataContext = myCalcViewModel;
-
             InitializeComponent();
         }
     }

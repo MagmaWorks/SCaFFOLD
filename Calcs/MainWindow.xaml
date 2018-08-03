@@ -6,7 +6,51 @@
         xmlns:local="clr-namespace:Calcs"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <!--<ContentControl x:Key="view2D">
+            <local:CalcInputs DataContext="{Binding TBC}"/>
+        </ContentControl>-->
+    </Window.Resources>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Single Calculation">
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+                    <local:CalcInputs Grid.Column="0"/>
+                    <local:CalcOutputs Grid.Column="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Table">
+                <local:CrossRefTable DataContext="{Binding Table}"/>
+            </TabItem>
+            <TabItem Header="Chart">
+                <local:ChartControl DataContext="{Binding Chart}"/>
+            </TabItem>
+            <TabItem Header="Cross Ref">
+                <local:CrossRef DataContext="{Binding CrossRef}"/>
+            </TabItem>
+        </TabControl>
+        <Image Grid.Row="1" HorizontalAlignment="Left">
+            <Image.Source>
+                <BitmapImage UriSource="/WhitbyWood.jpg"/>
+            </Image.Source>
+        </Image> 
+
     </Grid>
+
 </Window>
