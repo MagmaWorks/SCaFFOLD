@@ -22,6 +22,20 @@ namespace CalcCore
             return myVal;
         }
 
+        public CalcSelectionList CreateCalcSelectionList(string name, string selectedValue, IEnumerable<string> values)
+        {
+            var myVal = new CalcSelectionList(name, selectedValue, values);
+            this.values.Add(myVal);
+            return myVal;
+        }
+
+        public CalcFilePath CreateCalcFilePath(string name, string path)
+        {
+            var myVal = new CalcFilePath(name, path);
+            this.values.Add(myVal);
+            return myVal;
+        }
+
         public List<CalcValueBase> GetValues()
         {
             return values.ToList();

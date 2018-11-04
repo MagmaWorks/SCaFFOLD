@@ -16,16 +16,12 @@ using System.Windows.Shapes;
 namespace Calcs
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SingleCalc.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SingleCalc : UserControl
     {
-        public MainWindow()
+        public SingleCalc()
         {
-            CalculationViewModel myCalcViewModel = new CalculationViewModel(new TestCalcs.RC_Beam());
-
-            this.DataContext = myCalcViewModel;
-
             InitializeComponent();
         }
     }

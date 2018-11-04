@@ -22,7 +22,9 @@ namespace CalcCore
                     Value = result;
             }
         }
-        
+
+        public override CalcValueType Type { get { return CalcValueType.DOUBLE; } }
+
         public CalcDouble(string name, string symbol, string unit, double value)
         {
             this.Name = name;

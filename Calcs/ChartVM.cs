@@ -46,6 +46,8 @@ namespace Calcs
         {
             ChartSeries = new SeriesCollection();
             CalcCore.CalcValueBase inputValue = calc.GetInputs()[SelectedInputIndex];
+            // remember what value this was before running multiple calcs...
+            var input1Start = calc.GetInputs()[SelectedInputIndex].ValueAsString;
             List<List<ObservablePoint>> myList = new List<List<ObservablePoint>>();
             for (int i = 0; i < OutputSelection.Count; i++)
             {
@@ -70,10 +72,14 @@ namespace Calcs
                 {
                     ChartSeries.Add(new LineSeries()
                     {
-                        Values = new ChartValues<ObservablePoint>(myList[i])
+                        Values = new ChartValues<ObservablePoint>(myList[i]),
+                        LineSmoothness = 0
                     });
                 }
             }
+            //...restore starting value
+            calc.GetInputs()[SelectedInputIndex].ValueAsString = input1Start;
+
             RaisePropertyChanged(nameof(ChartSeries));
         }
 

@@ -20,20 +20,7 @@
         </Grid.RowDefinitions>
         <TabControl>
             <TabItem Header="Single Calculation">
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-                    <local:CalcInputs Grid.Column="0"/>
-                    <local:CalcOutputs Grid.Column="2"/>
-                </Grid>
+                <local:SingleCalc />
             </TabItem>
             <TabItem Header="Table">
                 <local:CrossRefTable DataContext="{Binding Table}"/>
@@ -49,7 +36,7 @@
             <Image.Source>
                 <BitmapImage UriSource="/WhitbyWood.jpg"/>
             </Image.Source>
-        </Image> 
+        </Image>
 
     </Grid>
 

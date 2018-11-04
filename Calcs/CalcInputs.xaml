@@ -3,18 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
              xmlns:local="clr-namespace:Calcs"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <DataTemplate x:Key="DoubleTemplate">
+            <StackPanel Orientation="Horizontal">
+                <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Value}" Width="100"/>
+                <controls:FormulaControl Scale="15" Formula="{Binding Units}" Width="60" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="FilePathTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Width="100"/>
+                <Button Content="{Binding Value}" Width="100" Click="Button_Click"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="SelectionListTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Width="100"/>
+                <ComboBox ItemsSource="{Binding SelectionList}" SelectedValue="{Binding Value}"/> 
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    
     <Grid>
         <ListView ItemsSource="{Binding Inputs}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Symbol}" Width="30"/>
-                        <TextBox Text="{Binding Value}" Width="100"/>
-                        <TextBlock Text="{Binding Units}"/>
-                    </StackPanel>
+                    <ContentControl Content="{Binding}">
+                        <ContentControl.Style>
+                            <Style TargetType="{x:Type ContentControl}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource SelectionListTemplate}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="DOUBLE">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource DoubleTemplate}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="FILEPATH">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource FilePathTemplate}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

@@ -12,7 +12,7 @@ namespace CalcCore
         string TypeName { get; }
         List<CalcValueBase> GetInputs();
         List<CalcValueBase> GetOutputs();
-        //List<Formulae> GetFormulae();
+        List<Formula> GetFormulae();
         void UpdateCalc();
     }
 }

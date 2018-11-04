@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="Calcs.FormulaeDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
+             xmlns:local="clr-namespace:Calcs"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Calc type: " Width="100" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding CalcTypeName}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Reference: " Width="100" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding CalcInstanceName}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
+                    <TextBlock Text="Calculations by: " Width="100"/>
+                    <TextBlock Text="{Binding Author}" FontWeight="Bold"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBlock Text="Ref" Width="100" FontWeight="Bold"/>
+                <TextBlock Text="Narrative and calculations" Width="500" FontWeight="Bold"/>
+                <TextBlock Text="Conclusions" FontWeight="Bold"/>
+            </StackPanel>
+            <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="#FFF05924"/>
+            <ItemsControl ItemsSource="{Binding Formulae}" >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Ref}" Width="100"/>
+                                <TextBlock Text="{Binding Narrative}"/>
+                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding Expression}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:FormulaControl Scale="15" Formula="{Binding}" Margin="100 0 0 0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding Conclusion}" Margin="600 0 0 0">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="PASS">
+                                                <Setter Property="Foreground" Value="Green"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="JUSTPASS">
+                                                <Setter Property="Foreground" Value="LightGreen"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="FAIL">
+                                                <Setter Property="Foreground" Value="Red"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="JUSTFAIL">
+                                                <Setter Property="Foreground" Value="Orange"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="NONE">
+                                                <Setter Property="Foreground" Value="Black"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <Rectangle HorizontalAlignment="Stretch" Fill="LightGray" Height="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

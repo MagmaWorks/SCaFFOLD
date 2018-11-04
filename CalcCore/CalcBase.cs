@@ -12,9 +12,25 @@ namespace CalcCore
 
         protected CalcValueFactory outputValues = new CalcValueFactory();
 
-        public string InstanceName{ get; set; }
+        protected List<Formula> formulae;
 
-        public string TypeName { get { return ""; } }
+        public string InstanceName { get; set; } = "";
+
+        protected string _typeName;
+        public string TypeName
+        {
+            get
+            {
+                return _typeName ?? (_typeName = this.GetType().ToString()); 
+            }
+        }
+
+        public List<Formula> GetFormulae()
+        {
+            return formulae ?? (formulae = GenerateFormulae());
+        }
+
+        public abstract List<Formula> GenerateFormulae();
 
         public List<CalcValueBase> GetInputs()
         {

@@ -56,6 +56,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfMath, Version=0.5.0.41790, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfMath.0.5.0\lib\net40\WpfMath.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -79,9 +82,17 @@
       <DependentUpon>CrossRefTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="CrossRefVM.cs" />
+    <Compile Include="FormulaeDisplay.xaml.cs">
+      <DependentUpon>FormulaeDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FormulaeVM.cs" />
+    <Compile Include="IOSelectionItems.cs" />
     <Compile Include="IOValues.cs" />
     <Compile Include="CalcInputs.xaml.cs">
       <DependentUpon>CalcInputs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SingleCalc.xaml.cs">
+      <DependentUpon>SingleCalc.xaml</DependentUpon>
     </Compile>
     <Compile Include="TableResult.cs" />
     <Compile Include="TableVM.cs" />
@@ -104,6 +115,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FormulaeDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,6 +132,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="CalcInputs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SingleCalc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

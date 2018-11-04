@@ -12,8 +12,24 @@ namespace CalcCore
         public string Symbol { get; set; }
         public string Unit { get; set; }
         public abstract string ValueAsString { get; set; }
-        // result status
-        // value type
+        public CalcStatus Status { get; set; }
+        public abstract CalcValueType Type { get; }
         // description
+    }
+
+    public enum CalcValueType
+    {
+        DOUBLE,
+        SELECTIONLIST,
+        FILEPATH
+    }
+
+    public enum CalcStatus
+    {
+        NONE,
+        PASS,
+        JUSTPASS,
+        JUSTFAIL,
+        FAIL
     }
 }

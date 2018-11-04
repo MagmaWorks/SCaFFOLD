@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Word.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Word.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,10 +46,17 @@
   <ItemGroup>
     <Compile Include="CalcBase.cs" />
     <Compile Include="CalcDouble.cs" />
+    <Compile Include="CalcFilePath.cs" />
+    <Compile Include="CalcSelectionList.cs" />
     <Compile Include="CalcValueBase.cs" />
     <Compile Include="CalcValueFactory.cs" />
+    <Compile Include="Formula.cs" />
     <Compile Include="ICalc.cs" />
+    <Compile Include="OutputToWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -24,5 +24,17 @@ namespace Calcs
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
+            Button myButton = (System.Windows.Controls.Button)sender;
+            fileDialog.Multiselect = false;
+            var result = fileDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                myButton.Content = fileDialog.FileName;
+            }
+        }
     }
 }

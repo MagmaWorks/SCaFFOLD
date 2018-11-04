@@ -15,6 +15,58 @@ namespace Calcs
         public TableVM Table { get; set; }
         public ChartVM Chart { get; set; }
         public CrossRefVM CrossRef {get;set;}
+        public string Author
+        {
+            get
+            {
+                return Environment.UserName;
+            }
+        }
+        ObservableCollection<FormulaeVM> _formulae;
+        public ObservableCollection<FormulaeVM> Formulae
+        {
+            get { return _formulae ; }
+            set
+            {
+                _formulae = value;
+            }
+        }
+
+        public string CalcTypeName
+        {
+            get
+            {
+                return calc.TypeName;
+            }
+        }
+
+        public string CalcInstanceName
+        {
+            get
+            {
+                return calc.InstanceName;
+            }
+            set
+            {
+                calc.InstanceName = value;
+                RaisePropertyChanged(nameof(CalcInstanceName));
+            }
+        }
+
+        ICommand toWord;
+
+        public ICommand ToWord
+        {
+            get
+            {
+                return toWord ?? (toWord = new CommandHandler(() => outputToWord(), true));
+            }
+        }
+
+        private void outputToWord()
+        {
+            CalcCore.OutputToWord.WriteToWord(calc);
+        }
 
         List<IOValues> inputs;
         public List<IOValues> Inputs
@@ -59,6 +111,11 @@ namespace Calcs
             this.Table = new TableVM(calc);
             this.Chart = new ChartVM(calc);
             this.CrossRef = new CrossRefVM(calc);
+            _formulae = new ObservableCollection<FormulaeVM>();
+            foreach (var item in calc.GetFormulae())
+            {
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status });
+            }
         }
 
         public void UpdateOutputs()
@@ -68,6 +125,14 @@ namespace Calcs
             {
                 Outputs.Add(new IOValues(item, calc, this));
             }
+            _formulae = new ObservableCollection<FormulaeVM>();
+            foreach (var item in calc.GetFormulae())
+            {
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status });
+            }
+            RaisePropertyChanged(nameof(Formulae));
+
+
         }
     }
 }
