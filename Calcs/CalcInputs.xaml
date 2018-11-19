@@ -25,15 +25,17 @@
         </DataTemplate>
         <DataTemplate x:Key="SelectionListTemplate">
             <StackPanel Orientation="Horizontal">
+                <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding SelectionList}" SelectedValue="{Binding Value}" Width="100"/>
+                <controls:FormulaControl Scale="15" Formula="{Binding Units}" Width="60" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Width="100"/>
-                <ComboBox ItemsSource="{Binding SelectionList}" SelectedValue="{Binding Value}"/> 
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
     
     <Grid>
-        <ListView ItemsSource="{Binding Inputs}">
-            <ListView.ItemTemplate>
+        <ItemsControl ItemsSource="{Binding Inputs}">
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <ContentControl Content="{Binding}">
                         <ContentControl.Style>
@@ -52,7 +54,7 @@
                     </ContentControl>
 
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

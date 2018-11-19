@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,18 @@ namespace Calcs
         public CrossRef()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var dialog = new System.Windows.Forms.SaveFileDialog();
+            dialog.AddExtension = true;
+            dialog.DefaultExt = "csv";
+            dialog.InitialDirectory = Environment.CurrentDirectory;
+            dialog.ShowDialog();
+            button.Content = dialog.FileName;
+
         }
     }
 }
