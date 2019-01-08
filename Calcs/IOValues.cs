@@ -11,7 +11,7 @@ namespace Calcs
     {
         CalcCore.CalcValueBase calcValue;
         CalcCore.ICalc calc;
-        CalculationViewModel calcVM;
+        ICalcViewParent calcVM;
 
         public string Type
         {
@@ -20,6 +20,27 @@ namespace Calcs
                 return calcValue.Type.ToString();
             }
         }
+
+        bool _sliderEntry = false;
+            public bool SliderEntry
+        {
+            get
+            {
+                return _sliderEntry;
+            }
+            set
+            {
+                _sliderEntry = value;
+                RaisePropertyChanged(nameof(SliderEntry));
+                RaisePropertyChanged(nameof(MinVal));
+                RaisePropertyChanged(nameof(MaxVal));
+            }
+        }
+
+        double _maxVal;
+        public double MaxVal { get { return _maxVal; } set { _maxVal = value; RaisePropertyChanged(nameof(MaxVal)); } }
+        double _minVal;
+        public double MinVal { get { return _minVal; } set { _minVal = value; RaisePropertyChanged(nameof(MinVal)); } }
 
         public string Value
         {
@@ -87,7 +108,7 @@ namespace Calcs
             }
         }
 
-        public IOValues(CalcCore.CalcValueBase calcValue, CalcCore.ICalc calc, CalculationViewModel calcVM)
+        public IOValues(CalcCore.CalcValueBase calcValue, CalcCore.ICalc calc, ICalcViewParent calcVM)
         {
             this.calcValue = calcValue;
             this.calc = calc;
@@ -95,7 +116,8 @@ namespace Calcs
             switch (calcValue.Type)
             {
                 case CalcCore.CalcValueType.DOUBLE:
-                    //no further data required
+                    MaxVal = Math.Max((calcValue as CalcCore.CalcDouble).Value * 5,0);
+                    MinVal = Math.Min(0, (calcValue as CalcCore.CalcDouble).Value) ;
                     break;
                 case CalcCore.CalcValueType.SELECTIONLIST:
                     _selectionList = (calcValue as CalcCore.CalcSelectionList).SelectionList;

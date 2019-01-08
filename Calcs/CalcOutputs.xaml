@@ -11,7 +11,7 @@
         <ItemsControl ItemsSource="{Binding Outputs}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 2">
                         <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding ValueRounded}" Width="100"/>
                         <controls:FormulaControl Scale="15" Formula="{Binding Units}" Width="60" VerticalAlignment="Center"/>

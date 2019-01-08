@@ -13,9 +13,13 @@ using System.Data;
 
 namespace Calcs
 {
-    public class CrossRefVM : ViewModelBase
+    public class CrossRefVM : ViewModelBase, ICalcViewParent
     {
         private int _crossRefTotalItems = 0;
+
+        private Thread backgroundCalcs;
+        private int totalCalcs;
+        private int calculations;
 
         private DataTable _crossRefOutput = new DataTable();
         public DataView CrossRefOutput
@@ -27,6 +31,35 @@ namespace Calcs
         }
 
         private double calcTime;
+
+        double _progress = 0;
+        public double Progress
+        {
+            get
+            {
+                return _progress;
+            }
+            set
+            {
+                _progress = value;
+                RaisePropertyChanged(nameof(Progress));
+            }
+        }
+
+        private bool stopBackgroundCalcs = false;
+
+        private bool _showProgressBar = false;
+        public Visibility ProgressVisibility
+        {
+            get
+            {
+                if (_showProgressBar)
+                {
+                    return Visibility.Visible;
+                }
+                return Visibility.Hidden;
+            }
+        }
 
         private string _filePath = Environment.CurrentDirectory + @"\Output.csv";
         public string FilePath
@@ -42,7 +75,6 @@ namespace Calcs
             }
         }
 
-        private List<CrossRefItem> crossRefData = new List<CrossRefItem>();
 
         public ObservableCollection<CrossRefItem> CrossRefItems { get; set; }
 
@@ -55,14 +87,40 @@ namespace Calcs
 
         ICalc calc;
 
+        List<IOValues> inputs;
+        public List<IOValues> Inputs
+        {
+            get
+            {
+                return inputs;
+            }
+            set
+            {
+                inputs = value;
+            }
+        }
+
         ICommand _test;
 
         public ICommand Test
         {
             get
             {
-                return _test ?? (_test = new CommandHandler(() => createDataTable(), true));
+                return _test ?? (_test = new CommandHandler(() => runBackgroundCalcs(), true));
             }
+        }
+
+        void runBackgroundCalcs()
+        {
+            if (backgroundCalcs.IsAlive)
+            {
+                stopBackgroundCalcs = true;
+                backgroundCalcs.Join();
+            }
+            stopBackgroundCalcs = false;
+            backgroundCalcs = new Thread(new ThreadStart(createDataTable));
+            backgroundCalcs.Start();
+
         }
 
         ICommand _save;
@@ -75,8 +133,19 @@ namespace Calcs
             }
         }
 
+        public void UpdateOutputs()
+        {
+
+        }
+
         public CrossRefVM(ICalc calc)
         {
+            Inputs = new List<IOValues>();
+            foreach (var item in calc.GetInputs())
+            {
+                Inputs.Add(new IOValues(item, calc, this));
+            }
+
             CrossRefItems = new ObservableCollection<CrossRefItem>();
             var inputs = calc.GetInputs();
             this.calc = calc;
@@ -90,6 +159,10 @@ namespace Calcs
             this.calc.UpdateCalc();
             calcTime = myTimer.Elapsed.TotalSeconds;
             myTimer.Stop();
+            backgroundCalcs = new Thread(new ThreadStart(createDataTable));
+            _crossRefOutput = new DataTable();
+            _crossRefOutput.Columns.Add("No results calculated yet.");
+            RaisePropertyChanged(nameof(CrossRefOutput));
         }
 
         public void calcCrossRefInputs()
@@ -151,20 +224,20 @@ namespace Calcs
 
         private void createDataTable()
         {
-            this.crossRefData.Clear();
-            this.crossRefData = CrossRefItems.Where(a => a.IsSelected == true).ToList();
-
-            _crossRefOutput = new DataTable();
+            _showProgressBar = true; RaisePropertyChanged(nameof(ProgressVisibility));
+            List<CrossRefItem> crossRefData = new List<CrossRefItem>();
+            crossRefData = CrossRefItems.Where(a => a.IsSelected == true).ToList();
+            var crossRefOutput = new DataTable();
             if (calc.GetInputs().Count > 1)
             {
                 for (int i = 0; i < calc.GetInputs().Count; i++)
                 {
-                    _crossRefOutput.Columns.Add("I"+i.ToString()+" "+ calc.GetInputs()[i].Name, typeof(string));
+                    crossRefOutput.Columns.Add("I"+i.ToString()+" "+ calc.GetInputs()[i].Name, typeof(string));
                 }
             }
             for (int i = 0; i < calc.GetOutputs().Count; i++)
             {
-                _crossRefOutput.Columns.Add("O"+i.ToString() + " " + calc.GetOutputs()[i].Name, typeof(string));
+                crossRefOutput.Columns.Add("O"+i.ToString() + " " + calc.GetOutputs()[i].Name, typeof(string));
             }
             
 
@@ -193,19 +266,38 @@ namespace Calcs
                 }
 
             }
-            int totalCalcs = 1;
+            totalCalcs = 1;
             for (int i = 0; i < CrossRefItems.Count; i++)
             {
                 if (CrossRefItems[i].IsSelected)
                 {
-                    totalCalcs = totalCalcs * (CrossRefItems[i].Steps + 1);
+                    if (CrossRefItems[i].CalcType == CalcValueType.DOUBLE)
+                    {
+                        totalCalcs = totalCalcs * (CrossRefItems[i].Steps + 1);
+                    }
+                    else if (CrossRefItems[i].CalcType == CalcValueType.SELECTIONLIST)
+                    {
+                        totalCalcs = totalCalcs * (CrossRefItems[i].EndIndex - CrossRefItems[i].StartIndex + 1);
+                    }
                 }
             }
 
             List<string> outputValues = new List<string>();
+            calculations = 0;
+            System.Timers.Timer myTimer = new System.Timers.Timer();
+            myTimer.Interval = 250;
+            myTimer.Elapsed += progressBarUpdate;
+            myTimer.Start();
 
             while (!complete)
             {
+
+                if (stopBackgroundCalcs)
+                {
+                    Application.Current.Dispatcher.InvokeAsync(() => _showProgressBar = false);
+                    Application.Current.Dispatcher.InvokeAsync(() => RaisePropertyChanged(nameof(ProgressVisibility)));
+                    return;
+                }
                 string outputString = "";
                 var outputStrings = new ObservableCollection<string>();
                 for (int i = 0; i < crossRefData.Count; i++)
@@ -213,11 +305,6 @@ namespace Calcs
                     calc.GetInputs()[crossRefData[i].InputIndex].ValueAsString = inputValues[i][indices[i]].ToString();
                 }
                 calc.UpdateCalc();
-
-                //this.Dispatcher.Invoke(() =>
-                //{
-                //    myModel.Progress = totalCalcs;
-                //});
 
                 outputStrings.Add(calc.GetInputs()[0].ValueAsString);
                 if (calc.GetInputs().Count > 1)
@@ -233,19 +320,12 @@ namespace Calcs
                 }
 
                 outputValues.Add(outputString);
-                var myRow = _crossRefOutput.NewRow();
+                var myRow = crossRefOutput.NewRow();
                 for (int i = 0; i < outputStrings.Count; i++)
                 {
                     myRow[i] = outputStrings[i];
                 }
-                _crossRefOutput.Rows.Add(myRow);
-
-                //string[] tempStrings = new string[myModel.CrossRefData.Count];
-                //for (int i = 0; i < myModel.CrossRefData.Count; i++)
-                //{
-                //    tempStrings[i] = inputValues[i][indices[i]].ToString();
-                //}
-                //outputValues.Add(tempStrings);
+                crossRefOutput.Rows.Add(myRow);
 
                 for (int i = 0; i < indices.Length; i++)
                 {
@@ -261,22 +341,18 @@ namespace Calcs
                         indices[i] = 0;
                     }
                 }
+                calculations++;
             }
 
-            //string displayString = "";
-            //foreach (var item in outputValues)
-            //{
-            //    displayString = displayString + "[";
-            //    foreach (var item2 in item)
-            //    {
-            //        displayString = displayString + item2  + ", ";
-            //    }
-            //    displayString = displayString + "]; ";
-            //}
-            //MessageBox.Show(displayString);
-            RaisePropertyChanged(nameof(CrossRefOutput));
-            //this.Dispatcher.Invoke(() => { myModel.EnableView = true; myModel.ProgressBarShowing = Visibility.Hidden; });
+            Application.Current.Dispatcher.InvokeAsync(() => _crossRefOutput = crossRefOutput);
+            Application.Current.Dispatcher.InvokeAsync(() => RaisePropertyChanged(nameof(CrossRefOutput)));
+            Application.Current.Dispatcher.InvokeAsync(() => _showProgressBar = false);
+            Application.Current.Dispatcher.InvokeAsync(() => RaisePropertyChanged(nameof(ProgressVisibility)));
         }
 
+        private void progressBarUpdate(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() => Progress = 100 * calculations / totalCalcs);
+        }
     }
 }

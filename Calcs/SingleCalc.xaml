@@ -8,46 +8,39 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="10"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
-        <StackPanel Orientation="Horizontal">
-            <StackPanel>
-                <TextBlock Text="{Binding CalcTypeName}" Width="250"/>
-                <TextBox Text="{Binding CalcInstanceName}" Width="250"/>
-            </StackPanel>
-            <Button Content="To WORD" Command="{Binding ToWord}" Width="100"/>
-        </StackPanel>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+                <RowDefinition Height="10"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"  ResizeDirection="Columns" Height="Auto" VerticalAlignment="Stretch" Margin="0" Grid.RowSpan="2"/>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="INPUTS"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="CALCULATED VALUES"/>
-            <local:CalcInputs Grid.Row="1" Grid.Column="0" />
-            <local:CalcOutputs Grid.Row="1" Grid.Column="2"/>
+            <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel>
+                    <TextBlock Text="{Binding CalcTypeName}" Width="250"/>
+                    <TextBox Text="{Binding CalcInstanceName}" Width="250"/>
+                </StackPanel>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1">
+                <StackPanel>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="INPUTS"/>
+                    <local:CalcInputs Grid.Row="1" Grid.Column="0" />
+                </StackPanel>
+            </ScrollViewer>
+            <ScrollViewer Grid.Row="3">
+                <StackPanel>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="CALCULATED VALUES"/>
+                    <local:CalcOutputs Grid.Row="1" Grid.Column="2"/>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"/>
-            <local:FormulaeDisplay Grid.Column="0"/>
-        </Grid>
-
-
+        <local:FormulaeDisplay Grid.Column="2"/>
     </Grid>
 </UserControl>

@@ -9,12 +9,60 @@
              d:DesignHeight="450" d:DesignWidth="800">
     
     <UserControl.Resources>
-        <DataTemplate x:Key="DoubleTemplate">
+        <DataTemplate x:Key="DoubleBoxEntryTemplate">
             <StackPanel Orientation="Horizontal">
                 <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Value}" Width="100"/>
+                <TextBox Text="{Binding Value}" Width="100">
+                    <TextBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Slider enabled" IsCheckable="True" IsChecked="{Binding SliderEntry}"/>
+                        </ContextMenu>
+                    </TextBox.ContextMenu>
+                </TextBox>
                 <controls:FormulaControl Scale="15" Formula="{Binding Units}" Width="60" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DoubleSliderEntryTemplate">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Value}" Width="100">
+                        <TextBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Slider enabled" IsCheckable="True" IsChecked="{Binding SliderEntry}"/>
+                            </ContextMenu>
+                        </TextBox.ContextMenu>
+                    </TextBox>
+                    <controls:FormulaControl Scale="15" Formula="{Binding Units}" Width="60" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Name}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Text="{Binding MinVal}" Width="60"/>
+                    <Slider Value="{Binding Value}" Width="100" Maximum="{Binding MaxVal}" Minimum="{Binding MinVal}"/>
+                    <TextBox Text="{Binding MaxVal}" Width="60"/>
+            </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DoubleTemplate">
+            <StackPanel Orientation="Horizontal">
+                <ContentControl Content="{Binding}">
+                    <ContentControl.Style>
+                        <Style TargetType="{x:Type ContentControl}">
+                            <Setter Property="ContentTemplate" Value="{StaticResource DoubleBoxEntryTemplate}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SliderEntry}" Value="TRUE">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource DoubleSliderEntryTemplate}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DoubleListTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding Value}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="FilePathTemplate">
@@ -32,12 +80,12 @@
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
-    
+
     <Grid>
         <ItemsControl ItemsSource="{Binding Inputs}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding}">
+                    <ContentControl Content="{Binding}" Margin="0 0 0 2">
                         <ContentControl.Style>
                             <Style TargetType="{x:Type ContentControl}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource SelectionListTemplate}"/>
@@ -47,6 +95,9 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Type}" Value="FILEPATH">
                                         <Setter Property="ContentTemplate" Value="{StaticResource FilePathTemplate}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="DOUBLELIST">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource DoubleListTemplate}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

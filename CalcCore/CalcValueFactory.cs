@@ -36,6 +36,13 @@ namespace CalcCore
             return myVal;
         }
 
+        public CalcDoubleList CreateCalcDoubleList(string name, List<List<double>> doubles)
+        {
+            var myVal = new CalcDoubleList(name, doubles);
+            this.values.Add(myVal);
+            return myVal;
+        }
+
         public List<CalcValueBase> GetValues()
         {
             return values.ToList();

@@ -150,12 +150,19 @@ namespace Calcs
                 RaisePropertyChanged(nameof(Step));
                 crossRefVM.calcCrossRefInputs();
             }
-
         }
 
         public int StartIndex { get { return startIndex; } set { startIndex = value; RaisePropertyChanged(nameof(StartIndex)); crossRefVM.calcCrossRefInputs(); } }
         public int EndIndex { get { return endIndex; } set { endIndex = value; RaisePropertyChanged(nameof(EndIndex)); crossRefVM.calcCrossRefInputs(); } }
         public List<string> SelectionList { get { return ((calc.GetInputs()[InputIndex]) as CalcCore.CalcSelectionList).SelectionList; } }
+        IOValues _inputValue;
+        public IOValues InputValue
+        {
+            get
+            {
+                return _inputValue;
+            }
+        }
 
         public CrossRefItem(ICalc calc, int inputIndex, CrossRefVM crossRefVM)
         {
@@ -165,6 +172,7 @@ namespace Calcs
             MinVal = 0;
             MaxVal = 100;
             Steps = 20;
+            _inputValue = new IOValues(calc.GetInputs()[inputIndex], calc, crossRefVM);
         }
     }
 }

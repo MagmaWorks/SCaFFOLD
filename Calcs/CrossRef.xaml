@@ -15,7 +15,7 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation
-                                                    Storyboard.TargetProperty="(StackPanel.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    Storyboard.TargetProperty="(StackPanel.LayoutTransform).(ScaleTransform.ScaleX)"
                                                     To="1"
                                                     Duration="0:0:0.2"
                                                     />
@@ -26,7 +26,36 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation
-                                                    Storyboard.TargetProperty="(StackPanel.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    Storyboard.TargetProperty="(StackPanel.LayoutTransform).(ScaleTransform.ScaleX)"
+                                                    To="0"
+                                                    Duration="0:0:0.2"
+                                                    />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="shrinkingGrowing" TargetType="StackPanel">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(StackPanel.LayoutTransform).(ScaleTransform.ScaleX)"
+                                                    To="1"
+                                                    Duration="0:0:0.2"
+                                                    />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(StackPanel.LayoutTransform).(ScaleTransform.ScaleX)"
                                                     To="0"
                                                     Duration="0:0:0.2"
                                                     />
@@ -43,9 +72,9 @@
                 <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Width="200"/>
                 <StackPanel x:Name="myPanel" Orientation="Horizontal" Style="{StaticResource growingShrinking}">
-                    <StackPanel.RenderTransform>
+                    <StackPanel.LayoutTransform>
                         <ScaleTransform ScaleX="0"/>
-                    </StackPanel.RenderTransform>
+                    </StackPanel.LayoutTransform>
                     <TextBlock Text="Start: " Width="40"/>
                     <TextBox Text="{Binding MinVal}" Width="100" TextAlignment="Right"/>
                     <controls:FormulaControl Scale="15" Formula="{Binding Unit}" Width="60" VerticalAlignment="Center"/>
@@ -60,6 +89,13 @@
                     <TextBox Text="{Binding Step}" Width="100" TextAlignment="Right"/>
                     <controls:FormulaControl Scale="15" Formula="{Binding Unit}" Width="60" VerticalAlignment="Center"/>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Style="{StaticResource shrinkingGrowing}">
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform ScaleX="0"/>
+                    </StackPanel.LayoutTransform>
+                    <TextBox Text="{Binding InputValue.Value}" Width="100"/>
+                    <controls:FormulaControl Scale="15" Formula="{Binding InputValue.Units}" Width="60" VerticalAlignment="Center"/>
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="SelectionListTemplate">
@@ -68,13 +104,20 @@
                 <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding Name}" Width="200"/>
                 <StackPanel Orientation="Horizontal" Style="{StaticResource growingShrinking}">
-                    <StackPanel.RenderTransform>
+                    <StackPanel.LayoutTransform>
                         <ScaleTransform ScaleX="0"/>
-                    </StackPanel.RenderTransform>
+                    </StackPanel.LayoutTransform>
                     <TextBlock Text="Start: " Width="40"/>
                     <ComboBox ItemsSource="{Binding SelectionList}" SelectedIndex="{Binding StartIndex}" Width="300" Margin="0 0 60 0"/>
                     <TextBlock Text="End: " Width="40"/>
                     <ComboBox ItemsSource="{Binding SelectionList}" SelectedIndex="{Binding EndIndex}" Width="300" Margin="0 0 60 0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Style="{StaticResource shrinkingGrowing}">
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform ScaleX="0"/>
+                    </StackPanel.LayoutTransform>
+                    <ComboBox ItemsSource="{Binding InputValue.SelectionList}" SelectedValue="{Binding InputValue.Value}" Width="100"/>
+                    <controls:FormulaControl Scale="15" Formula="{Binding InputValue.Units}" Width="60" VerticalAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
@@ -124,8 +167,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0">
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <Button Content="Save As..."  Command="{Binding Save}" Width="50" Height="20" HorizontalAlignment="Left"></Button>
+                <ProgressBar Value="{Binding Progress}" Width="300" Margin="10 0 0 0" Visibility="{Binding ProgressVisibility}"/>
             </StackPanel>
             <DataGrid x:Name="myGrid" 
                       Grid.Row="1" 

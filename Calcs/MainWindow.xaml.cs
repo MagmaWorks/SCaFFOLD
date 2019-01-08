@@ -22,10 +22,15 @@ namespace Calcs
     {
         public MainWindow()
         {
-            CalculationViewModel myCalcViewModel = new CalculationViewModel(new TestCalcs.RC_Beam());
-
-            this.DataContext = myCalcViewModel;
-
+            var calcClasses = FindAssemblies.GetAssemblies();
+            var calcs = new List<CalculationViewModel>();
+            foreach (var calc in calcClasses)
+            {
+                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
+                calcs.Add(new CalculationViewModel(calcInstance));
+            }
+            AppViewModel myAppVM = new AppViewModel() { ViewModels = calcs };
+            this.DataContext = myAppVM;
             InitializeComponent();
         }
     }

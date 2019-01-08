@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Calcs
 {
-    public class CalculationViewModel : ViewModelBase
+    public class CalculationViewModel : ViewModelBase, ICalcViewParent
     {
         CalcCore.ICalc calc;
         public TableVM Table { get; set; }
@@ -29,6 +29,48 @@ namespace Calcs
             set
             {
                 _formulae = value;
+            }
+        }
+
+        bool _includeInputsInWord = true;
+        public bool IncludeInputsInWord
+        {
+            get
+            {
+                return _includeInputsInWord;
+            }
+            set
+            {
+                _includeInputsInWord = value;
+                RaisePropertyChanged(nameof(IncludeInputsInWord));
+            }
+        }
+
+        bool _includeOutputsInWord = true;
+        public bool IncludeOutputsInWord
+        {
+            get
+            {
+                return _includeOutputsInWord;
+            }
+            set
+            {
+                _includeOutputsInWord = value;
+                RaisePropertyChanged(nameof(IncludeOutputsInWord));
+            }
+        }
+
+        bool _includeBodyInWord = true;
+        public bool IncludeBodyInWord
+        {
+            get
+            {
+                return _includeBodyInWord;
+            }
+            set
+            {
+                _includeBodyInWord = value;
+                RaisePropertyChanged(nameof(IncludeBodyInWord));
             }
         }
 
@@ -65,7 +107,7 @@ namespace Calcs
 
         private void outputToWord()
         {
-            CalcCore.OutputToWord.WriteToWord(calc);
+            CalcCore.OutputToWord.WriteToWord(calc, _includeInputsInWord, _includeBodyInWord, _includeOutputsInWord);
         }
 
         List<IOValues> inputs;
@@ -94,27 +136,29 @@ namespace Calcs
             }
         }
 
-        public CalculationViewModel(CalcCore.ICalc calculation)
+        public CalculationViewModel(CalcCore.ICalc calc)
         {
+            this.calc = calc;
+
             Inputs = new List<IOValues>();
-            foreach (var item in calculation.GetInputs())
+            foreach (var item in calc.GetInputs())
             {
-                Inputs.Add(new IOValues(item, calculation, this));
+                Inputs.Add(new IOValues(item, calc, this));
             }
             Outputs = new ObservableCollection<IOValues>();
-            foreach (var item in calculation.GetOutputs())
+            foreach (var item in calc.GetOutputs())
             {
-                Outputs.Add(new IOValues(item, calculation, this));
+                Outputs.Add(new IOValues(item, calc, this));
             }
 
-            this.calc = calculation;
+            //this.calc = calculation;
             this.Table = new TableVM(calc);
             this.Chart = new ChartVM(calc);
             this.CrossRef = new CrossRefVM(calc);
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
-                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status });
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status, Image=item.Image });
             }
         }
 
@@ -128,7 +172,7 @@ namespace Calcs
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
-                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status });
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image=item.Image });
             }
             RaisePropertyChanged(nameof(Formulae));
 

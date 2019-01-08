@@ -42,7 +42,7 @@ namespace Calcs
         private int _start1_2 = 0;
         private double _step1 = 1;
         private int _steps1 = 10;
-        private int _input2Index = 1;
+        private int _input2Index = 0;
         private double _start2 = 0;
         private int _start2_1 = 0;
         private int _start2_2 = 0;

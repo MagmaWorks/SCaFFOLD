@@ -59,5 +59,11 @@ namespace UnitTestProject1
                 Math.Round((resultValue.ToList()[0] as CalcCore.CalcDouble).Value, 2, MidpointRounding.AwayFromZero)
                 );
         }
+
+        [TestMethod]
+        public void Punching()
+        {
+            var myCalc = new TestCalcs.PunchingShear();
+        }
     }
 }

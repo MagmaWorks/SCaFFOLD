@@ -8,9 +8,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Calc type: " Width="100" HorizontalAlignment="Left"/>
                     <TextBlock Text="{Binding CalcTypeName}"/>
@@ -24,14 +32,93 @@
                     <TextBlock Text="{Binding Author}" FontWeight="Bold"/>
                 </StackPanel>
             </StackPanel>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                <TextBlock Text="Ref" Width="100" FontWeight="Bold"/>
-                <TextBlock Text="Narrative and calculations" Width="500" FontWeight="Bold"/>
-                <TextBlock Text="Conclusions" FontWeight="Bold"/>
+            <StackPanel Grid.Column="1">
+                <CheckBox IsChecked="{Binding IncludeInputsInWord}" Content="Include inputs"/>
+                <CheckBox IsChecked="{Binding IncludeBodyInWord}" Content="Include body"/>
+                <CheckBox IsChecked="{Binding IncludeOutputsInWord}" Content="Include calculated values"/>
+                <Button Content="To WORD" Command="{Binding ToWord}" Width="100" Height="Auto" HorizontalAlignment="Left"/>
             </StackPanel>
-            <Rectangle HorizontalAlignment="Stretch" Height="2" Fill="#FFF05924"/>
-            <ItemsControl ItemsSource="{Binding Formulae}" >
+        </Grid>
+        <ListView ItemsSource="{Binding Formulae}" Grid.Row="1" ScrollViewer.CanContentScroll="False">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+                    <Setter Property="VerticalContentAlignment" Value="Top"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView ScrollViewer.CanContentScroll="False">
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="OverridesDefaultStyle" Value="False"/>
+                            <Setter Property="BorderBrush" Value="#FFF05924"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,3"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn>
+                        <GridViewColumnHeader HorizontalContentAlignment="Left" Content="Ref"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Ref}" Width="100"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="500">
+                        <GridViewColumnHeader HorizontalContentAlignment="Left" Content="Narrative"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Narrative}" Margin="0 0 0 10" Foreground="Black"/>
+                                    <ItemsControl ItemsSource="{Binding Expression}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <controls:FormulaControl Scale="15" Formula="{Binding}" Margin="0 0 0 5"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Image Source="{Binding Image}" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumnHeader HorizontalContentAlignment="Left" Content="Conclusion"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Conclusion}" TextWrapping="Wrap" VerticalAlignment="Top">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="PASS">
+                                                    <Setter Property="Foreground" Value="Green"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="JUSTPASS">
+                                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="FAIL">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="JUSTFAIL">
+                                                    <Setter Property="Foreground" Value="Orange"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="NONE">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!--<ItemsControl ItemsSource="{Binding Formulae}" >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -46,6 +133,7 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            <Image Source="{Binding Image}" HorizontalAlignment="Left" Margin="100 0 0 0" Width="500"/>
                             <TextBlock Text="{Binding Conclusion}" Margin="600 0 0 0">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
@@ -73,7 +161,7 @@
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-    </ScrollViewer>
+            </ItemsControl>-->
+
+    </Grid>
 </UserControl>

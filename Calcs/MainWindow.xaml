@@ -7,18 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
-    <Window.Resources>
-        <!--<ContentControl x:Key="view2D">
-            <local:CalcInputs DataContext="{Binding TBC}"/>
-        </ContentControl>-->
-    </Window.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <TabControl>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Calculations: "/>
+            <ComboBox ItemsSource="{Binding ViewModels}" DisplayMemberPath="CalcTypeName" Width="200" SelectedIndex="{Binding SelectedViewModel}"/>
+        </StackPanel>
+        <TabControl Grid.Row="1" DataContext="{Binding ViewModel}">
             <TabItem Header="Single Calculation">
                 <local:SingleCalc />
             </TabItem>
@@ -32,7 +31,7 @@
                 <local:CrossRef DataContext="{Binding CrossRef}"/>
             </TabItem>
         </TabControl>
-        <Image Grid.Row="1" HorizontalAlignment="Left">
+        <Image Grid.Row="2" HorizontalAlignment="Left">
             <Image.Source>
                 <BitmapImage UriSource="/WhitbyWood.jpg"/>
             </Image.Source>

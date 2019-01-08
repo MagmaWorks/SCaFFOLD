@@ -21,7 +21,8 @@ namespace CalcCore
     {
         DOUBLE,
         SELECTIONLIST,
-        FILEPATH
+        FILEPATH,
+        DOUBLELIST
     }
 
     public enum CalcStatus
