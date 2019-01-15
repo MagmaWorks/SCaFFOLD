@@ -17,23 +17,19 @@ namespace TestCalcs
         CalcSelectionList _colType;
         CalcSelectionList _linkArrangement;
         CalcDouble _fck;
-        double fyv = 500;
-        double linkDia = 10;
+        CalcSelectionList _loadCombType;
+        CalcDouble _concPartFactor;
         CalcDouble _columnAdim;
         CalcDouble _columnBdim;
-        double G = 600;
-        double E = 400;
-        double F = -300;
-        double H = 200;
         CalcCore.CalcDouble _punchingLoad;
+        CalcDouble _mz;
+        CalcDouble _my;
         double udl = 0;
         CalcDouble _h;
         CalcDouble _offsety;
         CalcDouble _offsetz;
         double dy;
         double dz;
-        double asy = 1000;
-        double asz = 1000;
         double d_average;
         double ui;
         CalcCore.CalcDouble _beta;
@@ -41,7 +37,6 @@ namespace TestCalcs
         double stressvEd1;
         double reinforcementRatioy;
         double reinforcementRatioz;
-        double rhoL;
         double vRdc;
         double vRdMax;
         double u1;
@@ -49,6 +44,8 @@ namespace TestCalcs
         CalcDouble _rebarY;
         CalcDouble _rebarZ;
         CalcDouble _rho;
+        CalcSelectionList _srMode;
+        CalcDouble _srTarget;
         double sr;
         double fywd;
         double fywdef;
@@ -67,19 +64,17 @@ namespace TestCalcs
         CalcDouble _hole2PosY;
         CalcDouble _hole2SizeX;
         CalcDouble _hole2SizeY;
-        CalcDoubleList _moreHoles;
 
         List<Formula> expressions = new List<Formula>();
         List<Tuple<Line, Line>> _holeEdges;
-        //Line holeEdge1;
-        //Line holeEdge2;
-        //Line holeEdge3;
-        //Line holeEdge4;
         List<PolyLine> controlPerimeters;
+        PolyLine controlPerimeterNoHoles;
         List<PolyLine> outerPerimeters;
         PolyLine columnOutline;
+        PolyLine fullColumnOutline;
         List<PolyLine> columnOutlines;
         List<PolyLine> holeOutlines;
+        List<List<Vector2>> allHoleCorners;
         PolyLine slabEdge;
         List<PolyLine> shearLinkStartPerimeters;
         List<PolyLine> shearLinkEndPerimeters;
@@ -87,40 +82,46 @@ namespace TestCalcs
         List<List<Vector2>> shearLinks;
         List<List<PolyLine>> allPerimeters;
         List<List<PolyLine>> perimetersToReinforce;
+        List<PolyLine> u1reduced;
 
         public PunchingShear()
         {
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER" });
-            _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "SPURS", new List<string> { "SPURS", "EACH_PERIMETER", "CRUCIFORM" });
-            _beta = inputValues.CreateDoubleCalcValue("Beta value", @"\beta", "", 1.367);
+            _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_45_DEGREES", "SPURS_30_DEGREES", "GRID" });
+            _srMode = inputValues.CreateCalcSelectionList("Radial spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
+            _srTarget = inputValues.CreateDoubleCalcValue("Target radial spacing", "s_r", "mm", 0);
+            _beta = outputValues.CreateDoubleCalcValue("Beta value", @"\beta", "", 2);
             _columnAdim = inputValues.CreateDoubleCalcValue("Column A dimension", "A", "mm", 350);
             _columnBdim = inputValues.CreateDoubleCalcValue("Column B dimension", "B", "mm", 350);
             _h = inputValues.CreateDoubleCalcValue("Slab depth", "h", "mm", 225);
             _offsety = inputValues.CreateDoubleCalcValue("Offset to effective depth y dir", "d_{y,offset}", "mm", 45);
             _offsetz = inputValues.CreateDoubleCalcValue("Offset to effective depth z dir", "d_{z,offset}", "mm", 65);
-            _rebarY = inputValues.CreateDoubleCalcValue("Tension reinforcement y dir", "", @"mm^2/m", 1695);
-            _rebarZ = inputValues.CreateDoubleCalcValue("Tension reinforcement z dir", "", @"mm^2/m", 1695);
-            _fck = inputValues.CreateDoubleCalcValue("Concrete strength", "", @"N/{mm^2}", 40);
-            _rho = outputValues.CreateDoubleCalcValue("Reinforcement ratio", "", "", 0);
-            _punchingLoad = inputValues.CreateDoubleCalcValue("Punching shear load", "P", "kN", 457);
-            _stressvEdi = outputValues.CreateDoubleCalcValue("Shear stress at column face", @"v_{Ed,i}", @"N/{mm^2} ", 0);
+            _rebarY = inputValues.CreateDoubleCalcValue("Tension reinforcement y dir", "A_{s,y}", @"mm^2/m", 1695);
+            _rebarZ = inputValues.CreateDoubleCalcValue("Tension reinforcement z dir", "A_{s,z}", @"mm^2/m", 1695);
+            _my = inputValues.CreateDoubleCalcValue("Moment about y axis", "M_{Ed,y}", "kNm", 33);
+            _mz = inputValues.CreateDoubleCalcValue("Moment about z axis", "M_{Ed, z}", "kNm", 90);
+            _fck = inputValues.CreateDoubleCalcValue("Concrete strength", @"f_{ck}", @"N/{mm^2}", 40);
+             _loadCombType = inputValues.CreateCalcSelectionList("Design situation", "PERMANENT", new List<string> {"PERMANENT", "ACCIDENTAL" });
+            _concPartFactor = outputValues.CreateDoubleCalcValue("Partial factor for concrete", @"\gamma_c", "", 1.5);
+            _rho = outputValues.CreateDoubleCalcValue("Reinforcement ratio", @"\rho_l", "", 0);
+            _punchingLoad = inputValues.CreateDoubleCalcValue("Punching shear load", "V_{Ed}", "kN", 457);
+            _stressvEdi = outputValues.CreateDoubleCalcValue("Shear stress at column face", @"v_{Ed,0}", @"N/{mm^2} ", 0);
             _Asw = outputValues.CreateDoubleCalcValue("Punching shear leg area required per perimeter", "A_{sw}", "mm^2", 0);
-            _uoutef = outputValues.CreateDoubleCalcValue("Outer perimeter required", "u_{out,ef}", "mm", 0);
-            _linksInFirstPerim = outputValues.CreateDoubleCalcValue("Number of links in first perimeter", "", "No.", 0);
+            _uoutef = outputValues.CreateDoubleCalcValue("Outer perimeter required", "u_{out,ef,req}", "mm", 0);
+            _linksInFirstPerim = outputValues.CreateDoubleCalcValue("Number of spurs", "", "No.", 0);
             _numberOfPerimeters = outputValues.CreateDoubleCalcValue("Legs per spur", "", "No.", 0);
             _perimSpacing = outputValues.CreateDoubleCalcValue("Spacing of link perimeters", "", "mm", 0);
             _distToFirstLinkPerim = outputValues.CreateDoubleCalcValue("Distance to first link perimeter", "", "mm", 0);
             _legsTotal = outputValues.CreateDoubleCalcValue("Total legs", "", "No.", 0);
             _legDia = outputValues.CreateDoubleCalcValue("Leg diameter", "", "mm", 0);
-            _holePosX = inputValues.CreateDoubleCalcValue("Hole X position", "", "mm", 0);
-            _holePosY = inputValues.CreateDoubleCalcValue("Hole Y position", "", "mm", 220);
-            _holeSizeX = inputValues.CreateDoubleCalcValue("Hole X size", "", "mm", 200);
-            _holeSizeY = inputValues.CreateDoubleCalcValue("Hole Y size", "", "mm", 200);
-            _hole2PosX = inputValues.CreateDoubleCalcValue("Hole X position", "", "mm", 500);
-            _hole2PosY = inputValues.CreateDoubleCalcValue("Hole Y position", "", "mm", -300);
-            _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole X size", "", "mm", 150);
-            _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole Y size", "", "mm", 150);
-            //_moreHoles = inputValues.CreateCalcDoubleList("Hole corner coordinates", new List<List<double>> { new List<double> { 500, -500, 400, -600, 400, -700, 600,-700, 800,-500 } });
+            _holePosX = inputValues.CreateDoubleCalcValue("Hole 1 X position", "", "mm", 0);
+            _holePosY = inputValues.CreateDoubleCalcValue("Hole 1 Y position", "", "mm", 220);
+            _holeSizeX = inputValues.CreateDoubleCalcValue("Hole 1 X size", "", "mm", 0);
+            _holeSizeY = inputValues.CreateDoubleCalcValue("Hole 1 Y size", "", "mm", 200);
+            _hole2PosX = inputValues.CreateDoubleCalcValue("Hole 2 X position", "", "mm", 500);
+            _hole2PosY = inputValues.CreateDoubleCalcValue("Hole 2 Y position", "", "mm", -300);
+            _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole 2 X size", "", "mm", 00);
+            _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
             UpdateCalc();
         }
 
@@ -133,10 +134,13 @@ namespace TestCalcs
         private void resetFields()
         {
             controlPerimeters = new List<PolyLine>();
+            controlPerimeterNoHoles = null;
             outerPerimeters = new List<PolyLine>();
             columnOutline = null;
+            fullColumnOutline = null;
             columnOutlines = new List<PolyLine>();
             holeOutlines = null;
+            allHoleCorners = null;
             slabEdge = null;
             shearLinkStartPerimeters = new List<PolyLine>();
             shearLinkEndPerimeters = new List<PolyLine>();
@@ -145,6 +149,7 @@ namespace TestCalcs
             allPerimeters = new List<List<PolyLine>>();
             perimetersToReinforce = new List<List<PolyLine>>();
             _holeEdges = null;
+            u1reduced = null;
         }
 
         public override void UpdateCalc()
@@ -153,12 +158,22 @@ namespace TestCalcs
             resetFields();
             expressions = new List<Formula>();
 
-            string _colCondition = _colType.ValueAsString;
-
             // calculate effective depths in each direction
             dy = _h.Value - _offsety.Value;
             dz = _h.Value - _offsetz.Value;
             d_average = (dy + dz) / 2;
+            if (_loadCombType.ValueAsString == "PERMANENT") _concPartFactor.Value = 1.5;
+            else _concPartFactor.Value = 1.2;
+            expressions.Add(new Formula
+            {
+                Ref = "cl.2.4.2.4(1)",
+                Narrative = "Partial factor for concrete",
+                Expression = new List<string>
+                {
+                    _concPartFactor.Symbol + @"=" + _concPartFactor.Value
+                }
+            });
+            
             expressions.Add(new Formula()
             {
                 Narrative = "Calculate effective depths",
@@ -166,95 +181,105 @@ namespace TestCalcs
                 {
                     string.Format(@"{0} = {1} - {2} = {3}{4}", "d_y", _h.Symbol, _offsety.Symbol, dy, "mm"),
                     string.Format(@"{0} = {1} - {2} = {3}{4}", "d_z", _h.Symbol, _offsetz.Symbol, dz, "mm"),
-                    string.Format(@"{0} = \frac{{{1} + {2}}}{{2}} = {3}{4}", @"d_{average}", "d_x", "d_y", d_average, "mm")
-                }
+                    string.Format(@"{0} = \frac{{{1} + {2}}}{{2}} = {3}{4}", @"d_{eff}", "d_y", "d_z", d_average, "mm")
+                },
+                Ref="cl. 6.4.2(1)"
             });
 
-            // SET UP GEOMETRY
-            // holes
-            List<List<Vector2>> allHoleCorners = new List<List<Vector2>>();
-            if (_holeSizeX.Value != 0 && _holeSizeY.Value !=0)
-            {
-                allHoleCorners.Add(new List<Vector2> {
-            new Vector2((float)_holePosX.Value, (float)(_holePosY.Value + _holeSizeY.Value)),
-            new Vector2((float)(_holePosX.Value + _holeSizeX.Value), (float)(_holePosY.Value + _holeSizeY.Value)),
-            new Vector2((float)(_holePosX.Value + _holeSizeX.Value), (float)(_holePosY.Value)),
-            new Vector2((float)_holePosX.Value, (float)(_holePosY.Value))
-            });
-            }
-            if (_hole2SizeX.Value != 0 && _hole2SizeY.Value != 0)
-            {
-                allHoleCorners.Add(new List<Vector2> {
-            new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value + _hole2SizeY.Value)),
-            new Vector2((float)(_hole2PosX.Value + _hole2SizeX.Value), (float)(_hole2PosY.Value + _hole2SizeY.Value)),
-            new Vector2((float)(_hole2PosX.Value + _hole2SizeX.Value), (float)(_hole2PosY.Value)),
-            new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value)),
-            });
-            }
-
-            _holeEdges = new List<Tuple<Line, Line>>();
-            foreach (var holeCorners in allHoleCorners)
-            {
-                double minAngle = Math.Atan2(holeCorners[0].Y, holeCorners[0].X);
-                double maxAngle = Math.Atan2(holeCorners[0].Y, holeCorners[0].X);
-                foreach (var corner in holeCorners)
-                {
-                    double angle = Math.Atan2(corner.Y, corner.X);
-                    minAngle = Math.Min(minAngle, angle);
-                    maxAngle = Math.Max(maxAngle, angle);
-                }
-                if ((minAngle * maxAngle < 0) && (maxAngle - minAngle > Math.PI))
-                {
-                    var newMax = minAngle + 2 * Math.PI;
-                    minAngle = maxAngle;
-                    maxAngle = newMax;
-                }
-                var holeEdge1 = new Line(new Vector2(0, 0), new Vector2((float)(10000 * Math.Cos(minAngle)), (float)(10000 * Math.Sin(minAngle))));
-                var holeEdge2 = new Line(new Vector2(0, 0), new Vector2((float)(10000 * Math.Cos(maxAngle)), (float)(10000 * Math.Sin(maxAngle))));
-                _holeEdges.Add(new Tuple<Line, Line>(holeEdge1, holeEdge2));
-            }
-
-            holeOutlines = new List<PolyLine>();
-            foreach (var holeCorners in allHoleCorners)
-            {
-                var holeSegments = new List<GeometryBase>();
-
-                for (int i = 1; i < holeCorners.Count; i++)
-                {
-                    holeSegments.Add(new Line(holeCorners[i - 1], holeCorners[i]));
-                }
-                holeOutlines.Add(new PolyLine(holeSegments) { IsClosed = true });
-            }
-
-
-            //outline of column
-            var x = (float)_columnAdim.Value / 2f; var y = (float)_columnBdim.Value / 2f;
+            generateHoles();
             generateColumnOutlines();
-
             generateSlabEdge();
-
-            // outline of control perimeter
-            var controlPerimeterNoHoles = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 2 * d_average);
+            controlPerimeterNoHoles = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 2 * d_average);
             controlPerimeters = generatePerimeterWithHoles(2 * d_average);
+            u1reduced = generateReducedControlPerimeterWithHoles();
+            ui = columnOutlines.Sum(a => a.Length);
+            u1 = controlPerimeters.Sum(a => a.Length);
+
+            expressions.Add(new Formula
+            {
+                Narrative = "Determine the effective column face and first control perimeters taking into account the effect of holes.",
+                Expression = new List<string>
+                {
+                    string.Format("u_{{0,no holes}} = {0}mm", Math.Round(columnOutline.Length, 2)),
+                    string.Format(@"u_0 = {0} mm", Math.Round(ui, 2)),
+                    Environment.NewLine,
+                    "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
+                    "u_1 = " + Math.Round(u1,2) + "mm",
+                },
+            });
+
+            // calc Beta
+            Formula betaFormula = new Formula() { Narrative = "Calculate Beta factor." + Environment.NewLine, Ref="cl 6.4.3" };
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    double ey = _my.Value * 1E6 / (_punchingLoad.Value * 1E3);
+                    double ez = _mz.Value * 1E6 / (_punchingLoad.Value * 1E3);
+                    double by = (controlPerimeterNoHoles.Segments.Max(a => a.Start.X) - controlPerimeterNoHoles.Segments.Min(a => a.Start.X));
+                    double bz = (controlPerimeterNoHoles.Segments.Max(a => a.Start.Y) - controlPerimeterNoHoles.Segments.Min(a => a.Start.Y));
+                    double term1 = Math.Pow(ey / bz, 2);
+                    double term2 = Math.Pow(ez / by, 2);
+                    _beta.Value = 1 + 1.8 * Math.Sqrt(term1 + term2);
+                    betaFormula.Narrative += "Calculated based on a rectangular internal column with loading eccentric to both axes. Control perimeter dimensions as Fig 6.13.";
+                    betaFormula.Expression.Add(_beta.Symbol + @"=1 + 1.8\sqrt{\left(\frac{e_y}{b_z}\right)^2+\left(\frac{e_z}{b_y}\right)^2} ="+ Math.Round(_beta.Value, 3));
+                    betaFormula.Expression.Add(@"e_y =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ey,1) +"mm");
+                    betaFormula.Expression.Add(@"e_z =\frac{" + _mz.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ez,1) + "mm");
+                    betaFormula.Expression.Add(@"b_y =" + Math.Round(by, 1)+"mm");
+                    betaFormula.Expression.Add(@"b_z =" + Math.Round(bz, 1)+"mm");
+                    Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/ControlPerimeters_Fig_6_13.png");
+                    betaFormula.Image = new BitmapImage(uri);
+                    break;
+                case "EDGE":
+                    double epar = _my.Value * 1E6 / (_punchingLoad.Value * 1E3);
+                    double c1 = _columnAdim.Value;
+                    double c2 = _columnBdim.Value;
+                    double k = calck(c1/c2);
+                    double w1 = Math.Pow(c2, 2) / 4 + c1 * c2 + 4 * c1 * d_average + 8 * Math.Pow(d_average, 2) + Math.PI * d_average * c2;
+                    var u1 = controlPerimeterNoHoles.Length;
+                    var u1red = u1reduced.Sum(a => a.Length);
+                    _beta.Value = (u1 / u1red) + k * (u1 / w1) * epar;
+                    betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of hte slab.";
+                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}+k\frac{u_1}{W_1}e_{par}=" + Math.Round(_beta.Value, 3));
+                    betaFormula.Expression.Add(@"u_1="+Math.Round(u1,2)+"mm");
+                    betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
+                    betaFormula.Expression.Add(@"k="+Math.Round(k,2));
+                    betaFormula.Expression.Add(@"e_{par} =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(epar, 1) + "mm");
+                    betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2="+Math.Round(w1,2));
+                    Uri uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
+                    betaFormula.Image = new BitmapImage(uri2);
+                    break;
+                case "CORNER":
+                    u1 = controlPerimeterNoHoles.Length;
+                    u1red = u1reduced.Sum(a => a.Length);
+                    _beta.Value = u1 / u1red;
+                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}="+Math.Round(_beta.Value,3));
+                    betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
+                    uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
+                    betaFormula.Image = new BitmapImage(uri2);
+                    break;
+                default:
+                    break;
+            }
+            expressions.Add(betaFormula);
 
             // calculate shear stress at face
-            ui = columnOutlines.Sum(a => a.Length);
             _stressvEdi.Value = _beta.Value * _punchingLoad.Value * 1000 / (ui * d_average);
             var colFaceStressFormula = new Formula()
             {
-                Narrative = "Determine effective perimeter at column face and check shear stress.",
+                Narrative = "Check shear stress at column face.",
                 Expression = new List<string>
                 {
-                    string.Format("u_{{i,no holes}} = {0}mm", Math.Round(columnOutline.Length, 2)),
-                    string.Format(@"u_i = {0} mm", Math.Round(ui, 2)),
-                    _beta.Symbol + " = " + _beta.Value + _beta.Unit,
-                    String.Format(@"{0} = \frac{{{1} {2}}}{{u_i d_{{average}}}} = {3}{4}",
+                    string.Format(@"u_0 = {0} mm", Math.Round(ui, 2)),
+                    _beta.Symbol + " = " + Math.Round(_beta.Value,3) + _beta.Unit,
+                    String.Format(@"{0} = {1}\frac{{{2}}}{{u_0 d_{{eff}}}} = {3}{4}",
                         _stressvEdi.Symbol,
-                        _beta.Symbol, 
-                        _punchingLoad.Symbol, 
-                        Math.Round(_stressvEdi.Value, 2), 
-                        @"N/{mm^2}")
-                }
+                        _beta.Symbol,
+                        _punchingLoad.Symbol,
+                        Math.Round(_stressvEdi.Value, 2),
+                        @"N/{mm^2}"),
+                },
+                Ref = "cl.6.4.5(3)"
             };
 
             vRdMax = shearStressResistance(_fck.Value);
@@ -268,7 +293,7 @@ namespace TestCalcs
                 colFaceStressFormula.Conclusion = "Too high";
                 expressions.Add(colFaceStressFormula);
                 var image2 = generateImage();
-                expressions.Insert(0,new Formula
+                expressions.Insert(0, new Formula
                 {
                     Narrative = "Diagram:" + Environment.NewLine +
                     "Column shown in green, control and outer perimeters in red.",
@@ -283,29 +308,42 @@ namespace TestCalcs
                 colFaceStressFormula.Status = CalcStatus.PASS;
                 colFaceStressFormula.Conclusion = "OK";
                 _stressvEdi.Status = CalcStatus.PASS;
-                colFaceStressFormula.Expression.Add(string.Format(@"{0} = {1} \leq {2} = {3}{4}", _stressvEdi.Symbol, Math.Round(_stressvEdi.Value, 2), @"v_{Rd,max}", Math.Round(vRdMax, 2), @"N/_{mm^2}"));
+                colFaceStressFormula.Expression.Add(@"v_{Rd,max}=" + Math.Round(vRdMax, 2) + @"N/mm^2");
+                colFaceStressFormula.Expression.Add(string.Format(@"{0} \leq {1}", _stressvEdi.Symbol, @"v_{Rd,max}"));
                 expressions.Add(colFaceStressFormula);
             }
-
-            u1 = controlPerimeters.Sum(a => a.Length);
-            stressvEd1 = _beta.Value * _punchingLoad.Value * 1000 / (u1 * d_average);
-            expressions.Add(new Formula
-            {
-                Narrative = "Determine control perimeter including effect of openings and calculate shear stress",
-                Expression = new List<string>
-                {
-                    "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
-                    "u_1 = " + Math.Round(u1,2) + "mm",
-                    @"v_{Ed1} = \frac{" + _beta.Symbol + " " + _punchingLoad.Symbol + @"}{u_1 d_{average}} = " + Math.Round(stressvEd1,2) + @"N/{mm^2}"
-                },
-            });
 
             reinforcementRatioy = _rebarY.Value / (1000 * dy);
             reinforcementRatioz = _rebarZ.Value / (1000 * dz);
 
             _rho.Value = Math.Pow(reinforcementRatioy * reinforcementRatioz, 0.5);
 
-            vRdc = shearResistanceNoRein(_rho.Value, d_average, _fck.Value);
+            vRdc = shearResistanceNoRein(_rho.Value, d_average, _fck.Value, _concPartFactor.Value); expressions.Add(new Formula
+            {
+                Expression = new List<string>
+                    {
+                    @"v_{Rd,c}=\max(C_{Rd,c}k(100\rho_lf_{ck})^{1/3}+k_1\sigma_{cp},v_{min}+k_1\sigma_{cp})",
+                    @"v_{Rd,c}="+Math.Round(vRdc,2)+@"N/mm^2",
+                    @"\text{where}",
+                    @"C_{Rd,c}=\frac{0.18}{" + _concPartFactor.Symbol + @"}=" + Math.Round(0.18/_concPartFactor.Value,2),
+                    @"k=1+\sqrt{\frac{200}{d}}\leq2",
+                    _rho.Symbol + @"=\sqrt{\rho_{ly} \rho_{lz}}\leq0.02",
+                    _rho.Symbol + "=" + Math.Round(_rho.Value,5) + _rho.Unit
+                    },
+                Narrative = "Calculate punching shear resistance",
+                Ref = "cl. 6.4.4(1)"
+            });
+
+            stressvEd1 = _beta.Value * _punchingLoad.Value * 1000 / (u1 * d_average);
+            expressions.Add(new Formula
+            {
+                Narrative = "Calculate shear stress at first control perimeter",
+                Expression = new List<string>
+                {
+                    "u_1 = " + Math.Round(u1,2) + "mm",
+                    @"v_{Ed1} = \frac{" + _beta.Symbol + " " + _punchingLoad.Symbol + @"}{u_1 d_{average}} = " + Math.Round(stressvEd1,2) + @"N/{mm^2}"
+                },
+            });
 
             if (stressvEd1 <= vRdc)
             {
@@ -325,7 +363,7 @@ namespace TestCalcs
                     Narrative = "Check if shear links are required"
                 });
                 var image2 = generateImage();
-                expressions.Insert(0,new Formula
+                expressions.Insert(0, new Formula
                 {
                     Narrative = "Diagram:" + Environment.NewLine +
                     "Column shown in green, control and outer perimeters in red.",
@@ -335,7 +373,7 @@ namespace TestCalcs
                 });
                 return;
             }
-            if (stressvEd1 > 2 * vRdc)
+            else if (stressvEd1 > 2 * vRdc)
             {
                 _uoutef.Value = double.NaN;
                 _Asw.Value = double.NaN;
@@ -354,7 +392,7 @@ namespace TestCalcs
                     Status = CalcStatus.FAIL
                 });
                 var image2 = generateImage();
-                expressions.Insert(0,new Formula
+                expressions.Insert(0, new Formula
                 {
                     Narrative = "Diagram:" + Environment.NewLine +
                     "Column shown in green, control and outer perimeters in red.",
@@ -364,34 +402,88 @@ namespace TestCalcs
                 });
                 return;
             }
-
-            sr = 0.75 * d_average;
-            expressions.Add(new Formula
+            else
             {
-                Narrative = "Maximum radial spacing",
-                Expression = new List<string>
+                expressions.Add(new Formula
                 {
-                    @"s_r = 0.75 \times d_{average}",
-                    @"s_r = " + Math.Round(sr,0) + "mm"
-                }
-            });
+                    Expression = new List<string>
+                    {
+                        string.Format(@"{0} > {1}", @"v_{Ed,1}", @"v_{Rd,c}"),
+                        string.Format(@"{0} \leq 2 \times {1}", @"v_{Ed,1}", @"v_{Rd,c}"),
+                    },
+                    Conclusion = "Links required",
+                    Narrative = "Check if shear links are required and stress is less than limit"
+                });
+            }
+
+            switch (_srMode.ValueAsString)
+            {
+                case "AUTO":
+                    sr = 0.75 * d_average;
+                    break;
+                case "TARGET":
+                    sr = _srTarget.Value;
+                    break;
+                default:
+                    break;
+            }
+            if (sr <= 0.75 * d_average)
+            {
+                expressions.Add(new Formula
+                {
+                    Narrative = "Maximum radial spacing",
+                    Expression = new List<string>
+                            {
+                                @"s_r = " + Math.Round(sr,0) + "mm",
+                                @"s_r \leq 0.75 \times d",
+                                @"s_r \leq 0.75 \times " + Math.Round(d_average,0) + "mm"
+                            },
+                    Status = CalcStatus.PASS
+                });
+            }
+            else
+            {
+                expressions.Add(new Formula
+                {
+                    Narrative = "Maximum radial spacing",
+                    Expression = new List<string>
+                            {
+                                @"s_r = " + Math.Round(sr,0) + "mm",
+                                @"s_r > 0.75 \times d",
+                                @"s_r > 0.75 \times " + Math.Round(d_average,0) + "mm"
+                            },
+                    Status = CalcStatus.FAIL
+                });
+                expressions.Insert(0, new Formula
+                {
+                    Narrative = "Diagram:" + Environment.NewLine +
+                    "Column shown in green, control and outer perimeters in red.",
+                    Image = generateImage(),
+                    Conclusion = "Radial spacing too high",
+                    Status = CalcStatus.FAIL
+                });
+                return;
+            }
+
             fywd = 338; // need to calc this in future
             fywdef = Math.Min(250 + 0.25 * d_average, fywd);
             _Asw.Value = (stressvEd1 - 0.75 * vRdc) * sr * u1 / (1.5 * fywdef);
             expressions.Add(new Formula
             {
-                Narrative = "Area of shear reinforcement required",
+                Narrative = "Area of shear reinforcement required, assuming shear links are perpendicular to slab",
                 Expression = new List<string>
                 {
                     @"f_{ywdef} = \min{(250 + 0.25 \times d_{average},f_{ywd})} = \min{(" + (250 + 0.25 * d_average) + @"," + fywd+@")} = " + fywdef + @"N/mm^2",
-                    _Asw.Symbol + @" = \frac{v_{Ed1} - 0.75v_{Rdc}s_ru_1}{1.5 \times f_{ywdef}} =" + Math.Round(_Asw.Value,0) + _Asw.Unit
-                }
+                    _Asw.Symbol + @" = \frac{(v_{Ed1} - 0.75)v_{Rdc}s_ru_1}{1.5 \times f_{ywdef}} =" + Math.Round(_Asw.Value,0) + _Asw.Unit,
+                    @"\frac{" + _Asw.Symbol + @"}{s_r}=" + Math.Round(_Asw.Value / sr,3)
+                },
+                Ref = "cl.6.4.5(1)"
             });
 
             _uoutef.Value = _beta.Value * 1000 * _punchingLoad.Value / (vRdc * d_average);
 
             _distToFirstLinkPerim.Value = 0.5 * d_average;
-            _perimSpacing.Value = 0.75 * d_average;
+            _perimSpacing.Value = sr;
             allPerimeters = new List<List<PolyLine>>();
             allPerimeters.Add(generatePerimeterWithHoles(_distToFirstLinkPerim.Value));
             shearLinkStartPerimeters = allPerimeters[0];
@@ -412,188 +504,94 @@ namespace TestCalcs
             //spurs
             shearSpurs = new List<Line>();
             shearLinks = new List<List<Vector2>>();
-
-            //if (_linkArrangement.ValueAsString == "SPURS")
-            //{
-            //    int numberOfPerimeters = Math.Min(shearLinkStartPerimeters.Count, shearLinkEndPerimeters.Count);
-            //    for (int k = 0; k < numberOfPerimeters; k++)
-            //    {
-            //        var shearLinkStartPerimeter = shearLinkStartPerimeters[k];
-            //        var shearLinkEndPerimeter = shearLinkEndPerimeters[k];
-            //        int spursRequired = (int)Math.Max(Math.Ceiling(shearLinkEndPerimeter.Length / (1.5 * d_average)), 2);
-            //        double spurFraction = 1d / Math.Max((spursRequired - 1), 1);
-            //        for (int i = 0; i < spursRequired; i++)
-            //        {
-            //            var startPoint = shearLinkStartPerimeter.PointAtParameter(i * spurFraction);
-            //            var endPoint = shearLinkEndPerimeter.PointAtParameter(i * spurFraction);
-            //            var shearLine = new Line(startPoint, endPoint);
-            //            shearSpurs.Add(shearLine);
-            //            double maxSpacing = 0.75 * d_average;
-            //            double numberOfStuds = perimetersToReinforce.Count;
-            //            var spacingVector = (shearLine.End - shearLine.Start) / ((float)numberOfStuds - 1);
-            //            var links = new List<Vector2>();
-            //            for (int j = 0; j < numberOfStuds; j++)
-            //            {
-            //                links.Add(shearLine.Start + spacingVector * j);
-            //            }
-            //            shearLinks.Add(links);
-            //        }
-            //    }
-            //}
-
             var shearLinkStartSpurs = new List<PolyLine>();
             for (int i = 0; i < perimetersToReinforce.Count; i++)
             {
-                shearLinkStartSpurs.Add(generatePerimeter(_columnAdim.Value, _columnBdim.Value, 0.5 * d_average + i * (0.75 * d_average)));
+                shearLinkStartSpurs.Add(generatePerimeter(_columnAdim.Value, _columnBdim.Value, 0.5 * d_average + i * (sr)));
             }
-            //if (_linkArrangement.ValueAsString == "SPURS")
-            //{
-            //    int spursRequired = (int)Math.Max(Math.Ceiling(shearLinkStartPerimeters.Sum(a => a.Length) / (1.5 * d_average)), 2);
 
-
-            //    foreach (var perimeter in shearLinkStartSpurs)
-            //    {
-            //        double fraction = perimeter.Length / (spursRequired);
-            //        if (perimeter.Length / spursRequired > 1.5* d_average)
-            //        {
-            //            spursRequired = spursRequired * 2;
-            //            fraction = fraction / 2;
-            //        }
-            //        for (int k = 0; k < spursRequired; k++)
-            //        {
-            //            var parameter = (k * fraction) / perimeter.Length;
-            //            var point = perimeter.PointAtParameter(parameter);
-            //            var shearLine = new Line(point, point);
-            //            shearSpurs.Add(shearLine);
-            //            var links = new List<Vector2>() { point };
-            //            //for (int j = 0; j < numberOfStuds; j++)
-            //            //{
-            //            //    links.Add(shearLine.Start + spacingVector * j);
-            //            //}
-            //            shearLinks.Add(links);
-
-            //        }
-            //    }
-
-            //}
-
-            if (_linkArrangement.ValueAsString == "SPURS")
+            if (_linkArrangement.ValueAsString == "SPURS_AUTO" || _linkArrangement.ValueAsString == "SPURS_45_DEGREES" || _linkArrangement.ValueAsString == "SPURS_30_DEGREES")
             {
                 perimetersToReinforce = new List<List<PolyLine>> { perimetersToReinforce[0] };
-                int spursRequired = 0;
+                var spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints()};
 
-                switch (_colType.ValueAsString)
-                {
-                    case "INTERNAL":
-                        if ((shearLinkStartPerimeters.Sum(a => a.Length) / 8) < 1.5 * d_average)
-                            spursRequired = 8;
-                        else spursRequired = 12;
-                        break;
-                    case "EDGE":
-                        Line line1 = new Line(new Vector2(0, 0), new Vector2(0, -10000));
-                        Line line2 = new Line(new Vector2(0, 0), new Vector2(0, 10000));
-                        IntersectionResult inter1 = shearLinkStartSpurs[0].intersection(line1)[0];
-                        IntersectionResult inter2 = shearLinkStartSpurs[0].intersection(line2)[0];
-                        shearLinkStartSpurs[0] = shearLinkStartSpurs[0].Cut(inter1.Parameter, inter2.Parameter);
-                        if ((shearLinkStartPerimeters.Sum(a => a.Length) / 5) < 1.5 * d_average)
-                            spursRequired = 5;
-                        else spursRequired = 9;
-                        break;
-                    case "CORNER":
-                        Line line3 = new Line(new Vector2(0, 0), new Vector2(0, -10000));
-                        Line line4 = new Line(new Vector2(0, 0), new Vector2(10000, 0));
-                        IntersectionResult inter3 = shearLinkStartSpurs[0].intersection(line3)[0];
-                        IntersectionResult inter4 = shearLinkStartSpurs[0].intersection(line4)[0];
-                        shearLinkStartSpurs[0] = shearLinkStartSpurs[0].Cut(inter3.Parameter, inter4.Parameter);
-                        if ((shearLinkStartPerimeters.Sum(a => a.Length) / 3) < 1.5 * d_average)
-                            spursRequired = 3;
-                        else spursRequired = 5;
-                        break;
-                    default:
-                        break;
-                }
-
-                var spurPoints = new List<List<Vector2>>();
-                double fraction = shearLinkStartSpurs[0].Length / (spursRequired);
-                if (_colType.ValueAsString != "INTERNAL")
-                {
-                    fraction = shearLinkStartSpurs[0].Length / (spursRequired -1);
-                }
-                for (int i = 0; i < spursRequired; i++)
-                {
-                    var parameter = (i * fraction) / shearLinkStartSpurs[0].Length;
-                    var point = shearLinkStartSpurs[0].PointAtParameter(parameter);
-                    spurPoints.Add(new List<Vector2> { point });
-                }
                 for (int i = 1; i < 25; i++)
                 {
-                    int spursOnPrevPerim = spurPoints.Count;
+                    int spursOnPrevPerim = spurPoints[i-1].Count;
+                    List<Tuple<Vector2, Vector2>> newPerim = new List<Tuple<Vector2, Vector2>>();
                     for (int k = 0; k < spursOnPrevPerim; k++)
                     {
-                        var vector = Vector2.Normalize(spurPoints[k][0]);
-                        spurPoints[k].Add(spurPoints[k].Last() + vector * 0.75f * (float)d_average);
+                        var vector = spurPoints[i-1][k].Item2;
+                        newPerim.Add(new Tuple<Vector2, Vector2>(spurPoints[i-1][k].Item1 + vector * (float)sr, vector));
                     }
                     var segs = new List<GeometryBase>();
-                    var prevPoint = spurPoints.Last().Last();
+                    var testOuter = new List<GeometryBase>();
+                    var prevPoint = newPerim.Last();
                     int start = 0;
                     if (_colType.ValueAsString != "INTERNAL")
                     {
-                        prevPoint = spurPoints.First().Last();
+                        prevPoint = newPerim.First();
                         start = 1;
                     }
 
-
-                    for (int j = start; j < spurPoints.Count; j++)
+                    for (int j = start; j < newPerim.Count; j++)
                     {
-                        var item = spurPoints[j];
-                        if ((item.Last() - prevPoint).Length() > 1.5 * d_average)
+                        var item = newPerim[j];
+                        if ((item.Item1 - prevPoint.Item1).Length() > 1.5 * d_average)
                         {
-                            var interPoint = (prevPoint + item.Last()) / 2;
-                            spurPoints.Insert(j, new List<Vector2>
-                            {
-                                interPoint
-                            });
-                            segs.Add(new Line(prevPoint, interPoint));
-                            segs.Add(new Line(interPoint, item.Last()));
+                            var interPoint = (prevPoint.Item1 + item.Item1) / 2;
+                            var interVec = Vector2.Normalize((prevPoint.Item2 + item.Item2));
+                            newPerim.Insert(j, new Tuple<Vector2, Vector2>(interPoint,interVec));
+                            segs.Add(new Line(prevPoint.Item1, interPoint));
+                            segs.Add(new Line(interPoint, item.Item1));
                         }
                         else
                         {
-                            segs.Add(new Line(prevPoint, item.Last()));
+                            segs.Add(new Line(prevPoint.Item1, item.Item1));
                         }
-                        prevPoint = item.Last();
+                        prevPoint = item;
                     }
-                    var newPerim = new PolyLine(segs);
-                    var newPerimWithHoles = generatePerimeterWithHoles(newPerim);
+                    var newPerimLine = new PolyLine(segs);
+                    // extend to slab edge to max 0.75 * d
+                    if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
+                    {
+                        var v1 = Vector2.Normalize(segs.First().Start - segs.First().End);
+                        var ray1 = new Line(segs.First().Start, segs.First().Start + v1 * 10000);
+                        var v2 = Vector2.Normalize(segs.Last().End - segs.Last().Start);
+                        var ray2 = new Line(segs.Last().End, segs.Last().End + v2 * 10000);
+
+                        var inter1 = slabEdge.intersection(ray1);
+                        var inter2 = slabEdge.intersection(ray2);
+                        if (inter1[0].TypeOfIntersection == IntersectionType.WITHIN)
+                        {
+                            var pt1 = inter1[0].Point;
+                            if ((pt1 - segs.First().Start).Length() < 0.75f * (float)d_average) segs.Insert(0, new Line(pt1, segs.First().Start));
+                            else segs.Insert(0, new Line(segs.First().Start + v1 * 0.75f * (float)d_average, segs.First().Start));
+                        }
+                        if (inter2[0].TypeOfIntersection == IntersectionType.WITHIN)
+                        {
+                            var pt2 = inter2[0].Point;
+                            if ((pt2 - segs.Last().End).Length() < 0.75f * (float)d_average) segs.Add(new Line(segs.Last().End, pt2));
+                            else segs.Add(new Line(segs.Last().End, segs.Last().End + v2 * 0.75f * (float)d_average));
+                        }
+                    }
+                    var newPerimWithHoles = generatePerimeterWithHoles(newPerimLine);
                     perimetersToReinforce.Add(newPerimWithHoles);
+                    spurPoints.Add(newPerim);
                     if (newPerimWithHoles.Sum(a => a.Length) > _uoutef.Value)
                     {
                         break;
                     }
                 }
-                List<int> indicesToDelete = new List<int>();
-                for (int i = 0; i < spurPoints.Count; i++)
+                outerPerimeters = perimetersToReinforce.Last();
+                int numberOfPerimsToRemove = (int)Math.Ceiling(1.5 * d_average / sr);
+                numberOfPerimsToRemove = Math.Min(numberOfPerimsToRemove, spurPoints.Count - 2);
+                if (numberOfPerimsToRemove >= 2)
                 {
-                    var item = spurPoints[i];
-                    if (item.Count < 3)
-                    {
-                        indicesToDelete.Add(i);
-                    }
-                    else
-                    {
-                        item.RemoveRange(item.Count - 2, 2);
-                    }
-                }
-                indicesToDelete.Reverse();
-                foreach (var item in indicesToDelete)
-                {
-                    spurPoints.RemoveAt(item);
+                    spurPoints.RemoveRange(spurPoints.Count - numberOfPerimsToRemove, numberOfPerimsToRemove);
+                    perimetersToReinforce.RemoveRange(perimetersToReinforce.Count - numberOfPerimsToRemove, numberOfPerimsToRemove);
                 }
 
-                outerPerimeters = perimetersToReinforce.Last() ;
-                if (perimetersToReinforce.Count > 3)
-                {
-                    perimetersToReinforce.RemoveRange(perimetersToReinforce.Count - 2, 2);
-                }
                 shearLinkEndPerimeters = perimetersToReinforce.Last();
                 // remove links in holes
                 shearLinks = new List<List<Vector2>>();
@@ -609,99 +607,410 @@ namespace TestCalcs
                             if (angle1 < 0) angle1 += Math.PI * 2;
                             var angle2 = Math.Atan2(hole.Item2.End.Y, hole.Item2.End.X);
                             if (angle2 < 0) angle2 += Math.PI * 2;
-                            var angle3 = Math.Atan2(link.Y, link.X);
+                            var angle3 = Math.Atan2(link.Item1.Y, link.Item1.X);
                             if (angle3 < 0) angle3 += Math.PI * 2;
                             if (Math.Abs(angle1 - angle2) < Math.PI)
                             {
-                                if (angle3>Math.Min(angle1, angle2) && angle3<Math.Max(angle1, angle2))
+                                if (angle3 > Math.Min(angle1, angle2) && angle3 < Math.Max(angle1, angle2))
                                 {
                                     include = false;
                                 }
                             }
                             else
                             {
-                                if (angle3 < Math.Min(angle1, angle2) && angle3 > Math.Max(angle1, angle2))
+                                if (angle3 < Math.Min(angle1, angle2) || angle3 > Math.Max(angle1, angle2))
                                 {
                                     include = false;
                                 }
                             }
                         }
-                        if (include) filteredList.Add(link);
+                        if (include) filteredList.Add(link.Item1);
                     }
                     shearLinks.Add(filteredList);
                 }
-
             }
 
-            if (_linkArrangement.ValueAsString == "EACH_PERIMETER")
+            if (_linkArrangement.ValueAsString == "GRID")
             {
-                shearLinks = new List<List<Vector2>>();
-                foreach (var perimeter in perimetersToReinforce)
+                perimetersToReinforce = new List<List<PolyLine>>();
+                var initialLines = generateColumnFaces();
+                var links = new List<List<Tuple<Vector2, Vector2>>>();
+                var perimeterLines = new List<List<Line>>();
+                double offsetFromColumn = 0;
+                //generateFirstLinkPerimeter
+                var newLines = new List<Line>();
+                var newLinks = new List<Tuple<Vector2, Vector2>>();
+                foreach (var line in initialLines.Segments)
                 {
-                    var linksList = new List<Vector2>();
-                    foreach (var segment in perimeter)
+                    Vector2 dir = line.End - line.Start;
+                    Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
+                    
+                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (1.5*d_average))+1);
+                    var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
+                    for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
-                        if (segment.Length < 1.5 * d_average)
+                        newLinks.Add(new Tuple<Vector2, Vector2>(line.Start + stepVec * i + 0.5f * (float)d_average * perp, perp));
+                    }
+                    newLines.Add(new Line(line.Start + 0.5f * (float)d_average * perp, line.End + 0.5f * (float)d_average * perp));
+                }
+                offsetFromColumn += 0.5 * d_average;
+                perimetersToReinforce.Add(generatePerimeterWithHoles(offsetFromColumn));
+                perimeterLines.Add(newLines);
+                links.Add(newLinks);
+                var prevLinks = newLinks;
+
+                //generateMorePerimeters
+                newLines = new List<Line>();
+                for (int i = 1; i < 25; i++)//arbitrary max number of perim
+                {
+                    newLinks = new List<Tuple<Vector2, Vector2>>();
+                    newLines = new List<Line>();
+                    offsetFromColumn += sr;
+                    foreach (var link in prevLinks)
+                    {
+                        newLinks.Add(new Tuple<Vector2, Vector2>(link.Item1 + link.Item2 * (float)sr, link.Item2));
+                    }
+                    //generate perimeterlines
+                    foreach (var line in perimeterLines[i - 1])
+                    {
+                        Vector2 dir = line.End - line.Start;
+                        Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
+                        newLines.Add(new Line(line.Start + (float)sr * perp, line.End + (float)sr * perp));
+                    }
+
+                    // generate perimeter
+                    var perim = generatePerimeterWithHoles(offsetFromColumn);
+                    perimetersToReinforce.Add(perim);
+                    double outerPerimOffset = offsetFromColumn + 1.5 * d_average;
+                    outerPerimeters = generatePerimeterWithHoles(outerPerimOffset);
+                    if (outerPerimeters.Sum(a => a.Length) > _uoutef.Value)
+                    {
+                        links.Add(newLinks);
+                        break;
+                    }
+                    var newCornerLinks = new List<Tuple<Vector2,Vector2>>();
+                    //generate new links from previous corners
+                    int startLine = 1; int prevLine = 0;
+                    if (initialLines.IsClosed == true)
+                    {
+                        startLine = 0;
+                        prevLine = initialLines.Segments.Count - 1;
+                    }
+                    for (int j = startLine; j < perimeterLines[i - 1].Count; j++)
+                    {
+                        var line1 = perimeterLines[i - 1][prevLine];
+                        var line2 = perimeterLines[i - 1][j];
+                        Vector2 dir1 = line1.End - line1.Start;
+                        Vector2 perp1 = Vector2.Normalize(new Vector2(dir1.Y, -dir1.X));
+                        Vector2 dir2 = line2.End - line2.Start;
+                        Vector2 perp2 = Vector2.Normalize(new Vector2(dir2.Y, -dir2.X));
+                        var cornerPoint = line1.intersection(line2);
+                        newLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp1 *(float)sr, perp1));
+                        newLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp2 * (float)sr, perp2));
+                        newCornerLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp1 * (float)sr + perp2 * (float)sr, new Vector2(0f, 0f)));
+                        prevLine = j;
+                    }
+                    perimeterLines.Add(newLines);
+                    prevLinks = newLinks;
+                    var linksToAdd = newLinks.Select(a => a).ToList();
+                    linksToAdd.AddRange(newCornerLinks.Select(a => a).ToList());
+                    links.Add(linksToAdd);
+                }
+
+                shearLinkEndPerimeters = perimetersToReinforce.Last();
+                // remove links in holes
+                shearLinks = new List<List<Vector2>>();
+                foreach (var item in links)
+                {
+                    List<Vector2> filteredList = new List<Vector2>();
+                    foreach (var link in item)
+                    {
+                        bool include = true;
+                        foreach (var hole in _holeEdges)
                         {
-                            var pt = segment.PointAtParameter(0.5);
-                            linksList.Add(pt);
-                        }
-                        else if (segment.Length >= 1.5 * d_average)
-                        {
-                            int links = (int)Math.Ceiling(segment.Length / (1.5 * d_average));
-                            double halfSpacing = 1d / (2d * links);
-                            for (int i = 0; i < links; i++)
+                            var angle1 = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
+                            if (angle1 < 0) angle1 += Math.PI * 2;
+                            var angle2 = Math.Atan2(hole.Item2.End.Y, hole.Item2.End.X);
+                            if (angle2 < 0) angle2 += Math.PI * 2;
+                            var angle3 = Math.Atan2(link.Item1.Y, link.Item1.X);
+                            if (angle3 < 0) angle3 += Math.PI * 2;
+                            if (Math.Abs(angle1 - angle2) < Math.PI)
                             {
-                                var pt = segment.PointAtParameter(halfSpacing * (1 + i * 2));
-                                linksList.Add(pt);
+                                if (angle3 > Math.Min(angle1, angle2) && angle3 < Math.Max(angle1, angle2))
+                                {
+                                    include = false;
+                                }
+                            }
+                            else
+                            {
+                                if (angle3 < Math.Min(angle1, angle2) || (angle3 > Math.Max(angle1, angle2)))
+                                {
+                                    include = false;
+                                }
                             }
                         }
+                        if (include) filteredList.Add(link.Item1);
                     }
-                    shearLinks.Add(linksList);
+                    shearLinks.Add(filteredList);
                 }
             }
 
-            if (_linkArrangement.ValueAsString == "CRUCIFORM")
-            {
-
-            }
-
-            if (_linkArrangement.ValueAsString == "EACH_PERIMETER")
-            {
-                _linksInFirstPerim.Value = shearLinks[0].Count;
-            }
-            else
-            {
-                _linksInFirstPerim.Value = shearLinks.Count;
-            }
+            _linksInFirstPerim.Value = shearLinks[0].Count;
             _numberOfPerimeters.Value = perimetersToReinforce.Count;
             _legsTotal.Value = shearLinks.Sum(a => a.Count);
             _legDia.Value = calcBarSizeAndDia(_Asw.Value / _linksInFirstPerim.Value, new List<int> { 8, 10, 12, 16 });
 
             expressions.Add(new Formula
-            {
-                Narrative = "Detailing dimensions:",
-                Expression = new List<string>
+                {
+                    Narrative = "Outer perimeter",
+                    Expression = new List<string>
+                {
+                    _uoutef.Symbol + "=" + Math.Round(_uoutef.Value,0) + _uoutef.Unit,
+                    @"u_{out,ef,prov} = " + Math.Round(outerPerimeters.Sum(a => a.Length),0) + @"mm"
+                },
+                    Ref = "cl.6.4.5(4)"
+                });
+
+                var detailingFormula = new Formula
+                {
+                    Narrative = "Detailing dimensions:",
+                    Expression = new List<string>
                 {
                     @"\text{Distance to first perimeter} =" + Math.Round(_distToFirstLinkPerim.Value,0) + _distToFirstLinkPerim.Unit,
                     @"\text{Perimeter spacing} =" + Math.Round(_perimSpacing.Value,0) + _perimSpacing.Unit
                 }
-            });
-
-            var image = generateImage();
-            expressions.Insert(0, new Formula
+                };
+            if (_linkArrangement.ValueAsString=="GRID")
             {
-                Narrative = "Diagram:" + Environment.NewLine +
-                "Column shown in green, control and outer perimeters in red.",
-                Image = image,
-                Conclusion = "OK",
-                Status = CalcStatus.PASS
+                Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_ConcreteCentreLayout.png");
+                detailingFormula.Image = new BitmapImage(uri);
+                detailingFormula.Ref = "Concrete Centre Figure 9";
+            }
+            else if (_linkArrangement.ValueAsString == "SPURS_AUTO" || _linkArrangement.ValueAsString == "SPURS_45_DEGREES" || _linkArrangement.ValueAsString == "SPURS_30_DEGREES")
+            {
+                Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_EC1992_RadialLayout.png");
+                detailingFormula.Image = new BitmapImage(uri);
+                detailingFormula.Ref = "Figure 6.22, diagram A";
+            }
+
+            expressions.Add(detailingFormula);
+
+                var image = generateImage();
+                expressions.Insert(0, new Formula
+                {
+                    Narrative = "Diagram:" + Environment.NewLine +
+                    "Column shown in green, control and outer perimeters in red.",
+                    Image = image,
+                    Conclusion = "OK",
+                    Status = CalcStatus.PASS
+                });
+            }
+
+        private double calck(double c1overc2)
+        {
+            if (c1overc2 <= 0.5) return 0.45;
+            else if (c1overc2 < 1) return (c1overc2 - 0.5) * (0.15 / 0.5) + 0.5;
+            else if (c1overc2 < 3) return (c1overc2 - 1) * (0.2 / 2) + 1;
+            else return 0.8;
+        }
+
+        private void generateHoles()
+        {
+            // SET UP GEOMETRY
+            // holes
+            var holeExpression = new Formula()
+            {
+                Narrative = "Effective width of opening with respect to centre of loading",
+                Ref = "Figure 6.14",
+            };
+            allHoleCorners = new List<List<Vector2>>();
+            if (_holeSizeX.Value != 0 && _holeSizeY.Value != 0)
+            {
+                allHoleCorners.Add(new List<Vector2> {
+            new Vector2((float)_holePosX.Value, (float)(_holePosY.Value + _holeSizeY.Value)),
+            new Vector2((float)(_holePosX.Value + _holeSizeX.Value), (float)(_holePosY.Value + _holeSizeY.Value)),
+            new Vector2((float)(_holePosX.Value + _holeSizeX.Value), (float)(_holePosY.Value)),
+            new Vector2((float)_holePosX.Value, (float)(_holePosY.Value))
             });
+            }
+            if (_hole2SizeX.Value != 0 && _hole2SizeY.Value != 0)
+            {
+                allHoleCorners.Add(new List<Vector2> {
+            new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value + _hole2SizeY.Value)),
+            new Vector2((float)(_hole2PosX.Value + _hole2SizeX.Value), (float)(_hole2PosY.Value + _hole2SizeY.Value)),
+            new Vector2((float)(_hole2PosX.Value + _hole2SizeX.Value), (float)(_hole2PosY.Value)),
+            new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value)),
+            });
+            }
+
+            _holeEdges = new List<Tuple<Line, Line>>();
+            for (int i = 0; i < allHoleCorners.Count; i++)
+            {
+                var holeCorners = allHoleCorners[i];
+                double minAngle = Math.Atan2(holeCorners[0].Y, holeCorners[0].X);
+                double maxAngle = Math.Atan2(holeCorners[0].Y, holeCorners[0].X);
+                foreach (var corner in holeCorners)
+                {
+                    double angle = Math.Atan2(corner.Y, corner.X);
+                    minAngle = Math.Min(minAngle, angle);
+                    maxAngle = Math.Max(maxAngle, angle);
+                }
+                if ((minAngle * maxAngle < 0) && (maxAngle - minAngle > Math.PI))
+                {
+                    var newMax = minAngle + 2 * Math.PI;
+                    minAngle = maxAngle;
+                    maxAngle = newMax;
+                }
+                // translate coordinate system so that width and lengh of hole can be compared using radius as x-axis
+                //figure 6.14
+                var minx = 0d; var maxx = 0d; var miny = 0d; var maxy = 0d;
+                var midAngle = (maxAngle + minAngle) / 2;
+                var s = Math.Sin(-midAngle);
+                var c = Math.Cos(-midAngle);
+                var corn = holeCorners[0];
+                var newx = corn.X * c - corn.Y * s;
+                var newy = corn.X * s - corn.Y * c;
+                minx = newx;
+                maxx = newx;
+                miny = newy;
+                maxy = newy;
+                foreach (var corner in holeCorners)
+                {
+                    s = Math.Sin(-midAngle);
+                    c = Math.Cos(-midAngle);
+                    newx = corner.X * c - corner.Y * s;
+                    newy = corner.X * s - corner.Y * c;
+                    minx = Math.Min(minx, newx);
+                    maxx = Math.Max(maxx, newx);
+                    miny = Math.Min(miny, newy);
+                    maxy = Math.Max(maxy, newy);
+                }
+                maxy = minx * Math.Sin((maxAngle - minAngle) / 2);
+                miny = -minx * Math.Sin((maxAngle - minAngle) / 2);
+                var rangex = maxx - minx;
+                var rangey = maxy - miny;
+                if (rangex > rangey)
+                {
+                    var newrangey = Math.Sqrt(rangey * rangex);
+                    holeExpression.Expression.Add(@"width_" + i + "=" + Math.Round(newrangey, 0) + "mm");
+                    minAngle = Math.Atan2(-newrangey / 2, minx) + midAngle;
+                    maxAngle = Math.Atan2(newrangey / 2, minx) + midAngle;
+                    if ((minAngle * maxAngle < 0) && (maxAngle - minAngle > Math.PI))
+                    {
+                        var newMax = minAngle + 2 * Math.PI;
+                        minAngle = maxAngle;
+                        maxAngle = newMax;
+                    }
+                }
+                else
+                {
+                    holeExpression.Expression.Add(@"width_" + i + "=" + Math.Round(rangey, 0) + "mm");
+
+                }
+                var holeEdge1 = new Line(new Vector2(0, 0), new Vector2((float)(10000 * Math.Cos(minAngle)), (float)(10000 * Math.Sin(minAngle))));
+                var holeEdge2 = new Line(new Vector2(0, 0), new Vector2((float)(10000 * Math.Cos(maxAngle)), (float)(10000 * Math.Sin(maxAngle))));
+                _holeEdges.Add(new Tuple<Line, Line>(holeEdge1, holeEdge2));
+            }
+            if (allHoleCorners.Count > 0)
+            {
+                Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_14.png");
+                holeExpression.Image = new BitmapImage(uri);
+                expressions.Add(holeExpression);
+            }
+
+            holeOutlines = new List<PolyLine>();
+            foreach (var holeCorners in allHoleCorners)
+            {
+                var holeSegments = new List<GeometryBase>();
+
+                for (int i = 1; i < holeCorners.Count; i++)
+                {
+                    holeSegments.Add(new Line(holeCorners[i - 1], holeCorners[i]));
+                }
+                holeOutlines.Add(new PolyLine(holeSegments) { IsClosed = true });
+            }
+        }
+
+        private List<int> getSpursList()
+        {
+            List<int> basicNumbers = new List<int> { 8, 12, 16, 24};
+            switch (_linkArrangement.ValueAsString)
+            {
+                case "SPURS_AUTO":
+                    basicNumbers = new List<int> { 8, 12, 16, 24 };
+                    break;
+                case "SPURS_45_DEGREES":
+                    basicNumbers = new List<int> { 8 };
+                    break;
+                case "SPURS_30_DEGREES":
+                    basicNumbers = new List<int> { 12 };
+                    break;
+                default:
+                    break;
+            }
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    return basicNumbers;
+                case "EDGE":
+                    return basicNumbers.Select(a => (a / 2) + 1).ToList();
+                case "CORNER":
+                    return basicNumbers.Select(a => (a / 4) + 1).ToList();
+                default:
+                    break;
+            }
+            return basicNumbers;
+        }
+
+        private PolyLine generateColumnFaces()
+        {
+            var x = (float)_columnAdim.Value / 2f; var y = (float)_columnBdim.Value / 2f;
+            var returnList = new PolyLine(new List<GeometryBase>()
+            {
+                new Line(new Vector2(-x,y), new Vector2(-x,-y)),
+                new Line(new Vector2(-x,-y), new Vector2(x,-y)),
+                new Line(new Vector2(x,-y), new Vector2(x,y)),
+                new Line(new Vector2(x,y), new Vector2(-x,y))
+            })
+            { IsClosed = true };
+
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    break;
+                case "EDGE":
+                    returnList = new PolyLine(new List<GeometryBase>()
+                    {
+                        new Line(new Vector2(-x,-y), new Vector2(x,-y)),
+                        new Line(new Vector2(x,-y), new Vector2(x,y)),
+                        new Line(new Vector2(x,y), new Vector2(-x,y)),
+                    });
+                    break;
+                case "CORNER":
+
+                    returnList = new PolyLine(new List<GeometryBase>()
+                    {
+                        new Line(new Vector2(-x,-y), new Vector2(x,-y)),
+                        new Line(new Vector2(x,-y), new Vector2(x,y)),
+                    });
+                    break;
+                default:
+                    break;
+            }
+            return returnList;
+
         }
 
         private void generateColumnOutlines()
         {
             var x = (float)_columnAdim.Value / 2f; var y = (float)_columnBdim.Value / 2f;
+            fullColumnOutline = new PolyLine(new List<GeometryBase>
+            {
+                new Line(new Vector2(-x,y), new Vector2(-x,-y)),
+                new Line(new Vector2(-x,-y), new Vector2(x,-y)),
+                new Line(new Vector2(x,-y), new Vector2(x,y)),
+            })
+            { IsClosed = true };
             columnOutline = new PolyLine(new List<GeometryBase>
             {
                 new Line(new Vector2(-x,y), new Vector2(-x,-y)),
@@ -709,7 +1018,6 @@ namespace TestCalcs
                 new Line(new Vector2(x,-y), new Vector2(x,y)),
             })
             { IsClosed = true };
-            var columnOutline2 = columnOutline;
 
             switch (_colType.ValueAsString)
             {
@@ -718,7 +1026,7 @@ namespace TestCalcs
                 case "EDGE":
                     if (1.5 * d_average > _columnAdim.Value)
                     {
-                        columnOutline2 = new PolyLine(new List<GeometryBase>
+                        columnOutline = new PolyLine(new List<GeometryBase>
                         {
                             new Line(new Vector2(-x,-y), new Vector2(x,-y)),
                             new Line(new Vector2(x,-y), new Vector2(x,y)),
@@ -727,7 +1035,7 @@ namespace TestCalcs
                     }
                     else
                     {
-                        columnOutline2 = new PolyLine(new List<GeometryBase>
+                        columnOutline = new PolyLine(new List<GeometryBase>
                         {
                             new Line(new Vector2(x - 1.5f*(float)d_average,-y), new Vector2(x,-y)),
                             new Line(new Vector2(x,-y),new Vector2(x,y)),
@@ -738,7 +1046,7 @@ namespace TestCalcs
                 case "CORNER":
                     if (3 * d_average > _columnAdim.Value + _columnBdim.Value)
                     {
-                        columnOutline2 = new PolyLine(new List<GeometryBase>
+                        columnOutline = new PolyLine(new List<GeometryBase>
                         {
                             new Line(new Vector2(-x,-y), new Vector2(x,-y)),
                             new Line(new Vector2(x,-y), new Vector2(x,y)),
@@ -746,7 +1054,7 @@ namespace TestCalcs
                     }
                     else
                     {
-                        columnOutline2 = new PolyLine(new List<GeometryBase>
+                        columnOutline = new PolyLine(new List<GeometryBase>
                         {
                             new Line(new Vector2(x-(float)Math.Min(1.5*d_average, _columnAdim.Value),-y), new Vector2(x,-y)),
                             new Line(new Vector2(x,-y), new Vector2(x,(float)Math.Min(1.5*d_average, _columnBdim.Value) -y)),
@@ -756,7 +1064,7 @@ namespace TestCalcs
                 default:
                     break;
             }
-            columnOutlines = generatePerimeterWithHoles(columnOutline2);
+            columnOutlines = generatePerimeterWithHoles(columnOutline);
         }
 
         private void generateSlabEdge()
@@ -798,14 +1106,16 @@ namespace TestCalcs
             return double.NaN;
         }
 
-        public static double shearResistanceNoRein(double rhoL, double d_eff, double charStrength)
+        public static double shearResistanceNoRein(double rhoL, double d_eff, double charStrength, double concPartFact)
         {
             double k = Math.Min(1 + Math.Sqrt(200 / d_eff),2);
 
-            double resistance1 = 0.12 * k * Math.Pow((100 * rhoL * charStrength), 1f / 3f);
+            double cRdc = 0.18 / concPartFact;
 
+            double resistance1 = cRdc * k * Math.Pow((100d * rhoL * charStrength), 1f / 3f);
+           
             double resistance = Math.Max(resistance1,0.035 * Math.Pow(k, 1.5) * Math.Pow(charStrength, 0.5));
-
+            Console.WriteLine("rho" + rhoL + ";str" + charStrength + ";k" + k + ";vmin" + resistance+";vRdc"+resistance1);
             return resistance;
         }
 
@@ -863,13 +1173,13 @@ namespace TestCalcs
                 case "INTERNAL":
                     break;
                 case "EDGE":
-                    inter2 = perimeter.intersection(new Line(new Vector2(-x, -10000), new Vector2(-x, y)));
-                    inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(-x, 10000)));
+                    inter2 = perimeter.intersection(new Line(new Vector2(-x, -10000), new Vector2(-x, 0)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(-x, 0), new Vector2(-x, 10000)));
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
                     break;
                 case "CORNER":
                     inter2 = perimeter.intersection(new Line(new Vector2(-x, -10000), new Vector2(-x, y)));
-                    inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(10000, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x, y), new Vector2(10000, y)));
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
                     break;
                 default:
@@ -879,14 +1189,169 @@ namespace TestCalcs
             return perimeter2;
         }
 
+        private PolyLine generateReducedControlPerimeter(double width, double depth)
+        {
+            float offsetF = 2f * (float)d_average;
+            float x = (float)width / 2f;
+            float y = (float)depth / 2f;
+            var perimeter = new PolyLine(new List<GeometryBase>
+            {
+                new Line(new Vector2(0, y + offsetF), new Vector2(-x, y+offsetF)),
+                new Arc(){Centre = new Vector2(-x,y), Radius=offsetF, StartAngle=Math.PI/2, EndAngle=Math.PI},
+                new Line(new Vector2(-x-offsetF, y), new Vector2(-x-offsetF, -y)),
+                new Arc(){Centre = new Vector2(-x,-y), Radius=offsetF, StartAngle=Math.PI, EndAngle=1.5*Math.PI},
+                new Line(new Vector2(-x, - y - offsetF), new Vector2(x, - y - offsetF)),
+                new Arc(){Centre = new Vector2(x,-y), Radius=offsetF, StartAngle=1.5*Math.PI, EndAngle=2*Math.PI},
+                new Line(new Vector2(x + offsetF, - y), new Vector2(x +offsetF, y)),
+                new Arc(){Centre = new Vector2(x,y), Radius=offsetF, StartAngle=0, EndAngle=Math.PI/2},
+                new Line(new Vector2(x, y + offsetF), new Vector2(0, y + offsetF)),
+            });
+
+            List<IntersectionResult> inter2;
+            List<IntersectionResult> inter1;
+            PolyLine perimeter2 = perimeter;
+
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    break;
+                case "EDGE":
+                    float offx = (float)Math.Min(1.5 * d_average, 0.5 * _columnAdim.Value);
+                    inter2 = perimeter.intersection(new Line(new Vector2(x - offx, -10000), new Vector2(x - offx, 0)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x - offx, 0), new Vector2(x - offx, 10000)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                case "CORNER":
+                    float offx2 = (float)Math.Min(1.5 * d_average, 0.5 * _columnAdim.Value);
+                    float offy2 = (float)Math.Min(1.5 * d_average, 0.5 * _columnBdim.Value);
+                    inter2 = perimeter.intersection(new Line(new Vector2(x - offx2, -10000), new Vector2(x - offx2, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x, -y + offy2), new Vector2(10000, -y + offy2)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                default:
+                    break;
+            }
+            return perimeter2;
+        }
+
+        private List<Tuple<Vector2,Vector2>> spurStartPoints()
+        {
+            var returnList = new List<Tuple<Vector2, Vector2>>();
+            var innerPoints = new List<Vector2>();
+            var x = (float)_columnAdim.Value / 2;
+            var y = (float)_columnBdim.Value / 2;
+            double startAngle = 0;
+            int angleDivisions = 1;
+            bool includeLastCorner = false;
+            switch (_linkArrangement.ValueAsString)
+            {
+                case "SPURS_45_DEGREES":
+                    angleDivisions = 2;
+                    break;
+                case "SPURS_30_DEGREES":
+                    angleDivisions = 3;
+                    break;
+                case "SPURS_AUTO":
+                    angleDivisions = 2;
+                    break;
+                case "GRID":
+                    angleDivisions = 2;
+                    break;
+                default:
+                    break;
+            }
+
+            double newx = 0; double newy = 0;
+            if (_columnAdim.Value > 3 * d_average)
+            {
+                newx = x - Math.Min(0.5 * d_average, y);
+            }
+            else
+            {
+                newx = 0;
+            }
+            if (_columnBdim.Value > 3 * d_average)
+            {
+                newy = y - Math.Min(0.5 * d_average,x);
+            }
+            else
+            {
+                newy = 0;
+            }
+
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    innerPoints.Add(new Vector2(-(float)newx, (float)newy));
+                    innerPoints.Add(new Vector2(-(float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, (float)newy));
+                    innerPoints.Add(new Vector2(-(float)newx, (float)newy));
+                    startAngle = 1 * Math.PI;
+                    includeLastCorner = true;
+                    break;
+                case "EDGE":
+                    innerPoints.Add(new Vector2(-(float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, (float)newy));
+                    innerPoints.Add(new Vector2(-(float)newx, (float)newy));
+                    startAngle = 1.5 * Math.PI;
+                    break;
+                case "CORNER":
+                    innerPoints.Add(new Vector2(-(float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, (float)newy));
+                    startAngle = 1.5 * Math.PI;
+                    break;
+                default:
+                    break;
+            }
+
+            var angle = startAngle;
+            for (int j = 1; j < innerPoints.Count; j++)
+            {
+                var point = innerPoints[j];
+
+                Line line = new Line(innerPoints[j - 1], point);
+                var dist = line.Length;
+                if (dist > 0.5 * d_average) // really a check that dist>0
+                {
+                    int divs = (int)Math.Ceiling(dist / (1.5 * d_average));
+                    double paramFraction = 1d / divs;
+                    for (int k = 0; k < divs; k++)
+                    {
+                        var point2 = line.PointAtParameter(k * paramFraction);
+                        var ray = new Line(point2, point2 + new Vector2(10000f * (float)Math.Cos(angle), 10000f * (float)Math.Sin(angle)));
+                        var vec = Vector2.Normalize(ray.End - ray.Start);
+                        var inter = columnOutline.intersection(ray);
+                        var pt = inter[0].Point + vec * 0.5f * (float)d_average;
+                        returnList.Add(new Tuple<Vector2, Vector2>(pt, Vector2.Normalize(vec)));
+                    }
+                }
+
+                int cornerDivs = angleDivisions;
+                if (j >= innerPoints.Count - 1 && !includeLastCorner)
+                {
+                    cornerDivs = 1;
+                }
+                for (int i = 0; i < cornerDivs; i++)
+                {
+                    var ray = new Line(point, point + new Vector2(10000f * (float)Math.Cos(angle), 10000f * (float)Math.Sin(angle)));
+                    var vec = Vector2.Normalize(ray.End - ray.Start);
+                    var inter = columnOutline.intersection(ray);
+                    var pt = inter[0].Point + vec * 0.5f * (float)d_average;
+                    returnList.Add(new Tuple<Vector2, Vector2>(pt, Vector2.Normalize(vec)));
+                    angle += Math.PI / (2d * angleDivisions);
+                }
+
+            }
+            return returnList;
+        }
+
         private List<PolyLine> generatePerimeterWithHoles(PolyLine perimeter)
         {
             var perimeters = new List<PolyLine>();
             var perimeter2 = perimeter;
-            //var inter1 = perimeter2.intersection(holeEdge1);
-            //var inter2 = perimeter2.intersection(holeEdge2);
-            //var inter3 = perimeter2.intersection(holeEdge3);
-            //var inter4 = perimeter2.intersection(holeEdge4);
             var listOfHoleIntersections = new List<Tuple<IntersectionResult, IntersectionResult>>();
             foreach (var hole in _holeEdges)
             {
@@ -957,41 +1422,20 @@ namespace TestCalcs
             {
                 perimeters.Add(perimeter2.Cut(listOfCuts[i * 2], listOfCuts[1 + i * 2]));
             }
-
-
-            //if (inter1.Count == 0 && inter2.Count == 0)
-            //{
-            //    perimeters.Add(perimeter2);
-            //}
-            //else if (inter1.Count > 0 && inter2.Count > 0)
-            //{
-            //    if (inter1[0].Parameter > inter2[0].Parameter)
-            //    {
-            //        perimeters.Add(perimeter2.Cut(inter2[0].Parameter, inter1[0].Parameter));
-            //    }
-            //    else
-            //    {
-            //        perimeters.Add(perimeter2.Cut(0, inter1[0].Parameter));
-            //        perimeters.Add(perimeter2.Cut(inter2[0].Parameter, 1));
-            //    }
-            //}
-            //else if (inter1.Count == 0 && inter2.Count > 0)
-            //{
-            //    perimeters.Add(perimeter2.Cut(inter2[0].Parameter, 1));
-            //}
-            //else if (inter1.Count > 0 && inter2.Count == 0)
-            //{
-            //    perimeters.Add(perimeter2.Cut(0, inter1[0].Parameter));
-            //}
             return perimeters;
         }
 
 
         private List<PolyLine> generatePerimeterWithHoles(double offset)
         {
-            var perimeters = new List<PolyLine>();
             var perimeter2 = generatePerimeter(_columnAdim.Value, _columnBdim.Value, offset);
             return generatePerimeterWithHoles(perimeter2);
+        }
+
+        private List<PolyLine> generateReducedControlPerimeterWithHoles()
+        {
+            var perimeter = generateReducedControlPerimeter(_columnAdim.Value, _columnBdim.Value);
+            return generatePerimeterWithHoles(perimeter);
         }
 
         private PathGeometry generateGeometry(PolyLine polyline)
@@ -1058,8 +1502,9 @@ namespace TestCalcs
             using (var r = visual.RenderOpen())
             {
                 var controlPerimeterGeometry = generateGeometry(controlPerimeters);
+                var reducedControlPerimeterGeometry = generateGeometry(u1reduced);
                 var outerPerimeterGeometry = generateGeometry(outerPerimeters);
-                var columnGeometry = generateGeometry(columnOutline);
+                var columnGeometry = generateGeometry(fullColumnOutline);
                 var columnLoadedFaceGeometry = generateGeometry(columnOutlines);
                 var holeGeometry = generateGeometry(holeOutlines);
                 var voidGeometry = generateVoidCross(holeOutlines);
@@ -1101,10 +1546,13 @@ namespace TestCalcs
                 GeometryGroup allGeometry = new GeometryGroup();
                 allGeometry.Children = new GeometryCollection(new List<Geometry> { controlPerimeterGeometry, outerPerimeterGeometry, columnGeometry, holeGeometry, outerLinksPerimeterGeometry, innerLinksPerimeterGeometry });
                 var newBounds = allGeometry.Bounds;
-                double scale = 800 / (Math.Max(newBounds.Width, newBounds.Height));
+                double maxX = Math.Max(Math.Abs(newBounds.X), Math.Abs(newBounds.BottomRight.X));
+                double maxY = Math.Max(Math.Abs(newBounds.Y), Math.Abs(newBounds.BottomRight.Y));
+
+                double scale = 900 / (Math.Max(2*maxX, 2*maxY));
                 var scaleTransform = new ScaleTransform(scale, -scale);
-                var transX = scale * -newBounds.X;
-                var transY = scale * -newBounds.Y;
+                var transX = 50+scale * -newBounds.X;
+                var transY = 50+scale * -newBounds.Y;
                 var transTransform = new TranslateTransform(transX, transY);
                 var transGroup = new TransformGroup();
                 transGroup.Children.Add(scaleTransform);
@@ -1112,6 +1560,7 @@ namespace TestCalcs
 
                 columnLoadedFaceGeometry.Transform = transGroup;
                 controlPerimeterGeometry.Transform = transGroup;
+                reducedControlPerimeterGeometry.Transform = transGroup;
                 columnGeometry.Transform = transGroup;
                 outerPerimeterGeometry.Transform = transGroup;
                 holeGeometry.Transform = transGroup;
@@ -1127,12 +1576,13 @@ namespace TestCalcs
                 var dashedLine2 = new Pen(Brushes.Gray, 2) { DashStyle = new DashStyle(new List<double> { 10, 5 }, 0) };
 
                 r.DrawGeometry(Brushes.LightGreen, new Pen(Brushes.Green, 5), columnGeometry);
-                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Green, 3), slabGeometry);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Yellow, 3), slabGeometry);
                 r.DrawGeometry(Brushes.Transparent, dashedLine2, holeEdgeLinesGeometry);
-                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 5), controlPerimeterGeometry);
-                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 5), outerPerimeterGeometry);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 8), reducedControlPerimeterGeometry);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 4), controlPerimeterGeometry);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Green, 5), outerPerimeterGeometry);
                 r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 5), columnLoadedFaceGeometry);
-                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Green, 3), holeGeometry);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Yellow, 3), holeGeometry);
                 r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Black, 1), voidGeometry);
                 r.DrawGeometry(Brushes.Transparent, dashedLine, innerLinksPerimeterGeometry);
                 r.DrawGeometry(Brushes.Transparent, dashedLine, outerLinksPerimeterGeometry);
@@ -1143,630 +1593,5 @@ namespace TestCalcs
             testImage.Render(visual);
             return testImage;
         }
-
-        abstract class GeometryBase
-        {
-            public abstract Vector2 Start { get;  }
-            public abstract Vector2 End { get;  }
-            public abstract double Length { get;  }
-            public abstract List<IntersectionResult> intersection(Line line);
-            public abstract List<GeometryBase> Cut(double parameter);
-            public abstract Vector2 PointAtParameter(double parameter);
-            public abstract Vector2 PerpAtParameter(double parameter);
-        }
-
-        class PolyLine
-        {
-            List<GeometryBase> _segments;
-            public List<GeometryBase> Segments
-            {
-                get
-                {
-                    return _segments.ToList();
-                }
-            }
-
-
-            public Vector2 Start
-            {
-                get
-                {
-                    return _segments.First().Start;
-                }
-            }
-
-            public Vector2 End
-            {
-                get
-                {
-                    return _segments.Last().End;
-                }
-            }
-
-            public double Length
-            {
-                get
-                {
-                    double returnLength = 0;
-                    foreach (var item in _segments)
-                    {
-                        returnLength += item.Length;
-                    }
-                    return returnLength;
-                }
-            }
-
-            bool _isClosed = false;
-            public bool IsClosed
-            {
-                get
-                {
-                    return _isClosed;
-                }
-                set
-                {
-                    if (value)
-                    {
-                        if ((End - Start).Length() < 0.1)
-                        {
-                            _isClosed = value;
-                        }
-                        else
-                        {
-                            _segments.Add(new Line(End, Start));
-                        }
-                    }
-                    else
-                        _isClosed = value;
-                }
-            }
-
-            public PolyLine(List<GeometryBase> segments)
-            {
-                _segments = segments;
-            }
-
-            public List<IntersectionResult> intersection(Line line) // need to add full support for NONE and PROJECTED 
-            {
-                double totalLength = this.Length;
-                double lengthToSegment = 0;
-                List<IntersectionResult> returnList = new List<IntersectionResult>();
-                foreach (var segment in _segments)
-                {
-                    var intersections = segment.intersection(line);
-                    foreach (var intersection in intersections)
-                    {
-                        if (intersection.TypeOfIntersection == IntersectionType.WITHIN)
-                        {
-                            returnList.Add(new IntersectionResult((lengthToSegment + intersection.Parameter * segment.Length) / totalLength, intersection.Point, intersection.TypeOfIntersection));
-                        }
-                    }
-                    lengthToSegment += segment.Length;
-                }
-                if (returnList.Count == 0)
-                {
-                    returnList.Add(new IntersectionResult(double.NaN, new Vector2(), IntersectionType.NONE));
-                }
-                return returnList;
-            }
-
-            public override string ToString()
-            {
-                string returnString = "";
-                returnString = "Start " + _segments[0].Start.ToString();
-                returnString += Environment.NewLine;
-
-                foreach (var item in _segments)
-                {
-                    if (item.GetType() == typeof(Arc))
-                    {
-                        returnString += " Arc ";
-                        returnString += item.End;
-                        returnString += Environment.NewLine;
-                    }
-                    if (item.GetType() == typeof(Line))
-                    {
-                        returnString += " Line ";
-                        returnString += item.End;
-                        returnString += Environment.NewLine;
-                    }
-                }
-
-                return returnString;
-            }
-
-            public Vector2 PointAtParameter(double parameter)
-            {
-                double totalLength = this.Length;
-                double lengthToSegmentStart = 0;
-                double lengthToSegmentEnd = 0;
-                for (int i = 0; i < _segments.Count; i++)
-                {
-                    var segment = _segments[i];
-                    lengthToSegmentStart = lengthToSegmentEnd;
-                    lengthToSegmentEnd += segment.Length;
-                    double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-                    double parameterToSegmentStart = lengthToSegmentStart / totalLength;
-                    if (parameter >= parameterToSegmentStart && parameter <= parameterToSegmentEnd)
-                    {
-                        double segmentParameter = (parameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                        if (double.IsNaN(segmentParameter))
-                            segmentParameter = 0;
-                        return segment.PointAtParameter(segmentParameter);
-                    }
-                }
-                return _segments.Last().PointAtParameter(1);
-            }
-
-            public Vector2 PerpAtParameter(double parameter)
-            {
-                double totalLength = this.Length;
-                double lengthToSegmentStart = 0;
-                double lengthToSegmentEnd = 0;
-                for (int i = 0; i < _segments.Count; i++)
-                {
-                    var segment = _segments[i];
-                    lengthToSegmentStart = lengthToSegmentEnd;
-                    lengthToSegmentEnd += segment.Length;
-                    double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-                    double parameterToSegmentStart = lengthToSegmentStart / totalLength;
-                    if (parameter >= parameterToSegmentStart && parameter <= parameterToSegmentEnd)
-                    {
-                        double segmentParameter = (parameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                        if (double.IsNaN(segmentParameter))
-                            segmentParameter = 0;
-                        return segment.PerpAtParameter(segmentParameter);
-                    }
-                }
-                return _segments.Last().PerpAtParameter(1);
-            }
-
-            public PolyLine Cut(double startParameter, double endParameter)
-            {
-                double totalLength = this.Length;
-                double lengthToSegmentStart = 0;
-                double lengthToSegmentEnd = 0;
-                bool started = false;
-                bool finished = false;
-                List<GeometryBase> segments = new List<GeometryBase>(); 
-                for (int i = 0; i < _segments.Count; i++)
-                {
-                    var segment = _segments[i];
-                    lengthToSegmentStart = lengthToSegmentEnd;
-                    lengthToSegmentEnd += segment.Length;
-                    double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-                    double parameterToSegmentStart = lengthToSegmentStart / totalLength;
-                    if ((endParameter > parameterToSegmentEnd && started) || (endParameter <= startParameter && started))
-                    {
-                        segments.Add(segment);
-                    }
-                    else if (startParameter <= parameterToSegmentEnd && !started)
-                    {
-                        if (endParameter == 0.1)
-                        {
-                            //
-                        }
-                        if (endParameter <= parameterToSegmentEnd && endParameter >= startParameter)
-                        {
-                            double segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                            if (double.IsNaN(segmentParameter))
-                                segmentParameter = 0;
-                            var partialCut = segment.Cut(segmentParameter)[0];
-                            double secondSegmentParameter = (startParameter - parameterToSegmentStart) / (endParameter - parameterToSegmentStart);
-                            segments.Add(partialCut.Cut(secondSegmentParameter)[1]);
-                            started = true;
-                            finished = true;
-                        }
-                        else
-                        {
-                            double segmentParameter = (startParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                            if (double.IsNaN(segmentParameter))
-                                segmentParameter = 0;
-                            segments.Add(segment.Cut(segmentParameter)[1]);
-                            started = true;
-                        }
-                    }
-                    else if (endParameter <= parameterToSegmentEnd && endParameter >= startParameter && started && !finished)
-                    {
-                        double segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                        if (double.IsNaN(segmentParameter))
-                            segmentParameter = 0;
-                        segments.Add(segment.Cut(segmentParameter)[0]);
-                        finished = true;
-                        break;
-                    }
-                }
-                if (finished)
-                {
-                    return new PolyLine(segments);
-                }
-                lengthToSegmentEnd = 0;
-                lengthToSegmentStart = 0;
-                for (int i = 0; i < _segments.Count; i++)
-                {
-                    var segment = _segments[i];
-                    lengthToSegmentStart = lengthToSegmentEnd;
-                    lengthToSegmentEnd += segment.Length;
-                    double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-                    double parameterToSegmentStart = lengthToSegmentStart / totalLength;
-                    if (endParameter > parameterToSegmentEnd)
-                    {
-                        segments.Add(segment);
-                    }
-                    //else if (startParameter <= parameterToSegmentEnd && !started)
-                    //{
-                    //    double segmentParameter = (startParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                    //    segments.Add(segment.Cut(segmentParameter)[1]);
-                    //    started = true;
-                    //}
-                    else if (endParameter <= parameterToSegmentEnd)
-                    {
-                        double segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
-                        if (double.IsNaN(segmentParameter))
-                            segmentParameter = 0;
-                        segments.Add(segment.Cut(segmentParameter)[0]);
-                        finished = true;
-                        break;
-                    }
-                }
-                return new PolyLine(segments);
-            }
-        }
-
-        class Line : GeometryBase
-        {
-            Vector2 _start;
-            public override Vector2 Start { get => _start; }
-            Vector2 _end;
-            public override Vector2 End { get => _end; }
-            public override double Length
-            {
-                get
-                {
-                    {
-                        return (End - Start).Length();
-                    }
-                }
-            }
-
-            public override List<GeometryBase> Cut(double parameter)
-            {
-                if (parameter < 0 || parameter > 1)
-                {
-                    return null;
-                }
-                else
-                {
-                    Vector2 vector = End - Start;
-                    return new List<GeometryBase>
-                    {
-                        new Line(Start, Start + vector * (float)parameter),
-                        new Line(Start + vector * (float)parameter, End)
-                    };
-                }
-            }
-
-            public Line(Vector2 start, Vector2 end)
-            {
-                _start = start;
-                _end = end;
-            }
-
-            public override Vector2 PointAtParameter(double parameter)
-            {
-                    Vector2 vector = End - Start;
-                    return (float)parameter * vector + Start;
-            }
-
-            public override Vector2 PerpAtParameter(double parameter)
-            {
-                Vector2 v = End - Start;
-                var returnVector = new Vector2((
-                    float)(v.X * Math.Cos(Math.PI / 2) - v.Y * Math.Sin(Math.PI / 2)),
-                    (float)(v.X * Math.Sin(Math.PI / 2) + v.Y * Math.Cos(Math.PI / 2)));
-                return Vector2.Normalize(returnVector);
-            }
-
-            public override List<IntersectionResult> intersection(Line line)
-            {
-                var p1 = _start;
-                var p1_2 = _end;
-                var p2 = line.Start;
-                var p2_2 = line.End;
-
-                double A1 = p1_2.Y - p1.Y;
-                double B1 = p1.X - p1_2.X;
-                double C1 = A1 * p1.X + B1 * p1.Y;
-                double A2 = p2_2.Y - p2.Y;
-                double B2 = p2.X - p2_2.X;
-                double C2 = A2 * p2.X + B2 * p2.Y;
-                double det = A1 * B2 - A2 * B1;
-                double endX = 0; double endY = 0;
-                if (det == 0)
-                {
-                    //return new IntersectionResult(IntersectionType.NONE, new Point());
-                    return new List<IntersectionResult> { new IntersectionResult(double.NaN, new Vector2(), IntersectionType.NONE) };
-                    //return new List<Vector2>();
-                }
-                endX = (B2 * C1 - B1 * C2) / det;
-                endY = (A1 * C2 - A2 * C1) / det;
-                double tol = 0.00000000001;
-                if (
-                    endX + tol >= Math.Min(p1.X, p1_2.X)
-                    &&
-                    endX - tol <= Math.Max(p1.X, p1_2.X)
-                    &&
-                    endY + tol >= Math.Min(p1.Y, p1_2.Y)
-                    &&
-                    endY - tol <= Math.Max(p1.Y, p1_2.Y)
-                    &&
-                    endX + tol >= Math.Min(p2.X, p2_2.X)
-                    &&
-                    endX - tol <= Math.Max(p2.X, p2_2.X)
-                    &&
-                    endY + tol >= Math.Min(p2.Y, p2_2.Y)
-                    &&
-                    endY - tol <= Math.Max(p2.Y, p2_2.Y)
-                    )
-                {
-                    //return new IntersectionResult(IntersectionType.WITHIN, new Point(endX, endY));
-                    Vector2 inter = new Vector2((float)endX, (float)endY);
-                    double param = (inter - this.Start).Length() / this.Length;
-                    return new List<IntersectionResult> { new IntersectionResult(param, inter , IntersectionType.WITHIN) };
-                    //return new List<Vector2> { new Vector2((float)endX, (float)endY) };
-                }
-                else
-                {
-                    //return new IntersectionResult(IntersectionType.PROJECTED, new Point(endX, endY));
-                    Vector2 inter = new Vector2((float)endX, (float)endY);
-                    double param = (inter - this.Start).Length() / this.Length;
-                    return new List<IntersectionResult> { new IntersectionResult(double.NaN, inter, IntersectionType.PROJECTED) };
-                    //return new List<Vector2>();
-
-                }
-            }
-        }
-
-        class IntersectionResult
-        {
-            public double Parameter { get; private set; }
-            public Vector2 Point { get; private set; }
-            public IntersectionType TypeOfIntersection { get; private set; } 
-
-            public IntersectionResult(double parameter, Vector2 point, IntersectionType interType)
-            {
-                Parameter = parameter;
-                Point = point;
-                TypeOfIntersection = interType;
-            }
-
-            public override string ToString()
-            {
-                return string.Format("Point {0}; parameter {1}; type {2}", Point, Parameter, TypeOfIntersection);
-            }
-
-        }
-
-        enum IntersectionType
-        {
-            NONE,
-            WITHIN,
-            PROJECTED
-        }
-
-        class Ellipse
-        {
-            public Vector2 Centre { get; set; }
-            public double StartAngle { get; set; }
-            public double EndAngle { get; set; }
-            public double Width { get; set; }
-            public double Height { get; set; }
-        }
-
-        class Arc : GeometryBase
-        {
-            public Vector2 Centre { get; set; }
-            public double StartAngle { get; set; }
-            public double EndAngle { get; set; }
-            double _radius;
-            public double Radius
-            {
-                get
-                {
-                    return _radius;
-                }
-                set
-                {
-                    _radius = Math.Abs(value);
-                }
-            }
-            public override Vector2 Start
-            {
-                get
-                {
-                    return new Vector2((float)(Centre.X + Radius * Math.Cos(StartAngle)), (float)(Centre.Y + Radius * Math.Sin(StartAngle)));
-                }
-            }
-            public override Vector2 End
-            {
-                get
-                {
-                    return new Vector2((float)(Centre.X + Radius * Math.Cos(EndAngle)), (float)(Centre.Y + Radius * Math.Sin(EndAngle)));
-                }
-            }
-            public override double Length
-            {
-                get
-                {
-                    if (StartAngle == EndAngle)
-                    {
-                        return 0;
-                    }
-                    if (StartAngle > EndAngle)
-                    {
-                        double end = EndAngle + Math.PI;
-                        return ((end - StartAngle) / (2 * Math.PI)) * 2 * Math.PI * Radius;
-                    }
-                    else
-                    {
-                        double end = EndAngle;
-                        return ((end - StartAngle) / (2 * Math.PI)) * 2 * Math.PI * Radius;
-                    }
-                }
-            }
-
-            public override List<GeometryBase> Cut(double parameter)
-            {
-                if (parameter < 0 || parameter > 1)
-                {
-                    return null;
-                }
-                else
-                {
-                    double diffAngle = parameter * (EndAngle - StartAngle);
-                    if (diffAngle < 0)
-                    {
-                        diffAngle += 2*Math.PI;
-                    }
-
-                    return new List<GeometryBase>
-                    {
-                        new Arc{Centre = this.Centre, StartAngle = this.StartAngle, EndAngle = this.StartAngle + diffAngle, Radius = this.Radius},
-                        new Arc{Centre = this.Centre, StartAngle = this.StartAngle + diffAngle, EndAngle = this.EndAngle, Radius = this.Radius}
-                    };
-                }
-            }
-
-            public override Vector2 PointAtParameter(double parameter)
-            {
-                    double diffAngle = parameter * (EndAngle - StartAngle);
-                    if (diffAngle < 0)
-                    {
-                        diffAngle += 2 * Math.PI;
-                    }
-                    return new Vector2((float)(Centre.X + Radius * Math.Cos(StartAngle + diffAngle)), (float)(Centre.Y + Radius * Math.Sin(StartAngle + diffAngle)));
-            }
-
-            public override Vector2 PerpAtParameter(double parameter)
-            {
-                double diffAngle = parameter * (EndAngle - StartAngle);
-                if (diffAngle < 0)
-                {
-                    diffAngle += 2 * Math.PI;
-                }
-                var point = new Vector2((float)(Centre.X + Radius * Math.Cos(StartAngle + diffAngle)), (float)(Centre.Y + Radius * Math.Sin(StartAngle + diffAngle)));
-                var returnVector = point - Centre;
-                return Vector2.Normalize(returnVector);
-            }
-
-            // Find the points of intersection.
-            public override List<IntersectionResult> intersection(Line line)
-            {
-                var arc = this;
-                var point1 = line.Start;
-                var point2 = line.End;
-                var cx = arc.Centre.X;
-                var cy = arc.Centre.Y;
-                var radius = (float)arc.Radius;
-
-                Vector2 intersection1;
-                Vector2 intersection2;
-
-                float dx, dy, A, B, C, det, t;
-
-                dx = point2.X - point1.X;
-                dy = point2.Y - point1.Y;
-
-                A = dx * dx + dy * dy;
-                B = 2 * (dx * (point1.X - cx) + dy * (point1.Y - cy));
-                C = (point1.X - cx) * (point1.X - cx) + (point1.Y - cy) * (point1.Y - cy) - radius * radius;
-
-                det = B * B - 4 * A * C;
-                if ((A <= 0.0000001) || (det < 0))
-                {
-                    // No real solutions.
-                    return new List<IntersectionResult>();
-                }
-                else if (det == 0)
-                {
-                    // One solution.
-                    var returnList = new List<IntersectionResult>();
-                    t = -B / (2 * A);
-                    intersection1 = new Vector2(point1.X + t * dx, point1.Y + t * dy);
-                    double angle = Math.Atan2(intersection1.Y - arc.Centre.Y, intersection1.X - arc.Centre.X);
-                    if (angle < 0)
-                    {
-                        angle += 2 * Math.PI;
-                    }
-                    var endX = intersection1.X; var endY = intersection1.Y; float tol = 0.000001f;
-                    if (angle >= arc.StartAngle && 
-                        angle <= arc.EndAngle &&
-                        endX + tol >= Math.Min(point1.X, point2.X) &&
-                        endX - tol <= Math.Max(point1.X, point2.X) &&
-                        endY + tol >= Math.Min(point1.Y, point2.Y) &&
-                        endY - tol <= Math.Max(point1.Y, point2.Y))
-                    {
-                        double temp = angle - StartAngle;
-                        if (temp < 0) temp += 2 * Math.PI;
-
-                        double param = (this.Radius * temp) / (this.Length);
-                        
-                        returnList.Add(new IntersectionResult(param, intersection1, IntersectionType.WITHIN));
-                    }
-                    return returnList;
-                }
-                else
-                {
-                    // Two solutions.
-                    var returnList = new List<IntersectionResult>();
-                    t = (float)((-B + Math.Sqrt(det)) / (2 * A));
-                    intersection1 = new Vector2(point1.X + t * dx, point1.Y + t * dy);
-                    double angle = Math.Atan2(intersection1.Y - arc.Centre.Y, intersection1.X - arc.Centre.X);
-                    if (angle < 0)
-                    {
-                        angle += 2 * Math.PI;
-                    }
-                    var endX = intersection1.X; var endY = intersection1.Y; float tol = 0.000001f;
-                    if (angle >= arc.StartAngle &&
-                        angle <= arc.EndAngle &&
-                        endX + tol >= Math.Min(point1.X, point2.X) &&
-                        endX - tol <= Math.Max(point1.X, point2.X) &&
-                        endY + tol >= Math.Min(point1.Y, point2.Y) &&
-                        endY - tol <= Math.Max(point1.Y, point2.Y))
-                    {
-                        double temp = angle - StartAngle;
-                        if (temp < 0) temp += 2 * Math.PI;
-
-                        double param = (this.Radius * temp) / (this.Length);
-
-                        returnList.Add(new IntersectionResult(param, intersection1, IntersectionType.WITHIN));
-                    }
-                    t = (float)((-B - Math.Sqrt(det)) / (2 * A));
-                    intersection2 = new Vector2(point1.X + t * dx, point1.Y + t * dy);
-                    angle = Math.Atan2(intersection2.Y - arc.Centre.Y, intersection2.X - arc.Centre.X);
-                    if (angle < 0)
-                    {
-                        angle += 2 * Math.PI;
-                    }
-                    endX = intersection2.X; endY = intersection2.Y; 
-                    if (angle >= arc.StartAngle &&
-                        angle <= arc.EndAngle &&
-                        endX + tol >= Math.Min(point1.X, point2.X) &&
-                        endX - tol <= Math.Max(point1.X, point2.X) &&
-                        endY + tol >= Math.Min(point1.Y, point2.Y) &&
-                        endY - tol <= Math.Max(point1.Y, point2.Y))
-                    {
-                        double temp = angle - StartAngle;
-                        if (temp < 0) temp += 2 * Math.PI;
-
-                        double param = (this.Radius * temp) / (this.Length);
-
-                        returnList.Add(new IntersectionResult(param, intersection2, IntersectionType.WITHIN));
-                    }
-                    return returnList;
-                }
-            }
-        }
-
     }
 }
