@@ -63,7 +63,7 @@
                         <GridViewColumnHeader HorizontalContentAlignment="Left" Content="Ref"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Ref}" Width="100"/>
+                                <TextBlock Text="{Binding Ref}" TextWrapping="Wrap" Width="100"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -72,15 +72,16 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <TextBlock Text="{Binding Narrative}" Margin="0 0 0 10" Foreground="Black"/>
+                                    <TextBlock Text="{Binding Narrative}" Margin="0 0 0 10" Foreground="Black" TextWrapping="Wrap"/>
                                     <ItemsControl ItemsSource="{Binding Expression}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <controls:FormulaControl Scale="15" Formula="{Binding}" Margin="0 0 0 5"/>
+
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                    <Image Source="{Binding Image}" HorizontalAlignment="Stretch"/>
+                                    <Image Source="{Binding Image}" HorizontalAlignment="Center" Stretch="Uniform" StretchDirection="DownOnly"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -118,50 +119,5 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <!--<ItemsControl ItemsSource="{Binding Formulae}" >
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Ref}" Width="100"/>
-                                <TextBlock Text="{Binding Narrative}"/>
-                            </StackPanel>
-                            <ItemsControl ItemsSource="{Binding Expression}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <controls:FormulaControl Scale="15" Formula="{Binding}" Margin="100 0 0 0"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <Image Source="{Binding Image}" HorizontalAlignment="Left" Margin="100 0 0 0" Width="500"/>
-                            <TextBlock Text="{Binding Conclusion}" Margin="600 0 0 0">
-                                <TextBlock.Style>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Status}" Value="PASS">
-                                                <Setter Property="Foreground" Value="Green"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Status}" Value="JUSTPASS">
-                                                <Setter Property="Foreground" Value="LightGreen"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Status}" Value="FAIL">
-                                                <Setter Property="Foreground" Value="Red"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Status}" Value="JUSTFAIL">
-                                                <Setter Property="Foreground" Value="Orange"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Status}" Value="NONE">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                            <Rectangle HorizontalAlignment="Stretch" Fill="LightGray" Height="2"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>-->
-
     </Grid>
 </UserControl>

@@ -30,6 +30,20 @@ namespace Calcs
             }
         }
 
+        BatchVM _batcher;
+        public BatchVM Batcher
+        {
+            get
+            {
+                return _batcher;
+            }
+            set
+            {
+                _batcher = value;
+                RaisePropertyChanged(nameof(Batcher));
+            }
+        }
+
         int _selectedViewModel = 0;
         public int SelectedViewModel
         {

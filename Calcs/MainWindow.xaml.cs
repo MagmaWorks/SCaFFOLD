@@ -29,7 +29,7 @@ namespace Calcs
                 CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
                 calcs.Add(new CalculationViewModel(calcInstance));
             }
-            AppViewModel myAppVM = new AppViewModel() { ViewModels = calcs };
+            AppViewModel myAppVM = new AppViewModel() { ViewModels = calcs, Batcher = new BatchVM(calcClasses) };
             this.DataContext = myAppVM;
             InitializeComponent();
         }

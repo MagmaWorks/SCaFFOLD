@@ -9,12 +9,9 @@ using System.Windows.Input;
 
 namespace Calcs
 {
-    public class CalculationViewModel : ViewModelBase, ICalcViewParent
+    public class SimpleCalcVM : ViewModelBase, ICalcViewParent
     {
         CalcCore.ICalc calc;
-        public TableVM Table { get; set; }
-        public ChartVM Chart { get; set; }
-        public CrossRefVM CrossRef {get;set;}
         public string Author
         {
             get
@@ -136,7 +133,7 @@ namespace Calcs
             }
         }
 
-        public CalculationViewModel(CalcCore.ICalc calc)
+        public SimpleCalcVM(CalcCore.ICalc calc)
         {
             this.calc = calc;
 
@@ -152,9 +149,6 @@ namespace Calcs
             }
 
             //this.calc = calculation;
-            this.Table = new TableVM(calc);
-            this.Chart = new ChartVM(calc);
-            this.CrossRef = new CrossRefVM(calc);
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
@@ -175,6 +169,8 @@ namespace Calcs
                 _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image=item.Image });
             }
             RaisePropertyChanged(nameof(Formulae));
+
+
         }
     }
 }

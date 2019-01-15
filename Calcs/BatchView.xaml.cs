@@ -12,16 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WpfMath;
 
 namespace Calcs
 {
     /// <summary>
-    /// Interaction logic for FormulaeDisplay.xaml
+    /// Interaction logic for BatchView.xaml
     /// </summary>
-    public partial class FormulaeDisplay : UserControl
+    public partial class BatchView : UserControl
     {
-        public FormulaeDisplay()
+        public BatchView()
         {
             InitializeComponent();
         }

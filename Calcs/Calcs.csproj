@@ -68,10 +68,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppViewModel.cs" />
+    <Compile Include="BatchView.xaml.cs">
+      <DependentUpon>BatchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BatchVM.cs" />
     <Compile Include="CalcAssembly.cs" />
     <Compile Include="CalcOutputs.xaml.cs">
       <DependentUpon>CalcOutputs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SimpleCalcVM.cs" />
     <Compile Include="CalcViewParent.cs" />
     <Compile Include="ChartControl.xaml.cs">
       <DependentUpon>ChartControl.xaml</DependentUpon>
@@ -105,6 +110,10 @@
     <Compile Include="ValueType.cs" />
     <Compile Include="CalculationViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Page Include="BatchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CalcOutputs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

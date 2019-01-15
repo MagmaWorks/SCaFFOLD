@@ -17,18 +17,21 @@
             <TextBlock Text="Calculations: "/>
             <ComboBox ItemsSource="{Binding ViewModels}" DisplayMemberPath="CalcTypeName" Width="200" SelectedIndex="{Binding SelectedViewModel}"/>
         </StackPanel>
-        <TabControl Grid.Row="1" DataContext="{Binding ViewModel}">
-            <TabItem Header="Single Calculation">
+        <TabControl Grid.Row="1" >
+            <TabItem Header="Single Calculation" DataContext="{Binding ViewModel}">
                 <local:SingleCalc />
             </TabItem>
             <TabItem Header="Table">
-                <local:CrossRefTable DataContext="{Binding Table}"/>
+                <local:CrossRefTable DataContext="{Binding ViewModel.Table}"/>
             </TabItem>
             <TabItem Header="Chart">
-                <local:ChartControl DataContext="{Binding Chart}"/>
+                <local:ChartControl DataContext="{Binding ViewModel.Chart}"/>
             </TabItem>
             <TabItem Header="Cross Ref">
-                <local:CrossRef DataContext="{Binding CrossRef}"/>
+                <local:CrossRef DataContext="{Binding ViewModel.CrossRef}"/>
+            </TabItem>
+            <TabItem Header="Batch">
+                <local:BatchView DataContext="{Binding Batcher}"/>
             </TabItem>
         </TabControl>
         <Image Grid.Row="2" HorizontalAlignment="Left">
