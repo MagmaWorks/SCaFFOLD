@@ -18,7 +18,6 @@ namespace TestCalcs
         CalcSelectionList endConditions;
         Dictionary<string, Action> momentCalc;
         List<Section> sections;
-        CalcDoubleList testList;
 
         public Moment()
         {
@@ -35,7 +34,6 @@ namespace TestCalcs
         {
             this.span = this.inputValues.CreateDoubleCalcValue("span", "l", "m", span);
             this.udl = this.inputValues.CreateDoubleCalcValue("udl", "w", "kN/m", udl);
-            testList = inputValues.CreateCalcDoubleList("test list", new List<List<double>> { new List<double> { 10, 10 }, new List<double> { 20, 21 } });
             moment = this.outputValues.CreateDoubleCalcValue("moment", "M", "kNm", 0);
             shear = this.outputValues.CreateDoubleCalcValue("Shear", "V", "kN", 0);
             endConditions = this.inputValues.CreateCalcSelectionList("End Condition", "Pinned", new List<string> { "Fixed", "Pinned" });
