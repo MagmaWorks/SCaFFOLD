@@ -87,7 +87,7 @@ namespace TestCalcs
         public PunchingShear()
         {
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER" });
-            _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_45_DEGREES", "SPURS_30_DEGREES", "GRID" });
+            _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID" });
             _srMode = inputValues.CreateCalcSelectionList("Radial spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
             _srTarget = inputValues.CreateDoubleCalcValue("Target radial spacing", "s_r", "mm", 0);
             _beta = outputValues.CreateDoubleCalcValue("Beta value", @"\beta", "", 2);
@@ -191,7 +191,8 @@ namespace TestCalcs
             generateSlabEdge();
             controlPerimeterNoHoles = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 2 * d_average);
             controlPerimeters = generatePerimeterWithHoles(2 * d_average);
-            u1reduced = generateReducedControlPerimeterWithHoles();
+            u1reduced = new List<PolyLine> { generateReducedControlPerimeter(_columnAdim.Value, _columnBdim.Value) };
+            //u1reduced = generateReducedControlPerimeterWithHoles();
             ui = columnOutlines.Sum(a => a.Length);
             u1 = controlPerimeters.Sum(a => a.Length);
 
@@ -510,10 +511,11 @@ namespace TestCalcs
                 shearLinkStartSpurs.Add(generatePerimeter(_columnAdim.Value, _columnBdim.Value, 0.5 * d_average + i * (sr)));
             }
 
-            if (_linkArrangement.ValueAsString == "SPURS_AUTO" || _linkArrangement.ValueAsString == "SPURS_45_DEGREES" || _linkArrangement.ValueAsString == "SPURS_30_DEGREES")
+            if (_linkArrangement.ValueAsString == "SPURS_AUTO" )
             {
                 perimetersToReinforce = new List<List<PolyLine>> { perimetersToReinforce[0] };
                 var spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints()};
+                if (_colType.ValueAsString == "INTERNAL") spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints2() };
 
                 for (int i = 1; i < 25; i++)
                 {
@@ -805,6 +807,28 @@ namespace TestCalcs
                     Status = CalcStatus.PASS
                 });
             }
+
+        private List<Tuple<Vector2, Vector2>> spurStartPoints2()
+        {
+            var returnList = new List<Tuple<Vector2, Vector2>>();
+
+            var firstPerim = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 0.5 * d_average);
+            var controlPerim = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 2 * d_average);
+            int spurSegments = (int)Math.Ceiling(controlPerim.Length / (1.5*d_average));
+            if (firstPerim.IsClosed)
+            {
+                spurSegments++;
+            }
+            for (int i = 0; i < spurSegments; i++)
+            {
+                double frac = (1d / (double)spurSegments)*(i);
+                var pt1 = firstPerim.PointAtParameter((frac));
+                var pt2 = controlPerim.PointAtParameter((frac));
+                var vec = Vector2.Normalize(pt2 - pt1);
+                returnList.Add(new Tuple<Vector2, Vector2>(pt1, vec));
+            }
+            return returnList;
+        }
 
         private double calck(double c1overc2)
         {
@@ -1245,12 +1269,6 @@ namespace TestCalcs
             bool includeLastCorner = false;
             switch (_linkArrangement.ValueAsString)
             {
-                case "SPURS_45_DEGREES":
-                    angleDivisions = 2;
-                    break;
-                case "SPURS_30_DEGREES":
-                    angleDivisions = 3;
-                    break;
                 case "SPURS_AUTO":
                     angleDivisions = 2;
                     break;
@@ -1272,7 +1290,7 @@ namespace TestCalcs
             }
             if (_columnBdim.Value > 3 * d_average)
             {
-                newy = y - Math.Min(0.5 * d_average,x);
+                newy = y - Math.Min(0.5 * d_average, x);
             }
             else
             {
@@ -1323,7 +1341,7 @@ namespace TestCalcs
                         var point2 = line.PointAtParameter(k * paramFraction);
                         var ray = new Line(point2, point2 + new Vector2(10000f * (float)Math.Cos(angle), 10000f * (float)Math.Sin(angle)));
                         var vec = Vector2.Normalize(ray.End - ray.Start);
-                        var inter = columnOutline.intersection(ray);
+                        var inter = fullColumnOutline.intersection(ray);
                         var pt = inter[0].Point + vec * 0.5f * (float)d_average;
                         returnList.Add(new Tuple<Vector2, Vector2>(pt, Vector2.Normalize(vec)));
                     }
@@ -1338,7 +1356,7 @@ namespace TestCalcs
                 {
                     var ray = new Line(point, point + new Vector2(10000f * (float)Math.Cos(angle), 10000f * (float)Math.Sin(angle)));
                     var vec = Vector2.Normalize(ray.End - ray.Start);
-                    var inter = columnOutline.intersection(ray);
+                    var inter = fullColumnOutline.intersection(ray);
                     var pt = inter[0].Point + vec * 0.5f * (float)d_average;
                     returnList.Add(new Tuple<Vector2, Vector2>(pt, Vector2.Normalize(vec)));
                     angle += Math.PI / (2d * angleDivisions);
