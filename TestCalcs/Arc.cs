@@ -11,6 +11,7 @@ namespace TestCalcs
     {
         public Vector2 Centre { get; set; }
         public double StartAngle { get; set; }
+
         public double EndAngle { get; set; }
         double _radius;
         public double Radius

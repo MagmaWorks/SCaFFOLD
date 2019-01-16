@@ -82,12 +82,14 @@ namespace TestCalcs
         List<List<Vector2>> shearLinks;
         List<List<PolyLine>> allPerimeters;
         List<List<PolyLine>> perimetersToReinforce;
+        List<PolyLine> u1reducedNoHoles;
         List<PolyLine> u1reduced;
+
 
         public PunchingShear()
         {
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER" });
-            _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID" });
+            _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID", "CRUCIFORM" });
             _srMode = inputValues.CreateCalcSelectionList("Radial spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
             _srTarget = inputValues.CreateDoubleCalcValue("Target radial spacing", "s_r", "mm", 0);
             _beta = outputValues.CreateDoubleCalcValue("Beta value", @"\beta", "", 2);
@@ -149,6 +151,7 @@ namespace TestCalcs
             allPerimeters = new List<List<PolyLine>>();
             perimetersToReinforce = new List<List<PolyLine>>();
             _holeEdges = null;
+            u1reducedNoHoles = null;
             u1reduced = null;
         }
 
@@ -191,8 +194,8 @@ namespace TestCalcs
             generateSlabEdge();
             controlPerimeterNoHoles = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 2 * d_average);
             controlPerimeters = generatePerimeterWithHoles(2 * d_average);
-            u1reduced = new List<PolyLine> { generateReducedControlPerimeter(_columnAdim.Value, _columnBdim.Value) };
-            //u1reduced = generateReducedControlPerimeterWithHoles();
+            u1reducedNoHoles = new List<PolyLine> { generateReducedControlPerimeter(_columnAdim.Value, _columnBdim.Value) };
+            u1reduced = generateReducedControlPerimeterWithHoles();
             ui = columnOutlines.Sum(a => a.Length);
             u1 = controlPerimeters.Sum(a => a.Length);
 
@@ -237,7 +240,7 @@ namespace TestCalcs
                     double k = calck(c1/c2);
                     double w1 = Math.Pow(c2, 2) / 4 + c1 * c2 + 4 * c1 * d_average + 8 * Math.Pow(d_average, 2) + Math.PI * d_average * c2;
                     var u1 = controlPerimeterNoHoles.Length;
-                    var u1red = u1reduced.Sum(a => a.Length);
+                    var u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = (u1 / u1red) + k * (u1 / w1) * epar;
                     betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of hte slab.";
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}+k\frac{u_1}{W_1}e_{par}=" + Math.Round(_beta.Value, 3));
@@ -251,7 +254,7 @@ namespace TestCalcs
                     break;
                 case "CORNER":
                     u1 = controlPerimeterNoHoles.Length;
-                    u1red = u1reduced.Sum(a => a.Length);
+                    u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = u1 / u1red;
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}="+Math.Round(_beta.Value,3));
                     betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
@@ -757,31 +760,180 @@ namespace TestCalcs
                 }
             }
 
+            if (_linkArrangement.ValueAsString == "CRUCIFORM")
+            {
+                var cruciformGroups = new List<List<Tuple<Vector2, Vector2>>>();
+                perimetersToReinforce = new List<List<PolyLine>>();
+                var initialLines = generateColumnFaces();
+                var links = new List<List<Tuple<Vector2, Vector2>>>();
+                var perimeterLines = new List<List<Line>>();
+                double offsetFromColumn = 0;
+                //generateFirstLinkPerimeter
+                var newLines = new List<Line>();
+                foreach (var line in initialLines.Segments)
+                {
+                    var newLinks = new List<Tuple<Vector2, Vector2>>();
+                    Vector2 dir = line.End - line.Start;
+                    Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
+                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (1.5 * d_average)) + 1);
+                    var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
+                    for (int i = 0; i < numberOfSpursOnEdge; i++)
+                    {
+                        newLinks.Add(new Tuple<Vector2, Vector2>(line.Start + stepVec * i + 0.5f * (float)d_average * perp, perp));
+                    }
+                    cruciformGroups.Add(newLinks);
+                    newLines.Add(new Line(line.Start + 0.5f * (float)d_average * perp, line.End + 0.5f * (float)d_average * perp));
+                }
+                offsetFromColumn += 0.5 * d_average;
+                perimetersToReinforce.Add(generatePerimeterWithHoles(offsetFromColumn));
+                links.Add(cruciformGroups.SelectMany(i => i).ToList());
+
+                for (int i = 0; i < 25; i++)
+                {
+                    var prevCruciformGroups = cruciformGroups;
+                    cruciformGroups = new List<List<Tuple<Vector2, Vector2>>>();
+                    foreach (var edgeLinks in prevCruciformGroups)
+                    {
+                        var newLinks = new List<Tuple<Vector2, Vector2>>();
+                        foreach (var link in edgeLinks)
+                        {
+                            newLinks.Add(new Tuple<Vector2, Vector2>(link.Item1 + (float) sr * link.Item2, link.Item2));
+                        }
+                        cruciformGroups.Add(newLinks);
+                    }
+
+                    links.Add(cruciformGroups.SelectMany(a => a).ToList());
+                    perimetersToReinforce.Add(generatePerimeterWithHoles(offsetFromColumn));
+                    if (Math.Sqrt(2 * Math.Pow(offsetFromColumn, 2)) > 2 * d_average) break;
+                    offsetFromColumn += sr;
+                }
+
+                bool closed = false;
+                if (_colType.ValueAsString == "INTERNAL") closed = true;
+
+                var outerPerim = new List<PolyLine>();
+                for (int j = 0; j < cruciformGroups.Count; j++)
+                {
+                    var outPerimSegment = new List<GeometryBase>();
+                    var edgeLinks = cruciformGroups[j];
+                    var pt1 = edgeLinks.First().Item1 + edgeLinks.First().Item2 * 2f * (float)d_average;
+                    var pt2 = edgeLinks.Last().Item1 + edgeLinks.Last().Item2 * 2f * (float)d_average;
+                    var angle = Math.Atan2(edgeLinks.Last().Item2.Y, edgeLinks.Last().Item2.X);
+                    if (angle < 0) angle += 2d * Math.PI;
+                    if (j != 0 || closed)
+                    {
+                        var angle2 = angle;
+                        if (angle - Math.PI * 0.75 < 0)
+                        {
+                            angle2 += 2 * Math.PI;
+                        }
+                        var arc = new Arc { Centre = edgeLinks.First().Item1, Radius = 2 * d_average, StartAngle = angle2 - Math.PI / 4, EndAngle = angle2 };
+                        var startVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle2-Math.PI *0.75), (float)Math.Sin(angle2-Math.PI * 0.75)));
+                        var pt3 = arc.Start + startVec * (float)d_average;
+                        outPerimSegment.Add(new Line(pt3, arc.Start));
+                        outPerimSegment.Add(arc);
+                    }
+                    outPerimSegment.Add(new Line(pt1, pt2));
+                    if (j < cruciformGroups.Count - 1 || closed)
+                    {
+                        var arc = new Arc { Centre = edgeLinks.Last().Item1, Radius = 2 * d_average, StartAngle = angle, EndAngle = angle + Math.PI / 4 };
+                        var endVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle+Math.PI * 0.75), (float)Math.Sin(angle+Math.PI * 0.75)));
+                        var pt4 = arc.End + endVec * (float)d_average;
+                        outPerimSegment.Add(arc);
+                        outPerimSegment.Add(new Line(arc.End, pt4));
+                    }
+                    outerPerim.Add(new PolyLine(outPerimSegment));
+                }
+
+                outerPerimeters = new List<PolyLine>();
+                foreach (var perim in outerPerim)
+                {
+                    outerPerimeters.AddRange(generatePerimeterWithHoles(perim));
+                }
+
+                // remove links in holes
+                shearLinks = new List<List<Vector2>>();
+                foreach (var item in links)
+                {
+                    List<Vector2> filteredList = new List<Vector2>();
+                    foreach (var link in item)
+                    {
+                        bool include = true;
+                        foreach (var hole in _holeEdges)
+                        {
+                            var angle1 = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
+                            if (angle1 < 0) angle1 += Math.PI * 2;
+                            var angle2 = Math.Atan2(hole.Item2.End.Y, hole.Item2.End.X);
+                            if (angle2 < 0) angle2 += Math.PI * 2;
+                            var angle3 = Math.Atan2(link.Item1.Y, link.Item1.X);
+                            if (angle3 < 0) angle3 += Math.PI * 2;
+                            if (Math.Abs(angle1 - angle2) < Math.PI)
+                            {
+                                if (angle3 > Math.Min(angle1, angle2) && angle3 < Math.Max(angle1, angle2))
+                                {
+                                    include = false;
+                                }
+                            }
+                            else
+                            {
+                                if (angle3 < Math.Min(angle1, angle2) || (angle3 > Math.Max(angle1, angle2)))
+                                {
+                                    include = false;
+                                }
+                            }
+                        }
+                        if (include) filteredList.Add(link.Item1);
+                    }
+                    shearLinks.Add(filteredList);
+                }
+            }
+
             _linksInFirstPerim.Value = shearLinks[0].Count;
             _numberOfPerimeters.Value = perimetersToReinforce.Count;
             _legsTotal.Value = shearLinks.Sum(a => a.Count);
             _legDia.Value = calcBarSizeAndDia(_Asw.Value / _linksInFirstPerim.Value, new List<int> { 8, 10, 12, 16 });
 
-            expressions.Add(new Formula
-                {
-                    Narrative = "Outer perimeter",
-                    Expression = new List<string>
+            var outerPerimExp = new Formula
+            {
+                Narrative = "Outer perimeter",
+                Expression = new List<string>
                 {
                     _uoutef.Symbol + "=" + Math.Round(_uoutef.Value,0) + _uoutef.Unit,
                     @"u_{out,ef,prov} = " + Math.Round(outerPerimeters.Sum(a => a.Length),0) + @"mm"
                 },
-                    Ref = "cl.6.4.5(4)"
-                });
+                Ref = "cl.6.4.5(4)"
+            };
 
-                var detailingFormula = new Formula
+            if (_uoutef.Value > outerPerimeters.Sum(a => a.Length))
+            {
+                outerPerimExp.Conclusion = "Outer perimeter too short";
+                outerPerimExp.Status = CalcStatus.FAIL;
+                expressions.Add(outerPerimExp);
+
+                expressions.Insert(0, new Formula
                 {
-                    Narrative = "Detailing dimensions:",
-                    Expression = new List<string>
+                    Narrative = "Diagram:" + Environment.NewLine + "Column shown in green, control and outer perimeters in red.",
+                    Image = generateImage(),
+                    Conclusion = "Outer perimeter too short",
+                    Status = CalcStatus.FAIL
+                });
+                return;
+            }
+            else
+            {
+                expressions.Add(outerPerimExp);
+            }
+
+
+            var detailingFormula = new Formula
+            {
+                Narrative = "Detailing dimensions:",
+                Expression = new List<string>
                 {
                     @"\text{Distance to first perimeter} =" + Math.Round(_distToFirstLinkPerim.Value,0) + _distToFirstLinkPerim.Unit,
                     @"\text{Perimeter spacing} =" + Math.Round(_perimSpacing.Value,0) + _perimSpacing.Unit
                 }
-                };
+            };
             if (_linkArrangement.ValueAsString=="GRID")
             {
                 Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_ConcreteCentreLayout.png");
