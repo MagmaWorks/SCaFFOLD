@@ -46,7 +46,10 @@ namespace TestCalcs
         CalcDouble _rho;
         CalcSelectionList _srMode;
         CalcDouble _srTarget;
+        CalcSelectionList _stMode;
+        CalcDouble _stTarget;
         double sr;
+        double st;
         double fywd;
         double fywdef;
         CalcDouble _uoutef;
@@ -92,6 +95,8 @@ namespace TestCalcs
             _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID", "CRUCIFORM" });
             _srMode = inputValues.CreateCalcSelectionList("Radial spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
             _srTarget = inputValues.CreateDoubleCalcValue("Target radial spacing", "s_r", "mm", 0);
+            _stMode = inputValues.CreateCalcSelectionList("Tangential spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
+            _stTarget = inputValues.CreateDoubleCalcValue("Target tangential spacing", "s_t", "mm", 0);
             _beta = outputValues.CreateDoubleCalcValue("Beta value", @"\beta", "", 2);
             _columnAdim = inputValues.CreateDoubleCalcValue("Column A dimension", "A", "mm", 350);
             _columnBdim = inputValues.CreateDoubleCalcValue("Column B dimension", "B", "mm", 350);
@@ -160,6 +165,15 @@ namespace TestCalcs
             formulae = null;
             resetFields();
             expressions = new List<Formula>();
+
+            if (_stMode.ValueAsString=="AUTO")
+            {
+                st = 1.5 * d_average;
+            }
+            else
+            {
+                st = Math.Min(_stTarget.Value, 1.5*d_average);
+            }
 
             // calculate effective depths in each direction
             dy = _h.Value - _offsety.Value;
@@ -542,7 +556,7 @@ namespace TestCalcs
                     for (int j = start; j < newPerim.Count; j++)
                     {
                         var item = newPerim[j];
-                        if ((item.Item1 - prevPoint.Item1).Length() > 1.5 * d_average)
+                        if ((item.Item1 - prevPoint.Item1).Length() > st)
                         {
                             var interPoint = (prevPoint.Item1 + item.Item1) / 2;
                             var interVec = Vector2.Normalize((prevPoint.Item2 + item.Item2));
@@ -557,7 +571,7 @@ namespace TestCalcs
                         prevPoint = item;
                     }
                     var newPerimLine = new PolyLine(segs);
-                    // extend to slab edge to max 0.75 * d
+                    // extend to slab edge to max 0.5 * st
                     if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
                     {
                         var v1 = Vector2.Normalize(segs.First().Start - segs.First().End);
@@ -570,14 +584,14 @@ namespace TestCalcs
                         if (inter1[0].TypeOfIntersection == IntersectionType.WITHIN)
                         {
                             var pt1 = inter1[0].Point;
-                            if ((pt1 - segs.First().Start).Length() < 0.75f * (float)d_average) segs.Insert(0, new Line(pt1, segs.First().Start));
-                            else segs.Insert(0, new Line(segs.First().Start + v1 * 0.75f * (float)d_average, segs.First().Start));
+                            if ((pt1 - segs.First().Start).Length() < 0.5f * (float)st) segs.Insert(0, new Line(pt1, segs.First().Start));
+                            else segs.Insert(0, new Line(segs.First().Start + v1 * 0.5f * (float)st, segs.First().Start));
                         }
                         if (inter2[0].TypeOfIntersection == IntersectionType.WITHIN)
                         {
                             var pt2 = inter2[0].Point;
-                            if ((pt2 - segs.Last().End).Length() < 0.75f * (float)d_average) segs.Add(new Line(segs.Last().End, pt2));
-                            else segs.Add(new Line(segs.Last().End, segs.Last().End + v2 * 0.75f * (float)d_average));
+                            if ((pt2 - segs.Last().End).Length() < 0.5f * (float)st) segs.Add(new Line(segs.Last().End, pt2));
+                            else segs.Add(new Line(segs.Last().End, segs.Last().End + v2 * 0.5f * (float)st));
                         }
                     }
                     var newPerimWithHoles = generatePerimeterWithHoles(newPerimLine);
@@ -650,7 +664,7 @@ namespace TestCalcs
                     Vector2 dir = line.End - line.Start;
                     Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
                     
-                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (1.5*d_average))+1);
+                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st))+1);
                     var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
                     for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
@@ -775,7 +789,7 @@ namespace TestCalcs
                     var newLinks = new List<Tuple<Vector2, Vector2>>();
                     Vector2 dir = line.End - line.Start;
                     Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
-                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (1.5 * d_average)) + 1);
+                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st)) + 1);
                     var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
                     for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
@@ -816,8 +830,8 @@ namespace TestCalcs
                 {
                     var outPerimSegment = new List<GeometryBase>();
                     var edgeLinks = cruciformGroups[j];
-                    var pt1 = edgeLinks.First().Item1 + edgeLinks.First().Item2 * 2f * (float)d_average;
-                    var pt2 = edgeLinks.Last().Item1 + edgeLinks.Last().Item2 * 2f * (float)d_average;
+                    var pt1 = edgeLinks.First().Item1 + edgeLinks.First().Item2 * 1.5f * (float)d_average;
+                    var pt2 = edgeLinks.Last().Item1 + edgeLinks.Last().Item2 * 1.5f * (float)d_average;
                     var angle = Math.Atan2(edgeLinks.Last().Item2.Y, edgeLinks.Last().Item2.X);
                     if (angle < 0) angle += 2d * Math.PI;
                     if (j != 0 || closed)
@@ -827,7 +841,7 @@ namespace TestCalcs
                         {
                             angle2 += 2 * Math.PI;
                         }
-                        var arc = new Arc { Centre = edgeLinks.First().Item1, Radius = 2 * d_average, StartAngle = angle2 - Math.PI / 4, EndAngle = angle2 };
+                        var arc = new Arc { Centre = edgeLinks.First().Item1, Radius = 1.5 * d_average, StartAngle = angle2 - Math.PI / 4, EndAngle = angle2 };
                         var startVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle2-Math.PI *0.75), (float)Math.Sin(angle2-Math.PI * 0.75)));
                         var pt3 = arc.Start + startVec * (float)d_average;
                         outPerimSegment.Add(new Line(pt3, arc.Start));
@@ -836,7 +850,7 @@ namespace TestCalcs
                     outPerimSegment.Add(new Line(pt1, pt2));
                     if (j < cruciformGroups.Count - 1 || closed)
                     {
-                        var arc = new Arc { Centre = edgeLinks.Last().Item1, Radius = 2 * d_average, StartAngle = angle, EndAngle = angle + Math.PI / 4 };
+                        var arc = new Arc { Centre = edgeLinks.Last().Item1, Radius = 1.5 * d_average, StartAngle = angle, EndAngle = angle + Math.PI / 4 };
                         var endVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle+Math.PI * 0.75), (float)Math.Sin(angle+Math.PI * 0.75)));
                         var pt4 = arc.End + endVec * (float)d_average;
                         outPerimSegment.Add(arc);
@@ -966,7 +980,7 @@ namespace TestCalcs
 
             var firstPerim = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 0.5 * d_average);
             var controlPerim = generatePerimeter(_columnAdim.Value, _columnBdim.Value, 2 * d_average);
-            int spurSegments = (int)Math.Ceiling(controlPerim.Length / (1.5*d_average));
+            int spurSegments = (int)Math.Ceiling(controlPerim.Length / (st));
             if (firstPerim.IsClosed)
             {
                 spurSegments++;
@@ -1486,7 +1500,7 @@ namespace TestCalcs
                 var dist = line.Length;
                 if (dist > 0.5 * d_average) // really a check that dist>0
                 {
-                    int divs = (int)Math.Ceiling(dist / (1.5 * d_average));
+                    int divs = (int)Math.Ceiling(dist / (st));
                     double paramFraction = 1d / divs;
                     for (int k = 0; k < divs; k++)
                     {
