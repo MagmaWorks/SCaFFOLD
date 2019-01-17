@@ -11,8 +11,8 @@
     <UserControl.Resources>
         <DataTemplate x:Key="DoubleBoxEntryTemplate">
             <StackPanel Orientation="Horizontal">
-                <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Value}" Width="100">
+                <controls:FormulaControl Scale="15" Formula="{Binding Symbol}" Width="60" VerticalAlignment="Center" IsTabStop="False"/>
+                <TextBox Text="{Binding Value}" Width="100" GotKeyboardFocus="TextBox_GotKeyboardFocus">
                     <TextBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Slider enabled" IsCheckable="True" IsChecked="{Binding SliderEntry}"/>
@@ -46,7 +46,7 @@
         </DataTemplate>
         <DataTemplate x:Key="DoubleTemplate">
             <StackPanel Orientation="Horizontal">
-                <ContentControl Content="{Binding}">
+                <ContentControl Content="{Binding}" IsTabStop="False">
                     <ContentControl.Style>
                         <Style TargetType="{x:Type ContentControl}">
                             <Setter Property="ContentTemplate" Value="{StaticResource DoubleBoxEntryTemplate}"/>
@@ -85,7 +85,7 @@
         <ItemsControl ItemsSource="{Binding Inputs}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding}" Margin="0 0 0 2">
+                    <ContentControl Content="{Binding}" Margin="0 0 0 2" IsTabStop="False">
                         <ContentControl.Style>
                             <Style TargetType="{x:Type ContentControl}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource SelectionListTemplate}"/>
@@ -103,7 +103,6 @@
                             </Style>
                         </ContentControl.Style>
                     </ContentControl>
-
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

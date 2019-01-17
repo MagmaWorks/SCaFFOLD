@@ -954,11 +954,17 @@ namespace TestCalcs
                 detailingFormula.Image = new BitmapImage(uri);
                 detailingFormula.Ref = "Concrete Centre Figure 9";
             }
-            else if (_linkArrangement.ValueAsString == "SPURS_AUTO" || _linkArrangement.ValueAsString == "SPURS_45_DEGREES" || _linkArrangement.ValueAsString == "SPURS_30_DEGREES")
+            else if (_linkArrangement.ValueAsString == "SPURS_AUTO")
             {
-                Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_EC1992_RadialLayout.png");
+                Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_22.png");
                 detailingFormula.Image = new BitmapImage(uri);
                 detailingFormula.Ref = "Figure 6.22, diagram A";
+            }
+            else if (_linkArrangement.ValueAsString == "CRUCIFORM" )
+            {
+                Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_22.png");
+                detailingFormula.Image = new BitmapImage(uri);
+                detailingFormula.Ref = "Figure 6.22, diagram B";
             }
 
             expressions.Add(detailingFormula);

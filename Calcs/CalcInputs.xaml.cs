@@ -37,5 +37,11 @@ namespace Calcs
                 myButton.Content = fileDialog.FileName;
             }
         }
+
+        private void TextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            var textbox = sender as TextBox;
+            textbox.SelectAll();
+        }
     }
 }

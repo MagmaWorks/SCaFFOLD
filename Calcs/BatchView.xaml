@@ -13,7 +13,8 @@
             
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Content="Batch process" Command="{Binding ProcessBatchCommand}"/>
+            <Button Content="Batch process from CSV..." Command="{Binding ProcessBatchCommand}"/>
+            <TextBlock Text="Calculation: " Margin="15 0 0 0"/>
             <ComboBox ItemsSource="{Binding CalcNames}" SelectedIndex="{Binding SelectedIndex}"/>
         </StackPanel>
         <local:SingleCalc Grid.Row="1" DataContext="{Binding SelectedCalc}"/>
