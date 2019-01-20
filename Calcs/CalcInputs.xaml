@@ -68,7 +68,13 @@
         <DataTemplate x:Key="FilePathTemplate">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Name}" Width="100"/>
-                <Button Content="{Binding Value}" Width="100" Click="Button_Click"/>
+                <Button Content="{Binding Value, Mode=TwoWay}" Width="300" Click="Button_Click"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="FolderPathTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Width="100"/>
+                <Button Content="{Binding Value, Mode=TwoWay}" Width="300" Click="Button_Click_1"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="SelectionListTemplate">
@@ -96,8 +102,8 @@
                                     <DataTrigger Binding="{Binding Type}" Value="FILEPATH">
                                         <Setter Property="ContentTemplate" Value="{StaticResource FilePathTemplate}"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="DOUBLELIST">
-                                        <Setter Property="ContentTemplate" Value="{StaticResource DoubleListTemplate}"/>
+                                    <DataTrigger Binding="{Binding Type}" Value="FOLDERPATH">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource FolderPathTemplate}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

@@ -122,6 +122,8 @@ namespace Calcs
                 case CalcCore.CalcValueType.SELECTIONLIST:
                     _selectionList = (calcValue as CalcCore.CalcSelectionList).SelectionList;
                     break;
+                case CalcCore.CalcValueType.FOLDERPATH:
+                    break;
                 default:
                     break;
             }

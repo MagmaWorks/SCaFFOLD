@@ -36,6 +36,13 @@ namespace CalcCore
             return myVal;
         }
 
+        public CalcFolderPath CreateCalcFolderPath(string name, string path)
+        {
+            var myVal = new CalcFolderPath(name, path);
+            this.values.Add(myVal);
+            return myVal;
+        }
+
         public CalcDoubleList CreateCalcDoubleList(string name, List<List<double>> doubles)
         {
             var myVal = new CalcDoubleList(name, doubles);

@@ -9,6 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CalcCore;
+//using netDxf.Entities;
+//using netDxf;
+using netDxf.Tables;
 
 namespace TestCalcs
 {
@@ -59,6 +62,8 @@ namespace TestCalcs
         CalcDouble _numberOfPerimeters;
         CalcDouble _legsTotal;
         CalcDouble _legDia;
+        CalcSelectionList _dxfOpt;
+        CalcFolderPath _dxfFolder;
         CalcDouble _holePosX;
         CalcDouble _holePosY;
         CalcDouble _holeSizeX;
@@ -121,6 +126,8 @@ namespace TestCalcs
             _distToFirstLinkPerim = outputValues.CreateDoubleCalcValue("Distance to first link perimeter", "", "mm", 0);
             _legsTotal = outputValues.CreateDoubleCalcValue("Total legs", "", "No.", 0);
             _legDia = outputValues.CreateDoubleCalcValue("Leg diameter", "", "mm", 0);
+            _dxfOpt = inputValues.CreateCalcSelectionList("DXF output option", "NONE", new List<string> { "NONE", "SPECIFIED_FOLDER" });
+            _dxfFolder = inputValues.CreateCalcFolderPath("DXF output folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
             _holePosX = inputValues.CreateDoubleCalcValue("Hole 1 X position", "", "mm", 0);
             _holePosY = inputValues.CreateDoubleCalcValue("Hole 1 Y position", "", "mm", 220);
             _holeSizeX = inputValues.CreateDoubleCalcValue("Hole 1 X size", "", "mm", 0);
@@ -166,13 +173,13 @@ namespace TestCalcs
             resetFields();
             expressions = new List<Formula>();
 
-            if (_stMode.ValueAsString=="AUTO")
+            if (_stMode.ValueAsString == "AUTO")
             {
                 st = 1.5 * d_average;
             }
             else
             {
-                st = Math.Min(_stTarget.Value, 1.5*d_average);
+                st = Math.Min(_stTarget.Value, 1.5 * d_average);
             }
 
             // calculate effective depths in each direction
@@ -190,7 +197,7 @@ namespace TestCalcs
                     _concPartFactor.Symbol + @"=" + _concPartFactor.Value
                 }
             });
-            
+
             expressions.Add(new Formula()
             {
                 Narrative = "Calculate effective depths",
@@ -200,7 +207,7 @@ namespace TestCalcs
                     string.Format(@"{0} = {1} - {2} = {3}{4}", "d_z", _h.Symbol, _offsetz.Symbol, dz, "mm"),
                     string.Format(@"{0} = \frac{{{1} + {2}}}{{2}} = {3}{4}", @"d_{eff}", "d_y", "d_z", d_average, "mm")
                 },
-                Ref="cl. 6.4.2(1)"
+                Ref = "cl. 6.4.2(1)"
             });
 
             generateHoles();
@@ -227,7 +234,7 @@ namespace TestCalcs
             });
 
             // calc Beta
-            Formula betaFormula = new Formula() { Narrative = "Calculate Beta factor." + Environment.NewLine, Ref="cl 6.4.3" };
+            Formula betaFormula = new Formula() { Narrative = "Calculate Beta factor." + Environment.NewLine, Ref = "cl 6.4.3" };
             switch (_colType.ValueAsString)
             {
                 case "INTERNAL":
@@ -239,11 +246,11 @@ namespace TestCalcs
                     double term2 = Math.Pow(ez / by, 2);
                     _beta.Value = 1 + 1.8 * Math.Sqrt(term1 + term2);
                     betaFormula.Narrative += "Calculated based on a rectangular internal column with loading eccentric to both axes. Control perimeter dimensions as Fig 6.13.";
-                    betaFormula.Expression.Add(_beta.Symbol + @"=1 + 1.8\sqrt{\left(\frac{e_y}{b_z}\right)^2+\left(\frac{e_z}{b_y}\right)^2} ="+ Math.Round(_beta.Value, 3));
-                    betaFormula.Expression.Add(@"e_y =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ey,1) +"mm");
-                    betaFormula.Expression.Add(@"e_z =\frac{" + _mz.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ez,1) + "mm");
-                    betaFormula.Expression.Add(@"b_y =" + Math.Round(by, 1)+"mm");
-                    betaFormula.Expression.Add(@"b_z =" + Math.Round(bz, 1)+"mm");
+                    betaFormula.Expression.Add(_beta.Symbol + @"=1 + 1.8\sqrt{\left(\frac{e_y}{b_z}\right)^2+\left(\frac{e_z}{b_y}\right)^2} =" + Math.Round(_beta.Value, 3));
+                    betaFormula.Expression.Add(@"e_y =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ey, 1) + "mm");
+                    betaFormula.Expression.Add(@"e_z =\frac{" + _mz.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ez, 1) + "mm");
+                    betaFormula.Expression.Add(@"b_y =" + Math.Round(by, 1) + "mm");
+                    betaFormula.Expression.Add(@"b_z =" + Math.Round(bz, 1) + "mm");
                     Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/ControlPerimeters_Fig_6_13.png");
                     betaFormula.Image = new BitmapImage(uri);
                     break;
@@ -251,18 +258,18 @@ namespace TestCalcs
                     double epar = _my.Value * 1E6 / (_punchingLoad.Value * 1E3);
                     double c1 = _columnAdim.Value;
                     double c2 = _columnBdim.Value;
-                    double k = calck(c1/c2);
+                    double k = calck(c1 / c2);
                     double w1 = Math.Pow(c2, 2) / 4 + c1 * c2 + 4 * c1 * d_average + 8 * Math.Pow(d_average, 2) + Math.PI * d_average * c2;
                     var u1 = controlPerimeterNoHoles.Length;
                     var u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = (u1 / u1red) + k * (u1 / w1) * epar;
                     betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of hte slab.";
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}+k\frac{u_1}{W_1}e_{par}=" + Math.Round(_beta.Value, 3));
-                    betaFormula.Expression.Add(@"u_1="+Math.Round(u1,2)+"mm");
+                    betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
                     betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
-                    betaFormula.Expression.Add(@"k="+Math.Round(k,2));
+                    betaFormula.Expression.Add(@"k=" + Math.Round(k, 2));
                     betaFormula.Expression.Add(@"e_{par} =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(epar, 1) + "mm");
-                    betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2="+Math.Round(w1,2));
+                    betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2=" + Math.Round(w1, 2));
                     Uri uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
                     betaFormula.Image = new BitmapImage(uri2);
                     break;
@@ -270,7 +277,7 @@ namespace TestCalcs
                     u1 = controlPerimeterNoHoles.Length;
                     u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = u1 / u1red;
-                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}="+Math.Round(_beta.Value,3));
+                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}=" + Math.Round(_beta.Value, 3));
                     betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
                     betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
                     uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
@@ -528,20 +535,20 @@ namespace TestCalcs
                 shearLinkStartSpurs.Add(generatePerimeter(_columnAdim.Value, _columnBdim.Value, 0.5 * d_average + i * (sr)));
             }
 
-            if (_linkArrangement.ValueAsString == "SPURS_AUTO" )
+            if (_linkArrangement.ValueAsString == "SPURS_AUTO")
             {
                 perimetersToReinforce = new List<List<PolyLine>> { perimetersToReinforce[0] };
-                var spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints()};
+                var spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints() };
                 if (_colType.ValueAsString == "INTERNAL") spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints2() };
 
                 for (int i = 1; i < 25; i++)
                 {
-                    int spursOnPrevPerim = spurPoints[i-1].Count;
+                    int spursOnPrevPerim = spurPoints[i - 1].Count;
                     List<Tuple<Vector2, Vector2>> newPerim = new List<Tuple<Vector2, Vector2>>();
                     for (int k = 0; k < spursOnPrevPerim; k++)
                     {
-                        var vector = spurPoints[i-1][k].Item2;
-                        newPerim.Add(new Tuple<Vector2, Vector2>(spurPoints[i-1][k].Item1 + vector * (float)sr, vector));
+                        var vector = spurPoints[i - 1][k].Item2;
+                        newPerim.Add(new Tuple<Vector2, Vector2>(spurPoints[i - 1][k].Item1 + vector * (float)sr, vector));
                     }
                     var segs = new List<GeometryBase>();
                     var testOuter = new List<GeometryBase>();
@@ -560,7 +567,7 @@ namespace TestCalcs
                         {
                             var interPoint = (prevPoint.Item1 + item.Item1) / 2;
                             var interVec = Vector2.Normalize((prevPoint.Item2 + item.Item2));
-                            newPerim.Insert(j, new Tuple<Vector2, Vector2>(interPoint,interVec));
+                            newPerim.Insert(j, new Tuple<Vector2, Vector2>(interPoint, interVec));
                             segs.Add(new Line(prevPoint.Item1, interPoint));
                             segs.Add(new Line(interPoint, item.Item1));
                         }
@@ -663,8 +670,8 @@ namespace TestCalcs
                 {
                     Vector2 dir = line.End - line.Start;
                     Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
-                    
-                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st))+1);
+
+                    int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st)) + 1);
                     var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
                     for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
@@ -707,7 +714,7 @@ namespace TestCalcs
                         links.Add(newLinks);
                         break;
                     }
-                    var newCornerLinks = new List<Tuple<Vector2,Vector2>>();
+                    var newCornerLinks = new List<Tuple<Vector2, Vector2>>();
                     //generate new links from previous corners
                     int startLine = 1; int prevLine = 0;
                     if (initialLines.IsClosed == true)
@@ -724,7 +731,7 @@ namespace TestCalcs
                         Vector2 dir2 = line2.End - line2.Start;
                         Vector2 perp2 = Vector2.Normalize(new Vector2(dir2.Y, -dir2.X));
                         var cornerPoint = line1.intersection(line2);
-                        newLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp1 *(float)sr, perp1));
+                        newLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp1 * (float)sr, perp1));
                         newLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp2 * (float)sr, perp2));
                         newCornerLinks.Add(new Tuple<Vector2, Vector2>(cornerPoint[0].Point + perp1 * (float)sr + perp2 * (float)sr, new Vector2(0f, 0f)));
                         prevLine = j;
@@ -811,7 +818,7 @@ namespace TestCalcs
                         var newLinks = new List<Tuple<Vector2, Vector2>>();
                         foreach (var link in edgeLinks)
                         {
-                            newLinks.Add(new Tuple<Vector2, Vector2>(link.Item1 + (float) sr * link.Item2, link.Item2));
+                            newLinks.Add(new Tuple<Vector2, Vector2>(link.Item1 + (float)sr * link.Item2, link.Item2));
                         }
                         cruciformGroups.Add(newLinks);
                     }
@@ -842,7 +849,7 @@ namespace TestCalcs
                             angle2 += 2 * Math.PI;
                         }
                         var arc = new Arc { Centre = edgeLinks.First().Item1, Radius = 1.5 * d_average, StartAngle = angle2 - Math.PI / 4, EndAngle = angle2 };
-                        var startVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle2-Math.PI *0.75), (float)Math.Sin(angle2-Math.PI * 0.75)));
+                        var startVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle2 - Math.PI * 0.75), (float)Math.Sin(angle2 - Math.PI * 0.75)));
                         var pt3 = arc.Start + startVec * (float)d_average;
                         outPerimSegment.Add(new Line(pt3, arc.Start));
                         outPerimSegment.Add(arc);
@@ -851,7 +858,7 @@ namespace TestCalcs
                     if (j < cruciformGroups.Count - 1 || closed)
                     {
                         var arc = new Arc { Centre = edgeLinks.Last().Item1, Radius = 1.5 * d_average, StartAngle = angle, EndAngle = angle + Math.PI / 4 };
-                        var endVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle+Math.PI * 0.75), (float)Math.Sin(angle+Math.PI * 0.75)));
+                        var endVec = Vector2.Normalize(new Vector2((float)Math.Cos(angle + Math.PI * 0.75), (float)Math.Sin(angle + Math.PI * 0.75)));
                         var pt4 = arc.End + endVec * (float)d_average;
                         outPerimSegment.Add(arc);
                         outPerimSegment.Add(new Line(arc.End, pt4));
@@ -948,7 +955,7 @@ namespace TestCalcs
                     @"\text{Perimeter spacing} =" + Math.Round(_perimSpacing.Value,0) + _perimSpacing.Unit
                 }
             };
-            if (_linkArrangement.ValueAsString=="GRID")
+            if (_linkArrangement.ValueAsString == "GRID")
             {
                 Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_ConcreteCentreLayout.png");
                 detailingFormula.Image = new BitmapImage(uri);
@@ -960,7 +967,7 @@ namespace TestCalcs
                 detailingFormula.Image = new BitmapImage(uri);
                 detailingFormula.Ref = "Figure 6.22, diagram A";
             }
-            else if (_linkArrangement.ValueAsString == "CRUCIFORM" )
+            else if (_linkArrangement.ValueAsString == "CRUCIFORM")
             {
                 Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_22.png");
                 detailingFormula.Image = new BitmapImage(uri);
@@ -969,16 +976,106 @@ namespace TestCalcs
 
             expressions.Add(detailingFormula);
 
-                var image = generateImage();
-                expressions.Insert(0, new Formula
-                {
-                    Narrative = "Diagram:" + Environment.NewLine +
-                    "Column shown in green, control and outer perimeters in red.",
-                    Image = image,
-                    Conclusion = "OK",
-                    Status = CalcStatus.PASS
-                });
+            var image = generateImage();
+            expressions.Insert(0, new Formula
+            {
+                Narrative = "Diagram:" + Environment.NewLine +
+                "Column shown in green, control and outer perimeters in red.",
+                Image = image,
+                Conclusion = "OK",
+                Status = CalcStatus.PASS
+            });
+
+            if(_dxfOpt.ValueAsString == "SPECIFIED_FOLDER")
+            {
+                generateDXFoutput();
             }
+
+        }
+
+        private void generateDXFoutput()
+        {
+            var dxf = new netDxf.DxfDocument();
+            var ColumnLayer = new netDxf.Tables.Layer("Column")
+            {
+                Color = netDxf.AciColor.Green,
+                Lineweight = netDxf.Lineweight.W50
+            };
+            var slabEdgeLayer = new netDxf.Tables.Layer("SlabEdge")
+            {
+                Color = netDxf.AciColor.Yellow,
+                Lineweight = netDxf.Lineweight.W35
+            };
+            var linksLayer = new netDxf.Tables.Layer("Links")
+            {
+                Color = netDxf.AciColor.Green,
+                Lineweight = netDxf.Lineweight.W35
+            };
+            var controlPerimeterLayer = new netDxf.Tables.Layer("ControlPerimeter")
+            {
+                Color = netDxf.AciColor.Red,
+                Lineweight = netDxf.Lineweight.W18
+            };
+            var outerPerimeterLayer = new netDxf.Tables.Layer("OuterPerimeter")
+            {
+                Color = netDxf.AciColor.Red,
+                Lineweight = netDxf.Lineweight.W18
+            };
+
+            dxf.Layers.Add(ColumnLayer);
+            dxf.Layers.Add(slabEdgeLayer);
+            dxf.Layers.Add(linksLayer);
+            dxf.Layers.Add(controlPerimeterLayer);
+            dxf.Layers.Add(outerPerimeterLayer);
+
+            foreach (var item in fullColumnOutline.Segments)
+            {
+                dxf.AddEntity(getDXFEntityFromGeometry(item, ColumnLayer));                
+            }
+            foreach (var item in slabEdge.Segments)
+            {
+                dxf.AddEntity(getDXFEntityFromGeometry(item, slabEdgeLayer));
+            }
+            foreach (var item in shearLinks.SelectMany(a => a).ToList())
+            {
+                dxf.AddEntity(new netDxf.Entities.Circle(new netDxf.Vector2(item.X, item.Y), 10) { Layer = linksLayer });
+            }
+            foreach (var item in controlPerimeters.SelectMany(a => a.Segments))
+            {
+                dxf.AddEntity(getDXFEntityFromGeometry(item, controlPerimeterLayer));
+            }
+            foreach (var item in outerPerimeters.SelectMany(a => a.Segments))
+            {
+                dxf.AddEntity(getDXFEntityFromGeometry(item, outerPerimeterLayer));
+            }
+
+            var filePath = _dxfFolder.ValueAsString + @"\" + this.InstanceName + @".dxf";
+            dxf.Save(filePath);
+        }
+
+        private netDxf.Entities.EntityObject getDXFEntityFromGeometry(GeometryBase item, Layer layer)
+        {
+            if (item.GetType() == typeof(Line))
+            {
+                var dxfLine = new netDxf.Entities.Line(
+                    new netDxf.Vector2(item.Start.X, item.Start.Y),
+                    new netDxf.Vector2(item.End.X, item.End.Y))
+                { Layer = layer };
+                return dxfLine;
+            }
+            else if (item.GetType() == typeof(Arc))
+            {
+                var arc = item as Arc;
+                var dxfLine = new netDxf.Entities.Arc(
+                    new netDxf.Vector2(arc.Centre.X, arc.Centre.Y),
+                    arc.Radius,
+                    arc.StartAngle * (180 / Math.PI),
+                    arc.EndAngle * (180 / Math.PI))
+                { Layer = layer };
+                return dxfLine;
+            }
+            return null;
+        }
 
         private List<Tuple<Vector2, Vector2>> spurStartPoints2()
         {

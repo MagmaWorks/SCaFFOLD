@@ -22,7 +22,7 @@ namespace CalcCore
         DOUBLE,
         SELECTIONLIST,
         FILEPATH,
-        DOUBLELIST
+        FOLDERPATH
     }
 
     public enum CalcStatus

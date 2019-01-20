@@ -58,7 +58,7 @@ namespace CalcCore
             }
         }
 
-        public override CalcValueType Type => CalcValueType.DOUBLELIST;
+        public override CalcValueType Type => CalcValueType.DOUBLE;
 
         List<List<double>> _values;
 

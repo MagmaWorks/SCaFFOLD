@@ -51,6 +51,7 @@
     <Compile Include="CalcDouble.cs" />
     <Compile Include="CalcDoubleList.cs" />
     <Compile Include="CalcFilePath.cs" />
+    <Compile Include="CalcFolderPath.cs" />
     <Compile Include="CalcSelectionList.cs" />
     <Compile Include="CalcValueBase.cs" />
     <Compile Include="CalcValueFactory.cs" />

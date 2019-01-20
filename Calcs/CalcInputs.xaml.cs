@@ -43,5 +43,16 @@ namespace Calcs
             var textbox = sender as TextBox;
             textbox.SelectAll();
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog fileDialog = new System.Windows.Forms.FolderBrowserDialog();
+            Button myButton = (System.Windows.Controls.Button)sender;
+            var result = fileDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                myButton.Content = fileDialog.SelectedPath;
+            }
+        }
     }
 }
