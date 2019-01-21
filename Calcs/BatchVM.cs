@@ -91,7 +91,6 @@ namespace Calcs
             fileDialog.ShowDialog();
             var filePath = fileDialog.FileName;
 
-            //var filePath = @"C:\Users\Alex Baalham\Documents\test\INPUTS.csv";
             List<CalcCore.ICalc> returnList = new List<CalcCore.ICalc>();
             string line = "";
             string[] lineItems;

@@ -127,7 +127,7 @@ namespace TestCalcs
             _legsTotal = outputValues.CreateDoubleCalcValue("Total legs", "", "No.", 0);
             _legDia = outputValues.CreateDoubleCalcValue("Leg diameter", "", "mm", 0);
             _dxfOpt = inputValues.CreateCalcSelectionList("DXF output option", "NONE", new List<string> { "NONE", "SPECIFIED_FOLDER" });
-            _dxfFolder = inputValues.CreateCalcFolderPath("DXF output folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            _dxfFolder = inputValues.CreateCalcFolderPath("DXF output folder", AppDomain.CurrentDomain.BaseDirectory);
             _holePosX = inputValues.CreateDoubleCalcValue("Hole 1 X position", "", "mm", 0);
             _holePosY = inputValues.CreateDoubleCalcValue("Hole 1 Y position", "", "mm", 220);
             _holeSizeX = inputValues.CreateDoubleCalcValue("Hole 1 X size", "", "mm", 0);

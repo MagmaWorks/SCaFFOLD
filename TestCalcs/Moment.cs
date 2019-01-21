@@ -38,7 +38,7 @@ namespace TestCalcs
             shear = this.outputValues.CreateDoubleCalcValue("Shear", "V", "kN", 0);
             endConditions = this.inputValues.CreateCalcSelectionList("End Condition", "Pinned", new List<string> { "Fixed", "Pinned" });
             momentCalc = new Dictionary<string, Action>() { { "Fixed", new Action(calcFixedMoment) }, { "Pinned", new Action(calcPinnedMoment) } };
-            filePath = this.inputValues.CreateCalcFilePath("Section Names", @"C:\Users\Alex Baalham\source\repos\Calcs\TestCalcs\Section Names.csv");
+            filePath = this.inputValues.CreateCalcFilePath("Section Names", AppDomain.CurrentDomain.BaseDirectory + @"Libraries\Section_Names.csv");
             UpdateCalc();
         }
 
