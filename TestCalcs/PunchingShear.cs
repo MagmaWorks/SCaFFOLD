@@ -539,10 +539,12 @@ namespace TestCalcs
             {
                 perimetersToReinforce = new List<List<PolyLine>> { perimetersToReinforce[0] };
                 var spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints() };
+                double distFromCol = 0.5 * d_average;
                 if (_colType.ValueAsString == "INTERNAL") spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints2() };
 
                 for (int i = 1; i < 25; i++)
                 {
+                    distFromCol += sr;
                     int spursOnPrevPerim = spurPoints[i - 1].Count;
                     List<Tuple<Vector2, Vector2>> newPerim = new List<Tuple<Vector2, Vector2>>();
                     for (int k = 0; k < spursOnPrevPerim; k++)
@@ -563,7 +565,11 @@ namespace TestCalcs
                     for (int j = start; j < newPerim.Count; j++)
                     {
                         var item = newPerim[j];
-                        if ((item.Item1 - prevPoint.Item1).Length() > st)
+                        if (
+                           ((distFromCol < 2 * d_average) && ((item.Item1 - prevPoint.Item1).Length() > 1.5 * d_average))
+                           ||
+                           ((distFromCol >= 2 * d_average) && ((item.Item1 - prevPoint.Item1).Length() > 2 * d_average))
+                            )
                         {
                             var interPoint = (prevPoint.Item1 + item.Item1) / 2;
                             var interVec = Vector2.Normalize((prevPoint.Item2 + item.Item2));
@@ -672,10 +678,13 @@ namespace TestCalcs
                     Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
 
                     int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st)) + 1);
-                    var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
+                    double armOffset = 50;
+                    if (line.Length < 200) armOffset = 25;
+                    var stepVec = Vector2.Normalize(dir) * (float)((line.Length - 2*armOffset) / (double)(numberOfSpursOnEdge - 1));
+                    var startPoint = line.PointAtParameter(armOffset / line.Length);
                     for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
-                        newLinks.Add(new Tuple<Vector2, Vector2>(line.Start + stepVec * i + 0.5f * (float)d_average * perp, perp));
+                        newLinks.Add(new Tuple<Vector2, Vector2>(startPoint + stepVec * i + 0.5f * (float)d_average * perp, perp));
                     }
                     newLines.Add(new Line(line.Start + 0.5f * (float)d_average * perp, line.End + 0.5f * (float)d_average * perp));
                 }
@@ -797,10 +806,14 @@ namespace TestCalcs
                     Vector2 dir = line.End - line.Start;
                     Vector2 perp = Vector2.Normalize(new Vector2(dir.Y, -dir.X));
                     int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st)) + 1);
-                    var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
+                    double armOffset = 50;
+                    if (line.Length < 200) armOffset = 25;
+                    var stepVec = Vector2.Normalize(dir) * (float)((line.Length - 2 * armOffset) / (double)(numberOfSpursOnEdge - 1));
+                    var startPoint = line.PointAtParameter(armOffset / line.Length);
+                    //var stepVec = Vector2.Normalize(dir) * (float)(line.Length / (double)(numberOfSpursOnEdge - 1));
                     for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
-                        newLinks.Add(new Tuple<Vector2, Vector2>(line.Start + stepVec * i + 0.5f * (float)d_average * perp, perp));
+                        newLinks.Add(new Tuple<Vector2, Vector2>(startPoint + stepVec * i + 0.5f * (float)d_average * perp, perp));
                     }
                     cruciformGroups.Add(newLinks);
                     newLines.Add(new Line(line.Start + 0.5f * (float)d_average * perp, line.End + 0.5f * (float)d_average * perp));
