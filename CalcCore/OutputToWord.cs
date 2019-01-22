@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Microsoft.Office.Interop.Word;
 
@@ -13,7 +14,7 @@ namespace CalcCore
     {
         public static void WriteToWord(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs)
         {
-            _Application winWord = new Application();
+            _Application winWord = new Microsoft.Office.Interop.Word.Application();
             object missing = Type.Missing;
             winWord.Visible = true;
             Document document = winWord.Documents.Add(ref missing, ref missing, ref missing, ref missing);
@@ -206,13 +207,19 @@ namespace CalcCore
                 objTab1.Rows[1].Borders[WdBorderType.wdBorderBottom].Color = (WdColor)(240 + 0x100 * 89 + 0x10000 * 36); //converts RGB to Hex
             }
 
-           
-
             for (int i = 1; i < math.Count+1; i++)
             {
                 math[i].Type = WdOMathType.wdOMathInline;
-            } 
-            math.BuildUp();
+            }
+            try
+            {
+                math.BuildUp();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Sorry! Your version of Word isn't rendering the equations properly. Please fix manually.");
+            }
+            
         }
     }
 }
