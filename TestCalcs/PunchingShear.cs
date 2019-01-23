@@ -499,7 +499,7 @@ namespace TestCalcs
                 Expression = new List<string>
                 {
                     @"f_{ywdef} = \min{(250 + 0.25 \times d_{average},f_{ywd})} = \min{(" + (250 + 0.25 * d_average) + @"," + fywd+@")} = " + fywdef + @"N/mm^2",
-                    _Asw.Symbol + @" = \frac{(v_{Ed1} - 0.75)v_{Rdc}s_ru_1}{1.5 \times f_{ywdef}} =" + Math.Round(_Asw.Value,0) + _Asw.Unit,
+                    _Asw.Symbol + @" = \frac{(v_{Ed1} - 0.75v_{Rdc})s_ru_1}{1.5 \times f_{ywdef}} =" + Math.Round(_Asw.Value,0) + _Asw.Unit,
                     @"\frac{" + _Asw.Symbol + @"}{s_r}=" + Math.Round(_Asw.Value / sr,3)
                 },
                 Ref = "cl.6.4.5(1)"
