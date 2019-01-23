@@ -93,7 +93,6 @@ namespace TestCalcs
         List<PolyLine> u1reducedNoHoles;
         List<PolyLine> u1reduced;
 
-
         public PunchingShear()
         {
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER" });
@@ -136,9 +135,9 @@ namespace TestCalcs
             _hole2PosY = inputValues.CreateDoubleCalcValue("Hole 2 Y position", "", "mm", -300);
             _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole 2 X size", "", "mm", 00);
             _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
+
             UpdateCalc();
         }
-
 
         public override List<Formula> GenerateFormulae()
         {
@@ -1549,20 +1548,25 @@ namespace TestCalcs
             double startAngle = 0;
             int angleDivisions = 1;
             bool includeLastCorner = false;
-            switch (_linkArrangement.ValueAsString)
-            {
-                case "SPURS_AUTO":
-                    angleDivisions = 2;
-                    break;
-                case "GRID":
-                    angleDivisions = 2;
-                    break;
-                default:
-                    break;
-            }
+            double quarterLength = 0.5 * Math.PI * 2.25 * d_average;
+            angleDivisions = (int)Math.Ceiling(quarterLength / st);
+
+            //switch (_linkArrangement.ValueAsString)
+            //{
+            //    case "SPURS_AUTO":
+            //        angleDivisions = 3;
+            //        break;
+            //    case "GRID":
+            //        angleDivisions = 3;
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+
 
             double newx = 0; double newy = 0;
-            if (_columnAdim.Value > 3 * d_average)
+            if (_columnAdim.Value > 1.5 * d_average)
             {
                 newx = x - Math.Min(0.5 * d_average, y);
             }
@@ -1570,7 +1574,7 @@ namespace TestCalcs
             {
                 newx = 0;
             }
-            if (_columnBdim.Value > 3 * d_average)
+            if (_columnBdim.Value > 1.5 * d_average)
             {
                 newy = y - Math.Min(0.5 * d_average, x);
             }
