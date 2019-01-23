@@ -540,7 +540,7 @@ namespace TestCalcs
                 perimetersToReinforce = new List<List<PolyLine>> { perimetersToReinforce[0] };
                 var spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints() };
                 double distFromCol = 0.5 * d_average;
-                if (_colType.ValueAsString == "INTERNAL") spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints2() };
+                if (_colType.ValueAsString == "INTERNAL") spurPoints = new List<List<Tuple<Vector2, Vector2>>> { spurStartPoints() };
 
                 for (int i = 1; i < 25; i++)
                 {

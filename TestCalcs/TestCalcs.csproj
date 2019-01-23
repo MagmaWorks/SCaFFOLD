@@ -82,6 +82,7 @@
     <Resource Include="resources\PunchingShear_Fig_6_20.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="resources\Punching_Shear_Inputs.csv" />
     <None Include="resources\Section_Names.csv" />

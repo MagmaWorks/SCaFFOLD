@@ -210,16 +210,16 @@ namespace CalcCore
             for (int i = 1; i < math.Count+1; i++)
             {
                 math[i].Type = WdOMathType.wdOMathInline;
+                try
+                {
+                    math[i].BuildUp();
+                }
+                catch (Exception)
+                {
+                    math[i].Linearize();
+                    math[i].BuildUp();
+                }
             }
-            try
-            {
-                math.BuildUp();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Sorry! Your version of Word isn't rendering the equations properly. Please fix manually.");
-            }
-            
         }
     }
 }
