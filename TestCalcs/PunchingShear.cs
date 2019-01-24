@@ -1149,23 +1149,30 @@ namespace TestCalcs
             }
 
             _holeEdges = new List<Tuple<Line, Line>>();
+            var angles = new List<double>();
             for (int i = 0; i < allHoleCorners.Count; i++)
             {
                 var holeCorners = allHoleCorners[i];
-                double minAngle = Math.Atan2(holeCorners[0].Y, holeCorners[0].X);
-                double maxAngle = Math.Atan2(holeCorners[0].Y, holeCorners[0].X);
                 foreach (var corner in holeCorners)
                 {
-                    double angle = Math.Atan2(corner.Y, corner.X);
-                    minAngle = Math.Min(minAngle, angle);
-                    maxAngle = Math.Max(maxAngle, angle);
+                    var ang = Math.Atan2(corner.Y, corner.X);
+                    if (ang < 0) ang += 2 * Math.PI;
+                    angles.Add(ang);
                 }
-                if ((minAngle * maxAngle < 0) && (maxAngle - minAngle > Math.PI))
+                double minAngle = angles.Min();
+                double maxAngle = angles.Max();
+                if(maxAngle - minAngle > Math.PI)
                 {
-                    var newMax = minAngle + 2 * Math.PI;
-                    minAngle = maxAngle;
-                    maxAngle = newMax;
+                    angles = new List<double>();
+                    foreach (var corner in holeCorners)
+                    {
+                        var ang = Math.Atan2(corner.Y, corner.X);
+                        angles.Add(ang);
+                    }
                 }
+                minAngle = angles.Min();
+                maxAngle = angles.Max();
+
                 // translate coordinate system so that width and lengh of hole can be compared using radius as x-axis
                 //figure 6.14
                 var minx = 0d; var maxx = 0d; var miny = 0d; var maxy = 0d;

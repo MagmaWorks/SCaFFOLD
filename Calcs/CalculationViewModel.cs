@@ -107,7 +107,7 @@ namespace Calcs
 
         private void outputToWord()
         {
-            CalcCore.OutputToWord.WriteToWord(calc, _includeInputsInWord, _includeBodyInWord, _includeOutputsInWord);
+            CalcCore.OutputToODT.WriteToODT(calc, _includeInputsInWord, _includeBodyInWord, _includeOutputsInWord);
         }
 
         List<IOValues> inputs;
