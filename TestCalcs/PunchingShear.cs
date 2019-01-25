@@ -97,7 +97,7 @@ namespace TestCalcs
         {
             _typeName = "Punching Shear to EC2";
 
-            _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER" });
+            _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER", "RE-ENTRANT" });
             _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID", "CRUCIFORM" });
             _srMode = inputValues.CreateCalcSelectionList("Radial spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
             _srTarget = inputValues.CreateDoubleCalcValue("Target radial spacing", "s_r", "mm", 0);
@@ -285,6 +285,11 @@ namespace TestCalcs
                     betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
                     uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
                     betaFormula.Image = new BitmapImage(uri2);
+                    break;
+                case "RE-ENTRANT":
+                    _beta.Value = 1.275;
+                    betaFormula.Narrative += "Default value for beta - use with care.";
+                    betaFormula.Expression.Add(_beta.Symbol + @"=" + Math.Round(_beta.Value,3));
                     break;
                 default:
                     break;
@@ -589,7 +594,7 @@ namespace TestCalcs
                     }
                     var newPerimLine = new PolyLine(segs);
                     // extend to slab edge to max 0.5 * st
-                    if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
+                    if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER" || _colType.ValueAsString == "RE-ENTRANT")
                     {
                         var v1 = Vector2.Normalize(segs.First().Start - segs.First().End);
                         var ray1 = new Line(segs.First().Start, segs.First().Start + v1 * 10000);
@@ -788,6 +793,23 @@ namespace TestCalcs
                                 }
                             }
                         }
+                        List<double> lengthsFromCol = new List<double>();
+                        var x = _columnAdim.Value / 2; var y = _columnBdim.Value;
+                        foreach (var edge in fullColumnOutline.Segments)
+                        {
+                            lengthsFromCol.Add((link.Item1 - edge.Start).Length());
+                        }
+                        if (
+                            lengthsFromCol.Min()>(offsetFromColumn + 0.5*sr)
+                            &&
+                            (link.Item1.X < -x || link.Item1.X > x)
+                            && 
+                            (link.Item1.Y > y || link.Item1.Y < -y)
+                            )
+                        {
+                            include = false;
+                        }
+
                         if (include) filteredList.Add(link.Item1);
                     }
                     shearLinks.Add(filteredList);
@@ -1248,36 +1270,36 @@ namespace TestCalcs
             }
         }
 
-        private List<int> getSpursList()
-        {
-            List<int> basicNumbers = new List<int> { 8, 12, 16, 24};
-            switch (_linkArrangement.ValueAsString)
-            {
-                case "SPURS_AUTO":
-                    basicNumbers = new List<int> { 8, 12, 16, 24 };
-                    break;
-                case "SPURS_45_DEGREES":
-                    basicNumbers = new List<int> { 8 };
-                    break;
-                case "SPURS_30_DEGREES":
-                    basicNumbers = new List<int> { 12 };
-                    break;
-                default:
-                    break;
-            }
-            switch (_colType.ValueAsString)
-            {
-                case "INTERNAL":
-                    return basicNumbers;
-                case "EDGE":
-                    return basicNumbers.Select(a => (a / 2) + 1).ToList();
-                case "CORNER":
-                    return basicNumbers.Select(a => (a / 4) + 1).ToList();
-                default:
-                    break;
-            }
-            return basicNumbers;
-        }
+        //private List<int> getSpursList()
+        //{
+        //    List<int> basicNumbers = new List<int> { 8, 12, 16, 24};
+        //    switch (_linkArrangement.ValueAsString)
+        //    {
+        //        case "SPURS_AUTO":
+        //            basicNumbers = new List<int> { 8, 12, 16, 24 };
+        //            break;
+        //        case "SPURS_45_DEGREES":
+        //            basicNumbers = new List<int> { 8 };
+        //            break;
+        //        case "SPURS_30_DEGREES":
+        //            basicNumbers = new List<int> { 12 };
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    switch (_colType.ValueAsString)
+        //    {
+        //        case "INTERNAL":
+        //            return basicNumbers;
+        //        case "EDGE":
+        //            return basicNumbers.Select(a => (a / 2) + 1).ToList();
+        //        case "CORNER":
+        //            return basicNumbers.Select(a => (a / 4) + 1).ToList();
+        //        default:
+        //            break;
+        //    }
+        //    return basicNumbers;
+        //}
 
         private PolyLine generateColumnFaces()
         {
@@ -1310,6 +1332,16 @@ namespace TestCalcs
                         new Line(new Vector2(-x,-y), new Vector2(x,-y)),
                         new Line(new Vector2(x,-y), new Vector2(x,y)),
                     });
+                    break;
+                case "RE-ENTRANT":
+                    returnList = new PolyLine(new List<GeometryBase>()
+                    {
+                        new Line(new Vector2(-x,y), new Vector2(-x,-y)),
+                        new Line(new Vector2(-x,-y), new Vector2(x,-y)),
+                        new Line(new Vector2(x,-y), new Vector2(x,y)),
+                        new Line(new Vector2(x,y), new Vector2(-x,y))
+                    })
+                    { IsClosed = false };
                     break;
                 default:
                     break;
@@ -1378,6 +1410,16 @@ namespace TestCalcs
                         });
                     }
                     break;
+                case "RE-ENTRANT":
+                        columnOutline = new PolyLine(new List<GeometryBase>
+                        {
+                            new Line(new Vector2(-x,y), new Vector2(-x,-y)),
+                            new Line(new Vector2(-x,-y), new Vector2(x,-y)),
+                            new Line(new Vector2(x,-y), new Vector2(x,y)),
+                            new Line(new Vector2(x,y), new Vector2(-x,y)),
+                        })
+                    { IsClosed = false };
+                    break;
                 default:
                     break;
             }
@@ -1404,6 +1446,13 @@ namespace TestCalcs
                     {
                         new Line(new Vector2(-x, -10000), new Vector2(-x, y)),
                         new Line(new Vector2(-x, y), new Vector2(10000, y))
+                    });
+                    break;
+                case "RE-ENTRANT":
+                    slabEdge = new PolyLine(new List<GeometryBase>
+                    {
+                        new Line(new Vector2(-10000,y), new Vector2(-x, y)),
+                        new Line(new Vector2(-x, y), new Vector2(-x, 10000))
                     });
                     break;
                 default:
@@ -1499,6 +1548,11 @@ namespace TestCalcs
                     inter1 = perimeter.intersection(new Line(new Vector2(x, y), new Vector2(10000, y)));
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
                     break;
+                case "RE-ENTRANT":
+                    inter2 = perimeter.intersection(new Line(new Vector2(-10000,y), new Vector2(-x, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(-x, 10000)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
                 default:
                     break;
             }
@@ -1543,6 +1597,11 @@ namespace TestCalcs
                     float offy2 = (float)Math.Min(1.5 * d_average, 0.5 * _columnBdim.Value);
                     inter2 = perimeter.intersection(new Line(new Vector2(x - offx2, -10000), new Vector2(x - offx2, y)));
                     inter1 = perimeter.intersection(new Line(new Vector2(x, -y + offy2), new Vector2(10000, -y + offy2)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                case "RE-ENTRANT":
+                    inter2 = perimeter.intersection(new Line(new Vector2(-10000, y), new Vector2(-x, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(-x, 10000)));
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
                     break;
                 default:
@@ -1618,6 +1677,15 @@ namespace TestCalcs
                     innerPoints.Add(new Vector2((float)newx, -(float)newy));
                     innerPoints.Add(new Vector2((float)newx, (float)newy));
                     startAngle = 1.5 * Math.PI;
+                    break;
+                case "RE-ENTRANT":
+                    innerPoints.Add(new Vector2(-(float)newx, (float)newy));
+                    innerPoints.Add(new Vector2(-(float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, -(float)newy));
+                    innerPoints.Add(new Vector2((float)newx, (float)newy));
+                    innerPoints.Add(new Vector2(-(float)newx, (float)newy));
+                    startAngle = 1 * Math.PI;
+                    includeLastCorner = false;
                     break;
                 default:
                     break;
