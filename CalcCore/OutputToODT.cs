@@ -59,16 +59,26 @@ namespace CalcCore
                     var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
                     paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
                     body.Append(para);
+                    para = new Paragraph(new Run(new Text("Input values for calculation.")));
+                    paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
+                    body.Append(para);
                     var tableOfInputs = genTable(calculation.GetInputs());
                     body.Append(tableOfInputs);
                 }
 
                 if (includeBody)
                 {
-                    Paragraph para = new Paragraph(new Run(new Text("Formulae")));
+                    Paragraph para = new Paragraph(new Run(new Text("Body")));
                     var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
                     paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
                     body.Append(para);
+
+                    para = new Paragraph(new Run(new Text("Main calculation including diagrams, working, narrative and conclusions.")));
+                    paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
+                    body.Append(para);
+
 
                     var FormulaeTable = genFormulaeTable(calculation.GetFormulae(), mainPart);
                     body.AppendChild(FormulaeTable);
@@ -76,9 +86,14 @@ namespace CalcCore
 
                 if (includeOutputs)
                 {
-                    var para = new Paragraph(new Run(new Text("Outputs")));
+                    var para = new Paragraph(new Run(new Text("Calculated values")));
                     var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
                     paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                    body.Append(para);
+
+                    para = new Paragraph(new Run(new Text("List of calculated values.")));
+                    paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
                     body.Append(para);
 
                     var tableOfOutputs = genTable(calculation.GetOutputs());
@@ -98,7 +113,7 @@ namespace CalcCore
             tableOfInputs.AppendChild(tableGrid);
             var tableProps = new TableProperties();
             tableProps.AppendChild(new TableLayout() { Type = TableLayoutValues.Fixed });
-            tableProps.AppendChild(new TableWidth() { Width = "10000", Type = TableWidthUnitValues.Dxa });
+            tableProps.AppendChild(new TableWidth() { Width = "9000", Type = TableWidthUnitValues.Dxa });
             tableOfInputs.AppendChild(tableProps);
 
             foreach (var item in formulae)
@@ -110,7 +125,7 @@ namespace CalcCore
                 cell1.Append(para);
                 cell1.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
                 TableCell cell2 = new TableCell();
-                cell2.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "7600" }));
+                cell2.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "6100" }));
                 cell2.AppendChild(new Paragraph(new Run(new Text(item.Narrative))));
                 foreach (var formula in item.Expression)
                 {
@@ -143,7 +158,7 @@ namespace CalcCore
                 
                 TableCell cell3 = new TableCell();
                 cell3.Append(new Paragraph(new Run(new Text(item.Conclusion))));
-                cell3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
+                cell3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1700" }));
 
                 row.Append(cell1, cell2, cell3);
                 tableOfInputs.AppendChild(row);
@@ -161,35 +176,41 @@ namespace CalcCore
             tableOfInputs.AppendChild(tableGrid);
             var tableProps = new TableProperties();
             tableProps.AppendChild(new TableLayout() { Type = TableLayoutValues.Fixed });
-            tableProps.AppendChild(new TableWidth() { Width = "10000", Type = TableWidthUnitValues.Dxa });
+            tableProps.AppendChild(new TableWidth() { Width = "9000", Type = TableWidthUnitValues.Dxa });
             tableOfInputs.AppendChild(tableProps);
 
             foreach (var item in calcVals)
             {
                 TableRow row = new TableRow();
-                var para = new Paragraph();
+                var para1 = new Paragraph();
                 var myMath = new M.OfficeMath(new M.Run(new M.Text(item.Symbol) { Space = SpaceProcessingModeValues.Preserve }));
-                para.AppendChild(myMath);
-                para.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+                para1.AppendChild(myMath);
+                para1.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
                 TableCell cell1 = new TableCell();
-                cell1.Append(para);
+                cell1.Append(para1);
                 cell1.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
-                TableCell cell2 = new TableCell(new Paragraph(new Run(new Text(item.Name))));
-                cell2.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "7600" }));
-                para = new Paragraph();
+                var para2 = new Paragraph(new Run(new Text(item.Name)));
+                TableCell cell2 = new TableCell();
+                cell2.AppendChild(para2);
+                cell2.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "6100" }));
+                var para3 = new Paragraph();
                 if (item.Type == CalcValueType.DOUBLE)
                 {
                     myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new M.Run(new M.Text(item.ValueAsString + item.Unit) { Space = SpaceProcessingModeValues.Preserve }));
-                    para.AppendChild(myMath);
-                    para.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+                    para3.AppendChild(myMath);
+                    para3.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+                }
+                else if (item.Type == CalcValueType.SELECTIONLIST)
+                {
+                    para3.AppendChild(new Run(new Text(item.ValueAsString)));
                 }
                 else
                 {
-                    para.AppendChild(new Run(new Text(item.ValueAsString)));
+                    cell2.AppendChild(new Paragraph(new Run(new Text(item.ValueAsString))));
                 }
                 TableCell cell3 = new TableCell();
-                cell3.Append(para);
-                cell3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
+                cell3.Append(para3);
+                cell3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1700" }));
                 row.Append(cell1, cell2, cell3);
                 tableOfInputs.AppendChild(row);
 
