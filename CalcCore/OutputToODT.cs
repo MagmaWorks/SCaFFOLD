@@ -20,14 +20,24 @@ namespace CalcCore
     {
         public static void WriteToODT(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs)
         {
-            var saveDialog = new SaveFileDialog();
-            saveDialog.Filter = @"Word files |*.docx";
-            saveDialog.FileName = calculation.InstanceName+@".docx";
-            saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            saveDialog.ShowDialog();
-            var filePath = saveDialog.FileName;
-            var libraryPath = AppDomain.CurrentDomain.BaseDirectory + "Libraries";
-            File.Copy(libraryPath + @"\Calculation_Template.docx", filePath,true);
+            string filePath;
+            try
+            {
+                var saveDialog = new SaveFileDialog();
+                saveDialog.Filter = @"Word files |*.docx";
+                saveDialog.FileName = calculation.InstanceName + @".docx";
+                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if(saveDialog.ShowDialog() != DialogResult.OK) return;
+                filePath = saveDialog.FileName;
+                var libraryPath = AppDomain.CurrentDomain.BaseDirectory + "Libraries";
+                File.Copy(libraryPath + @"\Calculation_Template.docx", filePath, true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
+                return;
+            }
+            
             using (WordprocessingDocument wordDocument =
                 WordprocessingDocument.Open(filePath, true))
             {

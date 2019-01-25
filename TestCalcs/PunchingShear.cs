@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -115,7 +116,7 @@ namespace TestCalcs
             _my = inputValues.CreateDoubleCalcValue("Moment about y axis", "M_{Ed,y}", "kNm", 33);
             _mz = inputValues.CreateDoubleCalcValue("Moment about z axis", "M_{Ed, z}", "kNm", 90);
             _fck = inputValues.CreateDoubleCalcValue("Concrete strength", @"f_{ck}", @"N/{mm^2}", 40);
-             _loadCombType = inputValues.CreateCalcSelectionList("Design situation", "PERMANENT", new List<string> {"PERMANENT", "ACCIDENTAL" });
+            _loadCombType = inputValues.CreateCalcSelectionList("Design situation", "PERMANENT", new List<string> { "PERMANENT", "ACCIDENTAL" });
             _concPartFactor = outputValues.CreateDoubleCalcValue("Partial factor for concrete", @"\gamma_c", "", 1.5);
             _rho = outputValues.CreateDoubleCalcValue("Reinforcement ratio", @"\rho_l", "", 0);
             _punchingLoad = inputValues.CreateDoubleCalcValue("Punching shear load", "V_{Ed}", "kN", 457);
@@ -142,10 +143,21 @@ namespace TestCalcs
             UpdateCalc();
         }
 
-        
+
 
         public override List<Formula> GenerateFormulae()
         {
+            var image = generateImage();
+            expressions.Insert(0, new Formula
+            {
+                Narrative = "Diagram:",
+                Image = image[0],
+            });
+            expressions.Insert(1, new Formula
+            {
+                Narrative="Key:",
+                Image = generateImage()[1]
+            });
             return expressions;
         }
 
@@ -290,7 +302,7 @@ namespace TestCalcs
                 case "RE-ENTRANT":
                     _beta.Value = 1.275;
                     betaFormula.Narrative += "Default value for beta - use with care.";
-                    betaFormula.Expression.Add(_beta.Symbol + @"=" + Math.Round(_beta.Value,3));
+                    betaFormula.Expression.Add(_beta.Symbol + @"=" + Math.Round(_beta.Value, 3));
                     break;
                 default:
                     break;
@@ -326,12 +338,8 @@ namespace TestCalcs
                 colFaceStressFormula.Status = CalcStatus.FAIL;
                 colFaceStressFormula.Conclusion = "Too high";
                 expressions.Add(colFaceStressFormula);
-                var image2 = generateImage();
                 expressions.Insert(0, new Formula
                 {
-                    Narrative = "Diagram:" + Environment.NewLine +
-                    "Column shown in green, control and outer perimeters in red.",
-                    Image = image2,
                     Conclusion = "Face stress too high",
                     Status = CalcStatus.FAIL
                 });
@@ -397,15 +405,12 @@ namespace TestCalcs
                     Status = CalcStatus.PASS,
                     Narrative = "Check if shear links are required"
                 });
-                var image2 = generateImage();
                 expressions.Insert(0, new Formula
                 {
-                    Narrative = "Diagram:" + Environment.NewLine +
-                    "Column shown in green, control and outer perimeters in red.",
-                    Image = image2,
                     Conclusion = "No links required",
                     Status = CalcStatus.PASS
                 });
+
                 return;
             }
             else if (stressvEd1 > 2 * vRdc)
@@ -426,15 +431,13 @@ namespace TestCalcs
                     Conclusion = "Redesign slab",
                     Status = CalcStatus.FAIL
                 });
-                var image2 = generateImage();
                 expressions.Insert(0, new Formula
                 {
-                    Narrative = "Diagram:" + Environment.NewLine +
-                    "Column shown in green, control and outer perimeters in red.",
-                    Image = image2,
+
                     Conclusion = "Redesign slab",
                     Status = CalcStatus.FAIL
                 });
+
                 return;
             }
             else
@@ -491,12 +494,10 @@ namespace TestCalcs
                 });
                 expressions.Insert(0, new Formula
                 {
-                    Narrative = "Diagram:" + Environment.NewLine +
-                    "Column shown in green, control and outer perimeters in red.",
-                    Image = generateImage(),
                     Conclusion = "Radial spacing too high",
                     Status = CalcStatus.FAIL
                 });
+
                 return;
             }
 
@@ -690,7 +691,7 @@ namespace TestCalcs
                     int numberOfSpursOnEdge = Math.Max(2, (int)Math.Ceiling(line.Length / (st)) + 1);
                     double armOffset = 50;
                     if (line.Length < 200) armOffset = 25;
-                    var stepVec = Vector2.Normalize(dir) * (float)((line.Length - 2*armOffset) / (double)(numberOfSpursOnEdge - 1));
+                    var stepVec = Vector2.Normalize(dir) * (float)((line.Length - 2 * armOffset) / (double)(numberOfSpursOnEdge - 1));
                     var startPoint = line.PointAtParameter(armOffset / line.Length);
                     for (int i = 0; i < numberOfSpursOnEdge; i++)
                     {
@@ -801,10 +802,10 @@ namespace TestCalcs
                             lengthsFromCol.Add((link.Item1 - edge.Start).Length());
                         }
                         if (
-                            lengthsFromCol.Min()>(offsetFromColumn + 0.5*sr)
+                            lengthsFromCol.Min() > (offsetFromColumn + 0.5 * sr)
                             &&
                             (link.Item1.X < -x || link.Item1.X > x)
-                            && 
+                            &&
                             (link.Item1.Y > y || link.Item1.Y < -y)
                             )
                         {
@@ -973,8 +974,6 @@ namespace TestCalcs
 
                 expressions.Insert(0, new Formula
                 {
-                    Narrative = "Diagram:" + Environment.NewLine + "Column shown in green, control and outer perimeters in red.",
-                    Image = generateImage(),
                     Conclusion = "Outer perimeter too short",
                     Status = CalcStatus.FAIL
                 });
@@ -1016,17 +1015,7 @@ namespace TestCalcs
 
             expressions.Add(detailingFormula);
 
-            var image = generateImage();
-            expressions.Insert(0, new Formula
-            {
-                Narrative = "Diagram:" + Environment.NewLine +
-                "Column shown in green, control and outer perimeters in red.",
-                Image = image,
-                Conclusion = "OK",
-                Status = CalcStatus.PASS
-            });
-
-            if(_dxfOpt.ValueAsString == "SPECIFIED_FOLDER")
+            if (_dxfOpt.ValueAsString == "SPECIFIED_FOLDER")
             {
                 generateDXFoutput();
             }
@@ -1070,7 +1059,7 @@ namespace TestCalcs
 
             foreach (var item in fullColumnOutline.Segments)
             {
-                dxf.AddEntity(getDXFEntityFromGeometry(item, ColumnLayer));                
+                dxf.AddEntity(getDXFEntityFromGeometry(item, ColumnLayer));
             }
             foreach (var item in slabEdge.Segments)
             {
@@ -1130,7 +1119,7 @@ namespace TestCalcs
             }
             for (int i = 0; i < spurSegments; i++)
             {
-                double frac = (1d / (double)spurSegments)*(i);
+                double frac = (1d / (double)spurSegments) * (i);
                 var pt1 = firstPerim.PointAtParameter((frac));
                 var pt2 = controlPerim.PointAtParameter((frac));
                 var vec = Vector2.Normalize(pt2 - pt1);
@@ -1189,7 +1178,7 @@ namespace TestCalcs
                 }
                 double minAngle = angles.Min();
                 double maxAngle = angles.Max();
-                if(maxAngle - minAngle > Math.PI)
+                if (maxAngle - minAngle > Math.PI)
                 {
                     angles = new List<double>();
                     foreach (var corner in holeCorners)
@@ -1412,7 +1401,7 @@ namespace TestCalcs
                     }
                     break;
                 case "RE-ENTRANT":
-                        columnOutline = new PolyLine(new List<GeometryBase>
+                    columnOutline = new PolyLine(new List<GeometryBase>
                         {
                             new Line(new Vector2(-x,y), new Vector2(-x,-y)),
                             new Line(new Vector2(-x,-y), new Vector2(x,-y)),
@@ -1475,14 +1464,14 @@ namespace TestCalcs
 
         public static double shearResistanceNoRein(double rhoL, double d_eff, double charStrength, double concPartFact)
         {
-            double k = Math.Min(1 + Math.Sqrt(200 / d_eff),2);
+            double k = Math.Min(1 + Math.Sqrt(200 / d_eff), 2);
 
             double cRdc = 0.18 / concPartFact;
 
             double resistance1 = cRdc * k * Math.Pow((100d * rhoL * charStrength), 1f / 3f);
-           
-            double resistance = Math.Max(resistance1,0.035 * Math.Pow(k, 1.5) * Math.Pow(charStrength, 0.5));
-            Console.WriteLine("rho" + rhoL + ";str" + charStrength + ";k" + k + ";vmin" + resistance+";vRdc"+resistance1);
+
+            double resistance = Math.Max(resistance1, 0.035 * Math.Pow(k, 1.5) * Math.Pow(charStrength, 0.5));
+            Console.WriteLine("rho" + rhoL + ";str" + charStrength + ";k" + k + ";vmin" + resistance + ";vRdc" + resistance1);
             return resistance;
         }
 
@@ -1550,7 +1539,7 @@ namespace TestCalcs
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
                     break;
                 case "RE-ENTRANT":
-                    inter2 = perimeter.intersection(new Line(new Vector2(-10000,y), new Vector2(-x, y)));
+                    inter2 = perimeter.intersection(new Line(new Vector2(-10000, y), new Vector2(-x, y)));
                     inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(-x, 10000)));
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
                     break;
@@ -1611,7 +1600,7 @@ namespace TestCalcs
             return perimeter2;
         }
 
-        private List<Tuple<Vector2,Vector2>> spurStartPoints()
+        private List<Tuple<Vector2, Vector2>> spurStartPoints()
         {
             var returnList = new List<Tuple<Vector2, Vector2>>();
             var innerPoints = new List<Vector2>();
@@ -1880,7 +1869,7 @@ namespace TestCalcs
             return new PathGeometry(figPaths);
         }
 
-        private BitmapSource generateImage()
+        private List<BitmapSource> generateImage()
         {
             var testImage = new RenderTargetBitmap(1000, 1000, 96, 96, PixelFormats.Pbgra32);
             var visual = new DrawingVisual();
@@ -1897,7 +1886,7 @@ namespace TestCalcs
                 var linksGeometry = new GeometryGroup();
                 var holeEdgeLinesGeometry = new GeometryGroup();
                 var slabGeometry = generateGeometry(slabEdge);
-                var allPerimetersFlattened = new List<PolyLine> ();
+                var allPerimetersFlattened = new List<PolyLine>();
                 foreach (var item in perimetersToReinforce)
                 {
                     foreach (var section in item)
@@ -1934,10 +1923,10 @@ namespace TestCalcs
                 double maxX = Math.Max(Math.Abs(newBounds.X), Math.Abs(newBounds.BottomRight.X));
                 double maxY = Math.Max(Math.Abs(newBounds.Y), Math.Abs(newBounds.BottomRight.Y));
 
-                double scale = 900 / (Math.Max(2*maxX, 2*maxY));
+                double scale = 900 / (Math.Max(2 * maxX, 2 * maxY));
                 var scaleTransform = new ScaleTransform(scale, -scale);
-                var transX = 50+scale * -newBounds.X;
-                var transY = 50+scale * -newBounds.Y;
+                var transX = 50 + scale * -newBounds.X;
+                var transY = 50 + scale * -newBounds.Y;
                 var transTransform = new TranslateTransform(transX, transY);
                 var transGroup = new TransformGroup();
                 transGroup.Children.Add(scaleTransform);
@@ -1976,7 +1965,67 @@ namespace TestCalcs
             }
 
             testImage.Render(visual);
-            return testImage;
+
+            var keyImage = new RenderTargetBitmap(1000, 200, 96, 96, PixelFormats.Pbgra32);
+            var keyVisual = new DrawingVisual();
+            using (var r = keyVisual.RenderOpen())
+            {
+                GeometryCollection textKey = new GeometryCollection();
+
+                var columnLine = new LineGeometry(new Point(0, 25), new Point(200, 25));
+                textKey.Add(gettext("Column face", new Point(250, 25)));
+                var slabLine = new LineGeometry(new Point(0, 75), new Point(200, 75));
+                textKey.Add(gettext("Slab edge", new Point(250, 75)));
+                var holeEdgeLine = new LineGeometry(new Point(0, 125), new Point(200, 125));
+                textKey.Add(gettext("Hole effect", new Point(250, 125)));
+                var redControlPerimLine = new LineGeometry(new Point(0, 175), new Point(200, 175));
+                textKey.Add(gettext("Effective control"+Environment.NewLine +"perimeter u1*", new Point(250, 175)));
+                var conPerimLine = new LineGeometry(new Point(500, 25), new Point(700, 25));
+                textKey.Add(gettext("Control perimeter u1", new Point(750, 25)));
+                var OutPerimLine = new LineGeometry(new Point(500, 75), new Point(700, 75));
+                textKey.Add(gettext("Outer perimeter", new Point(750, 75)));
+                var colLoadedFaceLine = new LineGeometry(new Point(500, 125), new Point(700, 125));
+                textKey.Add(gettext("Loaded column face", new Point(750, 125)));
+                var linksCircle = new GeometryGroup() {
+                    Children = new GeometryCollection(new List<Geometry> {
+                        new EllipseGeometry(new Point(550, 175), 8, 8),
+                        new EllipseGeometry(new Point(600, 175), 8, 8),
+                        new EllipseGeometry(new Point(650, 175), 8, 8)
+                    }) };
+                textKey.Add(gettext("Links", new Point(750, 175)));
+
+                var textKeyGroup = new GeometryGroup() { Children = textKey };
+
+                var dashedLine = new Pen(Brushes.Gray, 2) { DashStyle = new DashStyle(new List<double> { 20, 5, 5, 5 }, 0) };
+                var dashedLine2 = new Pen(Brushes.Gray, 2) { DashStyle = new DashStyle(new List<double> { 10, 5 }, 0) };
+
+                r.DrawGeometry(Brushes.LightGreen, new Pen(Brushes.Green, 5), columnLine);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Yellow, 3), slabLine);
+                r.DrawGeometry(Brushes.Transparent, dashedLine2, holeEdgeLine);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 8), redControlPerimLine);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 4), conPerimLine);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Green, 5), OutPerimLine);
+                r.DrawGeometry(Brushes.Transparent, new Pen(Brushes.Red, 5), colLoadedFaceLine);
+                r.DrawGeometry(Brushes.LightGray, new Pen(Brushes.Black, 1), linksCircle);
+                r.DrawGeometry(Brushes.Black, new Pen(Brushes.Black, 1), textKeyGroup);
+            }
+
+            keyImage.Render(keyVisual);
+
+            return new List<BitmapSource> { testImage, keyImage };
+        }
+
+        private Geometry gettext(string text, Point pos)
+        {
+            FormattedText returnText = new FormattedText(text,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface("Tahoma"),
+                20,
+                Brushes.Black);
+            var pos1 = new Point(pos.X, pos.Y - returnText.Height/2);
+            Geometry geometry = returnText.BuildGeometry(pos1);
+            return geometry;
         }
     }
 }
