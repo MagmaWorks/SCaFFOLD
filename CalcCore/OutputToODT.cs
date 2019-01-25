@@ -22,7 +22,7 @@ namespace CalcCore
         {
             var saveDialog = new SaveFileDialog();
             saveDialog.Filter = @"Word files |*.docx";
-            saveDialog.FileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + calculation.InstanceName+@".docx";
+            saveDialog.FileName = calculation.InstanceName+@".docx";
             saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             saveDialog.ShowDialog();
             var filePath = saveDialog.FileName;
@@ -43,29 +43,38 @@ namespace CalcCore
                 headerDate.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
                 headerPart.RootElement.Append(headerCalcType, headerCalcInstance, headerDate);
 
-                Paragraph para = new Paragraph(new Run(new Text("Inputs")));
-                var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                body.Append(para);
+                if (includeInputs)
+                {
+                    Paragraph para = new Paragraph(new Run(new Text("Inputs")));
+                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                    body.Append(para);
+                    var tableOfInputs = genTable(calculation.GetInputs());
+                    body.Append(tableOfInputs);
+                }
 
-                var tableOfInputs = genTable(calculation.GetInputs());                
-                body.Append(tableOfInputs);
+                if (includeBody)
+                {
+                    Paragraph para = new Paragraph(new Run(new Text("Formulae")));
+                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                    body.Append(para);
 
-                para = new Paragraph(new Run(new Text("Formulae")));
-                paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                body.Append(para);
+                    var FormulaeTable = genFormulaeTable(calculation.GetFormulae(), mainPart);
+                    body.AppendChild(FormulaeTable);
+                }
 
-                var FormulaeTable = genFormulaeTable(calculation.GetFormulae(), mainPart);
-                body.AppendChild(FormulaeTable);
+                if (includeOutputs)
+                {
+                    var para = new Paragraph(new Run(new Text("Outputs")));
+                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                    body.Append(para);
 
-                para = new Paragraph(new Run(new Text("Outputs")));
-                paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                body.Append(para);
+                    var tableOfOutputs = genTable(calculation.GetOutputs());
+                    body.Append(tableOfOutputs);
+                }
 
-                var tableOfOutputs = genTable(calculation.GetOutputs());
-                body.Append(tableOfOutputs);
             }
         }
 

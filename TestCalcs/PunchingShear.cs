@@ -96,6 +96,7 @@ namespace TestCalcs
         public PunchingShear()
         {
             _typeName = "Punching Shear to EC2";
+            InstanceName = "My column";
 
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER", "RE-ENTRANT" });
             _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID", "CRUCIFORM" });
@@ -176,15 +177,6 @@ namespace TestCalcs
             resetFields();
             expressions = new List<Formula>();
 
-            if (_stMode.ValueAsString == "AUTO")
-            {
-                st = 1.5 * d_average;
-            }
-            else
-            {
-                st = Math.Min(_stTarget.Value, 1.5 * d_average);
-            }
-
             // calculate effective depths in each direction
             dy = _h.Value - _offsety.Value;
             dz = _h.Value - _offsetz.Value;
@@ -212,6 +204,15 @@ namespace TestCalcs
                 },
                 Ref = "cl. 6.4.2(1)"
             });
+
+            if (_stMode.ValueAsString == "AUTO")
+            {
+                st = 1.5 * d_average;
+            }
+            else
+            {
+                st = Math.Min(_stTarget.Value, 1.5 * d_average);
+            }
 
             generateHoles();
             generateColumnOutlines();
