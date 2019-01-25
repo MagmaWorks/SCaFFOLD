@@ -178,6 +178,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="resources\Calculation_Template.docx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -196,4 +197,7 @@
     <Resource Include="WhitbyWood.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\Debug\Libraries\" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

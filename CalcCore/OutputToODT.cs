@@ -11,6 +11,8 @@ using System.Windows.Media.Imaging;
 using A = DocumentFormat.OpenXml.Drawing;
 using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
+using M = DocumentFormat.OpenXml.Math;
+using System.Windows.Forms;
 
 namespace CalcCore
 {
@@ -18,33 +20,48 @@ namespace CalcCore
     {
         public static void WriteToODT(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs)
         {
-            var filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\test.docx";
+            var saveDialog = new SaveFileDialog();
+            saveDialog.Filter = @"Word files |*.docx";
+            saveDialog.FileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + calculation.InstanceName+@".docx";
+            saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            saveDialog.ShowDialog();
+            var filePath = saveDialog.FileName;
+            var libraryPath = AppDomain.CurrentDomain.BaseDirectory + "Libraries";
+            File.Copy(libraryPath + @"\Calculation_Template.docx", filePath,true);
             using (WordprocessingDocument wordDocument =
-                WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
+                WordprocessingDocument.Open(filePath, true))
             {
-                wordDocument.AddMainDocumentPart();
                 var mainPart = wordDocument.MainDocumentPart;
-                mainPart.Document = new Document();
                 Body body = mainPart.Document.AppendChild(new Body());
+
+                var headerPart = mainPart.HeaderParts.First();
+                var headerCalcType = new Paragraph(new Run(new Text(calculation.TypeName)));
+                headerCalcType.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                var headerCalcInstance = new Paragraph(new Run(new Text(calculation.InstanceName)));
+                headerCalcInstance.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                var headerDate = new Paragraph(new Run(new Text(DateTime.Today.ToLongDateString())));
+                headerDate.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                headerPart.RootElement.Append(headerCalcType, headerCalcInstance, headerDate);
+
+                Paragraph para = new Paragraph(new Run(new Text("Inputs")));
+                var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                body.Append(para);
 
                 var tableOfInputs = genTable(calculation.GetInputs());                
                 body.Append(tableOfInputs);
 
-                Paragraph para = new Paragraph(new Run(new Text("Formulae")));
-                ParagraphProperties paraProps = new ParagraphProperties();
-                paraProps.ParagraphStyleId = new ParagraphStyleId();
-                paraProps.ParagraphStyleId.Val = "Heading1";
-                para.ParagraphProperties = paraProps;
+                para = new Paragraph(new Run(new Text("Formulae")));
+                paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
                 body.Append(para);
 
                 var FormulaeTable = genFormulaeTable(calculation.GetFormulae(), mainPart);
                 body.AppendChild(FormulaeTable);
 
                 para = new Paragraph(new Run(new Text("Outputs")));
-                paraProps = new ParagraphProperties();
-                paraProps.ParagraphStyleId = new ParagraphStyleId();
-                paraProps.ParagraphStyleId.Val = "Heading1";
-                para.ParagraphProperties = paraProps;
+                paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
                 body.Append(para);
 
                 var tableOfOutputs = genTable(calculation.GetOutputs());
@@ -79,10 +96,9 @@ namespace CalcCore
                 foreach (var formula in item.Expression)
                 {
                     var mathPara = new Paragraph();
-                    //var mathPara2 = para.AppendChild(new DocumentFormat.OpenXml.Math.Paragraph());
-                    var myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new Run(new Text(formula + Environment.NewLine)));
-                    //mathPara.AppendChild(new Paragraph(new Run(new Text(" "))));
+                    var myMath = new M.OfficeMath(new M.Run(new M.Text(formula + Environment.NewLine) { Space = SpaceProcessingModeValues.Preserve }));
                     mathPara.AppendChild(myMath);
+                    mathPara.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
                     cell2.AppendChild(mathPara);
                 }
 
@@ -110,10 +126,8 @@ namespace CalcCore
                 cell3.Append(new Paragraph(new Run(new Text(item.Conclusion))));
                 cell3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
 
-
                 row.Append(cell1, cell2, cell3);
                 tableOfInputs.AppendChild(row);
-
             }
             return tableOfInputs;
         }
@@ -135,9 +149,9 @@ namespace CalcCore
             {
                 TableRow row = new TableRow();
                 var para = new Paragraph();
-                var para2 = para.AppendChild(new DocumentFormat.OpenXml.Math.Paragraph());
-                var myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new Run(new Text(item.Symbol)));
-                para2.AppendChild(myMath);
+                var myMath = new M.OfficeMath(new M.Run(new M.Text(item.Symbol) { Space = SpaceProcessingModeValues.Preserve }));
+                para.AppendChild(myMath);
+                para.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
                 TableCell cell1 = new TableCell();
                 cell1.Append(para);
                 cell1.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
@@ -146,9 +160,9 @@ namespace CalcCore
                 para = new Paragraph();
                 if (item.Type == CalcValueType.DOUBLE)
                 {
-                    para2 = para.AppendChild(new DocumentFormat.OpenXml.Math.Paragraph());
-                    myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new Run(new Text(item.ValueAsString + item.Unit)));
-                    para2.AppendChild(myMath);
+                    myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new M.Run(new M.Text(item.ValueAsString + item.Unit) { Space = SpaceProcessingModeValues.Preserve }));
+                    para.AppendChild(myMath);
+                    para.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
                 }
                 else
                 {

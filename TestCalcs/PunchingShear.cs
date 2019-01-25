@@ -95,6 +95,8 @@ namespace TestCalcs
 
         public PunchingShear()
         {
+            _typeName = "Punching Shear to EC2";
+
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER" });
             _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID", "CRUCIFORM" });
             _srMode = inputValues.CreateCalcSelectionList("Radial spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
@@ -138,6 +140,8 @@ namespace TestCalcs
 
             UpdateCalc();
         }
+
+        
 
         public override List<Formula> GenerateFormulae()
         {
