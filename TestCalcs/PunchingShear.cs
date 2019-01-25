@@ -340,7 +340,7 @@ namespace TestCalcs
             reinforcementRatioy = _rebarY.Value / (1000 * dy);
             reinforcementRatioz = _rebarZ.Value / (1000 * dz);
 
-            _rho.Value = Math.Pow(reinforcementRatioy * reinforcementRatioz, 0.5);
+            _rho.Value = Math.Min(Math.Pow(reinforcementRatioy * reinforcementRatioz, 0.5), 0.02);
 
             vRdc = shearResistanceNoRein(_rho.Value, d_average, _fck.Value, _concPartFactor.Value); expressions.Add(new Formula
             {
@@ -351,7 +351,8 @@ namespace TestCalcs
                     @"\text{where}",
                     @"C_{Rd,c}=\frac{0.18}{" + _concPartFactor.Symbol + @"}=" + Math.Round(0.18/_concPartFactor.Value,2),
                     @"k=1+\sqrt{\frac{200}{d}}\leq2",
-                    _rho.Symbol + @"=\sqrt{\rho_{ly} \rho_{lz}}\leq0.02",
+                    _rho.Symbol + @"=\min(\sqrt{\rho_{ly} \rho_{lz}},0.02)",
+                    _rho.Symbol + @"=\min(\sqrt{"+Math.Round(reinforcementRatioy,3)+@"\times"+Math.Round(reinforcementRatioz,3)+"},0.02)",
                     _rho.Symbol + "=" + Math.Round(_rho.Value,5) + _rho.Unit
                     },
                 Narrative = "Calculate punching shear resistance",
