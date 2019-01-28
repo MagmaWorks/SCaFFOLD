@@ -2020,8 +2020,8 @@ namespace TestCalcs
             FormattedText returnText = new FormattedText(text,
                 CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight,
-                new Typeface("Tahoma"),
-                20,
+                new Typeface(new FontFamily("Franklin Gothic Book"), FontStyles.Normal, FontWeights.Light, FontStretches.Normal),
+                24,
                 Brushes.Black);
             var pos1 = new Point(pos.X, pos.Y - returnText.Height/2);
             Geometry geometry = returnText.BuildGeometry(pos1);

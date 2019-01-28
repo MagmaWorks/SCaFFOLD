@@ -45,13 +45,15 @@ namespace CalcCore
                 Body body = mainPart.Document.AppendChild(new Body());
 
                 var headerPart = mainPart.HeaderParts.First();
-                var headerCalcType = new Paragraph(new Run(new Text(calculation.TypeName)));
-                headerCalcType.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
-                var headerCalcInstance = new Paragraph(new Run(new Text(calculation.InstanceName)));
-                headerCalcInstance.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
-                var headerDate = new Paragraph(new Run(new Text(DateTime.Today.ToLongDateString())));
-                headerDate.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
-                headerPart.RootElement.Append(headerCalcType, headerCalcInstance, headerDate);
+                var line1 = new Paragraph(new Run(new Text(calculation.TypeName + " - " + calculation.InstanceName)));
+                line1.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                var line2 = new Paragraph(new Run(new Text("By: " + Environment.UserName + " on " + DateTime.Today.ToLongDateString())));
+                line2.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                var line3 = new Paragraph(new Run(new Text("Checked by : ")));
+                line3.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                var line4 = new Paragraph(new Run(new Text("")));
+                line4.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                headerPart.RootElement.Append(line1, line2, line3, line4);
 
                 if (includeInputs)
                 {
@@ -114,6 +116,12 @@ namespace CalcCore
             var tableProps = new TableProperties();
             tableProps.AppendChild(new TableLayout() { Type = TableLayoutValues.Fixed });
             tableProps.AppendChild(new TableWidth() { Width = "9000", Type = TableWidthUnitValues.Dxa });
+            tableProps.AppendChild(new TableBorders() { InsideHorizontalBorder = new InsideHorizontalBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            tableProps.AppendChild(new TableBorders() { BottomBorder = new BottomBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            tableProps.AppendChild(new TableBorders() { TopBorder = new TopBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            //tableProps.AppendChild(new TableBorders() { LeftBorder = new LeftBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            //tableProps.AppendChild(new TableBorders() { InsideVerticalBorder = new InsideVerticalBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            //tableProps.AppendChild(new TableBorders() { RightBorder = new RightBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
             tableOfInputs.AppendChild(tableProps);
 
             foreach (var item in formulae)
@@ -177,6 +185,13 @@ namespace CalcCore
             var tableProps = new TableProperties();
             tableProps.AppendChild(new TableLayout() { Type = TableLayoutValues.Fixed });
             tableProps.AppendChild(new TableWidth() { Width = "9000", Type = TableWidthUnitValues.Dxa });
+            tableProps.AppendChild(new TableBorders() { InsideHorizontalBorder = new InsideHorizontalBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            tableProps.AppendChild(new TableBorders() { BottomBorder = new BottomBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            tableProps.AppendChild(new TableBorders() { TopBorder = new TopBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            //tableProps.AppendChild(new TableBorders() { LeftBorder = new LeftBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            //tableProps.AppendChild(new TableBorders() { InsideVerticalBorder = new InsideVerticalBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+            //tableProps.AppendChild(new TableBorders() { RightBorder = new RightBorder() { Color = "c0c0c0", Size = 4, Val = BorderValues.Single } });
+
             tableOfInputs.AppendChild(tableProps);
 
             foreach (var item in calcVals)

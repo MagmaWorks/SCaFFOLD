@@ -77,7 +77,7 @@
       <DependentUpon>CalcOutputs.xaml</DependentUpon>
     </Compile>
     <Compile Include="SimpleCalcVM.cs" />
-    <Compile Include="CalcViewParent.cs" />
+    <Compile Include="ICalcViewParent.cs" />
     <Compile Include="ChartControl.xaml.cs">
       <DependentUpon>ChartControl.xaml</DependentUpon>
     </Compile>

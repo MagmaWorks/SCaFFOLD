@@ -80,10 +80,12 @@ namespace Calcs
 
         public int CrossRefTotalItems { get => _crossRefTotalItems; set { _crossRefTotalItems = value; RaisePropertyChanged(nameof(CrossRefTotalItems)); RaisePropertyChanged(nameof(TotalCalcTime)); } }
         public double TotalCalcTime
-        { get
+        {
+            get
             {
                 return _crossRefTotalItems * calcTime;
-            } }
+            }
+        }
 
         ICalc calc;
 
@@ -151,8 +153,21 @@ namespace Calcs
             this.calc = calc;
             for (int i = 0; i < inputs.Count; i++)
             {
-                // add check on input type here in due course...
-                CrossRefItems.Add(new CrossRefItem(calc, i, this));
+                switch (inputs[i].Type)
+                {
+                    case CalcValueType.DOUBLE:
+                        CrossRefItems.Add(new CrossRefItem(calc, i, this));
+                        break;
+                    case CalcValueType.SELECTIONLIST:
+                        CrossRefItems.Add(new CrossRefItem(calc, i, this));
+                        break;
+                    case CalcValueType.FILEPATH:
+                        break;
+                    case CalcValueType.FOLDERPATH:
+                        break;
+                    default:
+                        break;
+                }
             }
             Stopwatch myTimer = new Stopwatch();
             myTimer.Start();
