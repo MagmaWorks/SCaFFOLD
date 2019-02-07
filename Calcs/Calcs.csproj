@@ -72,7 +72,6 @@
       <DependentUpon>BatchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="BatchVM.cs" />
-    <Compile Include="CalcAssembly.cs" />
     <Compile Include="CalcOutputs.xaml.cs">
       <DependentUpon>CalcOutputs.xaml</DependentUpon>
     </Compile>
@@ -92,7 +91,6 @@
       <DependentUpon>CrossRefTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="CrossRefVM.cs" />
-    <Compile Include="FindAssemblies.cs" />
     <Compile Include="FormulaeDisplay.xaml.cs">
       <DependentUpon>FormulaeDisplay.xaml</DependentUpon>
     </Compile>
@@ -198,6 +196,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\Debug\Libraries\" /Y</PostBuildEvent>
+    <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\Debug\Libraries\" /Y
+xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

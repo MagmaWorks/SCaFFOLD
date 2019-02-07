@@ -8,11 +8,11 @@ namespace CalcCore
 {
     public abstract class CalcValueBase
     {
-        public string Name { get; set; }
-        public string Symbol { get; set; }
-        public string Unit { get; set; }
+        public string Name { get; set; } = "";
+        public string Symbol { get; set; } = "";
+        public string Unit { get; set; } = "";
         public abstract string ValueAsString { get; set; }
-        public CalcStatus Status { get; set; }
+        public CalcStatus Status { get; set; } = CalcStatus.NONE;
         public abstract CalcValueType Type { get; }
         // description
     }
@@ -22,7 +22,8 @@ namespace CalcCore
         DOUBLE,
         SELECTIONLIST,
         FILEPATH,
-        FOLDERPATH
+        FOLDERPATH,
+        LISTOFDOUBLEARRAYS
     }
 
     public enum CalcStatus

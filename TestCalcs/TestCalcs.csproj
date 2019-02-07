@@ -11,6 +11,7 @@
     <AssemblyName>TestCalcs</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,6 +94,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
+xCopy "$(TargetPath)" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y</PostBuildEvent>
   </PropertyGroup>

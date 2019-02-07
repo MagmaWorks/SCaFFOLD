@@ -13,6 +13,7 @@ using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 using M = DocumentFormat.OpenXml.Math;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace CalcCore
 {
@@ -27,9 +28,25 @@ namespace CalcCore
                 saveDialog.Filter = @"Word files |*.docx";
                 saveDialog.FileName = calculation.InstanceName + @".docx";
                 saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                if(saveDialog.ShowDialog() != DialogResult.OK) return;
+                if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
-                var libraryPath = AppDomain.CurrentDomain.BaseDirectory + "Libraries";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
+                return;
+            }
+
+            WriteToODT(calculation, includeInputs, includeBody, includeOutputs, filePath);
+
+        }
+
+
+            public static void WriteToODT(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs, string filePath)
+        {
+            try
+            {
+                var libraryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Libraries";
                 File.Copy(libraryPath + @"\Calculation_Template.docx", filePath, true);
             }
             catch (Exception ex)

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calcs
+namespace CalcCore
 {
     public static class FindAssemblies
     {
@@ -15,7 +15,7 @@ namespace Calcs
             var calcs = new List<CalcAssembly>();
 
             var ext = new List<string> { ".dll" };
-            var filePath = AppDomain.CurrentDomain.BaseDirectory + "Libraries";
+            var filePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Libraries";
             var myFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(s => ext.Contains(System.IO.Path.GetExtension(s)));
             var myAssemblies = myFiles.ToList();

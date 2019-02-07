@@ -43,9 +43,16 @@ namespace CalcCore
             return myVal;
         }
 
-        public CalcDoubleList CreateCalcDoubleList(string name, List<List<double>> doubles)
+        //public CalcDoubleList CreateCalcDoubleList(string name, List<List<double>> doubles)
+        //{
+        //    var myVal = new CalcDoubleList(name, doubles);
+        //    this.values.Add(myVal);
+        //    return myVal;
+        //}
+
+        public CalcListOfDoubleArrays CreateCalcListOfDoubleArrays(string name, List<double[]> doubles)
         {
-            var myVal = new CalcDoubleList(name, doubles);
+            var myVal = new CalcListOfDoubleArrays(name, doubles);
             this.values.Add(myVal);
             return myVal;
         }

@@ -22,7 +22,7 @@ namespace Calcs
     {
         public MainWindow()
         {
-            var calcClasses = FindAssemblies.GetAssemblies();
+            var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
             var calcs = new List<CalculationViewModel>();
             foreach (var calc in calcClasses)
             {

@@ -11,6 +11,7 @@
     <AssemblyName>CalcCore</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -108,14 +109,17 @@
     <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalcAssembly.cs" />
     <Compile Include="CalcBase.cs" />
     <Compile Include="CalcDouble.cs" />
     <Compile Include="CalcDoubleList.cs" />
     <Compile Include="CalcFilePath.cs" />
     <Compile Include="CalcFolderPath.cs" />
+    <Compile Include="CalcListOfDoubleArrays.cs" />
     <Compile Include="CalcSelectionList.cs" />
     <Compile Include="CalcValueBase.cs" />
     <Compile Include="CalcValueFactory.cs" />
+    <Compile Include="FindAssemblies.cs" />
     <Compile Include="Formula.cs" />
     <Compile Include="ICalc.cs" />
     <Compile Include="OutputToODT.cs" />

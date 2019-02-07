@@ -73,6 +73,7 @@ namespace TestCalcs
         CalcDouble _hole2PosY;
         CalcDouble _hole2SizeX;
         CalcDouble _hole2SizeY;
+        CalcListOfDoubleArrays _studPositions;
 
         List<Formula> expressions = new List<Formula>();
         List<Tuple<Line, Line>> _holeEdges;
@@ -139,6 +140,7 @@ namespace TestCalcs
             _hole2PosY = inputValues.CreateDoubleCalcValue("Hole 2 Y position", "", "mm", -300);
             _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole 2 X size", "", "mm", 00);
             _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
+            _studPositions = outputValues.CreateCalcListOfDoubleArrays("Stud positions", new List<double[]>());
 
             UpdateCalc();
         }
@@ -181,6 +183,7 @@ namespace TestCalcs
             _holeEdges = null;
             u1reducedNoHoles = null;
             u1reduced = null;
+            _studPositions.Value = new List<double[]>();
         }
 
         public override void UpdateCalc()
@@ -500,8 +503,8 @@ namespace TestCalcs
 
                 return;
             }
-
-            fywd = 338; // need to calc this in future
+            
+            fywd = 500/1.15; // need to calc this in future
             fywdef = Math.Min(250 + 0.25 * d_average, fywd);
             _Asw.Value = (stressvEd1 - 0.75 * vRdc) * sr * u1 / (1.5 * fywdef);
             expressions.Add(new Formula
@@ -954,6 +957,16 @@ namespace TestCalcs
             _numberOfPerimeters.Value = perimetersToReinforce.Count;
             _legsTotal.Value = shearLinks.Sum(a => a.Count);
             _legDia.Value = calcBarSizeAndDia(_Asw.Value / _linksInFirstPerim.Value, new List<int> { 8, 10, 12, 16 });
+
+            var shearLinkPositions = new List<double[]>();
+            foreach (var links in shearLinks)
+            {
+                foreach (var item in links)
+                {
+                    shearLinkPositions.Add(new double[3] { item.X, item.Y, 0 });
+                }
+            }
+            _studPositions.Value = shearLinkPositions;
 
             var outerPerimExp = new Formula
             {

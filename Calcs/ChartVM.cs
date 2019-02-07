@@ -63,7 +63,12 @@ namespace Calcs
                 for (int j = 0; j < OutputSelection.Count; j++)
                 {
                     var result = results[j].ValueAsString;
-                    myList[j].Add(new ObservablePoint(stepValue, double.Parse(result)));
+                    if (results[j].Type == CalcCore.CalcValueType.DOUBLE)
+                    {
+                        myList[j].Add(new ObservablePoint(stepValue, double.Parse(result)));
+                    }
+                    else myList[j].Add(new ObservablePoint(stepValue, 0));
+
                 }
             }
             for (int i = 0; i < OutputSelection.Count; i++)

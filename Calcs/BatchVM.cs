@@ -73,9 +73,9 @@ namespace Calcs
             }
         }
 
-        List<CalcAssembly> _calcAssemblies;
+        List<CalcCore.CalcAssembly> _calcAssemblies;
 
-        public BatchVM(List<CalcAssembly> calcAssemblies)
+        public BatchVM(List<CalcCore.CalcAssembly> calcAssemblies)
         {
             _calcs = new List<SimpleCalcVM> { new SimpleCalcVM(new TestCalcs.RC_Beam())};
             _calcNames = new ObservableCollection<string> { "Calc 1" };
