@@ -20,8 +20,16 @@ namespace Calcs
     /// </summary>
     public partial class MainWindow : Window
     {
+        AppViewModel appVM;
+
         public MainWindow()
         {
+            Window startScreen = new Window();
+            startScreen.Content = new DynamicRelaxation(startScreen);
+            startScreen.WindowStyle = WindowStyle.None;
+            startScreen.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            startScreen.ShowDialog();
+
             var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
             var calcs = new List<CalculationViewModel>();
             foreach (var calc in calcClasses)
@@ -29,9 +37,14 @@ namespace Calcs
                 CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
                 calcs.Add(new CalculationViewModel(calcInstance));
             }
-            AppViewModel myAppVM = new AppViewModel() { ViewModels = calcs, Batcher = new BatchVM(calcClasses) };
-            this.DataContext = myAppVM;
+            appVM = new AppViewModel() { ViewModels = calcs, Batcher = new BatchVM(calcClasses) };
+            this.DataContext = appVM;
+
             InitializeComponent();
         }
+
+        
+
+
     }
 }

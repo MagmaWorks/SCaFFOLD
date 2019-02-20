@@ -38,14 +38,14 @@ namespace TestCalcs
             shear = this.outputValues.CreateDoubleCalcValue("Shear", "V", "kN", 0);
             endConditions = this.inputValues.CreateCalcSelectionList("End Condition", "Pinned", new List<string> { "Fixed", "Pinned" });
             momentCalc = new Dictionary<string, Action>() { { "Fixed", new Action(calcFixedMoment) }, { "Pinned", new Action(calcPinnedMoment) } };
-            filePath = this.inputValues.CreateCalcFilePath("Section Names", AppDomain.CurrentDomain.BaseDirectory + @"Libraries\Section_Names.csv");
+            //filePath = this.inputValues.CreateCalcFilePath("Section Names", AppDomain.CurrentDomain.BaseDirectory + @"Libraries\Section_Names.csv");
             UpdateCalc();
         }
 
         public override void UpdateCalc()
         {
             formulae = null;
-            sections = Section.openSteelSectionFile(filePath.ValueAsString);
+            //sections = Section.openSteelSectionFile(filePath.ValueAsString);
             momentCalc[endConditions.ValueAsString]();
             shear.Value = (udl.Value * span.Value) / 2;
         }

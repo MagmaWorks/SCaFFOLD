@@ -34,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HelixToolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.2.6.0\lib\netstandard1.1\HelixToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="HelixToolkit.Wpf, Version=2.6.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.Wpf.2.6.0\lib\net45\HelixToolkit.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
     </Reference>
@@ -75,6 +81,10 @@
     <Compile Include="CalcOutputs.xaml.cs">
       <DependentUpon>CalcOutputs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DynamicRelaxation.xaml.cs">
+      <DependentUpon>DynamicRelaxation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicRelaxationViewModel.cs" />
     <Compile Include="SimpleCalcVM.cs" />
     <Compile Include="ICalcViewParent.cs" />
     <Compile Include="ChartControl.xaml.cs">
@@ -125,6 +135,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CrossRefTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DynamicRelaxation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -186,6 +200,10 @@
       <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
       <Name>CalcCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DynamicRelaxation\DynamicRelaxation.csproj">
+      <Project>{6242d040-2b9a-436f-9c50-6a61f1b89960}</Project>
+      <Name>DynamicRelaxation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestCalcs\TestCalcs.csproj">
       <Project>{6212564f-470c-49ef-a4be-1f8e0043ec89}</Project>
       <Name>TestCalcs</Name>
@@ -193,6 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WhitbyWood.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CalcPage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

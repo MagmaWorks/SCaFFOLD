@@ -60,6 +60,10 @@
       <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
       <Name>CalcCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DynamicRelaxation\DynamicRelaxation.csproj">
+      <Project>{6242d040-2b9a-436f-9c50-6a61f1b89960}</Project>
+      <Name>DynamicRelaxation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestCalcs\TestCalcs.csproj">
       <Project>{6212564f-470c-49ef-a4be-1f8e0043ec89}</Project>
       <Name>TestCalcs</Name>

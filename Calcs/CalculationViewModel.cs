@@ -15,6 +15,9 @@ namespace Calcs
         public TableVM Table { get; set; }
         public ChartVM Chart { get; set; }
         public CrossRefVM CrossRef {get;set;}
+
+
+
         public string Author
         {
             get
@@ -160,6 +163,8 @@ namespace Calcs
             {
                 _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status, Image=item.Image });
             }
+
+            
         }
 
         public void UpdateOutputs()

@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="Calcs.DynamicRelaxation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helix="http://helix-toolkit.org/wpf"
+             xmlns:local="clr-namespace:Calcs"
+             mc:Ignorable="d" 
+             d:DesignHeight="338" d:DesignWidth="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <helix:HelixViewport3D ZoomExtentsWhenLoaded="True" IsHeadLightEnabled="True" ShowViewCube="False">
+            <ModelVisual3D Content="{Binding DynamicRelaxationVM.Model}"/>
+        </helix:HelixViewport3D>
+        <StackPanel Grid.Column="1">
+            <Image HorizontalAlignment="Left" Width="150">
+                <Image.Source>
+                    <BitmapImage UriSource="/WhitbyWood.jpg"/>
+                </Image.Source>
+            </Image>
+            <TextBlock Text="Calculation App" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 15"/>
+            <TextBlock Text="The following calculation types have been found:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book" Margin="0 0 0 15"/>
+            <ListView ItemsSource="{Binding Calcs}" FontFamily="Franklin Gothic Book" Margin="15 0 15 25"/>
+            <Button Content="Get Started" FontFamily="Franklin Gothic Book" FontSize="18" Click="Button_Click" Width="120" Margin="0 0 0 25"/>
+            <TextBlock Text="This application has been released as a beta version. Please report any bugs!" TextWrapping="Wrap" FontFamily="Franklin Gothic Book" Margin="0 0 0 15"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

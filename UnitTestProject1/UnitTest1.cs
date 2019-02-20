@@ -65,5 +65,12 @@ namespace UnitTestProject1
         {
             var myCalc = new TestCalcs.PunchingShear();
         }
+
+        [TestMethod]
+        public void TestDynamicRelaxation()
+        {
+            var myDynamicModel = new DynamicRelaxation.DynamicRelaxationSystem();
+            myDynamicModel.RunSteps(10, 0.1f);
+        }
     }
 }

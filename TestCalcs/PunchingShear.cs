@@ -504,7 +504,7 @@ namespace TestCalcs
                 return;
             }
             
-            fywd = 500/1.15; // need to calc this in future
+            fywd = 500/1.15; 
             fywdef = Math.Min(250 + 0.25 * d_average, fywd);
             _Asw.Value = (stressvEd1 - 0.75 * vRdc) * sr * u1 / (1.5 * fywdef);
             expressions.Add(new Formula
