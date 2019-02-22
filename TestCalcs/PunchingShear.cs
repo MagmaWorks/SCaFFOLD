@@ -1032,7 +1032,6 @@ namespace TestCalcs
             {
                 generateDXFoutput();
             }
-
         }
 
         private void generateDXFoutput()

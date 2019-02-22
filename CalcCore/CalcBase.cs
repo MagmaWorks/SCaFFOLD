@@ -37,6 +37,14 @@ namespace CalcCore
             return inputValues.GetValues();
         }
 
+        public List<CalcValueBase> Inputs
+        {
+            get
+            {
+                return inputValues.GetValues();
+            }
+        }
+
         public List<CalcValueBase> GetOutputs()
         {
             return outputValues.GetValues();

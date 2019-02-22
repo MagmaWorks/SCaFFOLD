@@ -13,10 +13,23 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Calculations: "/>
-            <ComboBox ItemsSource="{Binding ViewModels}" DisplayMemberPath="CalcTypeName" Width="200" SelectedIndex="{Binding SelectedViewModel}"/>
-        </StackPanel>
+        <Ribbon>
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Visibility="Collapsed"/>
+            </Ribbon.ApplicationMenu>
+            <Ribbon.HelpPaneContent>
+                <RibbonButton x:Name="HelpButton" />
+            </Ribbon.HelpPaneContent>
+
+            <RibbonTab Header="Results">
+                <RibbonGroup Header="Calculations">
+                    <RibbonComboBox Label="Calcs" SelectionBoxWidth="75" VerticalAlignment="Center">
+                        
+                    </RibbonComboBox>
+                    <ComboBox ItemsSource="{Binding ViewModels}" DisplayMemberPath="CalcTypeName" Width="200" SelectedIndex="{Binding SelectedViewModel}"/>
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
         <TabControl Grid.Row="1" >
             <TabItem Header="Single Calculation" DataContext="{Binding ViewModel}">
                 <local:SingleCalc />
