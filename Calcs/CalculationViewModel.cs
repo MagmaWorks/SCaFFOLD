@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Newtonsoft;
 
 namespace Calcs
 {
     public class CalculationViewModel : ViewModelBase, ICalcViewParent
     {
         CalcCore.ICalc calc;
+        public CalcCore.ICalc Calc { get => calc; }
         public TableVM Table { get; set; }
         public ChartVM Chart { get; set; }
         public CrossRefVM CrossRef {get;set;}

@@ -16,6 +16,14 @@ namespace CalcCore
 
         public string InstanceName { get; set; } = "";
 
+        public string ClassName
+        {
+            get
+            {
+                return this.GetType().ToString();
+            }
+        }
+
         protected string _typeName;
         public string TypeName
         {
@@ -35,6 +43,14 @@ namespace CalcCore
         public List<CalcValueBase> GetInputs()
         {
             return inputValues.GetValues();
+        }
+
+        public List<CalcValueBase> Inputs
+        {
+            get
+            {
+                return inputValues.GetValues();
+            }
         }
 
         public List<CalcValueBase> GetOutputs()

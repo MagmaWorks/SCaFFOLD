@@ -10,6 +10,7 @@ namespace CalcCore
     {
         string InstanceName { get; set; }
         string TypeName { get; }
+        List<CalcValueBase> Inputs { get; }
         List<CalcValueBase> GetInputs();
         List<CalcValueBase> GetOutputs();
         List<Formula> GetFormulae();

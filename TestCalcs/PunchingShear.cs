@@ -229,6 +229,19 @@ namespace TestCalcs
                 st = Math.Min(_stTarget.Value, 1.5 * d_average);
             }
 
+            // check aspect ratio of column
+            double aspectRatio = Math.Max(_columnAdim.Value, _columnBdim.Value) / Math.Min(_columnAdim.Value, _columnBdim.Value);
+            if (aspectRatio > 4 && aspectRatio < 6)
+            {
+                expressions.Add(new Formula
+                {
+                    Narrative = "Check aspect ratio of column",
+                    Expression = new List<string>{ Math.Round(aspectRatio, 2) + ">" + 4 },
+                    Conclusion = "OK"
+                });
+            }
+
+
             generateHoles();
             generateColumnOutlines();
             generateSlabEdge();
@@ -1032,7 +1045,6 @@ namespace TestCalcs
             {
                 generateDXFoutput();
             }
-
         }
 
         private void generateDXFoutput()
@@ -1182,6 +1194,7 @@ namespace TestCalcs
             var angles = new List<double>();
             for (int i = 0; i < allHoleCorners.Count; i++)
             {
+                angles = new List<double>();
                 var holeCorners = allHoleCorners[i];
                 foreach (var corner in holeCorners)
                 {

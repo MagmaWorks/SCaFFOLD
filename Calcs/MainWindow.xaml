@@ -13,10 +13,48 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Calculations: "/>
-            <ComboBox ItemsSource="{Binding ViewModels}" DisplayMemberPath="CalcTypeName" Width="200" SelectedIndex="{Binding SelectedViewModel}"/>
-        </StackPanel>
+        <Ribbon>
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Visibility="Collapsed"/>
+            </Ribbon.ApplicationMenu>
+            <Ribbon.HelpPaneContent>
+                <RibbonButton x:Name="HelpButton" />
+            </Ribbon.HelpPaneContent>
+
+            <RibbonTab Header="Calculations">
+                <RibbonGroup Header="Calculations">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Calculation"/>
+                        <ComboBox ItemsSource="{Binding ViewModels}" Width="250" SelectedIndex="{Binding SelectedViewModel}" VerticalAlignment="Center">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding CalcTypeName}"/>
+                                        <TextBlock Text="{Binding CalcInstanceName}" Margin="15 0 0 0"/>
+                                    </StackPanel>
+                                </DataTemplate>                                
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <RibbonMenuButton x:Name="AddAssemblyMenu" ItemsSource="{Binding Assemblies}" Label="Add calculation" LargeImageSource="/resources/Add_16x.png">
+                        <RibbonMenuButton.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Class.FullName}"/>
+                            </DataTemplate>
+                        </RibbonMenuButton.ItemTemplate>
+                        <RibbonMenuButton.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Command" Value="{Binding ElementName=AddAssemblyMenu, Path=DataContext.AddCalcCommand}"/>
+                                <Setter Property="CommandParameter" Value="{Binding Class}"/>
+                            </Style>
+                        </RibbonMenuButton.ItemContainerStyle>
+                    </RibbonMenuButton>
+                    <RibbonButton Command="{Binding SaveCalcCommand}" Width="100" Label="Save As..." LargeImageSource="/resources/save_64x64.png"/>
+                    <RibbonButton Command="{Binding OpenCalcCommand}" Width="100" Label="Open from JSON" LargeImageSource="/resources/folder_64x64.png"/>
+                    <RibbonButton Command="{Binding ProcessBatchCommand}" Width="100" Label="Import from CSV" LargeImageSource="/resources/folder_64x64.png"/>
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
         <TabControl Grid.Row="1" >
             <TabItem Header="Single Calculation" DataContext="{Binding ViewModel}">
                 <local:SingleCalc />
@@ -29,9 +67,6 @@
             </TabItem>
             <TabItem Header="Cross Ref">
                 <local:CrossRef DataContext="{Binding ViewModel.CrossRef}"/>
-            </TabItem>
-            <TabItem Header="Batch">
-                <local:BatchView DataContext="{Binding Batcher}"/>
             </TabItem>
         </TabControl>
         <Image Grid.Row="2" HorizontalAlignment="Left">
