@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,20 +32,12 @@ namespace Calcs
             startScreen.ShowDialog();
 
             var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
-            var calcs = new List<CalculationViewModel>();
-            foreach (var calc in calcClasses)
-            {
-                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
+            var calcs = new ObservableCollection<CalculationViewModel>();
+                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcClasses[0].Class);
                 calcs.Add(new CalculationViewModel(calcInstance));
-            }
-            appVM = new AppViewModel() { ViewModels = calcs, Batcher = new BatchVM(calcClasses) };
+            appVM = new AppViewModel() { Assemblies = calcClasses, ViewModels = calcs };
             this.DataContext = appVM;
-
             InitializeComponent();
         }
-
-        
-
-
     }
 }
