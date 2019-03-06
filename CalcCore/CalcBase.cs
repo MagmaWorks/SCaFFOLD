@@ -16,6 +16,14 @@ namespace CalcCore
 
         public string InstanceName { get; set; } = "";
 
+        public string ClassName
+        {
+            get
+            {
+                return this.GetType().ToString();
+            }
+        }
+
         protected string _typeName;
         public string TypeName
         {
