@@ -1952,7 +1952,7 @@ namespace TestCalcs
                 double scale = 900 / (Math.Max(2 * maxX, 2 * maxY));
                 var scaleTransform = new ScaleTransform(scale, -scale);
                 var transX = 50 + scale * -newBounds.X;
-                var transY = 50 + scale * -newBounds.Y;
+                var transY = 50 + scale * newBounds.BottomRight.Y;
                 var transTransform = new TranslateTransform(transX, transY);
                 var transGroup = new TransformGroup();
                 transGroup.Children.Add(scaleTransform);
