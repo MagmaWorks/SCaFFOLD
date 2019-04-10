@@ -107,7 +107,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
+    <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\bin\Debug\Libraries\" /Y
 xCopy "$(TargetPath)" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y</PostBuildEvent>

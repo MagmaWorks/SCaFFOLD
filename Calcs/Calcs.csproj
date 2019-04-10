@@ -235,7 +235,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\Debug\Libraries\" /Y
+    <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(TargetDir)Libraries\" /Y
 xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
