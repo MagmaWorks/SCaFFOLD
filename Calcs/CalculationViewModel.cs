@@ -18,8 +18,6 @@ namespace Calcs
         public ChartVM Chart { get; set; }
         public CrossRefVM CrossRef {get;set;}
 
-
-
         public string Author
         {
             get

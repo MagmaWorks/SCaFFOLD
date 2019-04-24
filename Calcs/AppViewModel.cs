@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 
+
 namespace Calcs
 {
     public class AppViewModel : ViewModelBase
@@ -86,13 +87,90 @@ namespace Calcs
             try
             {
                 var saveDialog = new SaveFileDialog();
-                saveDialog.Filter = @"Word files |*.JSON";
+                saveDialog.Filter = @"JSON files |*.JSON";
                 saveDialog.FileName = ViewModel.Calc.InstanceName + @".JSON";
                 saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
                 System.IO.File.WriteAllText(filePath, saveObj);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
+                return;
+            }
+        }
 
+        ICommand megaSaveCalcCommand;
+
+        public ICommand MegaSaveCalcCommand
+        {
+            get
+            {
+                return megaSaveCalcCommand ?? (megaSaveCalcCommand = new CommandHandler(() => megaSaveCalc(), true));
+            }
+        }
+
+        private void megaSaveCalc()
+        {
+            var saveObj = Newtonsoft.Json.JsonConvert.SerializeObject(ViewModel.Calc, Newtonsoft.Json.Formatting.Indented);
+            string filePath = "";
+            try
+            {
+                var saveDialog = new SaveFileDialog();
+                saveDialog.Filter = @"JSON files |*.JSON";
+                saveDialog.FileName = ViewModel.Calc.InstanceName + @".JSON";
+                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (saveDialog.ShowDialog() != DialogResult.OK) return;
+                filePath = saveDialog.FileName;
+                System.IO.File.WriteAllText(filePath, saveObj);
+                var drawings = ViewModel.Calc.GetDrawings();
+                for (int i = 0; i < drawings.Count; i++)
+                {
+                    var dxfDrawing = drawings[i];
+                    string filePathDxf = Path.GetFileNameWithoutExtension(filePath);
+                    filePathDxf = Path.GetDirectoryName(filePath) + @"\" + filePathDxf;
+                    filePathDxf += @" drawing" + (i + 1).ToString("D3") + ".dxf";
+                    dxfDrawing.Save(filePathDxf);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
+                return;
+            }
+        }
+
+        ICommand saveCalcDxfCommand;
+
+        public ICommand SaveCalcDxfCommand
+        {
+            get
+            {
+                return saveCalcDxfCommand ?? (saveCalcDxfCommand = new CommandHandler(() => saveCalcDxf(), true));
+            }
+        }
+
+        private void saveCalcDxf()
+        {
+            string filePath = "";
+            try
+            {
+                var saveDialog = new SaveFileDialog();
+                saveDialog.Filter = @"DXF files | *.dxf";
+                saveDialog.FileName = ViewModel.Calc.InstanceName + @".dxf";
+                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (saveDialog.ShowDialog() != DialogResult.OK) return;
+                filePath = saveDialog.FileName;
+                var drawings = ViewModel.Calc.GetDrawings();
+                for (int i = 0; i < drawings.Count; i++)
+                {
+                    var dxfDrawing = drawings[i];
+                    string filePathDxf = Path.GetFileNameWithoutExtension(filePath);
+                    filePathDxf = Path.GetDirectoryName(filePath) + @"\" + filePathDxf;
+                    filePathDxf += @" drawing" + (i + 1).ToString("D3") + ".dxf";
+                    dxfDrawing.Save(filePathDxf);
+                }
             }
             catch (Exception ex)
             {

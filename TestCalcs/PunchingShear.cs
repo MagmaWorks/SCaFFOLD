@@ -63,8 +63,6 @@ namespace TestCalcs
         CalcDouble _numberOfPerimeters;
         CalcDouble _legsTotal;
         CalcDouble _legDia;
-        CalcSelectionList _dxfOpt;
-        CalcFolderPath _dxfFolder;
         CalcDouble _holePosX;
         CalcDouble _holePosY;
         CalcDouble _holeSizeX;
@@ -94,11 +92,13 @@ namespace TestCalcs
         List<List<PolyLine>> perimetersToReinforce;
         List<PolyLine> u1reducedNoHoles;
         List<PolyLine> u1reduced;
+        
 
         public PunchingShear()
         {
             _typeName = "Punching Shear to EC2";
             InstanceName = "My column";
+            _drawings = new List<netDxf.DxfDocument>();
 
             _colType = inputValues.CreateCalcSelectionList("Column condition", "INTERNAL", new List<string> { "INTERNAL", "EDGE", "CORNER", "RE-ENTRANT" });
             _linkArrangement = inputValues.CreateCalcSelectionList("Shear link arrangement", "GRID", new List<string> { "SPURS_AUTO", "GRID", "CRUCIFORM" });
@@ -130,8 +130,6 @@ namespace TestCalcs
             _distToFirstLinkPerim = outputValues.CreateDoubleCalcValue("Distance to first link perimeter", "", "mm", 0);
             _legsTotal = outputValues.CreateDoubleCalcValue("Total legs", "", "No.", 0);
             _legDia = outputValues.CreateDoubleCalcValue("Leg diameter", "", "mm", 0);
-            _dxfOpt = inputValues.CreateCalcSelectionList("DXF output option", "NONE", new List<string> { "NONE", "SPECIFIED_FOLDER" });
-            _dxfFolder = inputValues.CreateCalcFolderPath("DXF output folder", AppDomain.CurrentDomain.BaseDirectory);
             _holePosX = inputValues.CreateDoubleCalcValue("Hole 1 X position", "", "mm", 0);
             _holePosY = inputValues.CreateDoubleCalcValue("Hole 1 Y position", "", "mm", 220);
             _holeSizeX = inputValues.CreateDoubleCalcValue("Hole 1 X size", "", "mm", 0);
@@ -145,7 +143,7 @@ namespace TestCalcs
             UpdateCalc();
         }
 
-
+        
 
         public override List<Formula> GenerateFormulae()
         {
@@ -1041,10 +1039,10 @@ namespace TestCalcs
 
             expressions.Add(detailingFormula);
 
-            if (_dxfOpt.ValueAsString == "SPECIFIED_FOLDER")
-            {
+            //if (_dxfOpt.ValueAsString == "SPECIFIED_FOLDER")
+            //{
                 generateDXFoutput();
-            }
+            //}
         }
 
         private void generateDXFoutput()
@@ -1103,8 +1101,10 @@ namespace TestCalcs
                 dxf.AddEntity(getDXFEntityFromGeometry(item, outerPerimeterLayer));
             }
 
-            var filePath = _dxfFolder.ValueAsString + @"\" + this.InstanceName + @".dxf";
-            dxf.Save(filePath);
+            //var filePath = _dxfFolder.ValueAsString + @"\" + this.InstanceName + @".dxf";
+            //dxf.Save(filePath);
+            _drawings.Clear();
+            _drawings.Add(dxf);
         }
 
         private netDxf.Entities.EntityObject getDXFEntityFromGeometry(GeometryBase item, Layer layer)
@@ -1952,7 +1952,7 @@ namespace TestCalcs
                 double scale = 900 / (Math.Max(2 * maxX, 2 * maxY));
                 var scaleTransform = new ScaleTransform(scale, -scale);
                 var transX = 50 + scale * -newBounds.X;
-                var transY = 50 + scale * -newBounds.Y;
+                var transY = 50 + scale * newBounds.BottomRight.Y;
                 var transTransform = new TranslateTransform(transX, transY);
                 var transGroup = new TransformGroup();
                 transGroup.Children.Add(scaleTransform);
