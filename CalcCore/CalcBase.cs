@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using netDxf;
 
 namespace CalcCore
 {
@@ -51,6 +52,13 @@ namespace CalcCore
             {
                 return inputValues.GetValues();
             }
+        }
+
+        protected List<DxfDocument> _drawings;
+
+        public List<DxfDocument> GetDrawings()
+        {
+            return _drawings;
         }
 
         public List<CalcValueBase> GetOutputs()
