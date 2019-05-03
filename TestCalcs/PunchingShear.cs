@@ -1240,16 +1240,16 @@ namespace TestCalcs
                     miny = Math.Min(miny, newy);
                     maxy = Math.Max(maxy, newy);
                 }
-                maxy = minx * Math.Sin((maxAngle - minAngle) / 2);
-                miny = -minx * Math.Sin((maxAngle - minAngle) / 2);
+                maxy = minx * Math.Tan((maxAngle - minAngle) / 2);
+                miny = -minx * Math.Tan((maxAngle - minAngle) / 2);
                 var rangex = maxx - minx;
                 var rangey = maxy - miny;
                 if (rangex > rangey)
                 {
                     var newrangey = Math.Sqrt(rangey * rangex);
                     holeExpression.Expression.Add(@"width_" + i + "=" + Math.Round(newrangey, 0) + "mm");
-                    minAngle = Math.Atan2(-newrangey / 2, minx) + midAngle;
-                    maxAngle = Math.Atan2(newrangey / 2, minx) + midAngle;
+                    minAngle = midAngle - Math.Atan2(newrangey / 2, minx);
+                    maxAngle = midAngle + Math.Atan2(newrangey / 2, minx);
                     if ((minAngle * maxAngle < 0) && (maxAngle - minAngle > Math.PI))
                     {
                         var newMax = minAngle + 2 * Math.PI;

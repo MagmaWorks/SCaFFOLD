@@ -194,6 +194,8 @@ namespace Calcs
             string filePath = "";
             try
             {
+                bool inputMissing = false;
+                string inputMissingMessage = "";
                 var openDialog = new OpenFileDialog();
                 openDialog.Filter = @"Calc files |*.JSON";
                 openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -207,11 +209,27 @@ namespace Calcs
                 CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcType.Class);
                 foreach (var item in deserialiseObj.Inputs)
                 {
-                    calcInstance.Inputs.First(a => a.Name == item.Name).ValueAsString = item.ValueAsString;
+                    // Need to find a tidy way to do this...
+                    var input = calcInstance.Inputs.Find(a => a.Name == item.Name);
+                    if (input != null)
+                    {
+                        input.ValueAsString = item.ValueAsString;
+                    }
+                    else
+                    {
+                        inputMissing = true;
+                        inputMissingMessage += "The input \"" + item.Name + "\" in file does not exist in calc" + Environment.NewLine;
+
+                    }
+
                 }
                 calcInstance.InstanceName = deserialiseObj.InstanceName;
                 ViewModels.Add(new CalculationViewModel(calcInstance));
                 SelectedViewModel = ViewModels.Count - 1;
+                if (inputMissing)
+                {
+                    System.Windows.MessageBox.Show(inputMissingMessage);
+                }
 
             }
             catch (Exception ex)
