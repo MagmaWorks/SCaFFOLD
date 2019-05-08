@@ -1752,6 +1752,36 @@ namespace TestCalcs
         {
             var perimeters = new List<PolyLine>();
             var perimeter2 = perimeter;
+            // check if hole within hole influence lines
+            bool perimeterFullyInside = true;
+            foreach (var hole in _holeEdges)
+            {
+                var startAngle = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
+                var endAngle = Math.Atan2(hole.Item2.End.Y, hole.Item2.End.X);
+                if (endAngle < startAngle)
+                {
+                    endAngle += 2 * Math.PI;                    
+                }
+                foreach (var segment in perimeter.Segments)
+                {
+                    var angle1 = Math.Atan2(segment.Start.Y, segment.End.X);
+                    var angle2 = Math.Atan2(segment.End.Y, segment.End.X);
+                    if (!(angle1 < endAngle && angle1 > startAngle || 
+                        angle2 < endAngle && angle2 > startAngle ||
+                        angle1 + Math.PI * 2 < endAngle && angle1 + Math.PI * 2 > startAngle ||
+                        angle2 + Math.PI * 2 < endAngle && angle2 + Math.PI * 2 > startAngle))
+                    {
+                        perimeterFullyInside = false;
+                    }
+                }
+            }
+            if (perimeterFullyInside)
+            {
+                return new List<PolyLine>();
+            }
+
+
+
             var listOfHoleIntersections = new List<Tuple<IntersectionResult, IntersectionResult>>();
             foreach (var hole in _holeEdges)
             {

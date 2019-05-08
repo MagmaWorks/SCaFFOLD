@@ -107,6 +107,11 @@ namespace TestCalcs
         // Find the points of intersection.
         public override List<IntersectionResult> intersection(Line line)
         {
+            if (StartAngle > 2* Math.PI && EndAngle > 2 * Math.PI)
+            {
+                StartAngle -= 2 * Math.PI;
+                EndAngle -= 2 * Math.PI;
+            }
             var arc = this;
             var point1 = line.Start;
             var point2 = line.End;
