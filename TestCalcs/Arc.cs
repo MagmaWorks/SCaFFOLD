@@ -10,9 +10,42 @@ namespace TestCalcs
     public class Arc : GeometryBase
     {
         public Vector2 Centre { get; set; }
-        public double StartAngle { get; set; }
+        double startAngle;
+        public double StartAngle
+        {
+            get
+            {
+                return startAngle;
+            }
+            set
+            {
+                startAngle = value;
+                checkAngleRange();
+            }
+        }
 
-        public double EndAngle { get; set; }
+        private void checkAngleRange()
+        {
+            if (startAngle > Math.PI * 2 && endAngle > Math.PI * 2)
+            {
+                startAngle -= 2 * Math.PI;
+                endAngle -= 2 * Math.PI;
+            };
+        }
+
+        double endAngle;
+        public double EndAngle
+        {
+            get
+            {
+                return endAngle;
+            }
+            set
+            {
+                endAngle = value;
+                checkAngleRange();
+            }
+        }
         double _radius;
         public double Radius
         {
@@ -107,11 +140,6 @@ namespace TestCalcs
         // Find the points of intersection.
         public override List<IntersectionResult> intersection(Line line)
         {
-            if (StartAngle > 2* Math.PI && EndAngle > 2 * Math.PI)
-            {
-                StartAngle -= 2 * Math.PI;
-                EndAngle -= 2 * Math.PI;
-            }
             var arc = this;
             var point1 = line.Start;
             var point2 = line.End;

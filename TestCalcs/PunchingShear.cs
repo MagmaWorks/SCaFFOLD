@@ -1754,6 +1754,10 @@ namespace TestCalcs
             var perimeter2 = perimeter;
             // check if hole within hole influence lines
             bool perimeterFullyInside = true;
+            if (_holeEdges.Count == 0)
+            {
+                perimeterFullyInside = false;
+            }
             foreach (var hole in _holeEdges)
             {
                 var startAngle = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
