@@ -101,6 +101,47 @@ namespace Calcs
             }
         }
 
+        ICommand copyCalcCommand;
+
+        public ICommand CopyCalcCommand
+        {
+            get
+            {
+                return copyCalcCommand ?? (copyCalcCommand = new CommandHandler(() => copyCalc(), true));
+            }
+        }
+
+        private void copyCalc()
+        {
+            CalcCore.ICalc newCalc = (CalcCore.ICalc)Activator.CreateInstance(ViewModel.Calc.GetType());
+            var oldInputs = ViewModel.Calc.GetInputs();
+            var newInputs = newCalc.GetInputs();
+            for (int i = 0; i < oldInputs.Count; i++)
+            {
+                newInputs[i].ValueAsString = oldInputs[i].ValueAsString;
+            }
+
+            bool uniqueName = false;
+            var proposedName = ViewModel.Calc.InstanceName + "_copy";
+            while (!uniqueName)
+            {
+                if (ViewModels.Where(a => a.CalcInstanceName == proposedName).ToList().Count > 0)
+                {
+                    proposedName += "_copy";
+                }
+                else
+                {
+                    uniqueName = true;
+                }
+            }
+            newCalc.InstanceName = proposedName;
+
+
+            _viewModels.Add(new CalculationViewModel(newCalc));
+            RaisePropertyChanged(nameof(ViewModels));
+            SelectedViewModel = _viewModels.Count - 1;
+        }
+
         ICommand megaSaveCalcCommand;
 
         public ICommand MegaSaveCalcCommand

@@ -243,6 +243,9 @@
   <ItemGroup>
     <Resource Include="WW.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\copy_64x64.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\$(ConfigurationName)\Libraries\" /Y
