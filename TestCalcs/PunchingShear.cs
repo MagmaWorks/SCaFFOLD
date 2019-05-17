@@ -58,6 +58,7 @@ namespace TestCalcs
         double fywdef;
         CalcDouble _uoutef;
         CalcDouble _distToFirstLinkPerim;
+        CalcDouble _distToOuterPerim;
         CalcDouble _perimSpacing;
         CalcDouble _linksInFirstPerim;
         CalcDouble _numberOfPerimeters;
@@ -128,6 +129,7 @@ namespace TestCalcs
             _numberOfPerimeters = outputValues.CreateDoubleCalcValue("Legs per spur", "", "No.", 0);
             _perimSpacing = outputValues.CreateDoubleCalcValue("Spacing of link perimeters", "", "mm", 0);
             _distToFirstLinkPerim = outputValues.CreateDoubleCalcValue("Distance to first link perimeter", "", "mm", 0);
+            _distToOuterPerim = outputValues.CreateDoubleCalcValue("Distance to outer perimeter", "", "mm", 0);
             _legsTotal = outputValues.CreateDoubleCalcValue("Total legs", "", "No.", 0);
             _legDia = outputValues.CreateDoubleCalcValue("Leg diameter", "", "mm", 0);
             _holePosX = inputValues.CreateDoubleCalcValue("Hole 1 X position", "", "mm", 0);
@@ -685,6 +687,7 @@ namespace TestCalcs
                     }
                     shearLinks.Add(filteredList);
                 }
+                _distToOuterPerim.Value = distFromCol;
             }
 
             if (_linkArrangement.ValueAsString == "GRID")
@@ -742,6 +745,7 @@ namespace TestCalcs
                     var perim = generatePerimeterWithHoles(offsetFromColumn);
                     perimetersToReinforce.Add(perim);
                     double outerPerimOffset = offsetFromColumn + 1.5 * d_average;
+                    _distToOuterPerim.Value = outerPerimOffset;
                     outerPerimeters = generatePerimeterWithHoles(outerPerimOffset);
                     if (outerPerimeters.Sum(a => a.Length) > _uoutef.Value)
                     {
@@ -962,6 +966,7 @@ namespace TestCalcs
                     }
                     shearLinks.Add(filteredList);
                 }
+                _distToOuterPerim.Value = offsetFromColumn + 1.5 * d_average;
             }
 
             _linksInFirstPerim.Value = shearLinks[0].Count;
