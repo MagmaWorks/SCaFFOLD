@@ -352,6 +352,12 @@ namespace TestCalcs
                 _uoutef.Value = double.NaN;
                 _Asw.Value = double.NaN;
                 colFaceStressFormula.Status = CalcStatus.FAIL;
+                if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
+                {
+                    colFaceStressFormula.Narrative += Environment.NewLine 
+                        + "Check on face stress can fail for corner or edge columns when dimension is greater than 1.5d as this is limiting value for effective face perimeter. For columns with greater dimensions, the beta factor increases but effective face perimeter does not. Alternative design strategies can be adopted to mitigate this.";
+
+                }
                 colFaceStressFormula.Conclusion = "Too high";
                 expressions.Add(colFaceStressFormula);
                 expressions.Insert(0, new Formula
