@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Calcs"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowState="Maximized">
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -51,6 +51,7 @@
                     </RibbonMenuButton>
                     <RibbonButton Command="{Binding CopyCalcCommand}" Width="100" Label="Copy" LargeImageSource="/resources/copy_64x64.png"/>
                     <RibbonButton Command="{Binding SaveCalcCommand}" Width="100" Label="Save As..." LargeImageSource="/resources/save_64x64.png"/>
+                    <RibbonButton Command="{Binding SaveAllCommand}" Width="100" Label="Save All" LargeImageSource="/resources/save_64x64.png"/>
                     <RibbonButton Command="{Binding SaveCalcDxfCommand}" Width="100" Label="Save DXFs..." LargeImageSource="/resources/save_64x64.png"/>
                     <RibbonButton Command="{Binding MegaSaveCalcCommand}" Width="100" Label="Mega save..." LargeImageSource="/resources/save_64x64.png" ToolTip="Saves JSON and DXFs"/>
                     <RibbonButton Command="{Binding OpenCalcCommand}" Width="100" Label="Open from JSON" LargeImageSource="/resources/folder_64x64.png"/>

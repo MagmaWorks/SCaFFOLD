@@ -70,6 +70,65 @@ namespace Calcs
             SelectedViewModel = ViewModels.Count-1;
         }
 
+        ICommand saveAllCommand;
+
+        public ICommand SaveAllCommand
+        {
+            get
+            {
+                return saveAllCommand ?? (saveAllCommand = new CommandHandler(() => saveAll(), true));
+            }
+        }
+
+        public void SaveAllOnClose(object sender, EventArgs e)
+        {
+            var vm = new SaveOnQuitVM();
+            Window1 myWin = new Window1(vm);
+            myWin.ShowDialog();
+            if (vm.Save)
+            {
+                saveAll();
+            }
+        }
+
+        public void saveAll()
+        {
+            for (int i = 0; i < ViewModels.Count; i++)
+            {
+                var vm = ViewModels[i];
+                var saveObj = Newtonsoft.Json.JsonConvert.SerializeObject(ViewModel.Calc, Newtonsoft.Json.Formatting.Indented);
+                string filePath = "";
+                try
+                {
+                    var saveDialog = new SaveFileDialog();
+                    saveDialog.Filter = @"JSON files |*.JSON";
+                    if (vm.Filepath == "")
+                    {
+                        SelectedViewModel = i;
+                        System.Windows.MessageBox.Show("Your calculation " + vm.Calc.InstanceName + " has not been saved yet. You have the option to save it now.");
+                        saveDialog.FileName = vm.Calc.InstanceName + @".JSON";
+                        saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                        if (saveDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            filePath = saveDialog.FileName;
+                            System.IO.File.WriteAllText(filePath, saveObj);
+                            vm.Filepath = filePath;
+                        }
+                    }
+                    else
+                    {
+                        filePath = vm.Filepath;
+                        System.IO.File.WriteAllText(filePath, saveObj);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
+                    return;
+                }
+            }
+        }
+
         ICommand saveCalcCommand;
 
         public ICommand SaveCalcCommand
@@ -88,11 +147,20 @@ namespace Calcs
             {
                 var saveDialog = new SaveFileDialog();
                 saveDialog.Filter = @"JSON files |*.JSON";
-                saveDialog.FileName = ViewModel.Calc.InstanceName + @".JSON";
+                if (ViewModel.Filepath == "")
+                {
+                    saveDialog.FileName = ViewModel.Calc.InstanceName + @".JSON";
+                }
+                else
+                {
+                    saveDialog.FileName = ViewModel.Filepath;
+                }
+                
                 saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
                 System.IO.File.WriteAllText(filePath, saveObj);
+                ViewModel.Filepath = filePath;
             }
             catch (Exception ex)
             {
@@ -160,11 +228,19 @@ namespace Calcs
             {
                 var saveDialog = new SaveFileDialog();
                 saveDialog.Filter = @"JSON files |*.JSON";
-                saveDialog.FileName = ViewModel.Calc.InstanceName + @".JSON";
+                if (ViewModel.Filepath == "")
+                {
+                    saveDialog.FileName = ViewModel.Calc.InstanceName + @".JSON";
+                }
+                else
+                {
+                    saveDialog.FileName = ViewModel.Filepath;
+                }
                 saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
                 System.IO.File.WriteAllText(filePath, saveObj);
+                ViewModel.Filepath = filePath;
                 var drawings = ViewModel.Calc.GetDrawings();
                 for (int i = 0; i < drawings.Count; i++)
                 {
@@ -265,7 +341,9 @@ namespace Calcs
 
                 }
                 calcInstance.InstanceName = deserialiseObj.InstanceName;
-                ViewModels.Add(new CalculationViewModel(calcInstance));
+                var newCalcVM = new CalculationViewModel(calcInstance);
+                newCalcVM.Filepath = filePath;
+                ViewModels.Add(newCalcVM);
                 SelectedViewModel = ViewModels.Count - 1;
                 if (inputMissing)
                 {

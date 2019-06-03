@@ -37,6 +37,7 @@ namespace Calcs
                 calcs.Add(new CalculationViewModel(calcInstance));
             appVM = new AppViewModel() { Assemblies = calcClasses, ViewModels = calcs };
             this.DataContext = appVM;
+            this.Closing += appVM.SaveAllOnClose;
             InitializeComponent();
         }
     }

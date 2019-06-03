@@ -96,6 +96,10 @@
       <DependentUpon>DynamicRelaxation.xaml</DependentUpon>
     </Compile>
     <Compile Include="DynamicRelaxationViewModel.cs" />
+    <Compile Include="SaveAllDialog.xaml.cs">
+      <DependentUpon>SaveAllDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SaveOnQuitVM.cs" />
     <Compile Include="SimpleCalcVM.cs" />
     <Compile Include="ICalcViewParent.cs" />
     <Compile Include="ChartControl.xaml.cs">
@@ -129,6 +133,9 @@
     <Compile Include="ValueType.cs" />
     <Compile Include="CalculationViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
     <Page Include="BatchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,7 +180,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SaveAllDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SingleCalc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
