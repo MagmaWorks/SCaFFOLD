@@ -18,6 +18,21 @@ namespace Calcs
         public ChartVM Chart { get; set; }
         public CrossRefVM CrossRef {get;set;}
 
+        string filepath = "";
+        public string Filepath
+        {
+            get
+            {
+                return filepath;
+            }
+            set
+            {
+                filepath = value;
+                RaisePropertyChanged(nameof(Filepath));
+            }
+        }
+
+
         public string Author
         {
             get

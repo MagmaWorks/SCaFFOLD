@@ -96,6 +96,10 @@
       <DependentUpon>DynamicRelaxation.xaml</DependentUpon>
     </Compile>
     <Compile Include="DynamicRelaxationViewModel.cs" />
+    <Compile Include="SaveAllDialog.xaml.cs">
+      <DependentUpon>SaveAllDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SaveOnQuitVM.cs" />
     <Compile Include="SimpleCalcVM.cs" />
     <Compile Include="ICalcViewParent.cs" />
     <Compile Include="ChartControl.xaml.cs">
@@ -129,6 +133,9 @@
     <Compile Include="ValueType.cs" />
     <Compile Include="CalculationViewModel.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
     <Page Include="BatchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,7 +180,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SaveAllDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SingleCalc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -201,6 +216,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="resources\CalcsInstaller.nsi" />
     <None Include="resources\Calculation_Template.docx" />
   </ItemGroup>
   <ItemGroup>
@@ -242,9 +258,14 @@
   <ItemGroup>
     <Resource Include="WW.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\copy_64x64.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\$(ConfigurationName)\Libraries\" /Y
-xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y</PostBuildEvent>
+xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
+xcopy "$(ProjectDir)resources\CalcsInstaller.nsi" "$(TargetDir)" /Y
+"C:\Program Files (x86)\NSIS\makensis.exe" "$(TargetDir)CalcsInstaller.nsi"</PostBuildEvent>
   </PropertyGroup>
 </Project>

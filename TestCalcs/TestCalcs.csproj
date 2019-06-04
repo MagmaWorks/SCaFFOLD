@@ -60,12 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arc.cs" />
-    <Compile Include="FE_Test_Calc.cs" />
+    <Compile Include="Drophead_Symmetrical.cs" />
     <Compile Include="GeometryBase.cs" />
     <Compile Include="IntersectionResult.cs" />
     <Compile Include="IntersectionType.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Moment.cs" />
+    <Compile Include="NodeCheck.cs" />
     <Compile Include="PolyLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PunchingShear.cs" />

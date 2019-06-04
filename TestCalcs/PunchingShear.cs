@@ -58,6 +58,7 @@ namespace TestCalcs
         double fywdef;
         CalcDouble _uoutef;
         CalcDouble _distToFirstLinkPerim;
+        CalcDouble _distToOuterPerim;
         CalcDouble _perimSpacing;
         CalcDouble _linksInFirstPerim;
         CalcDouble _numberOfPerimeters;
@@ -128,6 +129,7 @@ namespace TestCalcs
             _numberOfPerimeters = outputValues.CreateDoubleCalcValue("Legs per spur", "", "No.", 0);
             _perimSpacing = outputValues.CreateDoubleCalcValue("Spacing of link perimeters", "", "mm", 0);
             _distToFirstLinkPerim = outputValues.CreateDoubleCalcValue("Distance to first link perimeter", "", "mm", 0);
+            _distToOuterPerim = outputValues.CreateDoubleCalcValue("Distance to outer perimeter", "", "mm", 0);
             _legsTotal = outputValues.CreateDoubleCalcValue("Total legs", "", "No.", 0);
             _legDia = outputValues.CreateDoubleCalcValue("Leg diameter", "", "mm", 0);
             _holePosX = inputValues.CreateDoubleCalcValue("Hole 1 X position", "", "mm", 0);
@@ -350,6 +352,12 @@ namespace TestCalcs
                 _uoutef.Value = double.NaN;
                 _Asw.Value = double.NaN;
                 colFaceStressFormula.Status = CalcStatus.FAIL;
+                if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
+                {
+                    colFaceStressFormula.Narrative += Environment.NewLine 
+                        + "Check on face stress can fail for corner or edge columns when dimension is greater than 1.5d as this is limiting value for effective face perimeter. For columns with greater dimensions, the beta factor increases but effective face perimeter does not. Alternative design strategies can be adopted to mitigate this.";
+
+                }
                 colFaceStressFormula.Conclusion = "Too high";
                 expressions.Add(colFaceStressFormula);
                 expressions.Insert(0, new Formula
@@ -685,6 +693,7 @@ namespace TestCalcs
                     }
                     shearLinks.Add(filteredList);
                 }
+                _distToOuterPerim.Value = distFromCol;
             }
 
             if (_linkArrangement.ValueAsString == "GRID")
@@ -742,6 +751,7 @@ namespace TestCalcs
                     var perim = generatePerimeterWithHoles(offsetFromColumn);
                     perimetersToReinforce.Add(perim);
                     double outerPerimOffset = offsetFromColumn + 1.5 * d_average;
+                    _distToOuterPerim.Value = outerPerimOffset;
                     outerPerimeters = generatePerimeterWithHoles(outerPerimOffset);
                     if (outerPerimeters.Sum(a => a.Length) > _uoutef.Value)
                     {
@@ -962,6 +972,7 @@ namespace TestCalcs
                     }
                     shearLinks.Add(filteredList);
                 }
+                _distToOuterPerim.Value = offsetFromColumn + 1.5 * d_average;
             }
 
             _linksInFirstPerim.Value = shearLinks[0].Count;
@@ -1240,16 +1251,16 @@ namespace TestCalcs
                     miny = Math.Min(miny, newy);
                     maxy = Math.Max(maxy, newy);
                 }
-                maxy = minx * Math.Sin((maxAngle - minAngle) / 2);
-                miny = -minx * Math.Sin((maxAngle - minAngle) / 2);
+                maxy = minx * Math.Tan((maxAngle - minAngle) / 2);
+                miny = -minx * Math.Tan((maxAngle - minAngle) / 2);
                 var rangex = maxx - minx;
                 var rangey = maxy - miny;
                 if (rangex > rangey)
                 {
                     var newrangey = Math.Sqrt(rangey * rangex);
                     holeExpression.Expression.Add(@"width_" + i + "=" + Math.Round(newrangey, 0) + "mm");
-                    minAngle = Math.Atan2(-newrangey / 2, minx) + midAngle;
-                    maxAngle = Math.Atan2(newrangey / 2, minx) + midAngle;
+                    minAngle = midAngle - Math.Atan2(newrangey / 2, minx);
+                    maxAngle = midAngle + Math.Atan2(newrangey / 2, minx);
                     if ((minAngle * maxAngle < 0) && (maxAngle - minAngle > Math.PI))
                     {
                         var newMax = minAngle + 2 * Math.PI;
@@ -1752,6 +1763,40 @@ namespace TestCalcs
         {
             var perimeters = new List<PolyLine>();
             var perimeter2 = perimeter;
+            // check if hole within hole influence lines
+            bool perimeterFullyInside = true;
+            if (_holeEdges.Count == 0)
+            {
+                perimeterFullyInside = false;
+            }
+            foreach (var hole in _holeEdges)
+            {
+                var startAngle = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
+                var endAngle = Math.Atan2(hole.Item2.End.Y, hole.Item2.End.X);
+                if (endAngle < startAngle)
+                {
+                    endAngle += 2 * Math.PI;                    
+                }
+                foreach (var segment in perimeter.Segments)
+                {
+                    var angle1 = Math.Atan2(segment.Start.Y, segment.End.X);
+                    var angle2 = Math.Atan2(segment.End.Y, segment.End.X);
+                    if (!(angle1 < endAngle && angle1 > startAngle || 
+                        angle2 < endAngle && angle2 > startAngle ||
+                        angle1 + Math.PI * 2 < endAngle && angle1 + Math.PI * 2 > startAngle ||
+                        angle2 + Math.PI * 2 < endAngle && angle2 + Math.PI * 2 > startAngle))
+                    {
+                        perimeterFullyInside = false;
+                    }
+                }
+            }
+            if (perimeterFullyInside)
+            {
+                return new List<PolyLine>();
+            }
+
+
+
             var listOfHoleIntersections = new List<Tuple<IntersectionResult, IntersectionResult>>();
             foreach (var hole in _holeEdges)
             {
