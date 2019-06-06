@@ -399,7 +399,10 @@ namespace Calcs
                 for (int i = 2; i < lineItems.Count(); i++)
                 {
                     var input = inputs.Find(a => a.Name == listHeaders[i]);
-                    input.ValueAsString = lineItems[i];
+                    if (input != null)
+                    {
+                        input.ValueAsString = lineItems[i];
+                    }
                 }
                 number++;
                 newCalc.UpdateCalc();
