@@ -49,6 +49,7 @@
                             </Style>
                         </RibbonMenuButton.ItemContainerStyle>
                     </RibbonMenuButton>
+                    <RibbonButton Command="{Binding RemoveCalcCommand}" Width="100" Label="Remove" LargeImageSource="/resources/Remove_16x.png"/>
                     <RibbonButton Command="{Binding CopyCalcCommand}" Width="100" Label="Copy" LargeImageSource="/resources/copy_64x64.png"/>
                     <RibbonButton Command="{Binding SaveCalcCommand}" Width="100" Label="Save As..." LargeImageSource="/resources/save_64x64.png"/>
                     <RibbonButton Command="{Binding SaveAllCommand}" Width="100" Label="Save All" LargeImageSource="/resources/save_64x64.png"/>

@@ -16,24 +16,28 @@ namespace Calcs
     {
         public List<CalcCore.CalcAssembly> Assemblies { get; set; }
 
-        ObservableCollection<CalculationViewModel> _viewModels;
+        ObservableCollection<CalculationViewModel> _viewModels = new ObservableCollection<CalculationViewModel>();
         public ObservableCollection<CalculationViewModel> ViewModels
         {
             get
             {
                 return _viewModels;
             }
-            set
-            {
-                _viewModels = value;
-                RaisePropertyChanged(nameof(ViewModels));
-            }
+            //set
+            //{
+            //    _viewModels = value;
+            //    RaisePropertyChanged(nameof(ViewModels));
+            //}
         }
 
         public CalculationViewModel ViewModel
         {
             get
             {
+                if (_selectedViewModel < 0)
+                {
+                    _selectedViewModel = 0;
+                }
                 return ViewModels[_selectedViewModel];
             }
         }
@@ -47,7 +51,7 @@ namespace Calcs
             }
             set
             {
-                _selectedViewModel = value;
+                _selectedViewModel = Math.Max(0,value);
                 RaisePropertyChanged(nameof(SelectedViewModel));
                 RaisePropertyChanged(nameof(ViewModel));
             }
@@ -68,6 +72,32 @@ namespace Calcs
             CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcType);
             ViewModels.Add(new CalculationViewModel(calcInstance));
             SelectedViewModel = ViewModels.Count-1;
+        }
+
+        ICommand removeCalcCommand;
+
+        public ICommand RemoveCalcCommand
+        {
+            get
+            {
+                return removeCalcCommand ?? (removeCalcCommand = new CommandHandlerWithParameter(param => removeCalc(param), true));
+            }
+        }
+
+        private void removeCalc(Type calcType)
+        {
+            if (ViewModels.Count>1)
+            {
+                int removeIndex = SelectedViewModel;
+                SelectedViewModel = Math.Min(removeIndex, ViewModels.Count-2);
+                _viewModels.RemoveAt(removeIndex);
+                RaisePropertyChanged(nameof(ViewModels));
+                SelectedViewModel=SelectedViewModel;
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("You need at least one calculation");
+            }
         }
 
         ICommand saveAllCommand;
@@ -409,6 +439,13 @@ namespace Calcs
                 ViewModels.Add(new CalculationViewModel(newCalc));
             }
             SelectedViewModel = ViewModels.Count - 1;
+        }
+
+        public AppViewModel(List<CalcCore.CalcAssembly> calcs)
+        {
+            Assemblies = calcs;
+            CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(Assemblies[0].Class);
+            ViewModels.Add(new CalculationViewModel(calcInstance));
         }
 
         private class deserialiseCalcValue

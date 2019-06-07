@@ -261,6 +261,9 @@
   <ItemGroup>
     <Resource Include="resources\copy_64x64.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\Remove_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\$(ConfigurationName)\Libraries\" /Y
