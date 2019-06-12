@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Calcs
@@ -124,6 +125,7 @@ namespace Calcs
             RaisePropertyChanged(nameof(CalcNames));
             SelectedIndex = 0;
             SelectedCalc.UpdateOutputs();
+            
         }
     }
 }
