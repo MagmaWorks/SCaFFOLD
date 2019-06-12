@@ -66,6 +66,7 @@
     <Compile Include="IntersectionType.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Moment.cs" />
+    <Compile Include="NewCalc.cs" />
     <Compile Include="NodeCheck.cs" />
     <Compile Include="PolyLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
