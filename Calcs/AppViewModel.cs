@@ -410,35 +410,48 @@ namespace Calcs
             List<CalcCore.ICalc> returnList = new List<CalcCore.ICalc>();
             string line = "";
             string[] lineItems;
-            var fs = File.OpenRead(filePath);
-            var reader = new StreamReader(fs);
-            var headerLine = reader.ReadLine();//assumes first row is headers
-            var listHeaders = headerLine.Split(',');
-            int number = 0;
-            while (!reader.EndOfStream)
+            try
             {
-                CalcCore.ICalc newCalc = new TestCalcs.PunchingShear();
-                line = reader.ReadLine();
-                lineItems = line.Split(',');
-                foreach (var calc in Assemblies)
+                var fs = File.OpenRead(filePath);
+                var reader = new StreamReader(fs);
+                var headerLine = reader.ReadLine();//assumes first row is headers
+                var listHeaders = headerLine.Split(',');
+                int number = 0;
+                while (!reader.EndOfStream)
                 {
-                    if (calc.Class.ToString() == lineItems[0]) newCalc = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
-                }
-                newCalc.InstanceName = lineItems[1];
-                var inputs = newCalc.GetInputs();
-                for (int i = 2; i < lineItems.Count(); i++)
-                {
-                    var input = inputs.Find(a => a.Name == listHeaders[i]);
-                    if (input != null)
+                    CalcCore.ICalc newCalc = new TestCalcs.PunchingShear();
+                    line = reader.ReadLine();
+                    lineItems = line.Split(',');
+                    if (lineItems.Length > listHeaders.Length)
                     {
-                        input.ValueAsString = lineItems[i];
+                        System.Windows.MessageBox.Show("An error occured. Check your path doesn't contain any coma.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
                     }
+                    foreach (var calc in Assemblies)
+                    {
+                        if (calc.Class.ToString() == lineItems[0]) newCalc = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
+                    }
+                    newCalc.InstanceName = lineItems[1];
+                    var inputs = newCalc.GetInputs();
+                    for (int i = 2; i < lineItems.Count(); i++)
+                    {
+                        var input = inputs.Find(a => a.Name == listHeaders[i]);
+                        if (input != null)
+                        {
+                            input.ValueAsString = lineItems[i];
+                        }
+                    }
+                    number++;
+                    newCalc.UpdateCalc();
+                    ViewModels.Add(new CalculationViewModel(newCalc));
                 }
-                number++;
-                newCalc.UpdateCalc();
-                ViewModels.Add(new CalculationViewModel(newCalc));
+                SelectedViewModel = ViewModels.Count - 1;
             }
-            SelectedViewModel = ViewModels.Count - 1;
+            catch(Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message,"",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
+                
         }
 
         public AppViewModel(List<CalcCore.CalcAssembly> calcs)
