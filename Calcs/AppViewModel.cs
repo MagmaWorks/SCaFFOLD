@@ -36,7 +36,7 @@ namespace Calcs
             {
                 if (_selectedViewModel < 0)
                 {
-                    _selectedViewModel = 0;
+                    return ViewModels[0];
                 }
                 return ViewModels[_selectedViewModel];
             }
@@ -51,7 +51,7 @@ namespace Calcs
             }
             set
             {
-                _selectedViewModel = Math.Max(0,value);
+                _selectedViewModel = value;
                 RaisePropertyChanged(nameof(SelectedViewModel));
                 RaisePropertyChanged(nameof(ViewModel));
             }
@@ -89,10 +89,10 @@ namespace Calcs
             if (ViewModels.Count>1)
             {
                 int removeIndex = SelectedViewModel;
-                SelectedViewModel = Math.Min(removeIndex, ViewModels.Count-2);
+                int newIndex = Math.Min(removeIndex, ViewModels.Count-2);
                 _viewModels.RemoveAt(removeIndex);
                 RaisePropertyChanged(nameof(ViewModels));
-                SelectedViewModel=SelectedViewModel;
+                SelectedViewModel=newIndex;
             }
             else
             {
