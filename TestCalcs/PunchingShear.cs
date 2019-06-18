@@ -986,6 +986,16 @@ namespace TestCalcs
             var barSizes = allBarSizes.Where(a => a <= _maxBarDia).ToList();
 
             _legDia.Value = calcBarSizeAndDia(_Asw.Value / _linksInFirstPerim.Value, barSizes);
+            if (double.IsNaN(_legDia.Value))
+            {
+                expressions.Add(new Formula()
+                {
+                    Narrative = "User defined maximum bar size of " + _maxBarDia + "mm is too small for the specified spacings. Either specify a larger allowable bar size, or decrease radial or tangential spacing.",
+                    Status = CalcStatus.FAIL,
+                    Conclusion = "No valid bar dia"
+                
+                });
+            }
 
             var shearLinkPositions = new List<double[]>();
             foreach (var links in shearLinks)
