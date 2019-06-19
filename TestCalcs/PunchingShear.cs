@@ -1970,6 +1970,8 @@ namespace TestCalcs
                 var spursGeometry = new GeometryGroup();
                 var linksGeometry = new GeometryGroup();
                 var holeEdgeLinesGeometry = new GeometryGroup();
+                var axes = new GeometryGroup();
+                var axesLabels = new GeometryGroup();
                 var slabGeometry = generateGeometry(slabEdge);
                 var allPerimetersFlattened = new List<PolyLine>();
                 foreach (var item in perimetersToReinforce)
@@ -1990,6 +1992,9 @@ namespace TestCalcs
                     holeEdgeLinesGeometry.Children.Add(new LineGeometry(new Point(line.Start.X, line.Start.Y), new Point(line.End.X, line.End.Y)));
                 }
 
+                axes.Children.Add(new LineGeometry(new Point(-10000, 0), new Point(10000, 0)));
+                axes.Children.Add(new LineGeometry(new Point(0, -10000), new Point(0, 10000)));
+
                 foreach (var spur in shearSpurs)
                 {
                     spursGeometry.Children.Add(new LineGeometry(new Point(spur.Start.X, spur.Start.Y), new Point(spur.End.X, spur.End.Y)));
@@ -2009,6 +2014,10 @@ namespace TestCalcs
                 double maxY = Math.Max(Math.Abs(newBounds.Y), Math.Abs(newBounds.BottomRight.Y));
 
                 double scale = 900 / (Math.Max(2 * maxX, 2 * maxY));
+
+                axesLabels.Children.Add(gettext("Y", new Point(newBounds.Right + 35, 0), 1/scale));
+                axesLabels.Children.Add(gettext("Z", new Point(0, newBounds.Bottom + 35), 1 / scale));
+
                 var scaleTransform = new ScaleTransform(scale, -scale);
                 var transX = 50 + scale * -newBounds.X;
                 var transY = 50 + scale * newBounds.BottomRight.Y;
@@ -2030,6 +2039,8 @@ namespace TestCalcs
                 outerLinksPerimeterGeometry.Transform = transGroup;
                 voidGeometry.Transform = transGroup;
                 holeEdgeLinesGeometry.Transform = transGroup;
+                axes.Transform = transGroup;
+                axesLabels.Transform = transGroup;
 
                 var dashedLine = new Pen(Brushes.Gray, 2) { DashStyle = new DashStyle(new List<double> { 20, 5, 5, 5 }, 0) };
                 var dashedLine2 = new Pen(Brushes.Gray, 2) { DashStyle = new DashStyle(new List<double> { 10, 5 }, 0) };
@@ -2047,6 +2058,8 @@ namespace TestCalcs
                 r.DrawGeometry(Brushes.Transparent, dashedLine, outerLinksPerimeterGeometry);
                 r.DrawGeometry(Brushes.Red, new Pen(Brushes.PaleVioletRed, 1), spursGeometry);
                 r.DrawGeometry(Brushes.LightGray, new Pen(Brushes.Black, 1), linksGeometry);
+                r.DrawGeometry(Brushes.Transparent, dashedLine, axes);
+                r.DrawGeometry(Brushes.Black, new Pen(Brushes.Black, 1), axesLabels);
             }
 
             testImage.Render(visual);
@@ -2110,6 +2123,20 @@ namespace TestCalcs
                 Brushes.Black);
             var pos1 = new Point(pos.X, pos.Y - returnText.Height/2);
             Geometry geometry = returnText.BuildGeometry(pos1);
+            return geometry;
+        }
+
+        private Geometry gettext(string text, Point pos, double scale)
+        {
+            FormattedText returnText = new FormattedText(text,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface(new FontFamily("Franklin Gothic Book"), FontStyles.Normal, FontWeights.Light, FontStretches.Normal),
+                48,
+                Brushes.Black);
+            var pos1 = new Point(pos.X - returnText.Width / 2, pos.Y - returnText.Height / 2);
+            Geometry geometry = returnText.BuildGeometry(pos1);
+            geometry.Transform = new ScaleTransform(scale, -scale, pos.X, pos.Y);
             return geometry;
         }
     }
