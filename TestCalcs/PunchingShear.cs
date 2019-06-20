@@ -75,6 +75,8 @@ namespace TestCalcs
         CalcListOfDoubleArrays _studPositions;
         CalcSelectionList _maxBarSize;
         CalcSelectionList _faceCheck;
+        CalcSelectionList _betaCheck;
+        CalcDouble _betaProposed;
 
         List<Formula> expressions = new List<Formula>();
         List<Tuple<Line, Line>> _holeEdges;
@@ -125,6 +127,8 @@ namespace TestCalcs
             _concPartFactor = outputValues.CreateDoubleCalcValue("Partial factor for concrete", @"\gamma_c", "", 1.5);
             _rho = outputValues.CreateDoubleCalcValue("Reinforcement ratio", @"\rho_l", "", 0);
             _punchingLoad = inputValues.CreateDoubleCalcValue("Punching shear load", "V_{Ed}", "kN", 457);
+            _betaCheck = inputValues.CreateCalcSelectionList("Beta calculation", "AUTO", new List<string> {"AUTO", "CODE_DEFAULT", "MANUAL" });
+            _betaProposed = inputValues.CreateDoubleCalcValue("Proposed beta factor", @"\beta_{prop}", "", 1.5);
             _stressvEdi = outputValues.CreateDoubleCalcValue("Shear stress at column face", @"v_{Ed,0}", @"N/{mm^2} ", 0);
             _Asw = outputValues.CreateDoubleCalcValue("Punching shear leg area required per perimeter", "A_{sw}", "mm^2", 0);
             _uoutef = outputValues.CreateDoubleCalcValue("Outer perimeter required", "u_{out,ef,req}", "mm", 0);
@@ -327,6 +331,46 @@ namespace TestCalcs
                 default:
                     break;
             }
+
+            if (_betaCheck.ValueAsString== "MANUAL")
+            {
+                _beta.Value = _betaProposed.Value;
+                betaFormula = new Formula()
+                {
+                    Narrative = "Manally entered beta factor",
+                    Expression = new List<string>
+                    {
+                        _beta.Symbol + "=" + _betaProposed.Value
+                    }
+                };
+            }
+            else if (_betaCheck.ValueAsString == "CODE_DEFAULT")
+            {
+                if (_colType.ValueAsString == "INTERNAL")
+                    _beta.Value = 1.15;
+                else if (_colType.ValueAsString == "CORNER")
+                    _beta.Value = 1.5;
+                else if (_colType.ValueAsString == "EDGE")
+                    _beta.Value = 1.4;
+                else
+                    _beta.Value = 1.275;
+                betaFormula = new Formula()
+                {
+                    Narrative = "Use code defaults for beta factor. May be used where stability does not rely on" +
+                    "frame action between column and slab and adjacent spans differ by no more than 25%.",
+                    Ref = "cl 6.4.3(6)",
+                    Expression = new List<string>
+                    {
+                        _beta.Symbol + "=" + _beta.ValueAsString
+                    }
+                };
+                if (_colType.ValueAsString == "RE-ENTRANT")
+                {
+                    betaFormula.Narrative = "Value for re-entrant column is interpolated from" +
+                        " internal and edge column. Use with care.";
+                }
+            }
+
             expressions.Add(betaFormula);
 
             // calculate shear stress at face
