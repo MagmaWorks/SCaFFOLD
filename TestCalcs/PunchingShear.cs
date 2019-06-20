@@ -74,6 +74,7 @@ namespace TestCalcs
         CalcDouble _hole2SizeY;
         CalcListOfDoubleArrays _studPositions;
         CalcSelectionList _maxBarSize;
+        CalcSelectionList _faceCheck;
 
         List<Formula> expressions = new List<Formula>();
         List<Tuple<Line, Line>> _holeEdges;
@@ -109,6 +110,7 @@ namespace TestCalcs
             _stMode = inputValues.CreateCalcSelectionList("Tangential spacing", "AUTO", new List<string> { "AUTO", "TARGET" });
             _stTarget = inputValues.CreateDoubleCalcValue("Target tangential spacing", "s_t", "mm", 0);
             _beta = outputValues.CreateDoubleCalcValue("Beta value", @"\beta", "", 2);
+            _faceCheck = inputValues.CreateCalcSelectionList("Face shear", "CHECK", new List<string> { "CHECK", "IGNORE" });
             _columnAdim = inputValues.CreateDoubleCalcValue("Column A dimension", "A", "mm", 350);
             _columnBdim = inputValues.CreateDoubleCalcValue("Column B dimension", "B", "mm", 350);
             _h = inputValues.CreateDoubleCalcValue("Slab depth", "h", "mm", 225);
@@ -329,10 +331,12 @@ namespace TestCalcs
 
             // calculate shear stress at face
             _stressvEdi.Value = _beta.Value * _punchingLoad.Value * 1000 / (ui * d_average);
-            var colFaceStressFormula = new Formula()
+            if (_faceCheck.ValueAsString=="CHECK")
             {
-                Narrative = "Check shear stress at column face.",
-                Expression = new List<string>
+                var colFaceStressFormula = new Formula()
+                {
+                    Narrative = "Check shear stress at column face.",
+                    Expression = new List<string>
                 {
                     string.Format(@"u_0 = {0} mm", Math.Round(ui, 2)),
                     _beta.Symbol + " = " + Math.Round(_beta.Value,3) + _beta.Unit,
@@ -343,41 +347,50 @@ namespace TestCalcs
                         Math.Round(_stressvEdi.Value, 2),
                         @"N/{mm^2}"),
                 },
-                Ref = "cl.6.4.5(3)"
-            };
+                    Ref = "cl.6.4.5(3)"
+                };
 
-            vRdMax = shearStressResistance(_fck.Value);
+                vRdMax = shearStressResistance(_fck.Value);
 
-            if (_stressvEdi.Value > vRdMax)
-            {
-                _stressvEdi.Status = CalcStatus.FAIL;
-                _uoutef.Value = double.NaN;
-                _Asw.Value = double.NaN;
-                colFaceStressFormula.Status = CalcStatus.FAIL;
-                if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
+                if (_stressvEdi.Value > vRdMax)
                 {
-                    colFaceStressFormula.Narrative += Environment.NewLine 
-                        + "Check on face stress can fail for corner or edge columns when dimension is greater than 1.5d as this is limiting value for effective face perimeter. For columns with greater dimensions, the beta factor increases but effective face perimeter does not. Alternative design strategies can be adopted to mitigate this.";
+                    _stressvEdi.Status = CalcStatus.FAIL;
+                    _uoutef.Value = double.NaN;
+                    _Asw.Value = double.NaN;
+                    colFaceStressFormula.Status = CalcStatus.FAIL;
+                    if (_colType.ValueAsString == "EDGE" || _colType.ValueAsString == "CORNER")
+                    {
+                        colFaceStressFormula.Narrative += Environment.NewLine
+                            + "Check on face stress can fail for corner or edge columns when dimension is greater than 1.5d as this is limiting value for effective face perimeter. For columns with greater dimensions, the beta factor increases but effective face perimeter does not. Alternative design strategies can be adopted to mitigate this.";
 
+                    }
+                    colFaceStressFormula.Conclusion = "Too high";
+                    expressions.Add(colFaceStressFormula);
+                    expressions.Insert(0, new Formula
+                    {
+                        Conclusion = "Face stress too high",
+                        Status = CalcStatus.FAIL
+                    });
+                    return;
                 }
-                colFaceStressFormula.Conclusion = "Too high";
-                expressions.Add(colFaceStressFormula);
-                expressions.Insert(0, new Formula
+                else
                 {
-                    Conclusion = "Face stress too high",
-                    Status = CalcStatus.FAIL
-                });
-                return;
+                    colFaceStressFormula.Status = CalcStatus.PASS;
+                    colFaceStressFormula.Conclusion = "OK";
+                    _stressvEdi.Status = CalcStatus.PASS;
+                    colFaceStressFormula.Expression.Add(@"v_{Rd,max}=" + Math.Round(vRdMax, 2) + @"N/mm^2");
+                    colFaceStressFormula.Expression.Add(string.Format(@"{0} \leq {1}", _stressvEdi.Symbol, @"v_{Rd,max}"));
+                    expressions.Add(colFaceStressFormula);
+                }
             }
             else
             {
-                colFaceStressFormula.Status = CalcStatus.PASS;
-                colFaceStressFormula.Conclusion = "OK";
-                _stressvEdi.Status = CalcStatus.PASS;
-                colFaceStressFormula.Expression.Add(@"v_{Rd,max}=" + Math.Round(vRdMax, 2) + @"N/mm^2");
-                colFaceStressFormula.Expression.Add(string.Format(@"{0} \leq {1}", _stressvEdi.Symbol, @"v_{Rd,max}"));
-                expressions.Add(colFaceStressFormula);
+                expressions.Add(new Formula()
+                {
+                    Narrative = "Face shear check ignored."
+                });
             }
+            
 
             reinforcementRatioy = _rebarY.Value / (1000 * dy);
             reinforcementRatioz = _rebarZ.Value / (1000 * dz);
