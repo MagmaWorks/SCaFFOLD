@@ -1,3 +1,3 @@
 # Calcs
 Calculations ecosystem
-![logo](Calcs/resources/CalcSplash.gif)
+![logo](Calcs/resources/CalcSplash.gif | width = 100)
