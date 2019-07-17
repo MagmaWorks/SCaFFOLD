@@ -1,4 +1,4 @@
-# H1 SCaFFOLD
+# SCaFFOLD
 *Structural Calculations Framework*
 Free, Open and Lightweight Design
 
