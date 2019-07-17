@@ -1,5 +1,6 @@
 # SCaFFOLD
 *Structural Calculations Framework*
+
 Free, Open and Lightweight Design
 
 <img src="Calcs/resources/CalcSplash.gif" width="300">
