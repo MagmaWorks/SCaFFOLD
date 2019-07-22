@@ -6,7 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Newtonsoft;
+using SkiaSharp.Views.WPF;
 
 namespace Calcs
 {
@@ -89,6 +92,21 @@ namespace Calcs
             {
                 _includeBodyInWord = value;
                 RaisePropertyChanged(nameof(IncludeBodyInWord));
+            }
+        }
+
+        public ObservableCollection<DXFDrawData> TestGroup
+        {
+            get
+            {
+                var test = calc.GetDrawings();
+                if (test != null)
+                {
+                    var rettest = DXFDisplay.ReadDXF(test[0]);
+                    return new ObservableCollection<DXFDrawData>(rettest);
+                }
+                else
+                    return new ObservableCollection<DXFDrawData> { };
             }
         }
 
@@ -176,10 +194,13 @@ namespace Calcs
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
-                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status, Image=item.Image });
+                BitmapSource im = null;
+                if (item.Image != null)
+                {
+                    im = item.Image.ToWriteableBitmap();
+                }
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image = im });
             }
-
-            
         }
 
         public void UpdateOutputs()
@@ -192,9 +213,15 @@ namespace Calcs
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
-                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image=item.Image });
+                BitmapSource im = null;
+                if (item.Image != null)
+                {
+                    im = item.Image.ToWriteableBitmap();
+                }
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image = im });
             }
             RaisePropertyChanged(nameof(Formulae));
+            RaisePropertyChanged(nameof(TestGroup));
         }
     }
 }

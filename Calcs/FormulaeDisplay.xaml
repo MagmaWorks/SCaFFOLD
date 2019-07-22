@@ -39,6 +39,29 @@
                 <Button Content="To WORD" Command="{Binding ToWord}" Width="100" Height="Auto" HorizontalAlignment="Left"/>
             </StackPanel>
         </Grid>
+
+        <!--<ItemsControl ItemsSource="{Binding TestGroup}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Path Data="{Binding Geometry}" Stroke="{Binding LayerBrush}" StrokeThickness="{Binding LayerBrushThickness}" RenderTransformOrigin="0,0">
+                        <Path.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0.3" ScaleY="0.3"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform X="250" Y="300"/>
+                            </TransformGroup>
+                        </Path.RenderTransform>
+                    </Path>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>-->
+      
         <ListView ItemsSource="{Binding Formulae}" Grid.Row="1" ScrollViewer.CanContentScroll="False">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

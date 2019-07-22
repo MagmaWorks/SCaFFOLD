@@ -102,7 +102,7 @@ namespace Calcs
             int number = 0;
             while (!reader.EndOfStream)
             {
-                CalcCore.ICalc newCalc = new TestCalcs.PunchingShear();
+                CalcCore.ICalc newCalc = new TestCalcs.SimpleMoment();
                 line = reader.ReadLine();
                 lineItems = line.Split(',');
                 foreach (var calc in _calcAssemblies)

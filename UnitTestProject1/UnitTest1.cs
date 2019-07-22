@@ -60,11 +60,6 @@ namespace UnitTestProject1
                 );
         }
 
-        [TestMethod]
-        public void Punching()
-        {
-            var myCalc = new TestCalcs.PunchingShear();
-        }
 
         [TestMethod]
         public void TestDynamicRelaxation()

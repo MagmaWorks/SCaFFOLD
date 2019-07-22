@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
+using System.Media;
+using SkiaSharp;
 
 namespace CalcCore
 {
@@ -14,7 +17,7 @@ namespace CalcCore
         public string Narrative { get; set; } = "";
         public string Conclusion { get; set; } = "";
         public CalcStatus Status { get; set; } = CalcStatus.NONE;
-        public BitmapSource Image { get; set; } = null;
+        public SkiaSharp.SKBitmap Image { get; set; } = null;
 
         public Formula()
         {
@@ -55,7 +58,7 @@ namespace CalcCore
             return this;
         }
 
-        public Formula AddImage(BitmapSource image)
+        public Formula AddImage(SKBitmap image)
         {
             Image = image;
             return this;

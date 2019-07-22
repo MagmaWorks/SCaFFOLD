@@ -131,7 +131,8 @@ namespace CalcCore
                         Paragraph para2 = objTab1.Cell(row, 2).Range.Paragraphs.Add();
                         var tempFile = Path.GetTempFileName();
                         PngBitmapEncoder png = new PngBitmapEncoder();
-                        png.Frames.Add(BitmapFrame.Create(line.Image));
+                        //CHANGEBITMAP
+                        //png.Frames.Add(BitmapFrame.Create(line.Image));
                         using (Stream stm = File.Create(tempFile))
                         {
                             png.Save(stm);

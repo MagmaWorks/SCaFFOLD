@@ -152,7 +152,7 @@ namespace Calcs
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
-                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status, Image=item.Image });
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion=item.Conclusion, Narrative=item.Narrative, Status=item.Status/*, Image=item.Image */});
             }
         }
 
@@ -166,7 +166,7 @@ namespace Calcs
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
-                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image=item.Image });
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status/*, Image=item.Image */});
             }
             RaisePropertyChanged(nameof(Formulae));
 

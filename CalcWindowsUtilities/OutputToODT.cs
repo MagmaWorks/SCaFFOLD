@@ -166,7 +166,8 @@ namespace CalcCore
                     ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
                     var tempFile = Path.GetTempFileName();
                     PngBitmapEncoder png = new PngBitmapEncoder();
-                    png.Frames.Add(BitmapFrame.Create(item.Image));
+                    //CHANGEBITMAP
+                    //png.Frames.Add(BitmapFrame.Create(item.Image));
                     var width = Math.Min(10d, item.Image.Width * 2.54 / 96);
                     var height = (item.Image.Height / item.Image.Width) * width;
                     using (Stream stm = File.Create(tempFile))

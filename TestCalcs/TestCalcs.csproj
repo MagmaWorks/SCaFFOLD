@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,14 +36,20 @@
     <Reference Include="BriefFiniteElementNet">
       <HintPath>..\packages\BriefFiniteElement.NET.1.0.0\lib\net35\BriefFiniteElementNet.dll</HintPath>
     </Reference>
-    <Reference Include="netDxf, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\netDXF.2.2.0.1\lib\net45\netDxf.dll</HintPath>
+    <Reference Include="netDxf.netstandard, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\netDxf.netstandard.2.3.0\lib\net45\netDxf.netstandard.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="SkiaSharp, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkiaSharp.1.68.0\lib\net45\SkiaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="StructuralDrawing2D">
+      <HintPath>..\..\Libraries\WWGeometry\StructuralDrawing2D\bin\Debug\StructuralDrawing2D.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -70,6 +78,7 @@
     <Compile Include="NodeCheck.cs" />
     <Compile Include="PolyLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PunchingShear-mobile.cs" />
     <Compile Include="PunchingShear.cs" />
     <Compile Include="RC_Beam.cs" />
     <Compile Include="Sections.cs" />
@@ -83,17 +92,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\PunchingShear_Fig_6_14.png" />
+    <EmbeddedResource Include="resources\PunchingShear_Fig_6_14.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\PunchingShear_ConcreteCentreLayout.png" />
-    <Resource Include="resources\PunchingShear_EC1992_RadialLayout.png" />
+    <EmbeddedResource Include="resources\PunchingShear_ConcreteCentreLayout.png" />
+    <EmbeddedResource Include="resources\PunchingShear_EC1992_RadialLayout.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\ControlPerimeters_Fig_6_13.png" />
+    <EmbeddedResource Include="resources\ControlPerimeters_Fig_6_13.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\PunchingShear_Fig_6_20.png" />
+    <EmbeddedResource Include="resources\PunchingShear_Fig_6_20.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -102,7 +111,7 @@
     <None Include="resources\Section_Names.csv" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\PunchingShear_Fig_6_22.png" />
+    <EmbeddedResource Include="resources\PunchingShear_Fig_6_22.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="WW.ico" />
@@ -114,4 +123,11 @@ xCopy "$(TargetPath)" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets'))" />
+  </Target>
 </Project>

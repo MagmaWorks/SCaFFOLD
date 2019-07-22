@@ -56,7 +56,7 @@ namespace CalcCore
 
         protected List<DxfDocument> _drawings;
 
-        public List<DxfDocument> GetDrawings()
+        public virtual List<DxfDocument> GetDrawings()
         {
             return _drawings;
         }

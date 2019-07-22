@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicRelaxation", "Dynami
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunInConsole", "RunInConsole\RunInConsole.csproj", "{92EF8A94-0310-4858-937A-C37F07692703}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcWindowsUtilities", "CalcWindowsUtilities\CalcWindowsUtilities.csproj", "{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{92EF8A94-0310-4858-937A-C37F07692703}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92EF8A94-0310-4858-937A-C37F07692703}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92EF8A94-0310-4858-937A-C37F07692703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

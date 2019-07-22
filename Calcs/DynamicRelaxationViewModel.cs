@@ -43,6 +43,10 @@ namespace Calcs
             mat = new DiffuseMaterial(brush);
 
             Update();
+
+            //StLReader reader = new StLReader();
+            //Model = reader.Read(@"C:\Users\Alex Baalham\Documents\53 Gough Way\FanKnob.stl");
+           
         }
 
         public void Update()
