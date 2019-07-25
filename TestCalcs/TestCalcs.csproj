@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arc.cs" />
+    <Compile Include="ConcreteCreep.cs" />
     <Compile Include="Drophead_Symmetrical.cs" />
     <Compile Include="GeometryBase.cs" />
     <Compile Include="IntersectionResult.cs" />

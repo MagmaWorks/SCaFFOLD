@@ -265,12 +265,14 @@ namespace TestCalcs
 
             expressions.Add(new Formula
             {
-                Narrative = "Determine the effective column face and first control perimeters taking into account the effect of holes.",
+                Narrative = "Determine the effective column face and first control perimeters taking into account the effect of holes. " +
+                "These lengths are determined directly from the geometry - refer to diagram.",
                 Expression = new List<string>
                 {
                     string.Format("u_{{0,no holes}} = {0}mm", Math.Round(columnOutline.Length, 2)),
                     string.Format(@"u_0 = {0} mm", Math.Round(ui, 2)),
                     Environment.NewLine,
+                    @"u_1 \text{ is } 2d \text{ from column face}",
                     "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
                     "u_1 = " + Math.Round(u1,2) + "mm",
                 },
@@ -1085,7 +1087,45 @@ namespace TestCalcs
                 _distToOuterPerim.Value = offsetFromColumn + 1.5 * d_average;
             }
 
-            _linksInFirstPerim.Value = shearLinks[0].Count;
+            List<List<Vector2>> effectiveShearLinks = new List<List<Vector2>>();
+            foreach (var perim in shearLinks)
+            {
+                List<Vector2> perimLinks = new List<Vector2>();
+                foreach (var link in perim)
+                {
+                    bool include = true;
+                    foreach (var hole in _holeEdges)
+                    {
+                        var angle1 = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
+                        if (angle1 < 0) angle1 += Math.PI * 2;
+                        var angle2 = Math.Atan2(hole.Item2.End.Y, hole.Item2.End.X);
+                        if (angle2 < 0) angle2 += Math.PI * 2;
+                        var angle3 = Math.Atan2(link.Y, link.X);
+                        if (angle3 < 0) angle3 += Math.PI * 2;
+                        if (Math.Abs(angle1 - angle2) < Math.PI)
+                        {
+                            if (angle3 > Math.Min(angle1, angle2) && angle3 < Math.Max(angle1, angle2))
+                            {
+                                include = false;
+                            }
+                        }
+                        else
+                        {
+                            if (angle3 < Math.Min(angle1, angle2) || (angle3 > Math.Max(angle1, angle2)))
+                            {
+                                include = false;
+                            }
+                        }
+                    }
+                    if (include)
+                    {
+                        perimLinks.Add(link);
+                    }
+                }
+                effectiveShearLinks.Add(perimLinks);
+            }
+
+            _linksInFirstPerim.Value = effectiveShearLinks[0].Count;
             _numberOfPerimeters.Value = perimetersToReinforce.Count;
             _legsTotal.Value = shearLinks.Sum(a => a.Count);
 
@@ -1101,6 +1141,14 @@ namespace TestCalcs
                     .AddConclusion("No valid bar dia")
                     .AddStatus(CalcStatus.FAIL));
             }
+            else
+            {
+                expressions.Add(
+                    Formula.FormulaWithNarrative("Calculate required leg area and diameter required")
+                    .AddFirstExpression(@"A_s=\frac{" + _Asw.Symbol + @"}{"+_linksInFirstPerim.Value+"}="+ Math.Round(_Asw.Value/_linksInFirstPerim.Value,2))
+                    .AddExpression(@"\text{Smallest diameter that meets leg area required: }" + _legDia.Value + _legDia.Unit)
+                    );
+            }
 
             var shearLinkPositions = new List<double[]>();
             foreach (var links in shearLinks)
@@ -1114,9 +1162,12 @@ namespace TestCalcs
 
             var outerPerimExp = new Formula
             {
-                Narrative = "Outer perimeter",
+                Narrative = "Outer perimeter. The required perimeter is calculated from clause 6.4.5(4), " +
+                "the provided perimeter is the first perimeter of shear links that exceeds the required " +
+                "value and determined by evaluating successive perimeters until the condition is met.",
                 Expression = new List<string>
                 {
+                    _uoutef.Symbol + @"=\frac{" + _beta.Symbol + " " + _punchingLoad.Symbol + @"}{(v_{Rd,c}d)}",
                     _uoutef.Symbol + "=" + Math.Round(_uoutef.Value,0) + _uoutef.Unit,
                     @"u_{out,ef,prov} = " + Math.Round(outerPerimeters.Sum(a => a.Length),0) + @"mm"
                 },
