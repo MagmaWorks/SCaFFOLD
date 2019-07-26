@@ -80,6 +80,12 @@ namespace TestCalcs
         CalcSelectionList _faceCheck;
         CalcSelectionList _betaCheck;
         CalcDouble _betaProposed;
+        SkiaSharp.SKBitmap _fig6_13;
+        SkiaSharp.SKBitmap _fig6_14;
+        SkiaSharp.SKBitmap _fig6_20;
+        SkiaSharp.SKBitmap _fig6_22;
+        SkiaSharp.SKBitmap _figConcCentre;
+        SkiaSharp.SKBitmap _figRadialLayout;
 
         List<Formula> expressions = new List<Formula>();
         List<Tuple<Line, Line>> _holeEdges;
@@ -152,11 +158,8 @@ namespace TestCalcs
             _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
             _studPositions = outputValues.CreateCalcListOfDoubleArrays("Stud positions", new List<double[]>());
             _maxBarSize = inputValues.CreateCalcSelectionList("Maximum link diameter", "16", new List<string> { "8", "10", "12", "16", "20", "25", "32", "40" });
-
             UpdateCalc();
         }
-
-
 
         public override List<Formula> GenerateFormulae()
         {
@@ -171,6 +174,38 @@ namespace TestCalcs
                 Narrative = "Key:",
                 Image = image[1]
             });
+
+            Assembly assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.ControlPerimeters_Fig_6_13.png"))
+            {
+                _fig6_13 = SkiaSharp.SKBitmap.Decode(stream);
+            }
+            assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_14.png"))
+            {
+                _fig6_14 = SkiaSharp.SKBitmap.Decode(stream);
+            }
+            assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_20.png"))
+            {
+                _fig6_20 = SkiaSharp.SKBitmap.Decode(stream);
+            }
+            assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_22.png"))
+            {
+                _fig6_22 = SkiaSharp.SKBitmap.Decode(stream);
+            }
+            assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_ConcreteCentreLayout.png"))
+            {
+                _figConcCentre = SkiaSharp.SKBitmap.Decode(stream);
+            }
+            assembly = GetType().GetTypeInfo().Assembly;
+            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_EC1992_RadialLayout.png"))
+            {
+                _figRadialLayout = SkiaSharp.SKBitmap.Decode(stream);
+            }
+
             return expressions;
         }
 
@@ -297,11 +332,7 @@ namespace TestCalcs
                     betaFormula.Expression.Add(@"b_y =" + Math.Round(by, 1) + "mm");
                     betaFormula.Expression.Add(@"b_z =" + Math.Round(bz, 1) + "mm");
                     //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/ControlPerimeters_Fig_6_13.png");
-                    Assembly assembly = GetType().GetTypeInfo().Assembly;
-                    using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.ControlPerimeters_Fig_6_13.png"))
-                    {
-                        betaFormula.Image = SkiaSharp.SKBitmap.Decode(stream);
-                    }
+                    betaFormula.Image = _fig6_13;
                     //betaFormula.Image = new BitmapImage(uri);
                     break;
                 case "EDGE":
@@ -321,11 +352,7 @@ namespace TestCalcs
                     betaFormula.Expression.Add(@"e_{par} =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(epar, 1) + "mm");
                     betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2=" + Math.Round(w1, 2));
                     //Uri uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
-                    assembly = GetType().GetTypeInfo().Assembly;
-                    using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_20.png"))
-                    {
-                        betaFormula.Image = SkiaSharp.SKBitmap.Decode(stream);
-                    }
+                    betaFormula.Image = _fig6_20;
                     //betaFormula.Image = new BitmapImage(uri2);
                     break;
                 case "CORNER":
@@ -336,11 +363,7 @@ namespace TestCalcs
                     betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
                     //betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
                     //uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
-                    assembly = GetType().GetTypeInfo().Assembly;
-                    using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_20.png"))
-                    {
-                        betaFormula.Image = SkiaSharp.SKBitmap.Decode(stream);
-                    }
+                    betaFormula.Image = _fig6_20;
                     //betaFormula.Image = new BitmapImage(uri2);
                     break;
                 case "RE-ENTRANT":
@@ -1206,33 +1229,21 @@ namespace TestCalcs
             {
                 //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_ConcreteCentreLayout.png");
                 //detailingFormula.Image = new BitmapImage(uri);
-                var assembly = GetType().GetTypeInfo().Assembly;
-                using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_ConcreteCentreLayout.png"))
-                {
-                    detailingFormula.Image = SkiaSharp.SKBitmap.Decode(stream);
-                }
+                detailingFormula.Image = _figConcCentre;
                 detailingFormula.Ref = "Concrete Centre Figure 9";
             }
             else if (_linkArrangement.ValueAsString == "SPURS_AUTO")
             {
                 //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_22.png");
                 //detailingFormula.Image = new BitmapImage(uri);
-                var assembly = GetType().GetTypeInfo().Assembly;
-                using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_22.png"))
-                {
-                    detailingFormula.Image = SkiaSharp.SKBitmap.Decode(stream);
-                }
+                detailingFormula.Image = _fig6_22;
                 detailingFormula.Ref = "Figure 6.22, diagram A";
             }
             else if (_linkArrangement.ValueAsString == "CRUCIFORM")
             {
                 //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_22.png");
                 //detailingFormula.Image = new BitmapImage(uri);
-                var assembly = GetType().GetTypeInfo().Assembly;
-                using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_22.png"))
-                {
-                    detailingFormula.Image = SkiaSharp.SKBitmap.Decode(stream);
-                }
+                detailingFormula.Image = _fig6_22;
                 detailingFormula.Ref = "Figure 6.22, diagram B";
             }
 
@@ -1472,11 +1483,7 @@ namespace TestCalcs
             {
                 //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_14.png");
                 //holeExpression.Image = new BitmapImage(uri);
-                var assembly = GetType().GetTypeInfo().Assembly;
-                using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_14.png"))
-                {
-                    holeExpression.Image = SkiaSharp.SKBitmap.Decode(stream);
-                }
+                holeExpression.Image = _fig6_14;
                 expressions.Add(holeExpression);
             }
 
