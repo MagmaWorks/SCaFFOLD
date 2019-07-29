@@ -53,7 +53,7 @@ namespace CalcCore
         //public CalcDoubleList CreateCalcDoubleList(string name, List<List<double>> doubles)
         //{
         //    var myVal = new CalcDoubleList(name, doubles);
-        //    this.values.Add(myVal);
+        //    this.values.Add(getAvailableKeyName(name), myVal);
         //    return myVal;
         //}
 

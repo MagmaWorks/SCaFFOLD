@@ -109,6 +109,10 @@ namespace Calcs
                     {
                         calc.GetInputs()[Input1Index].ValueAsString = (Start1 + Step1 * i).ToString();
                     }
+                    else if (Input1Type == CalcCore.CalcValueType.LISTOFDOUBLEARRAYS)
+                    {
+
+                    }
                     else
                     {
                         calc.GetInputs()[Input1Index].ValueAsString = Start1Items[_start1_1 + i];
@@ -116,6 +120,10 @@ namespace Calcs
                     if (Input2Type == CalcCore.CalcValueType.DOUBLE)
                     {
                         calc.GetInputs()[Input2Index].ValueAsString = (Start2 + Step2 * j).ToString();
+                    }
+                    else if (Input2Type == CalcCore.CalcValueType.LISTOFDOUBLEARRAYS)
+                    {
+
                     }
                     else
                     {
@@ -144,6 +152,10 @@ namespace Calcs
                 {
                     Input1Headers.Add((Start1 + Step1 * i).ToString());
                 }
+                else if (Input1Type == CalcCore.CalcValueType.LISTOFDOUBLEARRAYS)
+                {
+                    Input1Headers.Add("none");
+                }
                 else
                 {
                     Input1Headers.Add(Start1Items[_start1_1 + i]);
@@ -155,6 +167,10 @@ namespace Calcs
                 if (Input2Type == CalcCore.CalcValueType.DOUBLE)
                 {
                     Input2Headers.Add((Start2 + Step2 * i).ToString());
+                }
+                else if (Input2Type == CalcCore.CalcValueType.LISTOFDOUBLEARRAYS)
+                {
+                    Input2Headers.Add("none");
                 }
                 else
                 {

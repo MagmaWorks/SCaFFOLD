@@ -85,6 +85,12 @@
                 <TextBlock Text="{Binding Name}" Width="100"/>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="ListOfDoubleArraysTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}"/>
+                <TextBox Text="{Binding Value}" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -104,6 +110,9 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Type}" Value="FOLDERPATH">
                                         <Setter Property="ContentTemplate" Value="{StaticResource FolderPathTemplate}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="LISTOFDOUBLEARRAYS">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource ListOfDoubleArraysTemplate}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

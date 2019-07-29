@@ -74,7 +74,6 @@ namespace CalcMonkey
             get
             {
                 return Resource1.ExportToDoc;
-                return null;
             }
         }
 
