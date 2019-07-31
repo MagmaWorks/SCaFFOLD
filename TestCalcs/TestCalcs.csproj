@@ -70,6 +70,7 @@
     <Compile Include="Arc.cs" />
     <Compile Include="ConcColumnShortening.cs" />
     <Compile Include="ConcCreep.cs" />
+    <Compile Include="ConcMultiStoreyColumnShortening.cs" />
     <Compile Include="ConcProperties.cs" />
     <Compile Include="ConcCreepAndShrinkage.cs" />
     <Compile Include="ConcShrinkage.cs" />

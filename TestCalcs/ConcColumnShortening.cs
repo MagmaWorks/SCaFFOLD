@@ -18,7 +18,7 @@ namespace TestCalcs
         CalcDouble relativeHumidity1;
         CalcDouble relativeHumiditySwitchTime;
         CalcDouble relativeHumidity2;
-        CalcDouble time0;
+        //CalcDouble time0;
         CalcDouble time;
         CalcDouble timeShrinkStart;
         CalcDouble Ac;
@@ -38,9 +38,36 @@ namespace TestCalcs
         CalcListOfDoubleArrays _loads;
         CalcDouble _numberOfSSteps;
 
+        public double TotalMovement
+        {
+            get
+            {
+                return totalMovement.Value;
+            }
+        }
+
+        public double Time
+        {
+            get
+            {
+                return time.Value;
+            }
+            set
+            {
+                time.Value = value;
+                UpdateCalc();
+            }
+        }
+
         public ConcColumnShortening()
         {
-            _loads = inputValues.CreateCalcListOfDoubleArrays("Loads (kN) and times (d)", new List<double[]> { new double[] { 100, 28 }, new double[] {500, 90 }, new double[] { 2000, 180 } });
+            initialise();
+            UpdateCalc();
+        }
+
+        private void initialise()
+        {
+            _loads = inputValues.CreateCalcListOfDoubleArrays("Loads (kN) and times (d)", new List<double[]> { new double[] { 100, 28 }, new double[] { 500, 90 }, new double[] { 2000, 180 } });
             _numberOfSSteps = outputValues.CreateDoubleCalcValue("Steps", "", "", 0);
             concGrade = inputValues.CreateCalcSelectionList("Concrete grade", "35", new List<string> { "30", "35", "40", "45", "50", "60", "70", "80", "90" });
             notionalcreepcoeff = outputValues.CreateDoubleCalcValue("Notional creep coefficient", @"\varphi(t,t_0)", "", 0);
@@ -49,7 +76,7 @@ namespace TestCalcs
             relativeHumidity1 = inputValues.CreateDoubleCalcValue("Relative humidity 1", "RH", "", 70);
             relativeHumidity2 = inputValues.CreateDoubleCalcValue("Relative humidity 2", "RH", "", 50);
             relativeHumiditySwitchTime = inputValues.CreateDoubleCalcValue("Relative humidity switch time", "t_{humiditychange}", "d", 80);
-            time0 = inputValues.CreateDoubleCalcValue("Time load applied", "t_0", "days", 28);
+            //time0 = inputValues.CreateDoubleCalcValue("Time load applied", "t_0", "days", 28);
             time = inputValues.CreateDoubleCalcValue("Time", "t", "days", 10000000);
             timeShrinkStart = inputValues.CreateDoubleCalcValue("Shrinkage start", "t_s", "days", 7);
             L = inputValues.CreateDoubleCalcValue("Length", "L", "mm", 500);
@@ -65,6 +92,22 @@ namespace TestCalcs
             totalCreepMovement = outputValues.CreateDoubleCalcValue("Total creep movement", "", "mm", 0);
             shrinkageMovement = outputValues.CreateDoubleCalcValue("Shrinkage movement", "", "mm", 0);
             totalMovement = outputValues.CreateDoubleCalcValue("Total movement", "", "mm", 0); UpdateCalc();
+        }
+
+        public ConcColumnShortening(List<double[]> loads, string concGrade, double RH, double t, double ts, double L, double W ,double H)
+        {
+            initialise();
+            _loads.Value = loads;
+            this.concGrade.ValueAsString = concGrade;
+            this.relativeHumidity1.Value = RH;
+            this.relativeHumidity2.Value = RH;
+            //this.time0.Value = t0;
+            this.time.Value = t;
+            this.timeShrinkStart.Value = ts;
+            this.L.Value = L;
+            this.W.Value = W;
+            this.H.Value = H;
+            UpdateCalc();
         }
 
         public override List<Formula> GenerateFormulae()
