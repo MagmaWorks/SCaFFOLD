@@ -14,6 +14,8 @@
         </Grid.ColumnDefinitions>
         <helix:HelixViewport3D ZoomExtentsWhenLoaded="True" IsHeadLightEnabled="True" ShowViewCube="False">
             <ModelVisual3D Content="{Binding DynamicRelaxationVM.Model}"/>
+            <ModelVisual3D Content="{Binding DynamicRelaxationVM.Model2}"/>
+            <helix:DefaultLights/>
         </helix:HelixViewport3D>
         <StackPanel Grid.Column="1">
             <Image HorizontalAlignment="Left" Width="150">

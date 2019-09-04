@@ -88,7 +88,7 @@
         <DataTemplate x:Key="ListOfDoubleArraysTemplate">
             <StackPanel>
                 <TextBlock Text="{Binding Name}"/>
-                <TextBox Text="{Binding Value}" HorizontalAlignment="Stretch"/>
+                <TextBox Text="{Binding Value}" HorizontalAlignment="Stretch" MaxWidth="500" TextWrapping="Wrap"/>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>

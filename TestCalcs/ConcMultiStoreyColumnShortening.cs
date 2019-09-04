@@ -99,8 +99,8 @@ namespace TestCalcs
                     for (int j = i; j < _columnData1.Value.Count; j++)
                     {
                         var _data = _columnData1.Value[j];
-                        loadTimes.Add(new double[] { _data[2] - startTime, _data[3] - startTime });
-                        loadTimes.Add(new double[] { _data[4] - startTime, _data[5] - startTime });
+                        loadTimes.Add(new double[] { _data[2], _data[3] - startTime });
+                        loadTimes.Add(new double[] { _data[4], _data[5] - startTime });
                     }
                     ConcColumnShortening calc = new ConcColumnShortening(loadTimes,
                         concGrade.ValueAsString,
@@ -126,8 +126,8 @@ namespace TestCalcs
                     for (int j = i; j < _columnData2.Value.Count; j++)
                     {
                         var _data = _columnData2.Value[j];
-                        loadTimes.Add(new double[] { _data[2] - startTime, _data[3] - startTime });
-                        loadTimes.Add(new double[] { _data[4] - startTime, _data[5] - startTime });
+                        loadTimes.Add(new double[] { _data[2], _data[3] - startTime });
+                        loadTimes.Add(new double[] { _data[4], _data[5] - startTime });
                     }
                     ConcColumnShortening calc = new ConcColumnShortening(loadTimes,
                         concGrade.ValueAsString,

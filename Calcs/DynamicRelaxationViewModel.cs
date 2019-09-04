@@ -15,6 +15,8 @@ namespace Calcs
     public class DynamicRelaxationViewModel : ViewModelBase
     {
         Model3D model;
+        Model3D modelOriginal;
+        Model3D model2;
         ImageBrush brush;
         DiffuseMaterial mat;
         int steps = 0;
@@ -23,6 +25,13 @@ namespace Calcs
         {
             get { return model; }
             set { model = value; RaisePropertyChanged(nameof(Model)); }
+        }
+
+
+        public Model3D Model2
+        {
+            get { return model2; }
+            set { model2 = value; RaisePropertyChanged(nameof(Model2)); }
         }
 
         DynamicRelaxationSystem dynamicRelaxationSystem;
@@ -42,14 +51,50 @@ namespace Calcs
             brush.Viewport = new Rect(0, 0, 1, 1);
             mat = new DiffuseMaterial(brush);
 
-            Update();
+            // UN COMMENT THIS SECTION FOR MAGMA MADE LOGO
+            //ObjReader reader = new ObjReader();
+            //Model = reader.Read(@"C:\Users\Alex Baalham\Documents\magmamade.obj");
+            //ObjReader reader3 = new ObjReader();
+            //modelOriginal = reader3.Read(@"C:\Users\Alex Baalham\Documents\magmamade.obj");
+            //ObjReader reader2 = new ObjReader();
+            //Model2 = reader2.Read(@"C:\Users\Alex Baalham\Documents\calcapp.obj");
+            //var positions = (((modelOriginal as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
+            //var modelPos = (((Model as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
+            //for (int i = 0; i < positions.Count; i++)
+            //{
+            //    modelPos[i] = new Point3D(positions[i].X, positions[i].Y, 3000);
+            //}
 
-            //StLReader reader = new StLReader();
-            //Model = reader.Read(@"C:\Users\Alex Baalham\Documents\53 Gough Way\FanKnob.stl");
-           
+
+
+            //Model = importedModel;
+            //StLReader stlRead = new StLReader();
+            //importedModel = stlRead.Read(@"C:\Users\Alex Baalham\Documents\53 Gough Way\test2.stl");
+            //Model = importedModel;
+            Update();
         }
 
         public void Update()
+        {
+            dynamicRelaxationUpdate();
+            //magmamadeUpdate();
+
+        }
+
+
+        private void magmamadeUpdate()
+        {
+            steps++;
+            var positions = (((modelOriginal as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
+            var modelPos = (((Model as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
+            //for (int i = 0; i < positions.Count; i++)
+            //{
+            //    modelPos[i] = new Point3D(positions[i].X, positions[i].Y, positions[i].Z * (steps/1000));
+            //}
+            RaisePropertyChanged(nameof(Model));
+        }
+
+        private void dynamicRelaxationUpdate()
         {
             steps++;
             if (steps > 700)
@@ -78,7 +123,7 @@ namespace Calcs
             }
             else if (steps > 300)
             {
-                if (steps==301)
+                if (steps == 301)
                 {
                     foreach (var item in dynamicRelaxationSystem.Connectors)
                     {
@@ -105,8 +150,8 @@ namespace Calcs
             //    gm.AddSphere(item.Position, 100,4,4);
             //}
 
-            MeshBuilder meshBuilder = new MeshBuilder(false, true);            
-            
+            MeshBuilder meshBuilder = new MeshBuilder(false, true);
+
             foreach (var pos in dynamicRelaxationSystem.Nodes)
             {
                 meshBuilder.Positions.Add(pos.Position);
@@ -116,7 +161,7 @@ namespace Calcs
             {
                 meshBuilder.AddTriangle(meshElement.Nodes);
             }
-            
+
 
             //m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
             m.Children.Add(new GeometryModel3D(meshBuilder.ToMesh(true), mat));

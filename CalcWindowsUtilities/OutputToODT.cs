@@ -14,6 +14,7 @@ using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
 using M = DocumentFormat.OpenXml.Math;
 using System.Windows.Forms;
 using System.Reflection;
+using WpfMath;
 
 namespace CalcCore
 {
@@ -154,11 +155,30 @@ namespace CalcCore
                 cell2.AppendChild(new Paragraph(new Run(new Text(item.Narrative))));
                 foreach (var formula in item.Expression)
                 {
-                    var mathPara = new Paragraph();
-                    var myMath = new M.OfficeMath(new M.Run(new M.Text(formula + Environment.NewLine) { Space = SpaceProcessingModeValues.Preserve }));
-                    mathPara.AppendChild(myMath);
-                    mathPara.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
-                    cell2.AppendChild(mathPara);
+                    if (formula != "")
+                    {
+                        var mathPara = new Paragraph();
+                        var parser = new TexFormulaParser();
+                        var formulaToParse = parser.Parse(formula);
+                        var formulaImage = formulaToParse.RenderToPng(20, 20, 20, "Franklin Gothic Book");
+                        ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
+                        using (var stream = new MemoryStream(formulaImage))
+                        {
+                            imagePart.FeedData(stream);
+                            var img = new BitmapImage();
+                            img.BeginInit();
+                            img.StreamSource = stream;
+                            img.CacheOption = BitmapCacheOption.OnLoad;
+                            img.EndInit();
+                            img.Freeze();
+                            var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width, img.Height);
+                            cell2.AppendChild(paraImage);
+                        }
+                    }
+                    //var myMath = new M.OfficeMath(new M.Run(new M.Text(formula + Environment.NewLine) { Space = SpaceProcessingModeValues.Preserve }));
+                    //mathPara.AppendChild(myMath);
+                    //mathPara.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+                    //cell2.AppendChild(mathPara);
                 }
 
                 if (item.Image != null)
@@ -169,10 +189,10 @@ namespace CalcCore
                     //CHANGEBITMAP
                     //png.Frames.Add(BitmapFrame.Create(item.Image));
                     var width = Math.Min(10d, item.Image.Width * 2.54 / 96);
-                    var height = (item.Image.Height / item.Image.Width) * width;
-                    using (Stream stm = File.Create(tempFile))
+                    var height = ((double)item.Image.Height / (double)item.Image.Width) * width;
+                    using (SkiaSharp.SKWStream stm = new SkiaSharp.SKFileWStream(tempFile))
                     {
-                        png.Save(stm);
+                        item.Image.Encode(stm, SkiaSharp.SKEncodedImageFormat.Png, 0);
                     }
                     using (FileStream stream = new FileStream(tempFile, FileMode.Open))
                     {

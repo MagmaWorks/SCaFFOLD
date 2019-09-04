@@ -75,6 +75,7 @@ namespace TestCalcs
         CalcDouble _hole2PosY;
         CalcDouble _hole2SizeX;
         CalcDouble _hole2SizeY;
+        CalcSelectionList _includeLinksBeyondHole;
         CalcListOfDoubleArrays _studPositions;
         CalcSelectionList _maxBarSize;
         CalcSelectionList _faceCheck;
@@ -156,24 +157,9 @@ namespace TestCalcs
             _hole2PosY = inputValues.CreateDoubleCalcValue("Hole 2 Y position", "", "mm", -300);
             _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole 2 X size", "", "mm", 00);
             _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
+            _includeLinksBeyondHole = inputValues.CreateCalcSelectionList("Include links beyond holes", "YES", new List<string> { "YES", "NO" });
             _studPositions = outputValues.CreateCalcListOfDoubleArrays("Stud positions", new List<double[]>());
             _maxBarSize = inputValues.CreateCalcSelectionList("Maximum link diameter", "16", new List<string> { "8", "10", "12", "16", "20", "25", "32", "40" });
-            UpdateCalc();
-        }
-
-        public override List<Formula> GenerateFormulae()
-        {
-            var image = generateImage();
-            expressions.Insert(0, new Formula
-            {
-                Narrative = "Diagram:",
-                Image = image[0],
-            });
-            expressions.Insert(1, new Formula
-            {
-                Narrative = "Key:",
-                Image = image[1]
-            });
 
             Assembly assembly = GetType().GetTypeInfo().Assembly;
             using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.ControlPerimeters_Fig_6_13.png"))
@@ -205,6 +191,25 @@ namespace TestCalcs
             {
                 _figRadialLayout = SkiaSharp.SKBitmap.Decode(stream);
             }
+
+            UpdateCalc();
+        }
+
+        public override List<Formula> GenerateFormulae()
+        {
+            var image = generateImage();
+            expressions.Insert(0, new Formula
+            {
+                Narrative = "Diagram:",
+                Image = image[0],
+            });
+            expressions.Insert(1, new Formula
+            {
+                Narrative = "Key:",
+                Image = image[1]
+            });
+
+
 
             return expressions;
         }
@@ -768,6 +773,7 @@ namespace TestCalcs
                     foreach (var link in item)
                     {
                         bool include = true;
+                        bool anyHoleObscuresLink = false;
                         foreach (var hole in allHoleCorners)
                         {
                             float minx = hole.Min(a => a.X);
@@ -778,7 +784,45 @@ namespace TestCalcs
                             {
                                 include = false;
                             }
+                            if (_includeLinksBeyondHole.ValueAsString == "NO")
+                            {
+                                bool holeObscuresLink = true;
+                                List<Vector2> pointsToCheck = new List<Vector2> {
+                                    new Vector2(0f,0f),
+                                    new Vector2((float)_columnAdim.Value/2, (float)_columnBdim.Value/2),
+                                    new Vector2(-(float)_columnAdim.Value/2, (float)_columnBdim.Value/2),
+                                    new Vector2(-(float)_columnAdim.Value/2, -(float)_columnBdim.Value/2),
+                                    new Vector2((float)_columnAdim.Value/2, -(float)_columnBdim.Value/2)
+                                };
+
+                                foreach (var corner in pointsToCheck)
+                                {
+                                    var lineToColumn = new Line(corner, link.Item1);
+                                    Vector2 prevPoint2 = hole.Last();
+                                    bool holeObscuresPoint = false;
+                                    foreach (var edgeEndPoint in hole)
+                                    {
+                                        var edgeLine = new Line(prevPoint2, edgeEndPoint);
+                                        var intersectionEvent = edgeLine.intersection(lineToColumn);
+                                        if (intersectionEvent.Any(a => a.TypeOfIntersection == IntersectionType.WITHIN))
+                                        {
+                                            holeObscuresPoint = true;
+                                        }
+                                        prevPoint2 = edgeEndPoint;
+                                    }
+                                    if (!holeObscuresPoint)
+                                    {
+                                        holeObscuresLink = false;
+                                    }
+                                }
+                                if (holeObscuresLink)
+                                {
+                                    anyHoleObscuresLink = true;
+                                }
+                            }
                         }
+                        if (anyHoleObscuresLink)
+                            include = false;
                         //foreach (var hole in _holeEdges)
                         //{
                         //    var angle1 = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
@@ -802,6 +846,7 @@ namespace TestCalcs
                         //        }
                         //    }
                         //}
+
                         if (include) filteredList.Add(link.Item1);
                     }
                     shearLinks.Add(filteredList);
@@ -909,6 +954,7 @@ namespace TestCalcs
                     foreach (var link in item)
                     {
                         bool include = true;
+                        bool anyHoleObscuresLink = false;
                         foreach (var hole in allHoleCorners)
                         {
                             float minx = hole.Min(a => a.X);
@@ -919,7 +965,45 @@ namespace TestCalcs
                             {
                                 include = false;
                             }
+                            if (_includeLinksBeyondHole.ValueAsString == "NO")
+                            {
+                                bool holeObscuresLink = true;
+                                List<Vector2> pointsToCheck = new List<Vector2> {
+                                    new Vector2(0f,0f),
+                                    new Vector2((float)_columnAdim.Value/2, (float)_columnBdim.Value/2),
+                                    new Vector2(-(float)_columnAdim.Value/2, (float)_columnBdim.Value/2),
+                                    new Vector2(-(float)_columnAdim.Value/2, -(float)_columnBdim.Value/2),
+                                    new Vector2((float)_columnAdim.Value/2, -(float)_columnBdim.Value/2)
+                                };
+
+                                foreach (var corner in pointsToCheck)
+                                {
+                                    var lineToColumn = new Line(corner, link.Item1);
+                                    Vector2 prevPoint2 = hole.Last();
+                                    bool holeObscuresPoint = false;
+                                    foreach (var edgeEndPoint in hole)
+                                    {
+                                        var edgeLine = new Line(prevPoint2, edgeEndPoint);
+                                        var intersectionEvent = edgeLine.intersection(lineToColumn);
+                                        if (intersectionEvent.Any(a => a.TypeOfIntersection == IntersectionType.WITHIN))
+                                        {
+                                            holeObscuresPoint = true;
+                                        }
+                                        prevPoint2 = edgeEndPoint;
+                                    }
+                                    if (!holeObscuresPoint)
+                                    {
+                                        holeObscuresLink = false;
+                                    }
+                                }
+                                if (holeObscuresLink)
+                                {
+                                    anyHoleObscuresLink = true;
+                                }
+                            }
                         }
+                        if (anyHoleObscuresLink)
+                            include = false;
                         //foreach (var hole in _holeEdges)
                         //{
                         //    var angle1 = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
@@ -1069,6 +1153,7 @@ namespace TestCalcs
                     foreach (var link in item)
                     {
                         bool include = true;
+                        bool anyHoleObscuresLink = false;
                         foreach (var hole in allHoleCorners)
                         {
                             float minx = hole.Min(a => a.X);
@@ -1079,7 +1164,46 @@ namespace TestCalcs
                             {
                                 include = false;
                             }
+                            if (_includeLinksBeyondHole.ValueAsString == "NO")
+                            {
+                                bool holeObscuresLink = true;
+                                List<Vector2> pointsToCheck = new List<Vector2> {
+                                    new Vector2(0f,0f),
+                                    new Vector2((float)_columnAdim.Value/2, (float)_columnBdim.Value/2),
+                                    new Vector2(-(float)_columnAdim.Value/2, (float)_columnBdim.Value/2),
+                                    new Vector2(-(float)_columnAdim.Value/2, -(float)_columnBdim.Value/2),
+                                    new Vector2((float)_columnAdim.Value/2, -(float)_columnBdim.Value/2)
+                                };
+
+                                foreach (var corner in pointsToCheck)
+                                {
+                                    var lineToColumn = new Line(corner, link.Item1);
+                                    Vector2 prevPoint2 = hole.Last();
+                                    bool holeObscuresPoint = false;
+                                    foreach (var edgeEndPoint in hole)
+                                    {
+                                        var edgeLine = new Line(prevPoint2, edgeEndPoint);
+                                        var intersectionEvent = edgeLine.intersection(lineToColumn);
+                                        if (intersectionEvent.Any(a => a.TypeOfIntersection == IntersectionType.WITHIN))
+                                        {
+                                            holeObscuresPoint = true;
+                                        }
+                                        prevPoint2 = edgeEndPoint;
+                                    }
+                                    if (!holeObscuresPoint)
+                                    {
+                                        holeObscuresLink = false;
+                                    }
+                                }
+                                if (holeObscuresLink)
+                                {
+                                    anyHoleObscuresLink = true;
+                                }
+                            }
                         }
+                        if (anyHoleObscuresLink)
+                            include = false;
+
                         //foreach (var hole in _holeEdges)
                         //{
                         //    var angle1 = Math.Atan2(hole.Item1.End.Y, hole.Item1.End.X);
