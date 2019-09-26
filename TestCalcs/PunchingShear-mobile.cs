@@ -558,7 +558,8 @@ namespace TestCalcs
                         string.Format(@"{0} > 2 \times {1}", @"v_{Ed,1}", @"v_{Rd,c}"),
                     },
                     Conclusion = "Redesign slab",
-                    Status = CalcStatus.FAIL
+                    Status = CalcStatus.FAIL,
+                    Ref = "cl. 6.4.5(1)"
                 });
                 expressions.Insert(0, new Formula
                 {
@@ -579,7 +580,8 @@ namespace TestCalcs
                         string.Format(@"{0} \leq 2 \times {1}", @"v_{Ed,1}", @"v_{Rd,c}"),
                     },
                     Conclusion = "Links required",
-                    Narrative = "Check if shear links are required and stress is less than limit"
+                    Narrative = "Check if shear links are required and stress is less than limit",
+                    Ref = "cl. 6.4.5(1)"
                 });
             }
 
