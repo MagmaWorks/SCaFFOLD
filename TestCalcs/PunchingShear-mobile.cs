@@ -2108,12 +2108,12 @@ namespace TestCalcs
                 }
                 foreach (var segment in perimeter.Segments)
                 {
-                    var angle1 = Math.Atan2(segment.Start.Y, segment.End.X);
+                    var angle1 = Math.Atan2(segment.Start.Y, segment.Start.X);
                     var angle2 = Math.Atan2(segment.End.Y, segment.End.X);
-                    if (!(angle1 < endAngle && angle1 > startAngle ||
-                        angle2 < endAngle && angle2 > startAngle ||
-                        angle1 + Math.PI * 2 < endAngle && angle1 + Math.PI * 2 > startAngle ||
-                        angle2 + Math.PI * 2 < endAngle && angle2 + Math.PI * 2 > startAngle))
+                    if (!((angle1 < endAngle && angle1 > startAngle) &&
+                        (angle2 < endAngle && angle2 > startAngle) ||
+                        (angle1 + Math.PI * 2 < endAngle && angle1 + Math.PI * 2 > startAngle) &&
+                        (angle2 + Math.PI * 2 < endAngle && angle2 + Math.PI * 2 > startAngle)))
                     {
                         perimeterFullyInside = false;
                     }
@@ -2403,7 +2403,7 @@ namespace TestCalcs
                 canvas.DrawText("Hole effect", 250, 135, paintText);
                 paint = dataset.DrawingFormatting["EffectiveControlPerimeter"].Outline;
                 canvas.DrawLine(0, 175, 200, 175, paint);
-                canvas.DrawText("Effective control", 250, 185, paintText);
+                canvas.DrawText("Reduced control u1*", 250, 185, paintText);
                 paint = dataset.DrawingFormatting["ControlPerimeter"].Outline;
                 canvas.DrawLine(500, 25, 700, 25, paint);
                 canvas.DrawText("Control perimeter u1", 750, 35, paintText);
