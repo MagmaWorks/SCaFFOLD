@@ -341,7 +341,7 @@ namespace TestCalcs
                     //betaFormula.Image = new BitmapImage(uri);
                     break;
                 case "EDGE":
-                    double epar = _my.Value * 1E6 / (_punchingLoad.Value * 1E3);
+                    double epar = Math.Abs(_my.Value * 1E6 / (_punchingLoad.Value * 1E3));
                     double c1 = _columnAdim.Value;
                     double c2 = _columnBdim.Value;
                     double k = calck(c1 / c2);
@@ -354,7 +354,7 @@ namespace TestCalcs
                     betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
                     betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
                     betaFormula.Expression.Add(@"k=" + Math.Round(k, 2));
-                    betaFormula.Expression.Add(@"e_{par} =\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(epar, 1) + "mm");
+                    betaFormula.Expression.Add(@"e_{par} =\left|\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + @"}\right|=" + Math.Round(epar, 1) + "mm");
                     betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2=" + Math.Round(w1, 2));
                     //Uri uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
                     betaFormula.Image = _fig6_20;
