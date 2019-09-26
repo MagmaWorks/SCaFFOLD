@@ -51,21 +51,23 @@ namespace Calcs
             brush.Viewport = new Rect(0, 0, 1, 1);
             mat = new DiffuseMaterial(brush);
 
-            // UN COMMENT THIS SECTION FOR MAGMA MADE LOGO
+            //UN COMMENT THIS SECTION FOR MAGMA MADE LOGO
             //ObjReader reader = new ObjReader();
-            //Model = reader.Read(@"C:\Users\Alex Baalham\Documents\magmamade.obj");
-            //ObjReader reader3 = new ObjReader();
-            //modelOriginal = reader3.Read(@"C:\Users\Alex Baalham\Documents\magmamade.obj");
+            //Model3DGroup group1 = reader.Read(@"C:\Users\Alex Baalham\Documents\magmaworks1.obj");
             //ObjReader reader2 = new ObjReader();
-            //Model2 = reader2.Read(@"C:\Users\Alex Baalham\Documents\calcapp.obj");
-            //var positions = (((modelOriginal as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
-            //var modelPos = (((Model as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
-            //for (int i = 0; i < positions.Count; i++)
-            //{
-            //    modelPos[i] = new Point3D(positions[i].X, positions[i].Y, 3000);
-            //}
+            //Model3DGroup group2 = reader2.Read(@"C:\Users\Alex Baalham\Documents\magmaworks2.obj");
+            //ObjReader reader3 = new ObjReader();
+            //Model3DGroup group3 = reader3.Read(@"C:\Users\Alex Baalham\Documents\magmaworks3.obj");
 
+            ////ObjReader reader2 = new ObjReader();
+            ////Model3DGroup group4 = reader2.Read(@"C:\Users\Alex Baalham\Documents\calcapp.obj");
 
+            //Model3DGroup group = new Model3DGroup();
+            //group.Children.Add(group1);
+            //group.Children.Add(group2);
+            //group.Children.Add(group3);
+
+            //Model = group;
 
             //Model = importedModel;
             //StLReader stlRead = new StLReader();
@@ -85,12 +87,6 @@ namespace Calcs
         private void magmamadeUpdate()
         {
             steps++;
-            var positions = (((modelOriginal as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
-            var modelPos = (((Model as Model3DGroup).Children[0] as GeometryModel3D).Geometry as MeshGeometry3D).Positions;
-            //for (int i = 0; i < positions.Count; i++)
-            //{
-            //    modelPos[i] = new Point3D(positions[i].X, positions[i].Y, positions[i].Z * (steps/1000));
-            //}
             RaisePropertyChanged(nameof(Model));
         }
 
