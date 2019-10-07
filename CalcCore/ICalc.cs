@@ -17,5 +17,6 @@ namespace CalcCore
         List<Formula> GetFormulae();
         void UpdateCalc();
         List<netDxf.DxfDocument> GetDrawings();
+        List<CalcCore3DModel> Get3DModels();
     }
 }

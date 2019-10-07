@@ -112,6 +112,9 @@
   <ItemGroup>
     <Compile Include="CalcAssembly.cs" />
     <Compile Include="CalcBase.cs" />
+    <Compile Include="CalcCore3DModel.cs" />
+    <Compile Include="CalcCorePoint2D.cs" />
+    <Compile Include="CalcCorePoint3D.cs" />
     <Compile Include="CalcDouble.cs" />
     <Compile Include="CalcDoubleList.cs" />
     <Compile Include="CalcFilePath.cs" />
@@ -120,9 +123,12 @@
     <Compile Include="CalcSelectionList.cs" />
     <Compile Include="CalcValueBase.cs" />
     <Compile Include="CalcValueFactory.cs" />
+    <Compile Include="FEElement.cs" />
+    <Compile Include="CalcCoreNode.cs" />
     <Compile Include="FindAssemblies.cs" />
     <Compile Include="Formula.cs" />
     <Compile Include="ICalc.cs" />
+    <Compile Include="CalcCoreMesh.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

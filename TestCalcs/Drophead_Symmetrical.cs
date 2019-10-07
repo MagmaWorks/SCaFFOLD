@@ -48,10 +48,10 @@ namespace TestCalcs
             double spb = _spacingBottom.Value / 2;
             double spv = _spacingVertical.Value;
 
-            var n1a = new Node(-spt, 0, spv) { Label = "1a" };
-            var n1b = new Node(spt, 0, spv) { Label = "1b" };
-            var n2a = new Node(0, -spb, 0) { Label = "2a" };
-            var n2b = new Node(0, spb, 0) { Label = "2b" };
+            var n1a = new BriefFiniteElementNet.Node(-spt, 0, spv) { Label = "1a" };
+            var n1b = new BriefFiniteElementNet.Node(spt, 0, spv) { Label = "1b" };
+            var n2a = new BriefFiniteElementNet.Node(0, -spb, 0) { Label = "2a" };
+            var n2b = new BriefFiniteElementNet.Node(0, spb, 0) { Label = "2b" };
 
             var e1 = new TrussElement2Node(n1a, n2a) { Label = "e1" };
             var e2 = new TrussElement2Node(n1a, n2b) { Label = "e2" };

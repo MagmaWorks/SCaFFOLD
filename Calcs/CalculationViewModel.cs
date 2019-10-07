@@ -8,6 +8,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
+using CalcCore;
+using HelixToolkit.Wpf;
 using Newtonsoft;
 using SkiaSharp.Views.WPF;
 
@@ -20,6 +23,20 @@ namespace Calcs
         public TableVM Table { get; set; }
         public ChartVM Chart { get; set; }
         public CrossRefVM CrossRef {get;set;}
+
+        Model3D _model;
+        public Model3D Model
+        {
+            get
+            {
+                return _model;
+            }
+            set
+            {
+                _model = value;
+                RaisePropertyChanged(nameof(Model));
+            }
+        }
 
         string filepath = "";
         public string Filepath
@@ -201,6 +218,35 @@ namespace Calcs
                 }
                 _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Ref, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image = im });
             }
+            if (this.calc.Get3DModels().Count>0)
+            {
+                makeModel(this.calc.Get3DModels()[0]);
+            }
+        }
+
+        private void makeModel(CalcCore3DModel calcCore3DModel)
+        {
+            Brush myBrush = new SolidColorBrush(Colors.Orange);
+            myBrush.Opacity = calcCore3DModel.Meshes[0].Opacity;
+            Material mat = new DiffuseMaterial(myBrush);
+            var m = new Model3DGroup();
+            MeshBuilder meshBuilder = new MeshBuilder(false, true);
+
+            foreach (var pos in calcCore3DModel.Meshes[0].Nodes)
+            {
+                meshBuilder.Positions.Add(new Point3D(pos.Point.X, pos.Point.Y, pos.Point.Z));
+                meshBuilder.TextureCoordinates.Add(new Point(0.5,0.5));
+            }
+            foreach (var triangle in calcCore3DModel.Meshes[0].MeshIndices)
+            {
+                meshBuilder.AddTriangle(triangle);
+            }
+
+
+            //m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
+            m.Children.Add(new GeometryModel3D(meshBuilder.ToMesh(true), mat));
+
+            Model = m;
         }
 
         public void UpdateOutputs()

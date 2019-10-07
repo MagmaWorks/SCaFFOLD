@@ -67,5 +67,10 @@ namespace CalcCore
         }
 
         public abstract void UpdateCalc();
+
+        public virtual List<CalcCore3DModel> Get3DModels()
+        {
+            return new List<CalcCore3DModel>();
+        }
     }
 }

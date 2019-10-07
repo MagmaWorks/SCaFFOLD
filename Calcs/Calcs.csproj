@@ -112,6 +112,10 @@
       <DependentUpon>DynamicRelaxation.xaml</DependentUpon>
     </Compile>
     <Compile Include="DynamicRelaxationViewModel.cs" />
+    <Compile Include="Optimiser.xaml.cs">
+      <DependentUpon>Optimiser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OptimiserVM.cs" />
     <Compile Include="SaveAllDialog.xaml.cs">
       <DependentUpon>SaveAllDialog.xaml</DependentUpon>
     </Compile>
@@ -193,6 +197,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="CalcInputs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Optimiser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
