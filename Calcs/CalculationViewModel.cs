@@ -226,7 +226,8 @@ namespace Calcs
 
         private void makeModel(CalcCore3DModel calcCore3DModel)
         {
-            Brush myBrush = new SolidColorBrush(Colors.Orange);
+            CalcColor col = calcCore3DModel.Meshes[0].Brush.Color;
+            Brush myBrush = new SolidColorBrush(Color.FromArgb(col.Alpha, col.Red, col.Green, col.Blue));
             myBrush.Opacity = calcCore3DModel.Meshes[0].Opacity;
             Material mat = new DiffuseMaterial(myBrush);
             var m = new Model3DGroup();

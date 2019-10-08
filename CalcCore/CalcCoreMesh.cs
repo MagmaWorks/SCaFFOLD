@@ -11,11 +11,13 @@ namespace CalcCore
         public List<int[]> MeshIndices { get; private set; }
         public List<CalcCoreNode> Nodes { get; private set; }
         public double Opacity { get; set; }
+        public CalcBrush Brush { get; set; }
 
         public CalcCoreMesh()
         {
             MeshIndices = new List<int[]>();
             Nodes = new List<CalcCoreNode>();
+            Brush = new CalcBrush(128, 128, 0);
             Opacity = 1;
         }
 

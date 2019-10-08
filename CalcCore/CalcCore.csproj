@@ -112,6 +112,8 @@
   <ItemGroup>
     <Compile Include="CalcAssembly.cs" />
     <Compile Include="CalcBase.cs" />
+    <Compile Include="CalcBrush.cs" />
+    <Compile Include="CalcColor.cs" />
     <Compile Include="CalcCore3DModel.cs" />
     <Compile Include="CalcCorePoint2D.cs" />
     <Compile Include="CalcCorePoint3D.cs" />

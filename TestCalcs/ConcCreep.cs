@@ -170,6 +170,7 @@ namespace TestCalcs
             mesh.addNode(25, 25, 50, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
             mesh.setIndices(new List<int[]> { new int[] { 2,1,0 }, new int[] {1,2,3 }, new int[] {3,0,1 }, new int[] {3,2,0 } });
             mesh.Opacity = 0.2;
+            mesh.Brush = new CalcBrush(0, 0, 255);
             return new List<CalcCore3DModel>() { new CalcCore3DModel(mesh) };
         }
     }
