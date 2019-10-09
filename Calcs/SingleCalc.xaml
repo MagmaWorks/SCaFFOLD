@@ -21,11 +21,8 @@
                 <RowDefinition/>
                 <RowDefinition Height="10"/>
                 <RowDefinition/>
-                <RowDefinition Height="10"/>
-                <RowDefinition/>
             </Grid.RowDefinitions>
             <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
-            <GridSplitter Grid.Row="4" Height="5" HorizontalAlignment="Stretch"/>
             <StackPanel Orientation="Horizontal">
                 <StackPanel>
                     <TextBlock Text="{Binding CalcTypeName}" Width="250"/>
@@ -38,17 +35,25 @@
                     <local:CalcInputs Grid.Row="1" Grid.Column="0" />
                 </StackPanel>
             </ScrollViewer>
+
             <ScrollViewer Grid.Row="3">
                 <StackPanel>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="CALCULATED VALUES"/>
                     <local:CalcOutputs Grid.Row="1" Grid.Column="2"/>
                 </StackPanel>
             </ScrollViewer>
-            <h:HelixViewport3D x:Name="V3D" ZoomExtentsWhenLoaded="True" Grid.Row="5">
+
+        </Grid>
+        <TabControl Grid.Column="2">
+            <TabItem Header="Output">
+                <local:FormulaeDisplay />
+            </TabItem>
+            <TabItem Header="3D view">
+            <h:HelixViewport3D x:Name="V3D" ZoomExtentsWhenLoaded="True">
                 <h:DefaultLights/>
                 <ModelVisual3D Content="{Binding Model}"/>
             </h:HelixViewport3D>
-        </Grid>
-        <local:FormulaeDisplay Grid.Column="2"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

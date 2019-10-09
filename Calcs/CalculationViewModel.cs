@@ -226,27 +226,30 @@ namespace Calcs
 
         private void makeModel(CalcCore3DModel calcCore3DModel)
         {
-            CalcColor col = calcCore3DModel.Meshes[0].Brush.Color;
-            Brush myBrush = new SolidColorBrush(Color.FromArgb(col.Alpha, col.Red, col.Green, col.Blue));
-            myBrush.Opacity = calcCore3DModel.Meshes[0].Opacity;
-            Material mat = new DiffuseMaterial(myBrush);
             var m = new Model3DGroup();
-            MeshBuilder meshBuilder = new MeshBuilder(false, true);
-
-            foreach (var pos in calcCore3DModel.Meshes[0].Nodes)
+            foreach (var mesh in calcCore3DModel.Meshes)
             {
-                meshBuilder.Positions.Add(new Point3D(pos.Point.X, pos.Point.Y, pos.Point.Z));
-                meshBuilder.TextureCoordinates.Add(new Point(0.5,0.5));
+                CalcColor col = mesh.Brush.Color;
+                Brush myBrush = new SolidColorBrush(Color.FromArgb(col.Alpha, col.Red, col.Green, col.Blue));
+                myBrush.Opacity = mesh.Opacity;
+                Material mat = new DiffuseMaterial(myBrush);
+
+                MeshBuilder meshBuilder = new MeshBuilder(false, true);
+
+                foreach (var pos in mesh.Nodes)
+                {
+                    meshBuilder.Positions.Add(new Point3D(pos.Point.X, pos.Point.Y, pos.Point.Z));
+                    meshBuilder.TextureCoordinates.Add(new Point(0.5, 0.5));
+                }
+                foreach (var triangle in mesh.MeshIndices)
+                {
+                    meshBuilder.AddTriangle(triangle);
+                }
+
+
+                //m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
+                m.Children.Add(new GeometryModel3D(meshBuilder.ToMesh(true), mat));
             }
-            foreach (var triangle in calcCore3DModel.Meshes[0].MeshIndices)
-            {
-                meshBuilder.AddTriangle(triangle);
-            }
-
-
-            //m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
-            m.Children.Add(new GeometryModel3D(meshBuilder.ToMesh(true), mat));
-
             Model = m;
         }
 
@@ -269,6 +272,12 @@ namespace Calcs
             }
             RaisePropertyChanged(nameof(Formulae));
             RaisePropertyChanged(nameof(TestGroup));
+            if (this.calc.Get3DModels().Count > 0)
+            {
+                makeModel(this.calc.Get3DModels()[0]);
+                RaisePropertyChanged(nameof(Model));
+            }
+
         }
     }
 }
