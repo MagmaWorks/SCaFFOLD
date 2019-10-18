@@ -74,11 +74,15 @@
                 <local:CrossRef DataContext="{Binding ViewModel.CrossRef}"/>
             </TabItem>
         </TabControl>
-        <Image Grid.Row="2" HorizontalAlignment="Left">
-            <Image.Source>
-                <BitmapImage UriSource="/WhitbyWood.jpg"/>
-            </Image.Source>
-        </Image>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Image HorizontalAlignment="Left">
+                <Image.Source>
+                    <BitmapImage UriSource="/resources/MagmaWorks_logo.png"/>
+                </Image.Source>
+            </Image>
+            <TextBlock FontFamily="Franklin Gothic Book" Margin="15 0 0 0" Text="SCaFFOLD" FontSize="18" VerticalAlignment="Center"/>
+        </StackPanel>
+
 
     </Grid>
 

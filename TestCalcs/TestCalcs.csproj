@@ -36,6 +36,9 @@
     <Reference Include="BriefFiniteElementNet">
       <HintPath>..\packages\BriefFiniteElement.NET.1.0.0\lib\net35\BriefFiniteElementNet.dll</HintPath>
     </Reference>
+    <Reference Include="MWGeometry">
+      <HintPath>..\..\Libraries\WWGeometry\WWGeometry\bin\Debug\MWGeometry.dll</HintPath>
+    </Reference>
     <Reference Include="netDxf.netstandard, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\netDxf.netstandard.2.3.0\lib\net45\netDxf.netstandard.dll</HintPath>
     </Reference>

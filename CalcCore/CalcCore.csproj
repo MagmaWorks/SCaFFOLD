@@ -36,6 +36,9 @@
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="MWGeometry">
+      <HintPath>..\..\Libraries\WWGeometry\WWGeometry\bin\Debug\MWGeometry.dll</HintPath>
+    </Reference>
     <Reference Include="netDxf.netstandard, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\netDxf.netstandard.2.3.0\lib\net45\netDxf.netstandard.dll</HintPath>
     </Reference>
@@ -112,11 +115,7 @@
   <ItemGroup>
     <Compile Include="CalcAssembly.cs" />
     <Compile Include="CalcBase.cs" />
-    <Compile Include="CalcBrush.cs" />
-    <Compile Include="CalcColor.cs" />
-    <Compile Include="CalcCore3DModel.cs" />
-    <Compile Include="CalcCorePoint2D.cs" />
-    <Compile Include="CalcCorePoint3D.cs" />
+    <Compile Include="CalcInt.cs" />
     <Compile Include="CalcDouble.cs" />
     <Compile Include="CalcDoubleList.cs" />
     <Compile Include="CalcFilePath.cs" />
@@ -125,12 +124,9 @@
     <Compile Include="CalcSelectionList.cs" />
     <Compile Include="CalcValueBase.cs" />
     <Compile Include="CalcValueFactory.cs" />
-    <Compile Include="FEElement.cs" />
-    <Compile Include="CalcCoreNode.cs" />
     <Compile Include="FindAssemblies.cs" />
     <Compile Include="Formula.cs" />
     <Compile Include="ICalc.cs" />
-    <Compile Include="CalcCoreMesh.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

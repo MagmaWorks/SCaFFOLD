@@ -12,6 +12,7 @@ using System.Windows;
 //using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CalcCore;
+using MWGeometry;
 //using netDxf.Entities;
 //using netDxf;
 using netDxf.Tables;
@@ -235,6 +236,7 @@ namespace TestCalcs
             u1reducedNoHoles = null;
             u1reduced = null;
             _studPositions.Value = new List<double[]>();
+            _status = CalcStatus.NONE;
         }
 
         public override void UpdateCalc()
@@ -567,6 +569,7 @@ namespace TestCalcs
                     Conclusion = "Redesign slab",
                     Status = CalcStatus.FAIL
                 });
+                _status = CalcStatus.FAIL;
 
                 return;
             }
@@ -2509,22 +2512,22 @@ namespace TestCalcs
         //}
         //}
 
-        public override List<CalcCore3DModel> Get3DModels()
+        public override List<MW3DModel> Get3DModels()
         {
-            CalcCoreMesh mesh = new CalcCoreMesh();
+            MWMesh mesh = new MWMesh();
             double minx = -_columnAdim.Value / 2;
             double maxx = -minx;
             double miny = -_columnBdim.Value / 2;
             double maxy = -miny;
 
-            mesh.addNode(minx, miny, -1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, -1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, -1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, miny, 1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, 1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, 1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, 1000, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, miny, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, maxy, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, maxy, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, miny, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, maxy, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, maxy, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
 
             mesh.setIndices(new List<int[]>
             {   new int[] { 0, 4, 7 },
@@ -2539,9 +2542,9 @@ namespace TestCalcs
                 new int[] { 6, 7, 4 }
             });
             mesh.Opacity = 1;
-            mesh.Brush = new CalcBrush(0, 255, 128);
+            mesh.Brush = new MWBrush(0, 255, 128);
 
-            var returnModel = new CalcCore3DModel(mesh);
+            var returnModel = new MW3DModel(mesh);
 
             foreach (var item in shearLinks)
             {
@@ -2552,10 +2555,10 @@ namespace TestCalcs
             }
             returnModel.Meshes.Add(meshSlab());
 
-            return new List<CalcCore3DModel> { returnModel };
+            return new List<MW3DModel> { returnModel };
         }
 
-        private CalcCoreMesh meshSlab()
+        private MWMesh meshSlab()
         {
             double minx = -2500;
             double maxx = 2500;
@@ -2576,15 +2579,15 @@ namespace TestCalcs
                 miny = _columnBdim.Value / 2;
             };
 
-            CalcCoreMesh mesh = new CalcCoreMesh();
-            mesh.addNode(minx, miny, _h.Value/2, CalcCorePoint2D.Point2DByCoordinates(0.5,0.5));
-            mesh.addNode(maxx, miny, _h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, _h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, _h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, miny, -_h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, -_h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -_h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, -_h.Value / 2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
+            MWMesh mesh = new MWMesh();
+            mesh.addNode(minx, miny, _h.Value/2, MWPoint2D.Point2DByCoordinates(0.5,0.5));
+            mesh.addNode(maxx, miny, _h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, maxy, _h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, maxy, _h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, miny, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, maxy, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, maxy, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
             mesh.setIndices(new List<int[]>
             {
                 new int[]{0,2,3 },
@@ -2602,28 +2605,28 @@ namespace TestCalcs
 
             });
             mesh.Opacity = 0.5;
-            mesh.Brush = new CalcBrush(255, 255, 0);
+            mesh.Brush = new MWBrush(255, 255, 0);
             return mesh;
 
         }
 
-        CalcCoreMesh meshLink(double dia, Vector2 centre)
+        MWMesh meshLink(double dia, Vector2 centre)
         {
-            CalcCoreMesh mesh = new CalcCoreMesh();
+            MWMesh mesh = new MWMesh();
             double minx = centre.X - dia / 2;
             double maxx = centre.X + dia / 2;
             double miny = centre.Y -dia / 2;
             double maxy = centre.Y + dia / 2;
             double d = d_average;
 
-            mesh.addNode(minx, miny, -d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, -d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, -d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, miny, d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, d/2, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, miny, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, maxy, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, maxy, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, miny, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(maxx, maxy, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, maxy, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
 
             mesh.setIndices(new List<int[]>
             {   new int[] { 0, 4, 7 },
@@ -2638,7 +2641,7 @@ namespace TestCalcs
                 new int[] { 6, 7, 4 }
             });
             mesh.Opacity = 1;
-            mesh.Brush = new CalcBrush(128, 128, 128);
+            mesh.Brush = new MWBrush(128, 128, 128);
             return mesh;
         }
     }

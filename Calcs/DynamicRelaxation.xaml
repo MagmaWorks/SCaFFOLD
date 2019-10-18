@@ -20,10 +20,10 @@
         <StackPanel Grid.Column="1">
             <Image HorizontalAlignment="Left" Width="150">
                 <Image.Source>
-                    <BitmapImage UriSource="/WhitbyWood.jpg"/>
+                    <BitmapImage UriSource="/resources/MagmaWorks_logo.png"/>
                 </Image.Source>
             </Image>
-            <TextBlock Text="Calculation App" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 15"/>
+            <TextBlock Text="SCaFFOLD" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 15"/>
             <TextBlock Text="The following calculation types have been found:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book" Margin="0 0 0 15"/>
             <ListView ItemsSource="{Binding Calcs}" FontFamily="Franklin Gothic Book" Margin="15 0 15 25"/>
             <Button Content="Get Started" FontFamily="Franklin Gothic Book" FontSize="18" Click="Button_Click" Width="120" Margin="0 0 0 25"/>

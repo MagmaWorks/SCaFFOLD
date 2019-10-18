@@ -23,7 +23,8 @@ namespace CalcCore
         SELECTIONLIST,
         FILEPATH,
         FOLDERPATH,
-        LISTOFDOUBLEARRAYS
+        LISTOFDOUBLEARRAYS,
+        INT
     }
 
     public enum CalcStatus

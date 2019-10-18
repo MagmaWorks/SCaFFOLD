@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using CalcCore;
 using HelixToolkit.Wpf;
+using MWGeometry;
 using Newtonsoft;
 using SkiaSharp.Views.WPF;
 
@@ -189,6 +190,15 @@ namespace Calcs
             }
         }
 
+        public CalcCore.CalcStatus Status
+        {
+            get
+            {
+                return calc.Status;
+            }
+        }
+
+
         public CalculationViewModel(CalcCore.ICalc calc)
         {
             this.calc = calc;
@@ -224,12 +234,12 @@ namespace Calcs
             }
         }
 
-        private void makeModel(CalcCore3DModel calcCore3DModel)
+        private void makeModel(MW3DModel calcCore3DModel)
         {
             var m = new Model3DGroup();
             foreach (var mesh in calcCore3DModel.Meshes)
             {
-                CalcColor col = mesh.Brush.Color;
+                MWColor col = mesh.Brush.Color;
                 Brush myBrush = new SolidColorBrush(Color.FromArgb(col.Alpha, col.Red, col.Green, col.Blue));
                 myBrush.Opacity = mesh.Opacity;
                 Material mat = new DiffuseMaterial(myBrush);
@@ -277,7 +287,7 @@ namespace Calcs
                 makeModel(this.calc.Get3DModels()[0]);
                 RaisePropertyChanged(nameof(Model));
             }
-
+            RaisePropertyChanged(nameof(Status));
         }
     }
 }

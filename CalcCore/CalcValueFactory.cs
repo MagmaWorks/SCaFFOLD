@@ -29,6 +29,13 @@ namespace CalcCore
             return myVal;
         }
 
+        public CalcInt CreateIntCalcValue(string name, string symbol, string unit, int value)
+        {
+            var myVal = new CalcInt(name, symbol, unit, value);
+            values.Add(getAvailableKeyName(name), myVal);
+            return myVal;
+        }
+
         public CalcSelectionList CreateCalcSelectionList(string name, string selectedValue, IEnumerable<string> values)
         {
             var myVal = new CalcSelectionList(name, selectedValue, values);

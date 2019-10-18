@@ -8,10 +8,10 @@
 ;--------------------------------
 
 ; The name of the installer
-Name "Whitby Wood Calcs"
+Name "Magma Works SCaFFOLD"
 
 ; The file to write
-OutFile "WWCalcs.exe"
+OutFile "SCaFFOLD.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES64\WW_Calcs
@@ -66,6 +66,7 @@ Section "WW_Calcs (required)"
   File "StructuralDrawing2D.dll"
   File "CalcWindowsUtilities.dll"
   File "libSkiaSharp.dll"
+  File "MWGeometry.dll"
   
   SetOutPath "$INSTDIR\Libraries"
   File /nonfatal /a /r "Libraries\"

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CalcCore;
+using MWGeometry;
 
 namespace TestCalcs
 {
@@ -161,17 +162,17 @@ namespace TestCalcs
             creepCoeff.Value = notionalcreepcoeff.Value * creepTimeCoeff.Value;
         }
 
-        public override List<CalcCore3DModel> Get3DModels()
+        public override List<MW3DModel> Get3DModels()
         {
-            CalcCoreMesh mesh = new CalcCoreMesh();
-            mesh.addNode(0, 0, 0, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(50, 0, 0, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(50, 50, 0, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(25, 25, 50, CalcCorePoint2D.Point2DByCoordinates(0.5, 0.5));
+            MWMesh mesh = new MWMesh();
+            mesh.addNode(0, 0, 0, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(50, 0, 0, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(50, 50, 0, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(25, 25, 50, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
             mesh.setIndices(new List<int[]> { new int[] { 2,1,0 }, new int[] {1,2,3 }, new int[] {3,0,1 }, new int[] {3,2,0 } });
             mesh.Opacity = 0.2;
-            mesh.Brush = new CalcBrush(0, 0, 255);
-            return new List<CalcCore3DModel>() { new CalcCore3DModel(mesh) };
+            mesh.Brush = new MWBrush(0, 0, 255);
+            return new List<MW3DModel>() { new MW3DModel(mesh) };
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using netDxf;
+using MWGeometry;
+
 
 namespace CalcCore
 {
@@ -54,6 +56,15 @@ namespace CalcCore
             }
         }
 
+        protected CalcStatus _status = CalcStatus.NONE;
+        public CalcStatus Status
+        {
+            get
+            {
+                return _status;
+            }
+        }
+
         protected List<DxfDocument> _drawings;
 
         public virtual List<DxfDocument> GetDrawings()
@@ -68,9 +79,9 @@ namespace CalcCore
 
         public abstract void UpdateCalc();
 
-        public virtual List<CalcCore3DModel> Get3DModels()
+        public virtual List<MW3DModel> Get3DModels()
         {
-            return new List<CalcCore3DModel>();
+            return new List<MW3DModel>();
         }
     }
 }

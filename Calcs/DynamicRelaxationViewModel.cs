@@ -40,7 +40,7 @@ namespace Calcs
         {
             dynamicRelaxationSystem = new DynamicRelaxationSystem();
             brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Calcs;component/CalcPage.png"));
+            brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Calcs;component/resources/CalcSplash.png"));
             brush.TileMode = TileMode.None;
             brush.ViewportUnits = BrushMappingMode.RelativeToBoundingBox;
             brush.ViewboxUnits = BrushMappingMode.RelativeToBoundingBox;
