@@ -125,6 +125,8 @@
     <EmbeddedResource Include="resources\PunchingShear_Fig_6_22.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\MWGeometry.dll" />
+    <Content Include="resources\StructuralDrawing2D.dll" />
     <Content Include="WW.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
