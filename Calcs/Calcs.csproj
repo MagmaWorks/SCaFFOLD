@@ -301,6 +301,10 @@
   <ItemGroup>
     <Resource Include="resources\MagmaWorks_logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\MWGeometry.dll" />
+    <Content Include="resources\StructuralDrawing2D.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\$(ConfigurationName)\Libraries\" /Y
