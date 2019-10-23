@@ -454,6 +454,7 @@ namespace TestCalcs
             {
                 double Medx = Math.Max(M02x, c.P * Math.Max(c.LY * 1E-3 / 30, 20 * 1E-3));
                 c.Mxd = Math.Round(Medx, 1);
+                Mxd.Value = c.Mxd;
                 f8.Narrative = "Design moment about x for a stocky column";
                 f8.Expression = new List<string>();
                 f8.Expression.Add(@"M_{Edx} = max \left( M_{02x}, N_{Ed}\times max \left(h/30,20 mm\right)\right) = " + Math.Round(Medx) + "kN.m");
@@ -484,6 +485,7 @@ namespace TestCalcs
                 List<double> Ms = new List<double>() { M02x, M0e + m2x, M01x + 0.5 * m2x, Math.Max(c.LY * 1E-3 / 30, 20 * 1E-3) * c.P };
                 double Medx = Ms.Max();
                 c.Mxd = Math.Round(Medx, 1);
+                Mxd.Value = c.Mxd;
 
                 f8.Narrative = "Design moment about x for a slender column";
                 f8.Ref = "5.8.8";
@@ -523,6 +525,7 @@ namespace TestCalcs
             {
                 double Medy = Math.Max(M02y, c.P * Math.Max(c.LX * 1E-3 / 30, 20 * 1E-3));
                 c.Myd = Math.Round(Medy, 1);
+                Myd.Value = c.Myd;
                 f9.Narrative = "Design moment about y for a stocky column";
                 f9.Expression = new List<string>();
                 f9.Expression.Add(@"M_{Edy} = max \left( M_{02y}, N_{Ed}\times max \left(h/30,20 mm\right)\right) = " + Math.Round(Medy) + "kN.m");
@@ -553,6 +556,7 @@ namespace TestCalcs
                 List<double> Ms = new List<double>() { M02y, M0e + m2y, M01y + 0.5 * m2y, Math.Max(c.LX * 1E-3 / 30, 20 * 1E-3) * c.P };
                 double Medy = Ms.Max();
                 c.Myd = Math.Round(Medy, 1);
+                Myd.Value = c.Myd;
 
                 f9.Narrative = "Design moment about y for a slender column";
                 f9.Ref = "5.8.8";
@@ -654,26 +658,31 @@ namespace TestCalcs
 
         public override List<MW3DModel> Get3DModels()
         {
-            MyColumn.GetInteractionDiagram();
+
+            Column c = MyColumn;
+
+            c.GetInteractionDiagram();
 
             List<MW3DModel> Models = new List<MW3DModel>();
+
+            // interaction diagram
             MWMesh myMesh = new MWMesh();
 
-            for(int i = 0; i < MyColumn.diagramVertices.Count; i++)
+            for(int i = 0; i < c.diagramVertices.Count; i++)
             {
-                MWPoint3D pt = MyColumn.diagramVertices[i];
+                MWPoint3D pt = c.diagramVertices[i];
                 myMesh.addNode(pt.X, pt.Y, pt.Z, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
             }
 
             List<int[]> indicesList = new List<int[]>();
-            for(int i = 0; i < MyColumn.diagramFaces.Count; i++)
+            for(int i = 0; i < c.diagramFaces.Count; i++)
             {
-                var f = MyColumn.diagramFaces[i];
+                var f = c.diagramFaces[i];
                 int[] indices = new int[]
                 {
-                    MyColumn.diagramVertices.IndexOf(f.Points[0]),
-                    MyColumn.diagramVertices.IndexOf(f.Points[1]),
-                    MyColumn.diagramVertices.IndexOf(f.Points[2])
+                    c.diagramVertices.IndexOf(f.Points[0]),
+                    c.diagramVertices.IndexOf(f.Points[1]),
+                    c.diagramVertices.IndexOf(f.Points[2])
                 };
                 indicesList.Add(indices);
             }
@@ -684,7 +693,35 @@ namespace TestCalcs
 
             MW3DModel myID = new MW3DModel(myMesh);
 
+            // current load state represented as a diamond
+            MWMesh loadStateMesh = new MWMesh();
+
+            loadStateMesh.addNode(c.Mxd - 10, c.Myd - 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd - 10, c.Myd + 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd + 10, c.Myd + 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd + 10, c.Myd - 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd, c.Myd, c.P - 10, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd, c.Myd, c.P + 10, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+
+            List<int[]> indicesList2 = new List<int[]>();
+            indicesList2.Add(new int[] { 0, 1, 5 });
+            indicesList2.Add(new int[] { 1, 2, 5 });
+            indicesList2.Add(new int[] { 2, 3, 5 });
+            indicesList2.Add(new int[] { 3, 0, 5 });
+            indicesList2.Add(new int[] { 0, 1, 4 });
+            indicesList2.Add(new int[] { 1, 2, 4 });
+            indicesList2.Add(new int[] { 2, 3, 4 });
+            indicesList2.Add(new int[] { 3, 0, 4 });
+
+            loadStateMesh.setIndices(indicesList2);
+
+            loadStateMesh.Brush = new MWBrush(50, 50, 200);
+            loadStateMesh.Opacity = 0.3;
+
+            MW3DModel myLoadState = new MW3DModel(loadStateMesh);
+
             Models.Add(myID);
+            Models.Add(myLoadState);
 
             return Models;
         }
