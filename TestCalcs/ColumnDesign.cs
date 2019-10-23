@@ -120,7 +120,8 @@ namespace TestCalcs
         }
 
         public override void UpdateCalc()
-        { 
+        {
+            formulae = null;
             expressions = new List<Formula>();
             MyColumn = new Column()
             {
@@ -145,14 +146,14 @@ namespace TestCalcs
             };
             if(Lx.Value > 0 && Ly.Value > 0)
             {
-                Get3DModels();
+                //Get3DModels();
+                MyColumn.GetInteractionDiagram();
+
                 MinMaxSteelCheck = UpdateMinMaxSteelCheck();
                 FireCheck = UpdateFireDesign();
                 SpacingCheck = UpdateSecondOrderCheck();
                 CapacityCheck = MyColumn.isInsideCapacity();
             }
-
-
         }
 
         public bool UpdateMinMaxSteelCheck()
@@ -661,7 +662,7 @@ namespace TestCalcs
             for(int i = 0; i < MyColumn.diagramVertices.Count; i++)
             {
                 MWPoint3D pt = MyColumn.diagramVertices[i];
-                myMesh.addNode(pt.X, pt.Y, pt.Z, MWPoint2D.Point2DByCoordinates(0, 0));
+                myMesh.addNode(pt.X, pt.Y, pt.Z, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
             }
 
             List<int[]> indicesList = new List<int[]>();
@@ -679,7 +680,7 @@ namespace TestCalcs
             myMesh.setIndices(indicesList);
 
             myMesh.Brush = new MWBrush(200, 50, 50);
-            myMesh.Opacity = 0.5;
+            myMesh.Opacity = 1;
 
             MW3DModel myID = new MW3DModel(myMesh);
 
