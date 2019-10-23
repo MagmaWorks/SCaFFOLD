@@ -680,7 +680,7 @@ namespace TestCalcs
             myMesh.setIndices(indicesList);
 
             myMesh.Brush = new MWBrush(200, 50, 50);
-            myMesh.Opacity = 1;
+            myMesh.Opacity = 0.3;
 
             MW3DModel myID = new MW3DModel(myMesh);
 
