@@ -31,9 +31,6 @@ namespace TestCalcs
         CalcDouble MyBot;
         CalcDouble P;
 
-        CalcDouble Mxd;
-        CalcDouble Myd;
-
         // Design
         CalcDouble EffectiveLength;
         CalcDouble CoverToLinks;
@@ -43,10 +40,27 @@ namespace TestCalcs
         CalcSelectionList NRebarY;
         CalcSelectionList R; // fire resistance in min
         
+
+        // Checks
         bool CapacityCheck = false;
         bool FireCheck = false;
         bool SpacingCheck = false;
         bool MinMaxSteelCheck = false;
+
+        // Outputs
+        CalcDouble Nd;
+        CalcDouble Mxd;
+        CalcDouble Myd;
+
+        CalcDouble CapacityCheckO;
+        CalcDouble FireCheckO;
+        CalcDouble SpacingCheckO;
+        CalcDouble MinMaxSteelCheckO;
+
+        CalcDouble ConcreteCarbon;
+        CalcDouble RebarCarbon;
+        CalcDouble TotalCarbon;
+
 
         List<Formula> expressions = new List<Formula>();
         List<Concrete> ConcreteGrades = new List<Concrete>();
@@ -69,8 +83,8 @@ namespace TestCalcs
             Angle = inputValues.CreateDoubleCalcValue("Angle", @"\alpha", @"\deg", 0);
 
             // Material
-            ConcreteGrade = inputValues.CreateCalcSelectionList("ConcreteGrade", "40/50", new List<string> { "32/40", "35/45", "40/50", "50/60" });
-            MaxAggSize = inputValues.CreateDoubleCalcValue("MaxAggSize", "Ag", "mm", 20);
+            ConcreteGrade = inputValues.CreateCalcSelectionList("Concrete grade", "40/50", new List<string> { "32/40", "35/45", "40/50", "50/60" });
+            MaxAggSize = inputValues.CreateDoubleCalcValue("Max agg. size", "Ag", "mm", 20);
 
             // Loads
             MxTop = inputValues.CreateDoubleCalcValue("MxTop", "M_x^{Top}", "kN/m", 0);
@@ -79,18 +93,29 @@ namespace TestCalcs
             MyBot = inputValues.CreateDoubleCalcValue("MyBot", "M_y^{Bot}", "kN/m", 0);
             P = inputValues.CreateDoubleCalcValue("AxialLoad", "P", "kN", 500);
 
-            Mxd = outputValues.CreateDoubleCalcValue("Mxd", "M_{x,Ed}", "kN/m", 0);
-            Myd = outputValues.CreateDoubleCalcValue("Myd", "M_{y,Ed}", "kN/m", 0);
-
             //Design
-            EffectiveLength = inputValues.CreateDoubleCalcValue("EffectiveLength", "L_{eff}", "", 0.7);
-            CoverToLinks = inputValues.CreateDoubleCalcValue("CoverToLinks", "c", "mm", 40);
-            BarDiameter = inputValues.CreateCalcSelectionList("BarDiameter", "16", new List<string> { "10", "12", "16", "20", "25", "32", "40" });
-            LinkDiameter = inputValues.CreateCalcSelectionList("LinkDiameter", "10", new List<string> { "10", "12", "16", "20", "25", "32", "40" });
+            EffectiveLength = inputValues.CreateDoubleCalcValue("Effective length", "L_{eff}", "", 0.7);
+            CoverToLinks = inputValues.CreateDoubleCalcValue("Cover to links", "c", "mm", 40);
+            BarDiameter = inputValues.CreateCalcSelectionList("Bar diameter", "16", new List<string> { "10", "12", "16", "20", "25", "32", "40" });
+            LinkDiameter = inputValues.CreateCalcSelectionList("Link diameter", "10", new List<string> { "10", "12", "16", "20", "25", "32", "40" });
             NRebarX = inputValues.CreateCalcSelectionList("NRebarX", "3", new List<string> { "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             NRebarY = inputValues.CreateCalcSelectionList("NRebarY", "3", new List<string> { "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             R = inputValues.CreateCalcSelectionList("R", "120", new List<string> { "60", "90", "120", "150", "180", "240" });
-            
+
+            // Outputs
+            Nd = outputValues.CreateDoubleCalcValue("Nd", "N_d", "kN", 0);
+            Mxd = outputValues.CreateDoubleCalcValue("Mxd", "M_{x,Ed}", "kN/m", 0);
+            Myd = outputValues.CreateDoubleCalcValue("Myd", "M_{y,Ed}", "kN/m", 0);
+
+            MinMaxSteelCheckO = outputValues.CreateDoubleCalcValue("Steel Check", "", "", 0);
+            FireCheckO = outputValues.CreateDoubleCalcValue("Fire Check", "", "", 0);
+            SpacingCheckO = outputValues.CreateDoubleCalcValue("Spacing Check", "", "", 0);
+            CapacityCheckO = outputValues.CreateDoubleCalcValue("Capacity Check", "", "", 0);
+
+            ConcreteCarbon = outputValues.CreateDoubleCalcValue("Concrete carbon", "", @"kg\text{ } CO_2", 0);
+            RebarCarbon = outputValues.CreateDoubleCalcValue("Rebar carbon", "", @"kg\text{ } CO_2", 0);
+            TotalCarbon = outputValues.CreateDoubleCalcValue("Total carbon", "", @"kg\text{ } CO_2", 0);
+
             ConcreteGrades = new List<Concrete>()
             {
                 new Concrete("32/40",32,33),
@@ -144,15 +169,27 @@ namespace TestCalcs
                 NRebarY = NRebars.First(n => n == Convert.ToInt32(NRebarY.ValueAsString)),
                 R = FireResistances.First(f => f == Convert.ToInt32(R.ValueAsString))
             };
+
+
             if(Lx.Value > 0 && Ly.Value > 0)
             {
-                //Get3DModels();
+
+                Nd.Value = MyColumn.P;
+                ConcreteCarbon.Value = MyColumn.GetEmbodiedCarbon()[0];
+                RebarCarbon.Value = MyColumn.GetEmbodiedCarbon()[1];
+                TotalCarbon.Value = MyColumn.GetEmbodiedCarbon()[2];
+
                 MyColumn.GetInteractionDiagram();
 
                 MinMaxSteelCheck = UpdateMinMaxSteelCheck();
                 FireCheck = UpdateFireDesign();
                 SpacingCheck = UpdateSecondOrderCheck();
                 CapacityCheck = MyColumn.isInsideCapacity();
+
+                MinMaxSteelCheckO.Status = MinMaxSteelCheck ? CalcStatus.PASS : CalcStatus.FAIL;
+                FireCheckO.Status = FireCheck ? CalcStatus.PASS : CalcStatus.FAIL;
+                SpacingCheckO.Status = SpacingCheck ? CalcStatus.PASS : CalcStatus.FAIL;
+                CapacityCheckO.Status = CapacityCheck ? CalcStatus.PASS : CalcStatus.FAIL;
             }
         }
 
@@ -696,12 +733,12 @@ namespace TestCalcs
             MWMesh loadStateMesh = new MWMesh();
 
             double size = 100;
-            loadStateMesh.addNode(c.Mxd - size, c.Myd - size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd - size, c.Myd + size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd + size, c.Myd + size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd + size, c.Myd - size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd, c.Myd, c.P - size, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd, c.Myd, c.P + size, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd - size, c.Myd - size, -c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd - size, c.Myd + size, -c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd + size, c.Myd + size, -c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd + size, c.Myd - size, -c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd, c.Myd, -c.P - size, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd, c.Myd, -c.P + size, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
 
             List<int[]> indicesList2 = new List<int[]>();
             indicesList2.Add(new int[] { 5, 1, 0 });
