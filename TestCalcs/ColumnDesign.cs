@@ -63,8 +63,8 @@ namespace TestCalcs
         public ColumnDesign()
         {
             // Geometry
-            Lx = inputValues.CreateDoubleCalcValue("Lx", "L_x", "mm", 350);
-            Ly = inputValues.CreateDoubleCalcValue("Ly", "L_y", "mm", 350);
+            Lx = inputValues.CreateDoubleCalcValue("Lx", "L_x", "mm", 900);
+            Ly = inputValues.CreateDoubleCalcValue("Ly", "L_y", "mm", 300);
             Length = inputValues.CreateDoubleCalcValue("Length", "L", "mm", 3150);
             Angle = inputValues.CreateDoubleCalcValue("Angle", @"\alpha", @"\deg", 0);
 
@@ -77,7 +77,7 @@ namespace TestCalcs
             MxBot = inputValues.CreateDoubleCalcValue("MxBot", "M_x^{Bot}", "kN/m", 0);
             MyTop = inputValues.CreateDoubleCalcValue("MyTop", "M_y^{Top}", "kN/m", 0);
             MyBot = inputValues.CreateDoubleCalcValue("MyBot", "M_y^{Bot}", "kN/m", 0);
-            P = inputValues.CreateDoubleCalcValue("AxialLoad", "P", "kN", 5000);
+            P = inputValues.CreateDoubleCalcValue("AxialLoad", "P", "kN", 500);
 
             Mxd = outputValues.CreateDoubleCalcValue("Mxd", "M_{x,Ed}", "kN/m", 0);
             Myd = outputValues.CreateDoubleCalcValue("Myd", "M_{y,Ed}", "kN/m", 0);
@@ -658,7 +658,6 @@ namespace TestCalcs
 
         public override List<MW3DModel> Get3DModels()
         {
-
             Column c = MyColumn;
 
             c.GetInteractionDiagram();
@@ -689,25 +688,26 @@ namespace TestCalcs
             myMesh.setIndices(indicesList);
 
             myMesh.Brush = new MWBrush(200, 50, 50);
-            myMesh.Opacity = 0.3;
+            myMesh.Opacity = 0.5;
 
             MW3DModel myID = new MW3DModel(myMesh);
 
             // current load state represented as a diamond
             MWMesh loadStateMesh = new MWMesh();
 
-            loadStateMesh.addNode(c.Mxd - 10, c.Myd - 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd - 10, c.Myd + 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd + 10, c.Myd + 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd + 10, c.Myd - 10, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd, c.Myd, c.P - 10, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            loadStateMesh.addNode(c.Mxd, c.Myd, c.P + 10, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            double size = 100;
+            loadStateMesh.addNode(c.Mxd - size, c.Myd - size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd - size, c.Myd + size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd + size, c.Myd + size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd + size, c.Myd - size, c.P, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd, c.Myd, c.P - size, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            loadStateMesh.addNode(c.Mxd, c.Myd, c.P + size, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
 
             List<int[]> indicesList2 = new List<int[]>();
-            indicesList2.Add(new int[] { 0, 1, 5 });
-            indicesList2.Add(new int[] { 1, 2, 5 });
-            indicesList2.Add(new int[] { 2, 3, 5 });
-            indicesList2.Add(new int[] { 3, 0, 5 });
+            indicesList2.Add(new int[] { 5, 1, 0 });
+            indicesList2.Add(new int[] { 5, 2, 1 });
+            indicesList2.Add(new int[] { 5, 3, 2 });
+            indicesList2.Add(new int[] { 5, 0, 3 });
             indicesList2.Add(new int[] { 0, 1, 4 });
             indicesList2.Add(new int[] { 1, 2, 4 });
             indicesList2.Add(new int[] { 2, 3, 4 });
@@ -716,12 +716,11 @@ namespace TestCalcs
             loadStateMesh.setIndices(indicesList2);
 
             loadStateMesh.Brush = new MWBrush(50, 50, 200);
-            loadStateMesh.Opacity = 0.3;
+            loadStateMesh.Opacity = 1;
 
-            MW3DModel myLoadState = new MW3DModel(loadStateMesh);
+            myID.Meshes.Add(loadStateMesh);
 
             Models.Add(myID);
-            Models.Add(myLoadState);
 
             return Models;
         }
