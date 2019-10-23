@@ -36,8 +36,13 @@
     <Reference Include="BriefFiniteElementNet">
       <HintPath>..\packages\BriefFiniteElement.NET.1.0.0\lib\net35\BriefFiniteElementNet.dll</HintPath>
     </Reference>
-    <Reference Include="MWGeometry">
-      <HintPath>..\..\Libraries\WWGeometry\WWGeometry\bin\Debug\MWGeometry.dll</HintPath>
+    <Reference Include="InteractionDiagram3D, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>resources\InteractionDiagram3D.dll</HintPath>
+    </Reference>
+    <Reference Include="MWGeometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>resources\MWGeometry.dll</HintPath>
     </Reference>
     <Reference Include="netDxf.netstandard, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\netDxf.netstandard.2.3.0\lib\net45\netDxf.netstandard.dll</HintPath>
@@ -71,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arc.cs" />
+    <Compile Include="Column.cs" />
+    <Compile Include="ColumnDesign.cs" />
     <Compile Include="ConcColumnShortening.cs" />
     <Compile Include="ConcCreep.cs" />
     <Compile Include="ConcMultiStoreyColumnShortening.cs" />
@@ -83,6 +90,7 @@
     <Compile Include="IntersectionResult.cs" />
     <Compile Include="IntersectionType.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="Moment.cs" />
     <Compile Include="NewCalc.cs" />
     <Compile Include="NodeCheck.cs" />
@@ -125,6 +133,7 @@
     <EmbeddedResource Include="resources\PunchingShear_Fig_6_22.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\InteractionDiagram3D.dll" />
     <Content Include="resources\MWGeometry.dll" />
     <Content Include="resources\StructuralDrawing2D.dll" />
     <Content Include="WW.ico" />
@@ -134,7 +143,11 @@
     <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\bin\Debug\Libraries\" /Y
 xCopy "$(TargetPath)" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
-xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y</PostBuildEvent>
+xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
+xCopy "$(ProjectDir)resources\MWGeometry.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
+xCopy "$(ProjectDir)resources\InteractionDiagram3D.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
+xCopy "$(ProjectDir)resources\Triangle.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
+xCopy "$(ProjectDir)resources\MIConvexHull.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
