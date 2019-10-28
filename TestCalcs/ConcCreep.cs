@@ -165,10 +165,10 @@ namespace TestCalcs
         public override List<MW3DModel> Get3DModels()
         {
             MWMesh mesh = new MWMesh();
-            mesh.addNode(0, 0, 0, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(50, 0, 0, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(50, 50, 0, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(25, 25, 50, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(0, 0, 0, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(50, 0, 0, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(50, 50, 0, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(25, 25, 50, new MWPoint2D(0.5, 0.5));
             mesh.setIndices(new List<int[]> { new int[] { 2,1,0 }, new int[] {1,2,3 }, new int[] {3,0,1 }, new int[] {3,2,0 } });
             mesh.Opacity = 0.2;
             mesh.Brush = new MWBrush(0, 0, 255);

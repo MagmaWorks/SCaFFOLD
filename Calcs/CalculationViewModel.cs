@@ -256,9 +256,19 @@ namespace Calcs
                     meshBuilder.AddTriangle(triangle);
                 }
 
+                var meshOutput = meshBuilder.ToMesh(true);
 
                 //m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
-                m.Children.Add(new GeometryModel3D(meshBuilder.ToMesh(true), mat));
+                m.Children.Add(new GeometryModel3D(meshOutput, mat));
+
+                //var edges = meshOutput.FindEdges();
+                //var positions = meshOutput.Positions;
+                //for (int i = 0; i < edges.Count/2; i++)
+                //{
+                //    MeshBuilder cylinder = new MeshBuilder(true, false);
+                //    cylinder.AddCylinder(positions[edges[i*2]], positions[edges[i*2+1]], 50, 6);
+                //    m.Children.Add(new GeometryModel3D(cylinder.ToMesh(true), mat));
+                //}
             }
             Model = m;
         }

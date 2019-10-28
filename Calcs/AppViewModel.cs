@@ -110,17 +110,6 @@ namespace Calcs
             }
         }
 
-        public void SaveAllOnClose(object sender, EventArgs e)
-        {
-            var vm = new SaveOnQuitVM();
-            Window1 myWin = new Window1(vm);
-            myWin.ShowDialog();
-            if (vm.Save)
-            {
-                saveAll();
-            }
-        }
-
         public void saveAll()
         {
             for (int i = 0; i < ViewModels.Count; i++)

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MWGeometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace TestCalcs
 {
@@ -121,4 +123,91 @@ namespace TestCalcs
         }
     }
 
+    public class MWGeometry2
+    {
+        /// <summary>
+        /// Returns transformation matrix setting 2D plane in 3D space to XY plane
+        /// </summary>
+        /// <param name="pt1 at origin"></param>
+        /// <param name="pt2 on x axis"></param>
+        /// <param name="pt3 on xy plane"></param>
+        /// <returns></returns>
+        public static Matrix4x4 TransformTo2DPlane(MWPoint3D pt1, MWPoint3D pt2, MWPoint3D pt3)
+        {
+            //Point4D p1 = new Point4D(pt1.X, pt1.Y, pt1.Z, 1);
+            //Point4D p2 = new Point4D(pt2.X, pt2.Y, pt2.Z, 1);
+            //Point4D p3 = new Point4D(pt3.X, pt3.Y, pt3.Z, 1);
+
+            MWVector3D xAxis = new MWVector3D(pt2.X - pt1.X, pt2.Y - pt1.Y, pt2.Z - pt1.Z);
+            MWVector3D hAxis = new MWVector3D(pt3.X - pt1.X, pt3.Y - pt1.Y, pt3.Z - pt1.Z);
+            MWVector3D zAxis = CrossProduct(xAxis, hAxis);
+            MWVector3D yAxis = CrossProduct(zAxis, xAxis);
+
+            xAxis = xAxis.Normalised();
+            yAxis = yAxis.Normalised();
+            zAxis = zAxis.Normalised();
+
+            Matrix4x4 trans = new Matrix4x4((float)xAxis.X, (float)xAxis.Y, (float)xAxis.Z, 0,
+                                          (float)yAxis.X, (float)yAxis.Y, (float)yAxis.Z, 0,
+                                          (float)zAxis.X, (float)zAxis.Y, (float)zAxis.Z, 0,
+                                          (float)pt1.X, (float)pt1.Y, (float)pt1.Z, 1);
+
+            //Matrix4x4 trans = new Matrix4x4((float)xAxis.X, (float)yAxis.X, (float)zAxis.X, 0,
+            //                              (float)xAxis.Y, (float)yAxis.Y, (float)zAxis.Y, 0,
+            //                              (float)xAxis.Z, (float)yAxis.Z, (float)zAxis.Z, 0,
+            //                              (float)pt1.X, (float)pt1.Y, (float)pt1.Z, 1);
+            Matrix4x4 returnMatrix;
+            Matrix4x4.Invert(trans, out returnMatrix);
+
+            Matrix3D trans2 = new Matrix3D(xAxis.X, xAxis.Y, xAxis.Z, 0,
+                              yAxis.X, yAxis.Y, yAxis.Z, 0,
+                              zAxis.X, zAxis.Y, zAxis.Z, 0,
+                              pt1.X, pt1.Y, pt1.Z, 1);
+            trans2.Invert();
+
+            return trans;
+        }
+
+        public static MWPoint3D TransformedPoint(MWPoint3D pt, Matrix4x4 matrix)
+        {
+            double newX = matrix.M11 * pt.X + matrix.M21 * pt.Y + matrix.M31 * pt.Z + matrix.M41;
+            double newY = matrix.M12 * pt.X + matrix.M22 * pt.Y + matrix.M32 * pt.Z + matrix.M42;
+            double newZ = matrix.M13 * pt.X + matrix.M23 * pt.Y + matrix.M33 * pt.Z + matrix.M43;
+            return new MWPoint3D(newX, newY, newZ);
+
+        }
+
+        //public static MWPoint3D TransformedPoint(MWPoint3D pt, Matrix3D matrix)
+        //{
+        //    double newX = matrix.M11 * pt.X + matrix.M12 * pt.Y + matrix.M13 * pt.Z + matrix.M14;
+        //    double newY = matrix.M21 * pt.X + matrix.M22 * pt.Y + matrix.M23 * pt.Z + matrix.M24;
+        //    double newZ = matrix.M31 * pt.X + matrix.M32 * pt.Y + matrix.M33 * pt.Z + matrix.M34;
+        //    return new MWPoint3D(newX, newY, newZ);
+
+        //}
+
+        public static MWVector3D CrossProduct(MWVector3D v1, MWVector3D v2)
+        {
+            double x, y, z;
+            x = v1.Y * v2.Z - v2.Y * v1.Z;
+            y = (v1.X * v2.Z - v2.X * v1.Z) * -1;
+            z = v1.X * v2.Y - v2.X * v1.Y;
+
+            var rtnvector = new MWVector3D(x, y, z);
+            return rtnvector;
+        }
+
+        public static Tuple<MWVector3D, MWVector3D, MWVector3D> LocalCoordSystemFromLinePoints(MWPoint3D point1, MWPoint3D point2)
+        {
+            MWVector3D normal = point2 - point1;
+            MWVector3D newX = CrossProduct(normal, new MWVector3D(0,0,1));
+            MWVector3D newY = CrossProduct(normal, newX);
+
+            var newX2 = newX.Normalised();
+            var newY2 = newY.Normalised();
+            var newZ2 = normal.Normalised();
+
+            return new Tuple<MWVector3D, MWVector3D, MWVector3D>(newX2, newY2, newZ2);
+        }
+    }
 }

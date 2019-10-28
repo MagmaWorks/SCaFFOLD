@@ -152,10 +152,10 @@ namespace TestCalcs
             Material concrete = new Material(ConcreteGrade.Name, MatYpe.Concrete, 0.85 * ConcreteGrade.Fc / 1.5, 3);
             ConcreteSection cs = new ConcreteSection(new List<MWPoint2D>()
                                                     {
-                                                        MWPoint2D.Point2DByCoordinates(0,0),
-                                                        MWPoint2D.Point2DByCoordinates(LX,0),
-                                                        MWPoint2D.Point2DByCoordinates(LX,LY),
-                                                        MWPoint2D.Point2DByCoordinates(0,LY)
+                                                        new MWPoint2D(0,0),
+                                                        new MWPoint2D(LX,0),
+                                                        new MWPoint2D(LX,LY),
+                                                        new MWPoint2D(0,LY)
                                                     },
                                                     concrete);
             /*ConcreteSection cs = new ConcreteSection(new List<Point>()
@@ -179,7 +179,7 @@ namespace TestCalcs
                 for (int j = 0; j < NRebarY; j++)
                 {
                     var y = CoverToLinks + LinkDiameter + BarDiameter / 2 + j * yspace;
-                    Rebar r = new Rebar(MWPoint2D.Point2DByCoordinates(x, y), Math.PI * Math.Pow(BarDiameter / 2, 2), steel);
+                    Rebar r = new Rebar(new MWPoint2D(x, y), Math.PI * Math.Pow(BarDiameter / 2, 2), steel);
                     composites.Add(r);
                 }
             }
@@ -200,14 +200,14 @@ namespace TestCalcs
         public bool isInsideInteractionDiagram(List<Tri3D> faces, List<MWPoint3D> vertices)
         {
             GetDesignMoments();
-            MWPoint3D p0 = MWPoint3D.point3DByCoordinates
+            MWPoint3D p0 = new MWPoint3D
             (
                 2 * vertices.Min(x => x.X),
                 0,
                 0
             );
 
-            MWPoint3D p = MWPoint3D.point3DByCoordinates
+            MWPoint3D p = new MWPoint3D
             (
                 Mxd,
                 Myd,
@@ -218,21 +218,21 @@ namespace TestCalcs
             for (int i = 0; i < faces.Count; i++)
             {
                 MWPoint3D pInter0 = Polygon3D.PlaneLineIntersection(new MWPoint3D[] { p0, p }, faces[i].Points);
-                if (pInter0 != null)
+                if (pInter0.X != double.NaN)
                 {
                     MWPoint3D pInter = pInter0;
-                    MWVector3D v = Vectors3D.VectorialProduct(MWVector3D.vector3DByCoordinates(p0.X - pInter.X, p0.Y - pInter.Y, p0.Z - pInter.Z),
-                                                              MWVector3D.vector3DByCoordinates(p.X - pInter.X, p.Y - pInter.Y, p.Z - pInter.Z));
+                    MWVector3D v = Vectors3D.VectorialProduct(new MWVector3D(p0.X - pInter.X, p0.Y - pInter.Y, p0.Z - pInter.Z),
+                                                              new MWVector3D(p.X - pInter.X, p.Y - pInter.Y, p.Z - pInter.Z));
 
                     List<MWPoint3D> pts = faces[i].Points;
-                    double a1 = Vectors3D.TriangleArea(MWVector3D.vector3DByCoordinates(pts[0].X - pInter.X, pts[0].Y - pInter.Y, pts[0].Z - pInter.Z),
-                                                       MWVector3D.vector3DByCoordinates(pts[1].X - pInter.X, pts[1].Y - pInter.Y, pts[1].Z - pInter.Z));
-                    double a2 = Vectors3D.TriangleArea(MWVector3D.vector3DByCoordinates(pts[1].X - pInter.X, pts[1].Y - pInter.Y, pts[1].Z - pInter.Z),
-                                                       MWVector3D.vector3DByCoordinates(pts[2].X - pInter.X, pts[2].Y - pInter.Y, pts[2].Z - pInter.Z));
-                    double a3 = Vectors3D.TriangleArea(MWVector3D.vector3DByCoordinates(pts[2].X - pInter.X, pts[2].Y - pInter.Y, pts[2].Z - pInter.Z),
-                                                       MWVector3D.vector3DByCoordinates(pts[0].X - pInter.X, pts[0].Y - pInter.Y, pts[0].Z - pInter.Z));
-                    double a0 = Vectors3D.TriangleArea(MWVector3D.vector3DByCoordinates(pts[1].X - pts[0].X, pts[1].Y - pts[0].Y, pts[1].Z - pts[0].Z),
-                                                       MWVector3D.vector3DByCoordinates(pts[2].X - pts[0].X, pts[2].Y - pts[0].Y, pts[2].Z - pts[0].Z));
+                    double a1 = Vectors3D.TriangleArea(new MWVector3D(pts[0].X - pInter.X, pts[0].Y - pInter.Y, pts[0].Z - pInter.Z),
+                                                       new MWVector3D(pts[1].X - pInter.X, pts[1].Y - pInter.Y, pts[1].Z - pInter.Z));
+                    double a2 = Vectors3D.TriangleArea(new MWVector3D(pts[1].X - pInter.X, pts[1].Y - pInter.Y, pts[1].Z - pInter.Z),
+                                                       new MWVector3D(pts[2].X - pInter.X, pts[2].Y - pInter.Y, pts[2].Z - pInter.Z));
+                    double a3 = Vectors3D.TriangleArea(new MWVector3D(pts[2].X - pInter.X, pts[2].Y - pInter.Y, pts[2].Z - pInter.Z),
+                                                       new MWVector3D(pts[0].X - pInter.X, pts[0].Y - pInter.Y, pts[0].Z - pInter.Z));
+                    double a0 = Vectors3D.TriangleArea(new MWVector3D(pts[1].X - pts[0].X, pts[1].Y - pts[0].Y, pts[1].Z - pts[0].Z),
+                                                       new MWVector3D(pts[2].X - pts[0].X, pts[2].Y - pts[0].Y, pts[2].Z - pts[0].Z));
                     if (Math.Abs(a1 + a2 + a3 - a0) < 10)
                         compt++;
                 }

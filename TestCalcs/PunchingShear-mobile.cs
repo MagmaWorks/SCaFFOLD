@@ -485,7 +485,6 @@ namespace TestCalcs
                 });
             }
 
-
             reinforcementRatioy = _rebarY.Value / (1000 * dy);
             reinforcementRatioz = _rebarZ.Value / (1000 * dz);
 
@@ -2520,14 +2519,14 @@ namespace TestCalcs
             double miny = -_columnBdim.Value / 2;
             double maxy = -miny;
 
-            mesh.addNode(minx, miny, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, -1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, miny, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, 1000, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, -1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, miny, -1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, maxy, -1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, maxy, -1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, miny, 1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, miny, 1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, maxy, 1000, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, maxy, 1000, new MWPoint2D(0.5, 0.5));
 
             mesh.setIndices(new List<int[]>
             {   new int[] { 0, 4, 7 },
@@ -2580,14 +2579,14 @@ namespace TestCalcs
             };
 
             MWMesh mesh = new MWMesh();
-            mesh.addNode(minx, miny, _h.Value/2, MWPoint2D.Point2DByCoordinates(0.5,0.5));
-            mesh.addNode(maxx, miny, _h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, _h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, _h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, miny, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, -_h.Value / 2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, _h.Value/2, new MWPoint2D(0.5,0.5));
+            mesh.addNode(maxx, miny, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
             mesh.setIndices(new List<int[]>
             {
                 new int[]{0,2,3 },
@@ -2619,14 +2618,14 @@ namespace TestCalcs
             double maxy = centre.Y + dia / 2;
             double d = d_average;
 
-            mesh.addNode(minx, miny, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, -d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, miny, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, miny, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(maxx, maxy, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
-            mesh.addNode(minx, maxy, d/2, MWPoint2D.Point2DByCoordinates(0.5, 0.5));
+            mesh.addNode(minx, miny, -d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, miny, -d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, maxy, -d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, maxy, -d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, miny, d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, miny, d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(maxx, maxy, d/2, new MWPoint2D(0.5, 0.5));
+            mesh.addNode(minx, maxy, d/2, new MWPoint2D(0.5, 0.5));
 
             mesh.setIndices(new List<int[]>
             {   new int[] { 0, 4, 7 },

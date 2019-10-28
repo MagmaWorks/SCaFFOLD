@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,8 +38,24 @@ namespace Calcs
                 calcs.Add(new CalculationViewModel(calcInstance));
             appVM = new AppViewModel(calcClasses) ;
             this.DataContext = appVM;
-            this.Closing += appVM.SaveAllOnClose;
+            //this.Closing += appVM.SaveAllOnClose;//
             InitializeComponent();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            var vm = new SaveOnQuitVM();
+            Window1 myWin = new Window1(vm);
+            myWin.ShowDialog();
+            if (vm.Save)
+            {
+                appVM.saveAll();
+            }
+            if (vm.Cancel)
+            {
+                e.Cancel = true;
+            }
+            base.OnClosing(e);
         }
     }
 }
