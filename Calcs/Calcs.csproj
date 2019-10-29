@@ -303,7 +303,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\MWGeometry.dll" />
+    <Resource Include="resources\No.png" />
     <Content Include="resources\StructuralDrawing2D.dll" />
+    <Resource Include="resources\Yes.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
