@@ -108,6 +108,14 @@ namespace Calcs
             }
         }
 
+        public CalcCore.CalcStatus Status
+        {
+            get
+            {
+                return calcValue.Status;
+            }
+        }
+
         public IOValues(CalcCore.CalcValueBase calcValue, CalcCore.ICalc calc, ICalcViewParent calcVM)
         {
             this.calcValue = calcValue;

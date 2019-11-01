@@ -752,63 +752,52 @@ namespace TestCalcs
             }
             myMesh.setIndices(indicesList);
 
-            myMesh.Brush = new MWBrush(200, 50, 50);
-            myMesh.Opacity = 0.5;
+            myMesh.Brush = new MWBrush(128, 200, 50, 50);
+            myMesh.Opacity = 1;
 
             var edges = myMesh.GetUniqueEdges();
             foreach (var edge in edges)
             {
                 MWPoint3D p1 = myMesh.Nodes[edge[0]].Point;
                 MWPoint3D p2 = myMesh.Nodes[edge[1]].Point;
-
-                myID.Meshes.Add(makeExtrudedPolygon(p1, p2, 25, 6));
-
+                var stickMesh = MWMesh.makeExtrudedPolygon(p1, p2, 15, 6);
+                stickMesh.Brush = new MWBrush(0, 128, 255);
+                var checkedges = stickMesh.GetOuterEdges();
+                var checkalledges = stickMesh.GetAllEdges();
+                var checkunique = stickMesh.GetUniqueEdges();
+                var outerEdges = stickMesh.GetMeshOutlines();
+                myID.Meshes.Add(stickMesh);
             }
+
+            var minPoint = myID.GetMinimumCorner();
+            var maxPoint = myID.GetMaximumCorner();
+
+            // calc scale for x axis
+            double range = maxPoint.X - minPoint.X;
+            var step = MWGeometry.Utilities.RoundToSignificantFigure(range/10, 1);
+            if (step == 3 || step == 4)
+                step = 2;
+            else if (step == 6 || step == 7 || step == 8 || step == 9)
+                step = 5;
+
+
+            List<MWMesh> axisMeshes = new List<MWMesh>();
+
+            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X-1000, 0, 0), new MWPoint3D(maxPoint.X+1000, 0, 0), 5, 5));
+            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, minPoint.Y-1000, 0), new MWPoint3D(0, maxPoint.Y+1000, 0), 5, 5));
+            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, 0, minPoint.Z-1000), new MWPoint3D(0, 0, maxPoint.Z+1000), 5, 5));
+
+            foreach (var mesh in axisMeshes)
+            {
+                mesh.Brush = new MWBrush(255, 0, 0, 0);
+                myID.Meshes.Add(mesh);
+            }          
 
             myID.Meshes.Add(myMesh);
 
             Models.Add(myID);
 
             return Models;
-        }
-
-        public static MWMesh makeExtrudedPolygon(MWPoint3D start, MWPoint3D end, double radius, int sides)
-        {
-            MWMesh returnMesh = new MWMesh();
-            double length = (end - start).Length;
-            var localCoords = MWGeometry2.LocalCoordSystemFromLinePoints(start, end);
-            var transMatrix = MWGeometry2.TransformTo2DPlane(start, start + localCoords.Item1, start + localCoords.Item2);
-            List<MWPoint3D> startPoints = new List<MWPoint3D>();
-            List<MWPoint3D> endPoints = new List<MWPoint3D>();
-            double angle = 2 * Math.PI / sides;
-            for (int i = 0; i < sides; i++)
-            {
-                var pt1 = radius * Math.Cos(angle * i);
-                var pt2 = radius * Math.Sin(angle * i);
-                startPoints.Add(new MWPoint3D(pt1, pt2, 0));
-                endPoints.Add(new MWPoint3D(pt1, pt2, length));
-            }
-
-            var prevStartPoint = startPoints.Last();
-            var prevEndPoint = endPoints.Last();
-            for (int i = 0; i < startPoints.Count; i++)
-            {
-                var newPoint1 = MWGeometry2.TransformedPoint(startPoints[i], transMatrix);
-                var newPoint2 = MWGeometry2.TransformedPoint(endPoints[i], transMatrix);
-                var newPoint3 = MWGeometry2.TransformedPoint(prevStartPoint, transMatrix);
-                var newPoint4 = MWGeometry2.TransformedPoint(prevEndPoint, transMatrix);
-                prevStartPoint = startPoints[i];
-                prevEndPoint = endPoints[i];
-                returnMesh.addNode(newPoint1.X, newPoint1.Y, newPoint1.Z, new MWPoint2D(0.5, 0.5));
-                returnMesh.addNode(newPoint2.X, newPoint2.Y, newPoint2.Z, new MWPoint2D(0.5, 0.5));
-                returnMesh.addNode(newPoint3.X, newPoint3.Y, newPoint3.Z, new MWPoint2D(0.5, 0.5));
-                returnMesh.addNode(newPoint4.X, newPoint4.Y, newPoint4.Z, new MWPoint2D(0.5, 0.5));
-                returnMesh.MeshIndices.Add(new int[] {i*4, i*4+1, i*4+2 });
-                returnMesh.MeshIndices.Add(new int[] { i * 4 + 3, i * 4 + 2, i * 4 + 1 });
-            }
-            returnMesh.Opacity = 1;
-            returnMesh.Brush = new MWBrush(255, 128, 128);
-            return returnMesh;
         }
     }
 }
