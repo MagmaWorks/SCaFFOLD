@@ -184,7 +184,7 @@ namespace TestCalcs
                 }
             }
 
-            Diagram d = new Diagram(composites);
+            Diagram d = new Diagram(composites,30);
 
             diagramVertices = d.vertices;
             diagramFaces = d.faces;
