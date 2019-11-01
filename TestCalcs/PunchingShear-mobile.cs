@@ -17,6 +17,9 @@ using MWGeometry;
 //using netDxf;
 using netDxf.Tables;
 using StructuralDrawing2D;
+using TriangleNet.Geometry;
+using TriangleNet.Meshing;
+using Point = TriangleNet.Geometry.Point;
 
 namespace TestCalcs
 {
@@ -2552,12 +2555,16 @@ namespace TestCalcs
                     returnModel.Meshes.Add(meshLink(12, item2));
                 }
             }
-            returnModel.Meshes.Add(meshSlab());
+
+            foreach (var item in meshSlab())
+            {
+                returnModel.Meshes.Add(item);
+            }
 
             return new List<MW3DModel> { returnModel };
         }
 
-        private MWMesh meshSlab()
+        private List<MWMesh> meshSlab()
         {
             double minx = -2500;
             double maxx = 2500;
@@ -2578,34 +2585,107 @@ namespace TestCalcs
                 miny = _columnBdim.Value / 2;
             };
 
-            MWMesh mesh = new MWMesh();
-            mesh.addNode(minx, miny, _h.Value/2, new MWPoint2D(0.5,0.5));
-            mesh.addNode(maxx, miny, _h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.addNode(maxx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.addNode(minx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.addNode(minx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.addNode(maxx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.addNode(maxx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.addNode(minx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            mesh.setIndices(new List<int[]>
+            // generate mesh for slab with holes with Triangle
+            var slabOutline = new TriangleNet.Geometry.Polygon();
+            slabOutline.AddContour(new List<Vertex> { new Vertex(minx, miny), new Vertex(maxx, miny), new Vertex(maxx, maxy), new Vertex(minx, maxy) }, 1);
+            if (_holeSizeX.Value > 0 && _holeSizeY.Value > 0)
             {
-                new int[]{0,2,3 },
-                new int[]{0,1,2 },
-                new int[]{7,6,4 },
-                new int[]{6,5,4 },
-                new int[]{0,4,1 },
-                new int[]{1,4,5 },
-                new int[]{0,3,4 },
-                new int[]{4,3,7 },
-                new int[]{7,3,6 },
-                new int[]{6,3,2 },
-                new int[]{2,1,5 },
-                new int[]{5,6,2 }
+                slabOutline.AddContour(new List<Vertex> {
+                new Vertex(_holePosX.Value, _holePosY.Value),
+                new Vertex(_holePosX.Value + _holeSizeX.Value, _holePosY.Value),
+                new Vertex(_holePosX.Value + _holeSizeX.Value, _holePosY.Value + _holeSizeY.Value),
+                new Vertex(_holePosX.Value, _holePosY.Value + _holeSizeY.Value)}, 2, new Point(_holePosX.Value + _holeSizeX.Value / 2, _holePosY.Value + _holeSizeY.Value / 2));
+            }
+            if (_hole2SizeX.Value > 0 && _hole2SizeY.Value > 0)
+            {
+                slabOutline.AddContour(new List<Vertex> {
+                new Vertex(_hole2PosX.Value, _hole2PosY.Value),
+                new Vertex(_hole2PosX.Value + _hole2SizeX.Value, _hole2PosY.Value),
+                new Vertex(_hole2PosX.Value + _hole2SizeX.Value, _hole2PosY.Value + _hole2SizeY.Value),
+                new Vertex(_hole2PosX.Value, _hole2PosY.Value + _hole2SizeY.Value)}, 3, new Point(_hole2PosX.Value + _hole2SizeX.Value / 2, _hole2PosY.Value + _hole2SizeY.Value / 2));
+            }
+            var meshedSlab = slabOutline.Triangulate();
+            var meshTriangles = meshedSlab.Triangles.ToList();
+            MWMesh slabMesh2 = new MWMesh();
+            foreach (var vertex in meshedSlab.Vertices)
+            {
+                slabMesh2.addNode(vertex.X, vertex.Y, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            }
+            foreach (var triangle in meshTriangles)
+            {
+                slabMesh2.MeshIndices.Add(new int[] { triangle.GetVertexID(0), triangle.GetVertexID(1), triangle.GetVertexID(2) });
+            }
 
-            });
+            var mesh = slabMesh2;
+
+            //MWMesh mesh = new MWMesh();
+            //mesh.addNode(minx, miny, _h.Value/2, new MWPoint2D(0.5,0.5));
+            //mesh.addNode(maxx, miny, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            //mesh.addNode(maxx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            //mesh.addNode(minx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
+            ////mesh.addNode(minx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            ////mesh.addNode(maxx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            ////mesh.addNode(maxx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            ////mesh.addNode(minx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
+            //mesh.setIndices(new List<int[]>
+            //{
+            //    new int[]{0,2,3 },
+            //    new int[]{0,1,2 },
+            //    //new int[]{7,6,4 },
+            //    //new int[]{6,5,4 },
+            //    //new int[]{0,4,1 },
+            //    //new int[]{1,4,5 },
+            //    //new int[]{0,3,4 },
+            //    //new int[]{4,3,7 },
+            //    //new int[]{7,3,6 },
+            //    //new int[]{6,3,2 },
+            //    //new int[]{2,1,5 },
+            //    //new int[]{5,6,2 }
+
+            //});
             mesh.Opacity = 0.5;
             mesh.Brush = new MWBrush(255, 255, 0);
-            return mesh;
+
+            var outline = mesh.GetMeshOutlines();
+            var sidemeshes = new List<MWMesh>();
+            foreach (var individualOutline in outline)
+            {
+                var outlinePoints = new List<MWPoint3D>();
+                foreach (var item in individualOutline)
+                {
+                    outlinePoints.Add(mesh.Nodes[item].Point);
+                }
+                var sideMesh = MWMesh.makeExtrudedPolygon(new MWPoint3D(0, 0, 0), new MWPoint3D(0, 0, -_h.Value), outlinePoints);
+                sideMesh.Opacity = 0.5;
+                sideMesh.Brush = new MWBrush(255, 255, 0);
+                sidemeshes.Add(sideMesh);
+            }
+            
+
+            var bottomMesh = new MWMesh();
+            foreach (var item in mesh.Nodes)
+            {
+                bottomMesh.addNode(item.Point.X, item.Point.Y, item.Point.Z - _h.Value, new MWPoint2D(0.5, 0.5));
+            }
+            var newIndices = new List<int[]>();
+            foreach (var item in mesh.MeshIndices)
+            {
+                newIndices.Add(new int[] { item[0], item[1], item[2] });
+            }
+            bottomMesh.setIndices(newIndices);
+            bottomMesh.Opacity = 0.5;
+            bottomMesh.Brush = new MWBrush(255, 255, 0);
+            bottomMesh.reverseFaceDirections();
+
+            var returnList = new List<MWMesh>();
+            returnList.Add(mesh);
+            foreach (var item in sidemeshes)
+            {
+                returnList.Add(item);
+            }
+            returnList.Add(bottomMesh);
+
+            return returnList;
 
         }
 

@@ -765,9 +765,33 @@ namespace TestCalcs
                 var checkedges = stickMesh.GetOuterEdges();
                 var checkalledges = stickMesh.GetAllEdges();
                 var checkunique = stickMesh.GetUniqueEdges();
-                //var outerEdges = stickMesh.GetMeshOutlines();
+                var outerEdges = stickMesh.GetMeshOutlines();
                 myID.Meshes.Add(stickMesh);
             }
+
+            var minPoint = myID.GetMinimumCorner();
+            var maxPoint = myID.GetMaximumCorner();
+
+            // calc scale for x axis
+            double range = maxPoint.X - minPoint.X;
+            var step = MWGeometry.Utilities.RoundToSignificantFigure(range/10, 1);
+            if (step == 3 || step == 4)
+                step = 2;
+            else if (step == 6 || step == 7 || step == 8 || step == 9)
+                step = 5;
+
+
+            List<MWMesh> axisMeshes = new List<MWMesh>();
+
+            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X-1000, 0, 0), new MWPoint3D(maxPoint.X+1000, 0, 0), 5, 5));
+            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, minPoint.Y-1000, 0), new MWPoint3D(0, maxPoint.Y+1000, 0), 5, 5));
+            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, 0, minPoint.Z-1000), new MWPoint3D(0, 0, maxPoint.Z+1000), 5, 5));
+
+            foreach (var mesh in axisMeshes)
+            {
+                mesh.Brush = new MWBrush(255, 0, 0, 0);
+                myID.Meshes.Add(mesh);
+            }          
 
             myID.Meshes.Add(myMesh);
 
