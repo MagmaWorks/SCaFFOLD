@@ -724,7 +724,7 @@ namespace TestCalcs
 
             loadStateMesh.setIndices(indicesList2);
 
-            loadStateMesh.Brush = new MWBrush(50, 50, 200);
+            loadStateMesh.Brush = new MWBrush(50, 255, 128);
             loadStateMesh.Opacity = 1;
 
             MW3DModel myID = new MW3DModel(loadStateMesh);
@@ -752,16 +752,16 @@ namespace TestCalcs
             }
             myMesh.setIndices(indicesList);
 
-            myMesh.Brush = new MWBrush(128, 200, 50, 50);
-            myMesh.Opacity = 1;
+            myMesh.Brush = new MWBrush(255, 200, 50, 50);
+            myMesh.Opacity = 0.4;
 
             var edges = myMesh.GetUniqueEdges();
             foreach (var edge in edges)
             {
                 MWPoint3D p1 = myMesh.Nodes[edge[0]].Point;
                 MWPoint3D p2 = myMesh.Nodes[edge[1]].Point;
-                var stickMesh = MWMesh.makeExtrudedPolygon(p1, p2, 15, 6);
-                stickMesh.Brush = new MWBrush(0, 128, 255);
+                var stickMesh = MWMesh.makeExtrudedPolygon(p1, p2, 8, 6);
+                stickMesh.Brush = new MWBrush(255, 128, 0);
                 var checkedges = stickMesh.GetOuterEdges();
                 var checkalledges = stickMesh.GetAllEdges();
                 var checkunique = stickMesh.GetUniqueEdges();
@@ -771,33 +771,81 @@ namespace TestCalcs
 
             var minPoint = myID.GetMinimumCorner();
             var maxPoint = myID.GetMaximumCorner();
+            double axisOverun = 1000;
 
-            // calc scale for x axis
-            double range = maxPoint.X - minPoint.X;
-            var step = MWGeometry.Utilities.RoundToSignificantFigure(range/10, 1);
-            if (step == 3 || step == 4)
-                step = 2;
-            else if (step == 6 || step == 7 || step == 8 || step == 9)
-                step = 5;
-
+            // calc scale for axes
+            var xAxisMarks = getAxisMarks(minPoint.X-axisOverun, maxPoint.X+axisOverun);
+            var yAxisMarks = getAxisMarks(minPoint.Y-axisOverun, maxPoint.Y+axisOverun);
+            var zAxisMarks = getAxisMarks(minPoint.Z-axisOverun, maxPoint.Z+axisOverun);
+            List<MWText3D> axisText = new List<MWText3D>();
 
             List<MWMesh> axisMeshes = new List<MWMesh>();
 
-            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X-1000, 0, 0), new MWPoint3D(maxPoint.X+1000, 0, 0), 5, 5));
-            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, minPoint.Y-1000, 0), new MWPoint3D(0, maxPoint.Y+1000, 0), 5, 5));
-            axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, 0, minPoint.Z-1000), new MWPoint3D(0, 0, maxPoint.Z+1000), 5, 5));
+            for (int i = 0; i < xAxisMarks.Item3; i++)
+            {
+                double s = xAxisMarks.Item1 + xAxisMarks.Item2 * i;
+                axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(s, minPoint.Y - axisOverun, 0), new MWPoint3D(s, maxPoint.Y + axisOverun, 0), 1, 5));
+                axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(s, 0, minPoint.Z - axisOverun), new MWPoint3D(s, 0, maxPoint.Z + axisOverun), 1, 5));
+                myID.Text.Add(new MWText3D(s.ToString() + "kNm", new MWPoint3D(s,0, maxPoint.Z+axisOverun), new MWVector3D(0,0,1), 50, new MWVector3D(-1,0,0)));
+            }
+            for (int i = 0; i < yAxisMarks.Item3; i++)
+            {
+                double s = yAxisMarks.Item1 + yAxisMarks.Item2 * i;
+                axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X - axisOverun, s, 0), new MWPoint3D(maxPoint.X + axisOverun, s, 0), 1, 5));
+                axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, s, minPoint.Z - axisOverun), new MWPoint3D(0, s, maxPoint.Z + axisOverun), 1, 5));
+                myID.Text.Add(new MWText3D(s.ToString() + "kNm", new MWPoint3D(0, s, maxPoint.Z + axisOverun), new MWVector3D(0, 0, 1), 50, new MWVector3D(0, -1, 0)));
 
+            }
+            for (int i = 0; i < zAxisMarks.Item3; i++)
+            {
+                double s = zAxisMarks.Item1 + zAxisMarks.Item2 * i;
+                axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X - axisOverun, 0, s), new MWPoint3D(maxPoint.X + axisOverun, 0, s), 1, 5));
+                axisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, minPoint.Y - axisOverun, s), new MWPoint3D(0, maxPoint.Y + axisOverun, s), 1, 5));
+                myID.Text.Add(new MWText3D(s.ToString() + "kN", new MWPoint3D(maxPoint.X+axisOverun, 0, s), new MWVector3D(1, 0, 0), 50, new MWVector3D(0, 0, 1)));
+                myID.Text.Add(new MWText3D(s.ToString() + "kN", new MWPoint3D(0, maxPoint.Y + axisOverun, s), new MWVector3D(0, 1, 0), 50, new MWVector3D(0, 0, 1)));
+            }
             foreach (var mesh in axisMeshes)
             {
-                mesh.Brush = new MWBrush(255, 0, 0, 0);
+                mesh.Brush = new MWBrush(255, 0, 255, 255);
                 myID.Meshes.Add(mesh);
-            }          
+            }
+
+            List<MWMesh> mainAxisMeshes = new List<MWMesh>();
+            mainAxisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X-1000, 0, 0), new MWPoint3D(maxPoint.X+1000, 0, 0), 5, 5));
+            mainAxisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, minPoint.Y-1000, 0), new MWPoint3D(0, maxPoint.Y+1000, 0), 5, 5));
+            mainAxisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(0, 0, minPoint.Z-1000), new MWPoint3D(0, 0, maxPoint.Z+1000), 5, 5));
+            foreach (var mesh in mainAxisMeshes)
+            {
+                mesh.Brush = new MWBrush(255, 0, 255, 255);
+                myID.Meshes.Add(mesh);
+            }
 
             myID.Meshes.Add(myMesh);
 
             Models.Add(myID);
 
             return Models;
+        }
+
+        private Tuple<double,double,int> getAxisMarks(double min, double max)
+        {
+            double range = max - min;
+            var stepNumber = MWGeometry.Utilities.RoundToSignificantFigure(range / 10, 1);
+            var step = int.Parse(stepNumber.ToString()[0].ToString());
+            int newStep = 0;
+            if (step == 3 || step == 4)
+                newStep = 2;
+            else if (step == 6 || step == 7 || step == 8 || step == 9)
+                newStep = 5;
+            else
+                newStep = step;
+
+            double newStepNumber = (stepNumber / step) * newStep;
+
+            double startNumber = Math.Ceiling(min / newStepNumber) * newStepNumber;
+            double endNumber = Math.Ceiling(max / newStepNumber) * newStepNumber;
+            int numberOfSteps = (int)((endNumber - startNumber) / newStepNumber);
+            return new Tuple<double, double, int>(startNumber, newStepNumber, numberOfSteps);
         }
     }
 }

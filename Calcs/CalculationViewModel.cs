@@ -260,6 +260,14 @@ namespace Calcs
 
                 m.Children.Add(new GeometryModel3D(meshOutput, mat));
             }
+            foreach (var item in calcCore3DModel.Text)
+            {
+                MWPoint3D p = item.Position;
+                MWVector3D v = item.Direction;
+                MWVector3D u = item.Up;
+                var text = HelixToolkit.Wpf.TextCreator.CreateTextLabelModel3D(item.Text, Brushes.Black, item.IsDoubleSided, item.Height, new Point3D(p.X, p.Y, p.Z), new Vector3D(v.X, v.Y, v.Z), new Vector3D(u.X, u.Y, u.Z));
+                m.Children.Add(text);
+            }
             Model = m;
         }
 
