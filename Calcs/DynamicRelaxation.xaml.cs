@@ -37,6 +37,8 @@ namespace Calcs
 
         public List<string> Calcs { get; private set; }
 
+        public List<string> Assemblies { get; private set; }
+
         public DynamicRelaxation(Window parent)
         {
             parentWindow = parent;
@@ -51,10 +53,15 @@ namespace Calcs
 
             var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
             var calcs = new List<CalculationViewModel>();
+            Assemblies = new List<string>();
             foreach (var calc in calcClasses)
             {
                 CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
                 calcs.Add(new CalculationViewModel(calcInstance));
+                if (!Assemblies.Contains(calc.Assembly))
+                {
+                    Assemblies.Add(calc.Assembly);
+                }
             }
             Calcs = new List<string>();
             foreach (var calc in calcs)

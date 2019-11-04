@@ -24,10 +24,35 @@
                 </Image.Source>
             </Image>
             <TextBlock Text="SCaFFOLD" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 15"/>
-            <TextBlock Text="The following calculation types have been found:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book" Margin="0 0 0 15"/>
-            <ListView ItemsSource="{Binding Calcs}" FontFamily="Franklin Gothic Book" Margin="15 0 15 25"/>
+            <!--<ListView ItemsSource="{Binding Calcs}" FontFamily="Franklin Gothic Book" Margin="15 0 15 25"/>-->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="150" Margin="15 0 15 15">
+                <StackPanel>
+                    <TextBlock Text="The following calculation files have been found:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book"/>
+                    <ItemsControl ItemsSource="{Binding Assemblies}" Margin="0 0 0 5">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontFamily="Franklin Gothic Book"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Text="The following calculation types have been found:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book"/>
+                    <ItemsControl ItemsSource="{Binding Calcs}" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontFamily="Franklin Gothic Book"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
             <Button Content="Get Started" FontFamily="Franklin Gothic Book" FontSize="18" Click="Button_Click" Width="120" Margin="0 0 0 25"/>
-            <TextBlock Text="This application has been released as a beta version. Please report any bugs!" TextWrapping="Wrap" FontFamily="Franklin Gothic Book" Margin="0 0 0 15"/>
+            <TextBlock Text="This application uses the following open source libraries:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book" Margin="0 0 0 5"/>
+            <TextBlock Text="Livecharts"/>
+            <TextBlock Text="Netdxf.net"/>
+            <TextBlock Text="Helix Toolkit"/>
+            <TextBlock Text="Newtonsoft json"/>
+            <TextBlock Text="SkiaSharp"/>
+            <TextBlock Text="wpfMath"/>
         </StackPanel>
     </Grid>
 </UserControl>
