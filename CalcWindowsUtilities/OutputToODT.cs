@@ -155,7 +155,7 @@ namespace CalcCore
                 cell2.AppendChild(new Paragraph(new Run(new Text(item.Narrative))));
                 foreach (var formula in item.Expression)
                 {
-                    if (formula != "")
+                    if (formula != "" && formula != "\r\n")
                     {
                         var mathPara = new Paragraph();
                         var parser = new TexFormulaParser();
@@ -274,9 +274,11 @@ namespace CalcCore
 
         private static Paragraph AddImageToBody(string relationshipId, double width, double height)
         {
-            var cx = (int)(width * 914400 / 2.54);
-            var cy = (int)(height * 914400 / 2.54);
-            
+            //var cx = (int)(width * 914400 / 2.54);
+            //var cy = (int)(height * 914400 / 2.54);
+            var cx = (int)(width * 6800);
+            var cy = (int)(height * 6800);
+
             // Define the reference of the image.
             var element =
                  new Drawing(
