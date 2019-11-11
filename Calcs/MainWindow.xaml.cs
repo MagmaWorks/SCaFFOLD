@@ -34,7 +34,7 @@ namespace Calcs
 
             var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
             var calcs = new ObservableCollection<CalculationViewModel>();
-                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcClasses[0].Class);
+                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcClasses[1].Class);
                 calcs.Add(new CalculationViewModel(calcInstance));
             appVM = new AppViewModel(calcClasses) ;
             this.DataContext = appVM;
