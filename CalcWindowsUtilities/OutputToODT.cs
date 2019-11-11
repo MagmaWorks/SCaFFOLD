@@ -83,7 +83,7 @@ namespace CalcCore
                     paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
                     paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
                     body.Append(para);
-                    var tableOfInputs = genTable(calculation.GetInputs());
+                    var tableOfInputs = genTable(calculation.GetInputs(), mainPart);
                     body.Append(tableOfInputs);
                 }
 
@@ -116,7 +116,7 @@ namespace CalcCore
                     paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
                     body.Append(para);
 
-                    var tableOfOutputs = genTable(calculation.GetOutputs());
+                    var tableOfOutputs = genTable(calculation.GetOutputs(), mainPart);
                     body.Append(tableOfOutputs);
                 }
 
@@ -153,26 +153,38 @@ namespace CalcCore
                 TableCell cell2 = new TableCell();
                 cell2.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "6100" }));
                 cell2.AppendChild(new Paragraph(new Run(new Text(item.Narrative))));
+                //foreach (var formula in item.Expression)
+                //{
+                //    var mathPara = new Paragraph();
+                //    var myMath = new M.OfficeMath(new M.Run(new M.Text(formula + Environment.NewLine) { Space = SpaceProcessingModeValues.Preserve }));
+                //    mathPara.AppendChild(myMath);
+                //    mathPara.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+                //    cell2.AppendChild(mathPara);
+                //}
                 foreach (var formula in item.Expression)
                 {
                     if (formula != "")
                     {
-                        var mathPara = new Paragraph();
+                        //var mathPara = new Paragraph();
                         var parser = new TexFormulaParser();
                         var formulaToParse = parser.Parse(formula);
-                        var formulaImage = formulaToParse.RenderToPng(20, 20, 20, "Franklin Gothic Book");
-                        ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
-                        using (var stream = new MemoryStream(formulaImage))
+                        var test = formulaToParse.GetRenderer(TexStyle.Script, 100, "Franklin Gothic Book");
+                        if (test.RenderSize.Width >0 && test.RenderSize.Height >0)
                         {
-                            imagePart.FeedData(stream);
-                            var img = new BitmapImage();
-                            img.BeginInit();
-                            img.StreamSource = stream;
-                            img.CacheOption = BitmapCacheOption.OnLoad;
-                            img.EndInit();
-                            img.Freeze();
-                            var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width, img.Height);
-                            cell2.AppendChild(paraImage);
+                            var formulaImage = formulaToParse.RenderToPng(100, 0, 0, "Franklin Gothic Book");
+                            ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
+                            using (var stream = new MemoryStream(formulaImage))
+                            {
+                                imagePart.FeedData(stream);
+                                var img = new BitmapImage();
+                                img.BeginInit();
+                                img.StreamSource = stream;
+                                img.CacheOption = BitmapCacheOption.OnLoad;
+                                img.EndInit();
+                                img.Freeze();
+                                var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 500, img.Height * 2.54 / 500);
+                                cell2.AppendChild(paraImage);
+                            }
                         }
                     }
                     //var myMath = new M.OfficeMath(new M.Run(new M.Text(formula + Environment.NewLine) { Space = SpaceProcessingModeValues.Preserve }));
@@ -212,7 +224,7 @@ namespace CalcCore
             return tableOfInputs;
         }
 
-        private static Table genTable(List<CalcCore.CalcValueBase> calcVals)
+        private static Table genTable(List<CalcCore.CalcValueBase> calcVals, MainDocumentPart mainPart)
         {
             Table tableOfInputs = new Table();
             var tableGrid = new TableGrid();
@@ -236,10 +248,36 @@ namespace CalcCore
             {
                 TableRow row = new TableRow();
                 var para1 = new Paragraph();
-                var myMath = new M.OfficeMath(new M.Run(new M.Text(item.Symbol) { Space = SpaceProcessingModeValues.Preserve }));
-                para1.AppendChild(myMath);
-                para1.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
                 TableCell cell1 = new TableCell();
+
+                // insert symbol as image
+                var parser = new TexFormulaParser();
+                if (item.Symbol != "")
+                {
+                    var formulaToParse = parser.Parse(item.Symbol);
+                    var formulaImage = formulaToParse.RenderToPng(100, 0, 0, "Franklin Gothic Book");
+                    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
+                    using (var stream = new MemoryStream(formulaImage))
+                    {
+                        imagePart.FeedData(stream);
+                        var img = new BitmapImage();
+                        img.BeginInit();
+                        img.StreamSource = stream;
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.EndInit();
+                        img.Freeze();
+                        var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 500, img.Height * 2.54 / 500);
+                        para1.AppendChild(new Run(paraImage));
+                    }
+                }
+                else
+                    para1.AppendChild(new Run(new Text(" ")));
+
+
+                //var myMath = new M.OfficeMath(new M.Run(new M.Text(item.Symbol) { Space = SpaceProcessingModeValues.Preserve }));
+                //para1.AppendChild(myMath);
+                //para1.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+
                 cell1.Append(para1);
                 cell1.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1200" }));
                 var para2 = new Paragraph(new Run(new Text(item.Name)));
@@ -249,9 +287,32 @@ namespace CalcCore
                 var para3 = new Paragraph();
                 if (item.Type == CalcValueType.DOUBLE)
                 {
-                    myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new M.Run(new M.Text(item.ValueAsString + item.Unit) { Space = SpaceProcessingModeValues.Preserve }));
-                    para3.AppendChild(myMath);
-                    para3.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
+                    // insert symbol as image
+                    parser = new TexFormulaParser();
+                    string toRender = item.ValueAsString + item.Unit;
+                    if (toRender != "")
+                    {
+                        var formulaToParse = parser.Parse(toRender);
+                        var formulaImage = formulaToParse.RenderToPng(100, 0, 0, "Franklin Gothic Book");
+                        ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
+                        using (var stream = new MemoryStream(formulaImage))
+                        {
+                            imagePart.FeedData(stream);
+                            var img = new BitmapImage();
+                            img.BeginInit();
+                            img.StreamSource = stream;
+                            img.CacheOption = BitmapCacheOption.OnLoad;
+                            img.EndInit();
+                            img.Freeze();
+                            var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 500, img.Height * 2.54 / 500);
+                            para3.AppendChild(new Run(paraImage));
+                        }
+                    }
+                    else
+                        para3.AppendChild(new Run(new Text(" ")));
+                    //myMath = new DocumentFormat.OpenXml.Math.OfficeMath(new M.Run(new M.Text(item.ValueAsString + item.Unit) { Space = SpaceProcessingModeValues.Preserve }));
+                    //para3.AppendChild(myMath);
+                    //para3.AppendChild(new Run(new Text(" ") { Space = SpaceProcessingModeValues.Preserve }));
                 }
                 else if (item.Type == CalcValueType.SELECTIONLIST)
                 {
