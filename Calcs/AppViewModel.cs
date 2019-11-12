@@ -449,7 +449,7 @@ namespace Calcs
         public AppViewModel(List<CalcCore.CalcAssembly> calcs)
         {
             Assemblies = calcs;
-            CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(Assemblies[0].Class);
+            CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(Assemblies[1].Class);
             ViewModels.Add(new CalculationViewModel(calcInstance));
         }
 

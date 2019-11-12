@@ -71,7 +71,11 @@ namespace Calcs
 
             //Model = importedModel;
             //StLReader stlRead = new StLReader();
-            //importedModel = stlRead.Read(@"C:\Users\Alex Baalham\Documents\53 Gough Way\test2.stl");
+
+            //var importedModel = stlRead.Read(@"C:\Users\Alex Baalham\Documents\53 Gough Way\FanControl2.stl");
+            //var test = importedModel.Children[0] as GeometryModel3D;
+            //var test2 = (MeshGeometry3D)test.Geometry;
+
             //Model = importedModel;
             Update();
         }
