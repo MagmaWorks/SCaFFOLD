@@ -163,7 +163,7 @@ namespace CalcCore
                 //}
                 foreach (var formula in item.Expression)
                 {
-                    if (formula != "" && formula != "\r\n")
+                    if (formula != "")
                     {
                         //var mathPara = new Paragraph();
                         var parser = new TexFormulaParser();
@@ -182,7 +182,7 @@ namespace CalcCore
                                 img.CacheOption = BitmapCacheOption.OnLoad;
                                 img.EndInit();
                                 img.Freeze();
-                                var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 500, img.Height * 2.54 / 500);
+                                var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 600, img.Height * 2.54 / 600);
                                 cell2.AppendChild(paraImage);
                             }
                         }
@@ -266,7 +266,7 @@ namespace CalcCore
                         img.CacheOption = BitmapCacheOption.OnLoad;
                         img.EndInit();
                         img.Freeze();
-                        var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 500, img.Height * 2.54 / 500);
+                        var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 600, img.Height * 2.54 / 600);
                         para1.AppendChild(new Run(paraImage));
                     }
                 }
@@ -304,7 +304,7 @@ namespace CalcCore
                             img.CacheOption = BitmapCacheOption.OnLoad;
                             img.EndInit();
                             img.Freeze();
-                            var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 500, img.Height * 2.54 / 500);
+                            var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 600, img.Height * 2.54 / 600);
                             para3.AppendChild(new Run(paraImage));
                         }
                     }
@@ -335,10 +335,8 @@ namespace CalcCore
 
         private static Paragraph AddImageToBody(string relationshipId, double width, double height)
         {
-            //var cx = (int)(width * 914400 / 2.54);
-            //var cy = (int)(height * 914400 / 2.54);
-            var cx = (int)(width * 6800);
-            var cy = (int)(height * 6800);
+            var cx = (int)(width * 914400 / 2.54);
+            var cy = (int)(height * 914400 / 2.54);
 
             // Define the reference of the image.
             var element =
