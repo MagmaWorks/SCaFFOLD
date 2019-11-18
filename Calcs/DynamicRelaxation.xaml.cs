@@ -40,7 +40,7 @@ namespace Calcs
         public List<string> Assemblies { get; private set; }
 
         public DynamicRelaxation(Window parent)
-        {
+        { 
             parentWindow = parent;
             _dynamicRelaxation = new DynamicRelaxationViewModel();
 
