@@ -11,5 +11,6 @@ namespace Calcs
     {
         CalcCore.ICalc Calc { get;  }
         UserControl Control { get;  }
+
     }
 }

@@ -15,7 +15,7 @@ namespace Calcs
         CalcCore.ICalc calc;
         private double _inputStartValue = 0;
         private double _inputEndValue = 100;
-        private int _steps = 20;
+        private int _steps = 1;
         private int _selectedInputIndex = 0;
 
         public ObservableCollection<string> InputSelection { get; set; }

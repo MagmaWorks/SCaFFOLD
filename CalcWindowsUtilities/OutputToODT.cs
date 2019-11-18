@@ -183,7 +183,7 @@ namespace CalcCore
                                 img.EndInit();
                                 img.Freeze();
                                 var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), img.Width * 2.54 / 600, img.Height * 2.54 / 600);
-                                cell2.AppendChild(paraImage);
+                                cell2.AppendChild(new Paragraph(new Run(paraImage)));
                             }
                         }
                     }
@@ -211,7 +211,7 @@ namespace CalcCore
                         imagePart.FeedData(stream);
                     }
                     var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), width, height);
-                    cell2.AppendChild(paraImage);
+                    cell2.AppendChild(new Paragraph(new Run(paraImage)));
                 }
                 
                 TableCell cell3 = new TableCell();
@@ -333,7 +333,7 @@ namespace CalcCore
 
         }
 
-        private static Paragraph AddImageToBody(string relationshipId, double width, double height)
+        private static Drawing AddImageToBody(string relationshipId, double width, double height)
         {
             var cx = (int)(width * 914400 / 2.54);
             var cy = (int)(height * 914400 / 2.54);
@@ -403,7 +403,7 @@ namespace CalcCore
                      });
 
             // Append the reference to body, the element should be in a Run.
-            return new Paragraph(new Run(element));
+            return element;
         }
     }
 }
