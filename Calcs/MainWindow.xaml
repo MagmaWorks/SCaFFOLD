@@ -59,6 +59,7 @@
                     <RibbonButton Command="{Binding MegaSaveCalcCommand}" Width="100" Label="Mega save..." LargeImageSource="/resources/save_64x64.png" ToolTip="Saves JSON and DXFs"/>
                     <RibbonButton Command="{Binding OpenCalcCommand}" Width="100" Label="Open from JSON" LargeImageSource="/resources/folder_64x64.png"/>
                     <RibbonButton Command="{Binding ProcessBatchCommand}" Width="100" Label="Import from CSV" LargeImageSource="/resources/folder_64x64.png"/>
+                    <RibbonButton Command="{Binding PrintAllCommand}" Width="100" Label="Print to Open Office document" LargeImageSource="/resources/folder_64x64.png"/>
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

@@ -109,6 +109,10 @@
     <Compile Include="CalcOutputs.xaml.cs">
       <DependentUpon>CalcOutputs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CalcsToPrint.xaml.cs">
+      <DependentUpon>CalcsToPrint.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalcsToPrintVM.cs" />
     <Compile Include="CommandHandlerWithParam.cs" />
     <Compile Include="DXFDisplay.cs" />
     <Compile Include="DXFDrawData.cs" />
@@ -167,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CalcOutputs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CalcsToPrint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

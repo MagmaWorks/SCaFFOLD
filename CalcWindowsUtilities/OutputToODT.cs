@@ -38,7 +38,7 @@ namespace CalcCore
                 return;
             }
 
-            WriteToODT(calculation, includeInputs, includeBody, includeOutputs, filePath);
+            WriteToODT(new List<ICalc> { calculation }, includeInputs, includeBody, includeOutputs, filePath);
 
         }
 
@@ -60,12 +60,12 @@ namespace CalcCore
                 return;
             }
 
-            //WriteToODT(calculation, includeInputs, includeBody, includeOutputs, filePath);
+            WriteToODT(calculation, includeInputs, includeBody, includeOutputs, filePath);
 
         }
 
 
-        public static void WriteToODT(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs, string filePath)
+        public static void WriteToODT(List<ICalc> calculations, bool includeInputs, bool includeBody, bool includeOutputs, string filePath)
         {
             try
             {
@@ -85,63 +85,76 @@ namespace CalcCore
                 Body body = mainPart.Document.AppendChild(new Body());
 
                 var headerPart = mainPart.HeaderParts.First();
-                var line1 = new Paragraph(new Run(new Text(calculation.TypeName + " - " + calculation.InstanceName)));
-                line1.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
+                //var line1 = new Paragraph(new Run(new Text(calculation.TypeName + " - " + calculation.InstanceName)));
+                //line1.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
                 var line2 = new Paragraph(new Run(new Text("By: " + Environment.UserName + " on " + DateTime.Today.ToLongDateString())));
                 line2.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
                 var line3 = new Paragraph(new Run(new Text("Checked by : ")));
                 line3.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
                 var line4 = new Paragraph(new Run(new Text("")));
                 line4.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
-                headerPart.RootElement.Append(line1, line2, line3, line4);
+                headerPart.RootElement.Append(
+                    /*line1,*/ 
+                    line2, 
+                    line3, 
+                    line4);
 
-                if (includeInputs)
+                bool firstCalc = true;
+                foreach (var calculation in calculations)
                 {
-                    Paragraph para = new Paragraph(new Run(new Text("Inputs")));
-                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                    body.Append(para);
-                    para = new Paragraph(new Run(new Text("Input values for calculation.")));
-                    paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
-                    body.Append(para);
-                    var tableOfInputs = genTable(calculation.GetInputs(), mainPart);
-                    body.Append(tableOfInputs);
+                    if (!firstCalc)
+                    {
+                        body.Append(new Paragraph(new Run(new Break() { Type = BreakValues.Page })));
+                    }
+
+                    if (includeInputs)
+                    {
+                        Paragraph para = new Paragraph(new Run(new Text("Inputs")));
+                        var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                        body.Append(para);
+                        para = new Paragraph(new Run(new Text("Input values for calculation.")));
+                        paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
+                        body.Append(para);
+                        var tableOfInputs = genTable(calculation.GetInputs(), mainPart);
+                        body.Append(tableOfInputs);
+                    }
+
+                    if (includeBody)
+                    {
+                        Paragraph para = new Paragraph(new Run(new Text("Body")));
+                        var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                        body.Append(para);
+
+                        para = new Paragraph(new Run(new Text("Main calculation including diagrams, working, narrative and conclusions.")));
+                        paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
+                        body.Append(para);
+
+
+                        var FormulaeTable = genFormulaeTable(calculation.GetFormulae(), mainPart);
+                        body.AppendChild(FormulaeTable);
+                    }
+
+                    if (includeOutputs)
+                    {
+                        var para = new Paragraph(new Run(new Text("Calculated values")));
+                        var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                        body.Append(para);
+
+                        para = new Paragraph(new Run(new Text("List of calculated values.")));
+                        paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
+                        body.Append(para);
+
+                        var tableOfOutputs = genTable(calculation.GetOutputs(), mainPart);
+                        body.Append(tableOfOutputs);
+                    }
+                    firstCalc = false;
                 }
-
-                if (includeBody)
-                {
-                    Paragraph para = new Paragraph(new Run(new Text("Body")));
-                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                    body.Append(para);
-
-                    para = new Paragraph(new Run(new Text("Main calculation including diagrams, working, narrative and conclusions.")));
-                    paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
-                    body.Append(para);
-
-
-                    var FormulaeTable = genFormulaeTable(calculation.GetFormulae(), mainPart);
-                    body.AppendChild(FormulaeTable);
-                }
-
-                if (includeOutputs)
-                {
-                    var para = new Paragraph(new Run(new Text("Calculated values")));
-                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                    body.Append(para);
-
-                    para = new Paragraph(new Run(new Text("List of calculated values.")));
-                    paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Normal" };
-                    body.Append(para);
-
-                    var tableOfOutputs = genTable(calculation.GetOutputs(), mainPart);
-                    body.Append(tableOfOutputs);
-                }
-
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CalcCore;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -227,6 +228,33 @@ namespace Calcs
             _viewModels.Add(new CalculationViewModel(newCalc));
             RaisePropertyChanged(nameof(ViewModels));
             SelectedViewModel = _viewModels.Count - 1;
+        }
+
+        ICommand printAllCommand;
+
+        public ICommand PrintAllCommand
+        {
+            get
+            {
+                return printAllCommand ?? (printAllCommand = new CommandHandler(() => printAll(), true));
+            }
+        }
+
+        public void printAll()
+        {
+            List<ICalc> listOfCalcs = ViewModels.Select(a => a.Calc).ToList();
+            var vm = new CalcsToPrintVM(listOfCalcs);
+            Window win = new CalcsToPrint()
+            {
+                DataContext = vm,
+                Title = "Export to Open Office document"
+            };
+            win.ShowDialog();
+            if (vm.Print)
+            {
+                var calcsToPrint = vm.Calcs.Where(a => a.Print == true).Select(a => a.Calc).ToList();
+                CalcCore.OutputToODT.WriteToODT(calcsToPrint, true, true, true);
+            }
         }
 
         ICommand megaSaveCalcCommand;
