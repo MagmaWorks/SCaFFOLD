@@ -103,6 +103,7 @@
     <Compile Include="PunchingShear-mobile.cs" />
     <Compile Include="PunchingShear.cs" />
     <Compile Include="RC_Beam.cs" />
+    <Compile Include="RC_Beam_Torsion.cs" />
     <Compile Include="Sections.cs" />
     <Compile Include="SimpleMoment.cs" />
     <Compile Include="StrutBucklingCheck.cs" />
