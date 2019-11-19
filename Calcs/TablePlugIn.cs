@@ -8,13 +8,10 @@ using CalcCore;
 
 namespace Calcs
 {
-    public class TablePlugIn : ICalcPlugin
+    public class TablePlugIn : CalcPluginBase
     {
-        ICalc _calc;
-        public ICalc Calc => _calc;
-
         UserControl _control;
-        public UserControl Control
+        public override UserControl Control
         {
             get
             {
@@ -24,10 +21,13 @@ namespace Calcs
 
         TableVM _viewModel;
 
-        public TablePlugIn()
+        public TablePlugIn(ICalc calc)
         {
+            CalcCore.ICalc _calc = (CalcCore.ICalc)Activator.CreateInstance(calc.GetType());
+            CopyValuesFrom(calc);
             _viewModel = new TableVM(_calc);
             _control = new CrossRefTable();
+            _control.DataContext = _viewModel;
         }
     }
 }

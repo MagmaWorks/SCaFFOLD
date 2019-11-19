@@ -116,7 +116,7 @@
       <DependentUpon>DynamicRelaxation.xaml</DependentUpon>
     </Compile>
     <Compile Include="DynamicRelaxationViewModel.cs" />
-    <Compile Include="ICalcPlugin.cs" />
+    <Compile Include="CalcPluginBase.cs" />
     <Compile Include="Optimiser.xaml.cs">
       <DependentUpon>Optimiser.xaml</DependentUpon>
     </Compile>
