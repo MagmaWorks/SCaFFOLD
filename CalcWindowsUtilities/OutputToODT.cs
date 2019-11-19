@@ -42,8 +42,30 @@ namespace CalcCore
 
         }
 
+        public static void WriteToODT(List<ICalc> calculation, bool includeInputs, bool includeBody, bool includeOutputs)
+        {
+            string filePath;
+            try
+            {
+                var saveDialog = new SaveFileDialog();
+                saveDialog.Filter = @"Word files |*.docx";
+                saveDialog.FileName = "calculations" + @".docx";
+                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (saveDialog.ShowDialog() != DialogResult.OK) return;
+                filePath = saveDialog.FileName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
+                return;
+            }
 
-            public static void WriteToODT(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs, string filePath)
+            //WriteToODT(calculation, includeInputs, includeBody, includeOutputs, filePath);
+
+        }
+
+
+        public static void WriteToODT(ICalc calculation, bool includeInputs, bool includeBody, bool includeOutputs, string filePath)
         {
             try
             {
