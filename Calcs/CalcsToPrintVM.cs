@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Calcs
 {
@@ -12,16 +13,48 @@ namespace Calcs
     {
         public ObservableCollection<CalcToPrint> Calcs { get; set; }
 
-        public CalcsToPrintVM(List<ICalc> calcs)
+        public CalcsToPrintVM(List<ICalc> calcs, int selectedCalc)
         {
             Calcs = new ObservableCollection<CalcToPrint>();
-            foreach (var calc in calcs)
+            for (int i = 0; i < calcs.Count; i++)
             {
-                Calcs.Add(new CalcToPrint(calc, true));
+                var calc = calcs[i];
+                
+                if (i == selectedCalc)
+                    Calcs.Add(new CalcToPrint(calc, true));
+                else
+                    Calcs.Add(new CalcToPrint(calc, false));
             }
         }
 
         public bool Print { get; set; } = false;
+
+        ICommand selectAllCommand;
+
+        public ICommand SelectAllCommand
+        {
+            get
+            {
+                return selectAllCommand ?? (selectAllCommand = new CommandHandler(() => selectAll(), true));
+            }
+        }
+
+        void selectAll()
+        {
+            bool valueToSet = false;
+            if (Calcs[0].Print == true)
+            {
+                valueToSet = false;
+            }
+            else
+            {
+                valueToSet = true;
+            }
+            foreach (var item in Calcs)
+            {
+                item.Print = valueToSet;
+            }
+        }
     }
 
     public class CalcToPrint : ViewModelBase

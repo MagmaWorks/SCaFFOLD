@@ -243,7 +243,7 @@ namespace Calcs
         public void printAll()
         {
             List<ICalc> listOfCalcs = ViewModels.Select(a => a.Calc).ToList();
-            var vm = new CalcsToPrintVM(listOfCalcs);
+            var vm = new CalcsToPrintVM(listOfCalcs, _selectedViewModel);
             Window win = new CalcsToPrint()
             {
                 DataContext = vm,

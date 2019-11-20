@@ -107,11 +107,16 @@ namespace CalcCore
                         body.Append(new Paragraph(new Run(new Break() { Type = BreakValues.Page })));
                     }
 
+                    Paragraph para = new Paragraph(new Run(new Text(calculation.TypeName + " - " + calculation.InstanceName)));
+                    var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                    paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                    body.Append(para);
+
                     if (includeInputs)
                     {
-                        Paragraph para = new Paragraph(new Run(new Text("Inputs")));
-                        var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                        para = new Paragraph(new Run(new Text("Inputs")));
+                        paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading2" };
                         body.Append(para);
                         para = new Paragraph(new Run(new Text("Input values for calculation.")));
                         paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
@@ -123,9 +128,9 @@ namespace CalcCore
 
                     if (includeBody)
                     {
-                        Paragraph para = new Paragraph(new Run(new Text("Body")));
-                        var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                        para = new Paragraph(new Run(new Text("Body")));
+                        paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading2" };
                         body.Append(para);
 
                         para = new Paragraph(new Run(new Text("Main calculation including diagrams, working, narrative and conclusions.")));
@@ -140,9 +145,9 @@ namespace CalcCore
 
                     if (includeOutputs)
                     {
-                        var para = new Paragraph(new Run(new Text("Calculated values")));
-                        var paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
-                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
+                        para = new Paragraph(new Run(new Text("Calculated values")));
+                        paraProps = para.PrependChild<ParagraphProperties>(new ParagraphProperties());
+                        paraProps.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading2" };
                         body.Append(para);
 
                         para = new Paragraph(new Run(new Text("List of calculated values.")));
