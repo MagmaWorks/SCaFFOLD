@@ -32,12 +32,12 @@
                     <TextBlock Text="{Binding Author}" FontWeight="Bold"/>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Column="1">
+            <!--<StackPanel Grid.Column="1">
                 <CheckBox IsChecked="{Binding IncludeInputsInWord}" Content="Include inputs"/>
                 <CheckBox IsChecked="{Binding IncludeBodyInWord}" Content="Include body"/>
                 <CheckBox IsChecked="{Binding IncludeOutputsInWord}" Content="Include calculated values"/>
                 <Button Content="To WORD" Command="{Binding ToWord}" Width="100" Height="Auto" HorizontalAlignment="Left"/>
-            </StackPanel>
+            </StackPanel>-->
         </Grid>
 
         <!--<ItemsControl ItemsSource="{Binding TestGroup}">

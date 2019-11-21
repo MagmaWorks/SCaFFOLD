@@ -53,13 +53,19 @@
                     </RibbonMenuButton>
                     <RibbonButton Command="{Binding RemoveCalcCommand}" Width="100" Label="Remove" LargeImageSource="/resources/Remove_16x.png"/>
                     <RibbonButton Command="{Binding CopyCalcCommand}" Width="100" Label="Copy" LargeImageSource="/resources/copy_64x64.png"/>
-                    <RibbonButton Command="{Binding SaveCalcCommand}" Width="100" Label="Save As..." LargeImageSource="/resources/save_64x64.png"/>
-                    <RibbonButton Command="{Binding SaveAllCommand}" Width="100" Label="Save All" LargeImageSource="/resources/save_64x64.png"/>
-                    <RibbonButton Command="{Binding SaveCalcDxfCommand}" Width="100" Label="Save DXFs..." LargeImageSource="/resources/save_64x64.png"/>
-                    <RibbonButton Command="{Binding MegaSaveCalcCommand}" Width="100" Label="Mega save..." LargeImageSource="/resources/save_64x64.png" ToolTip="Saves JSON and DXFs"/>
-                    <RibbonButton Command="{Binding OpenCalcCommand}" Width="100" Label="Open from JSON" LargeImageSource="/resources/folder_64x64.png"/>
-                    <RibbonButton Command="{Binding ProcessBatchCommand}" Width="100" Label="Import from CSV" LargeImageSource="/resources/folder_64x64.png"/>
-                    <RibbonButton Command="{Binding PrintAllCommand}" Width="100" Label="Print to Open Office document" LargeImageSource="/resources/folder_64x64.png"/>
+                    <RibbonMenuButton x:Name="SaveMenu" Label="Save" LargeImageSource="/resources/save_64x64.png">
+                        <RibbonMenuItem Header="Save As..." Command="{Binding SaveCalcCommand}" ToolTip="Save current calc"/>
+                        <RibbonMenuItem Header="Save All" 
+                                        Command="{Binding SaveAllCommand}" 
+                                        ToolTip="Save all calcs. Will ask for new name if file already exists."/>
+                        <RibbonMenuItem Header="Save DXFs" Command="{Binding SaveCalcDxfCommand}" ToolTip="Saves DXFs from current calc"/>
+                        <RibbonMenuItem Header="Mega Save" Command="{Binding MegaSaveCalcCommand}" ToolTip="Saves all calcs to JSON, and all DXFs from all calcs"/>
+                        <RibbonMenuItem Header="Export Open Office document" Command="{Binding PrintAllCommand}" ToolTip="Exports user selection of calcs to an Open Office document"/>
+                    </RibbonMenuButton>
+                    <RibbonMenuButton Label="Open or import" LargeImageSource="/resources/folder_64x64.png">
+                        <RibbonMenuItem Header="Open JSON" Command="{Binding OpenCalcCommand}" ToolTip="Opens calc from JSON file"/>
+                        <RibbonMenuItem Header="Import from CSV" Command="{Binding ProcessBatchCommand}" ToolTip="Opens multiple calcs from CSV file"/>
+                    </RibbonMenuButton>
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

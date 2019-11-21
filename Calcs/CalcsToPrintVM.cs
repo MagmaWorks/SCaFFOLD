@@ -13,6 +13,46 @@ namespace Calcs
     {
         public ObservableCollection<CalcToPrint> Calcs { get; set; }
 
+        bool _includeInputs = true;
+        public bool IncludeInputs
+        {
+            get
+            {
+                return _includeInputs;
+            }
+            set
+            {
+                _includeInputs = value;
+                RaisePropertyChanged(nameof(IncludeInputs));
+            }
+        }
+        bool _includeBody = true;
+        public bool IncludeBody
+        {
+            get
+            {
+                return _includeBody;
+            }
+            set
+            {
+                _includeBody = value;
+                RaisePropertyChanged(nameof(IncludeBody));
+            }
+        }
+        bool _includeOutputs = true;
+        public bool IncludeOutputs
+        {
+            get
+            {
+                return _includeOutputs;
+            }
+            set
+            {
+                _includeOutputs = value;
+                RaisePropertyChanged(nameof(IncludeOutputs));
+            }
+        }
+
         public CalcsToPrintVM(List<ICalc> calcs, int selectedCalc)
         {
             Calcs = new ObservableCollection<CalcToPrint>();

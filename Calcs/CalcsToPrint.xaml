@@ -20,9 +20,24 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <StackPanel Margin="0 15 0 0">
+                <TextBlock Text="Choose which sections to include"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IncludeInputs}"/>
+                    <TextBlock Text="Include inputs"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IncludeBody}"/>
+                    <TextBlock Text="Include body"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding IncludeOutputs}"/>
+                    <TextBlock Text="Include outputs"/>
+                </StackPanel>
+            </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 15 0 0">
                 <Button Content="Select all" Command="{Binding SelectAllCommand}" Width="100"/>
-                <Button Content="Print" Click="Button_Click" Width="100" Margin="15 0 0 0"/>
+                <Button Content="Export" Click="Button_Click" Width="100" Margin="15 0 0 0"/>
                 <Button Content="Cancel" Click="Button_Click_1" Width="100" Margin="15 0 0 0"/>
             </StackPanel>
         </StackPanel>

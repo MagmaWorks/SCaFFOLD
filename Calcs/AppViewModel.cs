@@ -253,7 +253,7 @@ namespace Calcs
             if (vm.Print)
             {
                 var calcsToPrint = vm.Calcs.Where(a => a.Print == true).Select(a => a.Calc).ToList();
-                CalcCore.OutputToODT.WriteToODT(calcsToPrint, true, true, true);
+                CalcCore.OutputToODT.WriteToODT(calcsToPrint, vm.IncludeInputs, vm.IncludeBody, vm.IncludeOutputs);
             }
         }
 
