@@ -61,7 +61,7 @@ namespace CalcMonkey
 
             if (myCalc != null && output)
             {
-                OutputToODT.WriteToODT(myCalc, true, true, true, filePath);
+                OutputToODT.WriteToODT(new List<ICalc> { myCalc }, true, true, true, filePath);
             }
         }
 
