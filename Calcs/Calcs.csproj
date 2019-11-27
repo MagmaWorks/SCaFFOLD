@@ -146,7 +146,6 @@
       <DependentUpon>DynamicRelaxation.xaml</DependentUpon>
     </Compile>
     <Compile Include="DynamicRelaxationViewModel.cs" />
-    <Compile Include="CalcPluginBase.cs" />
     <Compile Include="FindPlugins.cs" />
     <Compile Include="MainViewData.cs" />
     <Compile Include="MainViewTypes.cs" />
@@ -155,7 +154,6 @@
     </Compile>
     <Compile Include="OptimiserVM.cs" />
     <Compile Include="PluginInfo.cs" />
-    <Compile Include="PluginNameAttribute.cs" />
     <Compile Include="PlugInView.xaml.cs">
       <DependentUpon>PlugInView.xaml</DependentUpon>
     </Compile>

@@ -84,6 +84,10 @@
       <Project>{c7fb5bc1-fa62-4ddf-afc6-1431026aa72c}</Project>
       <Name>Calcs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CalcWindowsUtilities\CalcWindowsUtilities.csproj">
+      <Project>{35547d5c-c7e0-4a07-87d3-275db1aa7a70}</Project>
+      <Name>CalcWindowsUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="ChartControl.xaml">
