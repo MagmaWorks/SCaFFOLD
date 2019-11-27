@@ -36,6 +36,9 @@ namespace TestCalcs
         CalcSelectionList _Bardia;
         Double d;
         double vRdmax;
+        CalcDouble _Minlink_spacing;
+        CalcDouble _Linkspacing;
+        CalcDouble _linklegs;
         CalcDouble _VRdmax;
         CalcDouble _VRdc;
         CalcDouble _notensbars;
@@ -46,6 +49,9 @@ namespace TestCalcs
         CalcDouble _Asi;
         double gammas;
         double gammac;
+        double Asw;
+        CalcDouble _VRds;
+        Double rholink;
 
         
         List<Formula> expressions = new List<Formula>();
@@ -80,6 +86,7 @@ namespace TestCalcs
             _Bardia = inputValues.CreateCalcSelectionList("Bar diameter", "16", new List<string> { "10", "12", "16", "20", "25", "32", "40" });
             _linkdiameter = inputValues.CreateCalcSelectionList("Link diameter", "10", new List<string> {"8", "10", "12", "16", "20", "25", "32", "40" });
             _notensbars = inputValues.CreateDoubleCalcValue("Number of tension bars", "No.", "", 3);
+            _Minlink_spacing = inputValues.CreateDoubleCalcValue("Min link spacing", "S_min", "mm", 100);
 
             //Ouputs
             _teff = outputValues.CreateDoubleCalcValue("Effective thickess", "t_{eff}", "mm", 10);
@@ -89,7 +96,10 @@ namespace TestCalcs
             _TRdmax = outputValues.CreateDoubleCalcValue("Torsion capacity Max", "T_{Rd,max}", "kNm", 10);
             _VRdmax = outputValues.CreateDoubleCalcValue("Maximum Shear capacity", "V_{Rd,max}", "kN", 10);
             _VRdc = outputValues.CreateDoubleCalcValue("Concrete Shear capacity", "V_{Rd,c}", "kN", 10);
-            _Asi = outputValues.CreateDoubleCalcValue("Additional Steel Required", "A_{si}", "mm^2", 0);
+            _Asi = outputValues.CreateDoubleCalcValue("Add. Long. Torsion Rebar", "A_{si}", "mm^2", 0);
+            _Linkspacing = outputValues.CreateDoubleCalcValue("Shear link spacing", "s", "mm", 200);
+            _linklegs = outputValues.CreateDoubleCalcValue("No. Shear link legs", "no.", "", 2);
+            _VRds = outputValues.CreateDoubleCalcValue("Shear link resistance", "V_{Rds}", "kN", 10);
 
             // finally, call your UpdateCalc() method to run the calc for the first time
             UpdateCalc();
@@ -201,7 +211,7 @@ namespace TestCalcs
                     Formula f5 = new Formula();
                     f5.Narrative = "Shear and Torsional max capacity";
                     f5.Ref = "(6.29)";
-                    f5.Expression.Add(@"\theta = " + Math.Round(theta, 4));
+                    f5.Expression.Add(@"\theta = " + Math.Round(theta*(180/Math.PI), 4)+"'");
                     f5.Expression.Add(_TRdmax.Symbol + @"=2 \nu \alpha_{cw} f_{cd} "+_Areak.Symbol + _teff.Symbol + @"sin\theta cos\theta = " +Math.Round(_TRdmax.Value, 2)+_TRdmax.Unit);
                     f5.Expression.Add(_VRdmax.Symbol+@"=(\alpha_{cw} b_{w} z \nu_{1} f_{cd})/(cot\theta + tan\theta)="+Math.Round(_VRdmax.Value,2)+_VRdmax.Unit);
                     f5.Expression.Add(string.Format("{0}/{1} + {2}/{3} = {4} < 1", _TEd.Symbol, _VRdmax.Symbol, _TEd.Symbol, _TRdmax.Symbol, Math.Round(checkmax, 4)));
@@ -219,18 +229,18 @@ namespace TestCalcs
 
                     checkc = (_VEd.Value / _VRdc.Value) + (_TEd.Value / _TRdc.Value);
 
+                    //Torsion link requirements
+
                     if (checkc > 1)
                     {
                         Formula f9 = new Formula();
                         f9.Narrative = "Shear and Torsional resistance concrete";
                         f9.Expression = new List<string>();
                         f9.Ref = "(6.31)";
-                        //f9.Expression.Add(string.Format("{1} = {0} {2}", Math.Round(_TRdc.Value, 2), _TRdc.Symbol, _TRdc.Unit));
-                        //f9.Expression.Add(string.Format("{1} = {0} {2}", Math.Round(_VRdc.Value, 2), _VRdc.Symbol, _TRdc.Unit));
                         f9.Expression.Add(_TRdc.Symbol + "=2 f_{ctd} " + _Areak.Symbol  + _teff.Symbol + "=" +Math.Round(_TRdc.Value,2) + _TRdc.Unit);
                         f9.Expression.Add(_VRdc.Symbol + @"=b_{w} d C_{Rd,c} k (100 \rho_{I} f_{ck})^{1/3}=" + Math.Round(_VRdc.Value, 2) + _VRdc.Unit);
                         f9.Expression.Add(String.Format("{0}/{1} + {2}/{3} = {4}>1", _VEd.Symbol, _VRdc.Symbol, _TEd.Symbol, _TRdc.Symbol, Math.Round(checkc, 3)));
-                        f9.Conclusion = "Additional reinforcement required";
+                        f9.Conclusion = "Additional torsional reinforcement required";
                         expressions.Add(f9);
 
                         _Asi.Value = A_Si_add(_TEd.Value, _Areak.Value, theta, Uperik, fyd);
@@ -241,6 +251,7 @@ namespace TestCalcs
                         f10.Ref = "(6.28)";
                         f10.Expression.Add(_Asi.Symbol + "=(" + _TEd.Symbol + @"cot\theta u_{k})/(2 f_{yd}" + _Areak.Symbol + @")=" + Math.Round(_Asi.Value, 2) + _Asi.Unit);
                         expressions.Add(f10);
+
                     }
                     else
                     {
@@ -251,9 +262,40 @@ namespace TestCalcs
                         f8.Expression.Add(_TRdc.Symbol + "=2 f_{ctd} " + _Areak.Symbol + _teff.Symbol + "=" + Math.Round(_TRdc.Value, 2) + _TRdc.Unit);
                         f8.Expression.Add(_VRdc.Symbol + @"=b_{w} d C_{Rd,c} k (100 \rho_{I} f_{ck})^{1/3}=" + Math.Round(_VRdc.Value, 2) + _VRdc.Unit);
                         f8.Expression.Add(String.Format("{0}/{1} + {2}/{3} = {4}<1", _VEd.Symbol, _VRdc.Symbol, _TEd.Symbol, _TRdc.Symbol,Math.Round( checkc,3)));
-                        f8.Conclusion = "No Additional reinforcement required";
+                        f8.Conclusion = "No Additional Torsion reinforcement required";
                         f8.Status = CalcStatus.PASS;
                         expressions.Add(f8);
+
+                    }
+
+                    //Calc shear links
+                    var res = Shear_links(_VEd.Value, fyd, theta, d, _beambdim.Value, _Cover.Value, double.Parse(_linkdiameter.ValueAsString), _Minlink_spacing.Value, fck,_fy.Value);
+                    _Linkspacing.Value = res.Item1;
+                    _linklegs.Value = res.Item2;
+                    _VRds.Value = res.Item3;
+                    rholink = res.Item4;
+
+                    if (_VRds.Value > _VEd.Value)
+                    {
+                        Formula f12 = new Formula();
+                        f12.Narrative = "Shear link requirements";
+                        f12.Expression = new List<string>();
+                        f12.Ref = "(6.8)";
+                        f12.Expression.Add(_Linkspacing.Symbol + "=" + Math.Round(_Linkspacing.Value, 0 ) + _linkdiameter.Unit);
+                        f12.Expression.Add(_linklegs.Symbol + "=" + Math.Round(_linklegs.Value, 0));
+                        f12.Expression.Add(@"\rho_{links}=" + Math.Round( rholink,4));
+                        f12.Expression.Add(_VRds.Symbol + @"=(A_{sw}/s)zf_{ywd}cot\theta=" + Math.Round(_VRds.Value, 2) + _VRds.Unit);
+                        f12.Status = CalcStatus.PASS;
+                        expressions.Add(f12);
+                    }
+                    else
+                    {
+                        Formula f11 = new Formula();
+                        f11.Narrative = "Shear link cannot accomodate load, try increasing link diameter of section size";
+                        f11.Ref = "(6.8)";
+                        f11.Conclusion = "FAIL";
+                        f11.Status = CalcStatus.FAIL;
+                        expressions.Add(f11);
                     }
                     break;
                 }
@@ -280,7 +322,7 @@ namespace TestCalcs
             }
         }
 
-        //Concrete resistance to Torsion maximum 
+        //Concrete resistance to Torsion maximum tre
         public Double T_res_concrete_max(Double Crosssectionk, Double Crosssection, Double conccompdes, Double conccomp, Double thickeff, double angle)
         {
             Double v;
@@ -338,6 +380,117 @@ namespace TestCalcs
             Double X;
             X = (Ted * (1 / Math.Tan(theta)) * uk*1000000) / (2 * Ak * fyd);
             return X;
+        }
+
+        //Shear links
+        public (double,double,double,double) Shear_links(Double Ved, Double fyd, double theta, Double d, Double b, Double c, Double linkdia, Double Minlinkspacing, double fck, double fyk)
+        {
+            Double s;
+            Double linkno;
+            Double Asw;
+            Double z;
+            Double VRds;
+            Double link_tang_S;
+            Double fywd;
+            Double base_s;
+            Double rho;
+            double rhomin;
+            double stmax;
+
+            fywd = fyd;
+            z = 0.9 * d;
+            linkno = 2;
+            
+            //max spacing along beam
+            s = Math.Round((0.75 * d) / 25) * 25; 
+            if (s > 0.75 * d)
+                {
+                    s = s - 25;
+                }
+            base_s = s;
+
+            //max tang spacing check of links
+            stmax = Math.Min(0.75 * d, 600);
+
+            //initial max spacing between shear legs
+            link_tang_S = (b - 2 * c - linkdia) / (linkno - 1);
+
+            //required number of legs to achieve max spacing rules
+
+            linkno = Math.Round(link_tang_S / stmax);
+            link_tang_S = (b - 2 * c - linkdia) / (linkno - 1);
+
+            if (link_tang_S > stmax)
+            {
+                linkno = linkno + 1;
+            }
+            
+            //min link area check
+
+            Asw = (Math.PI * (linkdia * linkdia) * 0.25) * linkno;
+            rho = (Asw)/(s*b);
+            rhomin = (0.08 * Math.Sqrt(fck)) / fyk;
+
+            while (rho < rhomin)
+            {
+                if (s <= Minlinkspacing)
+                {
+                    linkno = linkno + 1;
+                    s = base_s;
+                }
+                else
+                {
+                    s = s - 25;
+                }
+
+                Asw = (Math.PI * (linkdia * linkdia) * 0.25) * linkno;
+                rho = (Asw) / (s * b);
+
+            }
+
+            //Updated base_s to suit minimum rho
+            base_s = s;
+
+            //design resistance of shear links, spacing is reduced and numbers increased automatically to achieve Ved
+
+            VRds = (Asw / s) * (z * fywd * (1 / (Math.Tan(theta)))) / 1000;
+
+            while (true)
+            {
+                    if (Ved < VRds)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        if (s <= Minlinkspacing)
+                        {
+                            linkno = linkno + 1;
+                            link_tang_S = (b - 2 * c - linkdia)/(linkno-1);
+
+                            if (link_tang_S < Minlinkspacing)
+                                {
+                                    linkno = linkno - 1;
+                                    link_tang_S = b - linkno * c - linkdia;
+                                    break;
+                                }
+                            else
+                                {
+                                    s = base_s;
+                                }       
+                        }
+                        else
+                        {
+                            s = s - 25;
+                        }
+                    }
+
+                    Asw = (Math.PI * (linkdia * linkdia) * 0.25) * linkno;
+                    VRds = (Asw / s) * (z * fywd * (1 / (Math.Tan(theta)))) / 1000;
+
+            }
+
+            return (s,linkno,VRds,rho);
         }
     }
 }
