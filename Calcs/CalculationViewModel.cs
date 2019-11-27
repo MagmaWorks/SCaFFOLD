@@ -21,9 +21,6 @@ namespace Calcs
     {
         CalcCore.ICalc calc;
         public CalcCore.ICalc Calc { get => calc; }
-        public TableVM Table { get; set; }
-        public ChartVM Chart { get; set; }
-        public CrossRefVM CrossRef {get;set;}
 
         Model3D _model;
         public Model3D Model
@@ -36,6 +33,15 @@ namespace Calcs
             {
                 _model = value;
                 RaisePropertyChanged(nameof(Model));
+            }
+        }
+
+        ObservableCollection<PluginInfo> _plugins;
+        public ObservableCollection<PluginInfo> Plugins
+        {
+            get
+            {
+                return _plugins;
             }
         }
 
@@ -128,6 +134,15 @@ namespace Calcs
             }
         }
 
+        ObservableCollection<MainViewData> _mainViews;
+        public ObservableCollection<MainViewData> MainViews
+        {
+            get
+            {
+                return _mainViews;
+            }
+        }
+
         public string CalcTypeName
         {
             get
@@ -147,6 +162,23 @@ namespace Calcs
                 calc.InstanceName = value;
                 RaisePropertyChanged(nameof(CalcInstanceName));
             }
+        }
+
+        ICommand addPluginCommand;
+
+        public ICommand AddPluginCommand
+        {
+            get
+            {
+                return addPluginCommand ?? (addPluginCommand = new CommandHandlerWithParameter(param => addPlugin(param), true));
+            }
+        }
+
+        private void addPlugin(Type pluginType)
+        {
+            CalcPluginBase pluginInstance = (CalcPluginBase)Activator.CreateInstance(pluginType);
+            pluginInstance.Initialise(this.Calc);
+            MainViews.Insert(MainViews.Count - 1, new MainViewData(this, pluginInstance));
         }
 
         ICommand toWord;
@@ -198,10 +230,28 @@ namespace Calcs
             }
         }
 
+        int _selectedTabIndex;
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return _selectedTabIndex;
+            }
+            set
+            {
+                _selectedTabIndex = value;
+                RaisePropertyChanged(nameof(SelectedTabIndex));
+            }
+        }
 
-        public CalculationViewModel(CalcCore.ICalc calc)
+        public CalculationViewModel(CalcCore.ICalc calc, List<PluginInfo> plugins)
         {
             this.calc = calc;
+            this._plugins = new ObservableCollection<PluginInfo>();
+            foreach (var plugin in plugins)
+            {
+                _plugins.Add(plugin);
+            }
 
             Inputs = new List<IOValues>();
             foreach (var item in calc.GetInputs())
@@ -214,10 +264,7 @@ namespace Calcs
                 Outputs.Add(new IOValues(item, calc, this));
             }
 
-            //this.calc = calculation;
-            this.Table = new TableVM(calc);
-            this.Chart = new ChartVM(calc);
-            this.CrossRef = new CrossRefVM(calc);
+            _mainViews = new ObservableCollection<MainViewData> { MainViewData.CreateMainViewFormulae(this), MainViewData.CreateMainView3D(this), MainViewData.CreateMainViewAdd(this) };
             _formulae = new ObservableCollection<FormulaeVM>();
             foreach (var item in calc.GetFormulae())
             {
@@ -296,6 +343,13 @@ namespace Calcs
                 RaisePropertyChanged(nameof(Model));
             }
             RaisePropertyChanged(nameof(Status));
+            foreach (var item in MainViews)
+            {
+                if (item.ViewType == MainViewTypes.PLUGIN)
+                {
+                    item.Plugin.Update();
+                }
+            }
         }
     }
 }

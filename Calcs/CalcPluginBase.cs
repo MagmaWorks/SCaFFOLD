@@ -10,7 +10,7 @@ namespace Calcs
 {
     public abstract class CalcPluginBase
     {
-        ICalc _calc;
+        protected ICalc _calc;
         public CalcCore.ICalc Calc { get => _calc; }
         public abstract UserControl Control { get;  }
 
@@ -36,6 +36,8 @@ namespace Calcs
             }
         }
 
+        public abstract void Initialise(ICalc calc);
 
+        public abstract void Update();
     }
 }

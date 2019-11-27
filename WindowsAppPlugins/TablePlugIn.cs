@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using CalcCore;
+using Calcs;
 
-namespace Calcs
+namespace WindowsAppPlugins
 {
+    [PluginName("Table 2D")]
     public class TablePlugIn : CalcPluginBase
     {
         UserControl _control;
@@ -21,13 +23,30 @@ namespace Calcs
 
         TableVM _viewModel;
 
+        public TablePlugIn()
+        {
+
+        }
+
         public TablePlugIn(ICalc calc)
         {
-            CalcCore.ICalc _calc = (CalcCore.ICalc)Activator.CreateInstance(calc.GetType());
-            CopyValuesFrom(calc);
+            _calc = calc;
             _viewModel = new TableVM(_calc);
             _control = new CrossRefTable();
             _control.DataContext = _viewModel;
+        }
+
+        public override void Initialise(ICalc calc)
+        {
+            _calc = calc;
+            _viewModel = new TableVM(_calc);
+            _control = new CrossRefTable();
+            _control.DataContext = _viewModel;
+        }
+
+        public override void Update()
+        {
+            _viewModel.CalcResultsTable();
         }
     }
 }

@@ -12,7 +12,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="250"/>
         </Grid.ColumnDefinitions>
-        <helix:HelixViewport3D ZoomExtentsWhenLoaded="True" IsHeadLightEnabled="True" ShowViewCube="False">
+        <helix:HelixViewport3D ZoomExtentsWhenLoaded="True" IsHeadLightEnabled="False" ShowViewCube="False">
             <ModelVisual3D Content="{Binding DynamicRelaxationVM.Model}"/>
             <ModelVisual3D Content="{Binding DynamicRelaxationVM.Model2}"/>
             <helix:DefaultLights/>

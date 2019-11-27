@@ -10,8 +10,9 @@ using System.Windows.Input;
 using System.Windows;
 using System.Diagnostics;
 using System.Data;
+using Calcs;
 
-namespace Calcs
+namespace WindowsAppPlugins
 {
     public class CrossRefVM : ViewModelBase, ICalcViewParent
     {

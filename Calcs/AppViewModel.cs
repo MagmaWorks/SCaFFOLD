@@ -31,6 +31,15 @@ namespace Calcs
             //}
         }
 
+        List<PluginInfo> _plugins;
+        public List<PluginInfo> Plugins
+        {
+            get
+            {
+                return _plugins;
+            }
+        }
+
         public CalculationViewModel ViewModel
         {
             get
@@ -71,7 +80,7 @@ namespace Calcs
         private void addCalc(Type calcType)
         {
             CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcType);
-            ViewModels.Add(new CalculationViewModel(calcInstance));
+            ViewModels.Add(new CalculationViewModel(calcInstance, _plugins));
             SelectedViewModel = ViewModels.Count-1;
         }
 
@@ -225,7 +234,7 @@ namespace Calcs
             newCalc.InstanceName = proposedName;
 
 
-            _viewModels.Add(new CalculationViewModel(newCalc));
+            _viewModels.Add(new CalculationViewModel(newCalc, _plugins));
             RaisePropertyChanged(nameof(ViewModels));
             SelectedViewModel = _viewModels.Count - 1;
         }
@@ -247,7 +256,8 @@ namespace Calcs
             Window win = new CalcsToPrint()
             {
                 DataContext = vm,
-                Title = "Export to Open Office document"
+                Title = "Export to Open Office document",
+                Width = 400
             };
             win.ShowDialog();
             if (vm.Print)
@@ -390,7 +400,7 @@ namespace Calcs
 
                     }
                     calcInstance.InstanceName = deserialiseObj.InstanceName;
-                    var newCalcVM = new CalculationViewModel(calcInstance);
+                    var newCalcVM = new CalculationViewModel(calcInstance, _plugins);
                     newCalcVM.Filepath = filePath;
                     ViewModels.Add(newCalcVM);
                     SelectedViewModel = ViewModels.Count - 1;
@@ -463,7 +473,7 @@ namespace Calcs
                     }
                     number++;
                     newCalc.UpdateCalc();
-                    ViewModels.Add(new CalculationViewModel(newCalc));
+                    ViewModels.Add(new CalculationViewModel(newCalc, _plugins));
                 }
                 SelectedViewModel = ViewModels.Count - 1;
             }
@@ -474,11 +484,12 @@ namespace Calcs
                 
         }
 
-        public AppViewModel(List<CalcCore.CalcAssembly> calcs)
+        public AppViewModel(List<CalcCore.CalcAssembly> calcs, List<PluginInfo> plugins)
         {
             Assemblies = calcs;
+            _plugins = plugins;
             CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(Assemblies[1].Class);
-            ViewModels.Add(new CalculationViewModel(calcInstance));
+            ViewModels.Add(new CalculationViewModel(calcInstance, _plugins));
         }
 
         private class deserialiseCalcValue

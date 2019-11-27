@@ -23,6 +23,8 @@ using Point = TriangleNet.Geometry.Point;
 
 namespace TestCalcs
 {
+    [CalcName("Punching Shear to EC2")]
+    [CalcAlternativeName("TestCalcs.PunchingShear")]
     public class PunchingShear : CalcCore.CalcBase
     {
         CalcSelectionList _colType;

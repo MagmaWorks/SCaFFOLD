@@ -52,19 +52,20 @@ namespace Calcs
             mat = new DiffuseMaterial(brush);
 
             //UN COMMENT THIS SECTION FOR MAGMA MADE LOGO
-            //ObjReader reader = new ObjReader();
-            //Model3DGroup group1 = reader.Read(@"C:\Users\Alex Baalham\Documents\magmaworks1.obj");
+            ObjReader reader = new ObjReader();
+            Model3DGroup group1 = reader.Read(@"C:\Users\Alex Baalham\Documents\MagmaWorksPad.obj");
             //ObjReader reader2 = new ObjReader();
             //Model3DGroup group2 = reader2.Read(@"C:\Users\Alex Baalham\Documents\magmaworks2.obj");
             //ObjReader reader3 = new ObjReader();
             //Model3DGroup group3 = reader3.Read(@"C:\Users\Alex Baalham\Documents\magmaworks3.obj");
 
-            ////ObjReader reader2 = new ObjReader();
-            ////Model3DGroup group4 = reader2.Read(@"C:\Users\Alex Baalham\Documents\calcapp.obj");
+            ObjReader reader4 = new ObjReader();
+            Model3DGroup group4 = reader4.Read(@"C:\Users\Alex Baalham\Documents\XmasTree.obj");
 
-            //Model3DGroup group = new Model3DGroup();
-            //group.Children.Add(group1);
-            //group.Children.Add(group2);
+
+            Model3DGroup group = new Model3DGroup();
+            group.Children.Add(group1);
+            group.Children.Add(group4);
             //group.Children.Add(group3);
 
             //Model = group;
@@ -76,7 +77,7 @@ namespace Calcs
             //var test = importedModel.Children[0] as GeometryModel3D;
             //var test2 = (MeshGeometry3D)test.Geometry;
 
-            //Model = importedModel;
+            Model = group;
             Update();
         }
 
@@ -84,7 +85,18 @@ namespace Calcs
         {
             dynamicRelaxationUpdate();
             //magmamadeUpdate();
+            //XmasTreeUpdate();
 
+        }
+
+        public void XmasTreeUpdate()
+        {
+            
+            var myLight = new PointLight(Colors.Yellow, new Point3D(steps*10, 0, 5000)) { Range = 10000, QuadraticAttenuation = 0.00000002 };
+            var group = new Model3DGroup();
+            group.Children.Add(myLight);
+            Model2 = group;
+            steps++;
         }
 
 

@@ -54,15 +54,15 @@ namespace Calcs
             var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
             var calcs = new List<CalculationViewModel>();
             Assemblies = new List<string>();
-            foreach (var calc in calcClasses)
-            {
-                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
-                calcs.Add(new CalculationViewModel(calcInstance));
-                if (!Assemblies.Contains(calc.Assembly))
-                {
-                    Assemblies.Add(calc.Assembly);
-                }
-            }
+            //foreach (var calc in calcClasses)
+            //{
+            //    CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
+            //    calcs.Add(new CalculationViewModel(calcInstance));
+            //    if (!Assemblies.Contains(calc.Assembly))
+            //    {
+            //        Assemblies.Add(calc.Assembly);
+            //    }
+            //}
             Calcs = new List<string>();
             foreach (var calc in calcs)
             {

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Calcs
 {
     /// <summary>
-    /// Interaction logic for CrossRefTable.xaml
+    /// Interaction logic for PlugInView.xaml
     /// </summary>
-    public partial class CrossRefTable : UserControl
+    public partial class PlugInView : UserControl
     {
-        public CrossRefTable()
+        public PlugInView()
         {
             InitializeComponent();
         }

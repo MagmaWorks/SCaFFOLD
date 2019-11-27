@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Calcs
 {
     /// <summary>
@@ -33,11 +34,12 @@ namespace Calcs
             startScreen.ShowDialog();
 
             var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
-            var calcs = new ObservableCollection<CalculationViewModel>();
-                CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcClasses[1].Class);
-                calcs.Add(new CalculationViewModel(calcInstance));
-            appVM = new AppViewModel(calcClasses) ;
+            var plugins = FindPlugins.GetPlugins();
+            appVM = new AppViewModel(calcClasses, plugins) ;
             this.DataContext = appVM;
+
+
+
             //this.Closing += appVM.SaveAllOnClose;//
             InitializeComponent();
         }

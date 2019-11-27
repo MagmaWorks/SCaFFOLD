@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunInConsole", "RunInConsol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcWindowsUtilities", "CalcWindowsUtilities\CalcWindowsUtilities.csproj", "{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsAppPlugins", "WindowsAppPlugins\WindowsAppPlugins.csproj", "{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35547D5C-C7E0-4A07-87D3-275DB1AA7A70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

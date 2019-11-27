@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CalcCore")]
-[assembly: AssemblyDescription("Framework library")]
+[assembly: AssemblyTitle("WindowsAppPlugins")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MagmaWorks")]
-[assembly: AssemblyProduct("SCaFFOLD")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("WindowsAppPlugins")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9948df11-c3e8-4ed8-bdf0-e67d2aa178ce")]
+[assembly: Guid("bf482afb-af24-4af3-a5fc-b90c7d549d91")]
 
 // Version information for an assembly consists of the following four values:
 //
