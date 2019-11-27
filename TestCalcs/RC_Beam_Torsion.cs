@@ -383,7 +383,7 @@ namespace TestCalcs
         }
 
         //Shear links
-        public (double,double,double,double) Shear_links(Double Ved, Double fyd, double theta, Double d, Double b, Double c, Double linkdia, Double Minlinkspacing, double fck, double fyk)
+        public Tuple<double,double,double,double> Shear_links(Double Ved, Double fyd, double theta, Double d, Double b, Double c, Double linkdia, Double Minlinkspacing, double fck, double fyk)
         {
             Double s;
             Double linkno;
@@ -490,7 +490,7 @@ namespace TestCalcs
 
             }
 
-            return (s,linkno,VRds,rho);
+            return new Tuple<double, double, double, double>(s,linkno,VRds,rho);
         }
     }
 }
