@@ -7,6 +7,7 @@ using CalcCore;
 
 namespace TestCalcs
 {
+    [CalcName("Concrete classes")]
     public class ConcreteStrengthClasses : CalcBase
     {
         CalcSelectionList _grade;

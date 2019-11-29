@@ -8,6 +8,7 @@ using MWGeometry;
 
 namespace TestCalcs
 {
+    [CalcName("Concrete creep")]
     public class ConcCreep : CalcCore.CalcBase
     {
         CalcDouble notionalcreepcoeff;

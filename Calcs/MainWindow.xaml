@@ -1,4 +1,5 @@
 ﻿<Window x:Class="Calcs.MainWindow"
+        x:Name="MainCalcWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
@@ -100,12 +101,27 @@
 
         <Grid Grid.Row="1" DataContext="{Binding ViewModel}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" x:Name="IODisplay"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--<Button Grid.Row="0" HorizontalAlignment="Right" Height="10" Width="10" Click="Button_Click">
+                    --><!--<Button.Template>
+                        <ControlTemplate>
+                            <Canvas Height="10" Width="10">
+                                <Ellipse Width="10" Height="10" Stroke="Black"/>
+                                <Polygon Points="7 1  0 5  7 9" Fill="Black"/>
+                            </Canvas>
+                        </ControlTemplate>
+                    </Button.Template>--><!--
+                </Button>-->
+                <Grid Grid.Row="1" Margin="15 0 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
@@ -144,6 +160,7 @@
                         <local:CalcOutputs Grid.Row="1" Grid.Column="2"/>
                     </StackPanel>
                 </ScrollViewer>
+            </Grid>
             </Grid>
             <TabControl Grid.Column="2" ItemsSource="{Binding MainViews}" SelectedIndex="{Binding SelectedTabIndex}">
                 <TabControl.ItemTemplate>

@@ -29,7 +29,19 @@ namespace CalcCore
                           select type;
                 foreach (var item in res.ToList())
                 {
-                    calcs.Add(new CalcAssembly(item, ass));
+                    if (Attribute.IsDefined(item, typeof(CalcCore.CalcNameAttribute)) 
+                        && Attribute.IsDefined(item, typeof(CalcCore.CalcAlternativeNameAttribute)))
+                    {
+                        string name = ((CalcCore.CalcNameAttribute)Attribute.GetCustomAttribute(item, typeof(CalcCore.CalcNameAttribute))).CalcName;
+                        List<string> altNames = (Attribute.GetCustomAttributes(item, typeof(CalcCore.CalcAlternativeNameAttribute))).Select(a => ((CalcAlternativeNameAttribute)a).CalcAlternativeName).ToList();
+                        calcs.Add(new CalcAssembly(item, ass, name, altNames));
+                    }
+                    else if (Attribute.IsDefined(item, typeof(CalcCore.CalcNameAttribute)))
+                    {
+                        string name = ((CalcCore.CalcNameAttribute)Attribute.GetCustomAttribute(item, typeof(CalcCore.CalcNameAttribute))).CalcName;
+                        calcs.Add(new CalcAssembly(item, ass, name, null));
+                    }
+
                 }
             }
             return calcs;

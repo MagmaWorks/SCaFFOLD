@@ -39,7 +39,7 @@ namespace Calcs
 
         public List<string> Assemblies { get; private set; }
 
-        public DynamicRelaxation(Window parent)
+        public DynamicRelaxation(Window parent, List<CalcCore.CalcAssembly> calcClasses)
         { 
             parentWindow = parent;
             _dynamicRelaxation = new DynamicRelaxationViewModel();
@@ -51,22 +51,15 @@ namespace Calcs
 
             DataContext = this;
 
-            var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
-            var calcs = new List<CalculationViewModel>();
             Assemblies = new List<string>();
-            //foreach (var calc in calcClasses)
-            //{
-            //    CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
-            //    calcs.Add(new CalculationViewModel(calcInstance));
-            //    if (!Assemblies.Contains(calc.Assembly))
-            //    {
-            //        Assemblies.Add(calc.Assembly);
-            //    }
-            //}
             Calcs = new List<string>();
-            foreach (var calc in calcs)
+            foreach (var calc in calcClasses)
             {
-                Calcs.Add(calc.CalcTypeName);
+                Calcs.Add(calc.Name);
+                if (!Assemblies.Contains(calc.Assembly))
+                {
+                    Assemblies.Add(calc.Assembly);
+                }
             }
 
             InitializeComponent();
@@ -75,7 +68,6 @@ namespace Calcs
         void dispatcherTimer_Tick(object sender, EventArgs args)
         {
             DynamicRelaxationVM.Update();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

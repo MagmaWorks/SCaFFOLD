@@ -24,23 +24,21 @@ namespace Calcs
     public partial class MainWindow : Window
     {
         AppViewModel appVM;
+        double savedWidth = 0;
 
         public MainWindow()
         {
             Window startScreen = new Window();
-            startScreen.Content = new DynamicRelaxation(startScreen);
+            var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
+            var plugins = FindPlugins.GetPlugins();
+            startScreen.Content = new DynamicRelaxation(startScreen, calcClasses);
             startScreen.WindowStyle = WindowStyle.None;
             startScreen.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             startScreen.ShowDialog();
 
-            var calcClasses = CalcCore.FindAssemblies.GetAssemblies();
-            var plugins = FindPlugins.GetPlugins();
             appVM = new AppViewModel(calcClasses, plugins) ;
             this.DataContext = appVM;
 
-
-
-            //this.Closing += appVM.SaveAllOnClose;//
             InitializeComponent();
         }
 
@@ -58,6 +56,11 @@ namespace Calcs
                 e.Cancel = true;
             }
             base.OnClosing(e);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            IODisplay.Width = new GridLength(15);
         }
     }
 }

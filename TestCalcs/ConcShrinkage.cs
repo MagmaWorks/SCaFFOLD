@@ -7,6 +7,7 @@ using CalcCore;
 
 namespace TestCalcs
 {
+    [CalcName("Concrete shrinkage")]
     public class ConcShrinkage : CalcCore.CalcBase
     {
         //\varphi
