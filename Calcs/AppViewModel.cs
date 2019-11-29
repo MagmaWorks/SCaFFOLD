@@ -401,6 +401,7 @@ namespace Calcs
 
                     }
                     calcInstance.InstanceName = deserialiseObj.InstanceName;
+                    calcInstance.UpdateCalc();
                     var newCalcVM = new CalculationViewModel(calcInstance, _plugins);
                     newCalcVM.Filepath = filePath;
                     ViewModels.Add(newCalcVM);
