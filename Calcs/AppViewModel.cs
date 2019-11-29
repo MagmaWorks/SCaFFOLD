@@ -257,7 +257,8 @@ namespace Calcs
             {
                 DataContext = vm,
                 Title = "Export to Open Office document",
-                Width = 400
+                Width = 400,
+                Height = 500
             };
             win.ShowDialog();
             if (vm.Print)
