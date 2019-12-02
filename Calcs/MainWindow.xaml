@@ -8,7 +8,7 @@
         xmlns:h="http://helix-toolkit.org/wpf"
         xmlns:local="clr-namespace:Calcs"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowState="Maximized">
+        Title="SCaFFOLD" Height="450" Width="800" WindowState="Maximized">
 
     <Window.Resources>
         <DataTemplate x:Key="SingleCalc">
