@@ -70,6 +70,7 @@ Section "WW_Calcs (required)"
   File "InteractionDiagram3D.dll"
   File "MIConvexHull.dll"
   File "Triangle.dll"
+  File "Microsoft.Xaml.Behaviors.dll"
   
   SetOutPath "$INSTDIR\Libraries"
   File /nonfatal /a /r "Libraries\"

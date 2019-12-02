@@ -109,6 +109,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\bin\Debug\Libraries\" /Y</PostBuildEvent>
+    <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\bin\$(ConfigurationName)\Libraries\" /Y
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

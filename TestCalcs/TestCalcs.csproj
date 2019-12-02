@@ -149,10 +149,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\bin\Debug\Libraries\" /Y
+    <PostBuildEvent>xCopy "$(TargetPath)" "$(SolutionDir)Calcs\bin\$(ConfigurationName)\Libraries\" /Y
 xCopy "$(TargetPath)" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
-xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
-xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\Debug\Libraries\" /Y
+xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\$(ConfigurationName)\Libraries\" /Y
+xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\$(ConfigurationName)\Libraries\" /Y
 xCopy "$(ProjectDir)resources\MWGeometry.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
 xCopy "$(ProjectDir)resources\InteractionDiagram3D.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
 xCopy "$(ProjectDir)resources\Triangle.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
