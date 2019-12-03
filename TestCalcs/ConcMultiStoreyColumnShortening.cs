@@ -8,6 +8,7 @@ using CalcCore;
 namespace TestCalcs
 {
     [CalcName("Concrete multi storey column shortening")]
+    [CalcAlternativeName("TestCalcs.ConcMultiStoreyColumnShortening")]
     public class ConcMultiStoreyColumnShortening : CalcBase
     {
         List<Formula> expressions;

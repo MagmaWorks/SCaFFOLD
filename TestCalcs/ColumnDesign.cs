@@ -11,6 +11,7 @@ using StructuralDrawing2D;
 namespace TestCalcs
 {
     [CalcName("RC Axial and Bending Design")]
+    [CalcAlternativeName("TestCalcs.ColumnDesign")]
     public class ColumnDesign : CalcBase
     {
         // Column object

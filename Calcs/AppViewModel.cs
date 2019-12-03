@@ -24,11 +24,6 @@ namespace Calcs
             {
                 return _viewModels;
             }
-            //set
-            //{
-            //    _viewModels = value;
-            //    RaisePropertyChanged(nameof(ViewModels));
-            //}
         }
 
         List<PluginInfo> _plugins;
@@ -382,7 +377,24 @@ namespace Calcs
                     var deserialiseType = new { InstanceName = "", TypeName = "", ClassName = "", Inputs = new List<deserialiseCalcValue>() };
                     var deserialiseObj = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(openObj, deserialiseType);
 
-                    var calcType = Assemblies.Where(a => a.Class.FullName == deserialiseObj.ClassName).First();
+                    var calcType = Assemblies.Where(a => a.Name == deserialiseObj.ClassName).First();
+                    foreach (var assembly in Assemblies)
+                    {
+                        if (assembly.Name == deserialiseObj.ClassName)
+                        {
+                            calcType = assembly;
+                        }
+                        else if (assembly.AltNames != null)
+                        {
+                            foreach (var name in assembly.AltNames)
+                            {
+                                if (name == deserialiseObj.ClassName)
+                                {
+                                    calcType = assembly;
+                                }
+                            }
+                        }
+                    }
                     CalcCore.ICalc calcInstance = (CalcCore.ICalc)Activator.CreateInstance(calcType.Class);
                     foreach (var item in deserialiseObj.Inputs)
                     {

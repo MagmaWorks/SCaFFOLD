@@ -8,6 +8,7 @@ using CalcCore;
 namespace TestCalcs
 {
     [CalcName("RC Column Shortening")]
+    [CalcAlternativeName("TestCalcs.ConcColumnShortening")]
     public class ConcColumnShortening : CalcBase
     {
         List<Formula> expressions;

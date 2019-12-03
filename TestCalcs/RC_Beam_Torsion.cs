@@ -13,6 +13,7 @@ namespace TestCalcs
     // CalcBase provides the functionality required for our SimpleMoment class to communicate with the rest of the WW calcs ecosystem
     // Two methods have to be present - UpdateCalc() and GenerateFormulae(), plus a parameterless constructor
     [CalcName("RC Beam Torsion")]
+    [CalcAlternativeName("TestCalcs.RC_Beam_Torsion")]
     public class RC_Beam_Torsion : CalcBase
     {
         // We're going to need some values for our calc. Let's define them here
