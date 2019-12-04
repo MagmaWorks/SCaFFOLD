@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CalcCore;
 using MWGeometry;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     [CalcName("Concrete creep")]
     [CalcAlternativeName("TestCalcs.ConcCreep")]

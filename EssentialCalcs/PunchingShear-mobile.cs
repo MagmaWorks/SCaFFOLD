@@ -21,7 +21,7 @@ using TriangleNet.Geometry;
 using TriangleNet.Meshing;
 using Point = TriangleNet.Geometry.Point;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     [CalcName("Punching Shear to EC2")]
     [CalcAlternativeName("TestCalcs.PunchingShear")]
@@ -168,32 +168,32 @@ namespace TestCalcs
             _maxBarSize = inputValues.CreateCalcSelectionList("Maximum link diameter", "16", new List<string> { "8", "10", "12", "16", "20", "25", "32", "40" });
 
             Assembly assembly = GetType().GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.ControlPerimeters_Fig_6_13.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.ControlPerimeters_Fig_6_13.png"))
             {
                 _fig6_13 = SkiaSharp.SKBitmap.Decode(stream);
             }
             assembly = GetType().GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_14.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.PunchingShear_Fig_6_14.png"))
             {
                 _fig6_14 = SkiaSharp.SKBitmap.Decode(stream);
             }
             assembly = GetType().GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_20.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.PunchingShear_Fig_6_20.png"))
             {
                 _fig6_20 = SkiaSharp.SKBitmap.Decode(stream);
             }
             assembly = GetType().GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_Fig_6_22.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.PunchingShear_Fig_6_22.png"))
             {
                 _fig6_22 = SkiaSharp.SKBitmap.Decode(stream);
             }
             assembly = GetType().GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_ConcreteCentreLayout.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.PunchingShear_ConcreteCentreLayout.png"))
             {
                 _figConcCentre = SkiaSharp.SKBitmap.Decode(stream);
             }
             assembly = GetType().GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream("TestCalcs.resources.PunchingShear_EC1992_RadialLayout.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.PunchingShear_EC1992_RadialLayout.png"))
             {
                 _figRadialLayout = SkiaSharp.SKBitmap.Decode(stream);
             }

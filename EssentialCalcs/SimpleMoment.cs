@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // We need to bring the functionality provided by CalcCore into scope so add a 'using' statement:
 using CalcCore;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     // The calculation class is named SimpleMoment and is based on the CalcBase class
     // CalcBase provides the functionality required for our SimpleMoment class to communicate with the rest of the WW calcs ecosystem

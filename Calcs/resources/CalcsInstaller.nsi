@@ -56,7 +56,6 @@ Section "WW_Calcs (required)"
   File "LiveCharts.Wpf.dll"
   File "netDxf.netstandard.dll"
   File "Newtonsoft.Json.dll"
-  File "TestCalcs.dll"
   File "WindowsBase.dll"
   File "WpfMath.dll"
   File "SkiaSharp.dll"
@@ -74,6 +73,8 @@ Section "WW_Calcs (required)"
   
   SetOutPath "$INSTDIR\Libraries"
   File /nonfatal /a /r "Libraries\"
+  
+  Delete "TestCalcs.dll"
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\WW_Calcs "Install_Dir" "$INSTDIR"

@@ -377,7 +377,7 @@ namespace Calcs
                     var deserialiseType = new { InstanceName = "", TypeName = "", ClassName = "", Inputs = new List<deserialiseCalcValue>() };
                     var deserialiseObj = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(openObj, deserialiseType);
 
-                    var calcType = Assemblies.Where(a => a.Name == deserialiseObj.ClassName).First();
+                    CalcAssembly calcType = Assemblies[0];
                     foreach (var assembly in Assemblies)
                     {
                         if (assembly.Name == deserialiseObj.ClassName)
@@ -463,7 +463,7 @@ namespace Calcs
                 int number = 0;
                 while (!reader.EndOfStream)
                 {
-                    CalcCore.ICalc newCalc = new TestCalcs.SimpleMoment();
+                    CalcCore.ICalc newCalc = new EssentialCalcs.SimpleMoment();
                     line = reader.ReadLine();
                     lineItems = line.Split(',');
                     if (lineItems.Length > listHeaders.Length)

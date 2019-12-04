@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     public class WoodArmer : CalcBase
     {

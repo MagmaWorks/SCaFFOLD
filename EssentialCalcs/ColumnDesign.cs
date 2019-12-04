@@ -8,7 +8,7 @@ using CalcCore;
 using MWGeometry;
 using StructuralDrawing2D;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     [CalcName("RC Axial and Bending Design")]
     [CalcAlternativeName("TestCalcs.ColumnDesign")]

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CalcCore;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     [CalcName("Concrete multi storey column shortening")]
     [CalcAlternativeName("TestCalcs.ConcMultiStoreyColumnShortening")]

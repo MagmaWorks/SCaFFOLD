@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CalcCore;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     [CalcName("Concrete creep and shrinkage")]
     [CalcAlternativeName("TestCalcs.ConcCreepAndShrinkage")]

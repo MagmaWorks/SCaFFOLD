@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     public class Line : GeometryBase
     {

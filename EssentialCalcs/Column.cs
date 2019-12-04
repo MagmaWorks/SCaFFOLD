@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WWGeometry;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     public enum FireExposition { OneSide, MoreThanOneSide };
     

@@ -7,7 +7,7 @@ using CalcCore;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.Elements;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     public class DropHead_Symmetrical : CalcCore.CalcBase
     {

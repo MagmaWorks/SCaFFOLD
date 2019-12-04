@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CalcCore;
 
-namespace TestCalcs
+namespace EssentialCalcs
 {
     [CalcName("RC Column Shortening")]
     [CalcAlternativeName("TestCalcs.ConcColumnShortening")]
