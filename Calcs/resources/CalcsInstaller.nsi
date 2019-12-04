@@ -14,11 +14,11 @@ Name "Magma Works SCaFFOLD"
 OutFile "SCaFFOLD.exe"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES64\WW_Calcs
+InstallDir $PROGRAMFILES64\SCaFFOLDforWindows
 
 ; Registry key to check for directory (so if you install again, it will 
 ; overwrite the old one automatically)
-InstallDirRegKey HKLM "Software\WW_Calcs" "Install_Dir"
+InstallDirRegKey HKLM "Software\SCaFFOLDforWindows" "Install_Dir"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
@@ -37,7 +37,7 @@ UninstPage instfiles
 ;--------------------------------
 
 ; The stuff to install
-Section "WW_Calcs (required)"
+Section "SCaFFOLD for Windows (required)"
 
   SectionIn RO
   
@@ -74,16 +74,14 @@ Section "WW_Calcs (required)"
   SetOutPath "$INSTDIR\Libraries"
   File /nonfatal /a /r "Libraries\"
   
-  Delete "TestCalcs.dll"
-  
   ; Write the installation path into the registry
-  WriteRegStr HKLM SOFTWARE\WW_Calcs "Install_Dir" "$INSTDIR"
+  WriteRegStr HKLM SOFTWARE\SCaFFOLDforWindows "Install_Dir" "$INSTDIR"
   
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WW_Calcs" "DisplayName" "Whitby Wood Calcs"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WW_Calcs" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WW_Calcs" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WW_Calcs" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SCaFFOLDforWindows" "DisplayName" "SCaFFOLD for Windows"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SCaFFOLDforWindows" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SCaFFOLDforWindows" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SCaFFOLDforWindows" "NoRepair" 1
   WriteUninstaller "$INSTDIR\uninstall.exe"
   
 SectionEnd
@@ -91,14 +89,14 @@ SectionEnd
 ; Optional section (can be disabled by the user)
 Section "Start Menu Shortcuts"
 
-  CreateDirectory "$SMPROGRAMS\WW_Calcs"
-  CreateShortcut "$SMPROGRAMS\WW_Calcs\WW_Calcs.lnk" "$INSTDIR\Calcs.exe" "" "$INSTDIR\Calcs.exe" 0
+  CreateDirectory "$SMPROGRAMS\SCaFFOLD"
+  CreateShortcut "$SMPROGRAMS\SCaFFOLD\SCaFFOLD.lnk" "$INSTDIR\Calcs.exe" "" "$INSTDIR\Calcs.exe" 0
   
 SectionEnd
 
 Section "Desktop Shortcut"
 
-  CreateShortCut "$DESKTOP\WW Calcs.lnk" "$INSTDIR\Calcs.exe"
+  CreateShortCut "$DESKTOP\SCaFFOLD.lnk" "$INSTDIR\Calcs.exe"
   
 SectionEnd
 
@@ -109,17 +107,17 @@ SectionEnd
 Section "Uninstall"
   
   ; Remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WW_Calcs"
-  DeleteRegKey HKLM SOFTWARE\WW_Calcs
-
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\SCaFFOLDforWindows"
+  DeleteRegKey HKLM SOFTWARE\SCaFFOLDforWindows
+  
   ; Remove files and uninstaller
 
   ; Remove shortcuts, if any
-  Delete "$SMPROGRAMS\WW_Calcs\*.*"
-  Delete "$DESKTOP\WW Calcs.lnk"
+  Delete "$SMPROGRAMS\SCaFFOLD\*.*"
+  Delete "$DESKTOP\SCaFFOLD.lnk"
 
   ; Remove directories used
-  RMDir "$SMPROGRAMS\WW_Calcs"
+  RMDir "$SMPROGRAMS\SCaFFOLDforWindows"
   RMDir $INSTDIR
   RMDir $INSTDIR\data
   RMDir /r /REBOOTOK $INSTDIR

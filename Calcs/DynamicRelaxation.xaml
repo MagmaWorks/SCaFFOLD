@@ -25,7 +25,7 @@
             </Image>
             <TextBlock Text="SCaFFOLD" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 15"/>
             <!--<ListView ItemsSource="{Binding Calcs}" FontFamily="Franklin Gothic Book" Margin="15 0 15 25"/>-->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="150" Margin="15 0 15 15">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="Auto" Margin="15 0 15 15">
                 <StackPanel>
                     <TextBlock Text="The following calculation files have been found:" TextWrapping="Wrap" FontFamily="Franklin Gothic Book"/>
                     <ItemsControl ItemsSource="{Binding Assemblies}" Margin="0 0 0 5">

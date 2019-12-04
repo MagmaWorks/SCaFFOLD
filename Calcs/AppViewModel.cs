@@ -444,7 +444,6 @@ namespace Calcs
 
         private void runBatchCalcs()
         {
-            //var _calcs = new List<SimpleCalcVM>();
             var _calcNames = new ObservableCollection<string>();
             var fileDialog = new OpenFileDialog();
             fileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -471,10 +470,26 @@ namespace Calcs
                         System.Windows.MessageBox.Show("An error occured. Check your path doesn't contain any coma.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         break;
                     }
-                    foreach (var calc in Assemblies)
+                    CalcAssembly calcType = Assemblies[0];
+                    foreach (var assembly in Assemblies)
                     {
-                        if (calc.Class.ToString() == lineItems[0]) newCalc = (CalcCore.ICalc)Activator.CreateInstance(calc.Class);
+                        if (assembly.Name == lineItems[0])
+                        {
+                            calcType = assembly;
+                        }
+                        else if (assembly.AltNames != null)
+                        {
+                            foreach (var name in assembly.AltNames)
+                            {
+                                if (name == lineItems[0])
+                                {
+                                    calcType = assembly;
+                                }
+                            }
+                        }
                     }
+                    newCalc = (CalcCore.ICalc)Activator.CreateInstance(calcType.Class);
+
                     newCalc.InstanceName = lineItems[1];
                     var inputs = newCalc.GetInputs();
                     for (int i = 2; i < lineItems.Count(); i++)

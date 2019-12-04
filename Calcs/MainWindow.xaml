@@ -70,7 +70,7 @@
                     <RibbonMenuButton x:Name="AddAssemblyMenu" ItemsSource="{Binding Assemblies}" Label="Add calculation" LargeImageSource="/resources/Add_16x.png">
                         <RibbonMenuButton.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Class.FullName}"/>
+                                <TextBlock Text="{Binding Name}"/>
                             </DataTemplate>
                         </RibbonMenuButton.ItemTemplate>
                         <RibbonMenuButton.ItemContainerStyle>
