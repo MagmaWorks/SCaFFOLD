@@ -72,6 +72,7 @@ namespace EssentialCalcs
 
         public override void UpdateCalc()
         {
+            formulae = new List<Formula>();
             var concProps = ConcProperties.ByGrade(concGrade.ValueAsString);
             
             charCompStr.Value = concProps.fck;
@@ -103,17 +104,42 @@ namespace EssentialCalcs
             double fcm0 = 10;
 
             double betaRH = 1.55 * (1 - Math.Pow((relativeHumidity.Value / RH0), 3));
+            formulae.Add(
+                Formula.FormulaWithNarrative("Calculate factor due to relative humidity")
+                .AddFirstExpression(@"\beta_{RH}=1.55(1-(" + relativeHumidity.Symbol + "/RH_0)^3)")
+                .AddRef("B.2")
+                );
 
             dryingStrain.Value = 0.85 * ((220 + 110 * alphads1) * Math.Exp(-alphads2 * (meanCompStr.Value / fcm0))) * Math.Pow(10, -6) * betaRH;
+            formulae.Add(
+                Formula.FormulaWithNarrative("Basic drying strain")
+                .AddRef("B.2")
+                .AddFirstExpression(@"\epsilon_{cd,0}=0.85\left[ (220+110\alpha_{ds1})exp\left( -\alpha_{ds2}\frac{f_{cm}}{f_{cmo}}\right)\right]10^{-6}\beta_{RH}=" + String.Format("{0:F6}", dryingStrain.Value))
+                );
 
             //3.12
             double autogenousStrainFinal = 2.5 * (charCompStr.Value - 10) * Math.Pow(10, -6);
+            formulae.Add(
+                Formula.FormulaWithNarrative("Final autogenous strain")
+                .AddRef("eq. 3.12")
+                .AddFirstExpression(@"\epsilon_{ca}(\infty)=2.5(f_{ck}-10)10^{-6}="+ String.Format("{0:F6}", autogenousStrainFinal))
+                );
 
             //3.13
             double betaast = 1 - Math.Exp(-0.2 * Math.Pow(time.Value, 0.5));
+            formulae.Add(
+                Formula.FormulaWithNarrative("")
+                .AddRef("eq 3.13")
+                .AddFirstExpression(@"\beta_{as}(t)=1-exp(-0.2t^{0.5})="+ String.Format("{0:F6}", betaast))
+                );
 
             //3.11
             double autogenousStrainTime = betaast * autogenousStrainFinal;
+            formulae.Add(
+                Formula.FormulaWithNarrative("Autogenous shrinkage strain")
+                .AddRef("eq. 3.11")
+                .AddFirstExpression(@"\epsilon_{ca}(t)=\beta_{as}(t)\epsilon_{ca}(\infty)=" + String.Format("{0:F6}", autogenousStrainTime))
+                );
 
             //3.10
             double timeDevCoeff = (time.Value - timeShrinkStart.Value) / ((time.Value - timeShrinkStart.Value) + 0.04 * Math.Sqrt(Math.Pow(h0, 3)));
@@ -122,9 +148,19 @@ namespace EssentialCalcs
 
             //3.9
             double dryingStrainWithTime = timeDevCoeff * kh * dryingStrain.Value;
+            formulae.Add(
+                Formula.FormulaWithNarrative("Drying shrinkage strain")
+                .AddRef("eq. 3.9")
+                .AddFirstExpression(@"\epsilon_{cd}(t)=\beta_{ds}(t,t_s)k_h\epsilon_{cd,0}="+ String.Format("{0:F6}", dryingStrainWithTime))
+                );
 
             //3.8
             totalShrinkageStrain.Value = dryingStrainWithTime + autogenousStrainTime;
+            formulae.Add(
+                Formula.FormulaWithNarrative("Total shrinkage strain")
+                .AddRef("eq. 3.8")
+                .AddFirstExpression(@"\epsilon_{cs}=\epsilon_{cd}+\epsilon_{ca}="+ String.Format("{0:F6}", totalShrinkageStrain.Value))
+                );
         }
 
         double getkh(double h0)
