@@ -152,10 +152,10 @@
 xCopy "$(TargetPath)" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Punching_Shear_Inputs.csv" "$(SolutionDir)Calcs\Bin\$(ConfigurationName)\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Section_Names.csv" "$(SolutionDir)Calcs\Bin\$(ConfigurationName)\Libraries\" /Y
-xCopy "$(ProjectDir)resources\MWGeometry.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
-xCopy "$(ProjectDir)resources\InteractionDiagram3D.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
-xCopy "$(ProjectDir)resources\Triangle.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y
-xCopy "$(ProjectDir)resources\MIConvexHull.dll" "$(SolutionDir)TestCalcs\Bin\$(ConfigurationName)\" /Y</PostBuildEvent>
+xCopy "$(ProjectDir)resources\MWGeometry.dll" "$(SolutionDir)EssentialCalcs\Bin\$(ConfigurationName)\" /Y
+xCopy "$(ProjectDir)resources\InteractionDiagram3D.dll" "$(SolutionDir)EssentialCalcs\Bin\$(ConfigurationName)\" /Y
+xCopy "$(ProjectDir)resources\Triangle.dll" "$(SolutionDir)EssentialCalcs\Bin\$(ConfigurationName)\" /Y
+xCopy "$(ProjectDir)resources\MIConvexHull.dll" "$(SolutionDir)EssentialCalcs\Bin\$(ConfigurationName)\" /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

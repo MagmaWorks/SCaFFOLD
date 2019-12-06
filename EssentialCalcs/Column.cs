@@ -149,7 +149,7 @@ namespace EssentialCalcs
             List<Composite> composites = new List<Composite>();
 
             // Creation of the concrete section
-            Material concrete = new Material(ConcreteGrade.Name, MatYpe.Concrete, 0.85 * ConcreteGrade.Fc / 1.5, 3);
+            Material concrete = new Material(ConcreteGrade.Name, MatYpe.Concrete, 0.85 * ConcreteGrade.Fc / 1.5, 0, ConcreteGrade.E, 0.00175);
             ConcreteSection cs = new ConcreteSection(new List<MWPoint2D>()
                                                     {
                                                         new MWPoint2D(0,0),
@@ -170,7 +170,7 @@ namespace EssentialCalcs
 
             // Creation of the rebars
             //Material steel = new Material(steelGrade.Name, MatYpe.Steel, steelGrade.Fy / 1.15, steelGrade.Fy / 1.15);
-            Material steel = new Material(steelGrade.Name, MatYpe.Steel, steelGrade.Fy / 1.15, 0);
+            Material steel = new Material(steelGrade.Name, MatYpe.Steel, steelGrade.Fy / 1.15, steelGrade.Fy / 1.15, steelGrade.E);
             double xspace = (LX - 2 * (CoverToLinks + LinkDiameter + BarDiameter / 2)) / (NRebarX - 1);
             double yspace = (LY - 2 * (CoverToLinks + LinkDiameter + BarDiameter / 2)) / (NRebarY - 1);
             for (int i = 0; i < NRebarX; i++)
