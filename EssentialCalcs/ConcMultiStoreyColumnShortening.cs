@@ -41,6 +41,7 @@ namespace EssentialCalcs
         public ConcMultiStoreyColumnShortening()
         {
             initialise();
+            UpdateCalc();
         }
 
         private void initialise()
@@ -83,12 +84,14 @@ namespace EssentialCalcs
 
         public override List<Formula> GenerateFormulae()
         {
-            return new List<Formula>();
+            return expressions;
         }
 
         public override void UpdateCalc()
         {
             // set up time-load history for each column lift
+            formulae = null;
+            expressions = new List<Formula>();
             List<ConcColumnShortening> columnCalcs1 = new List<ConcColumnShortening>();
             for (int i = 0; i < _columnData1.Value.Count; i++)
             {
@@ -185,6 +188,12 @@ namespace EssentialCalcs
             movement1.Value = move1 - preMove1;
             movement2.Value = move2 - preMove2;
             diffMovement.Value = movement1.Value - movement2.Value;
+            expressions.Add(
+                Formula.FormulaWithNarrative("Movement of column 1 at level " + movementLevel.Value + "= " + String.Format("{0:F2}", movement1.Value) + movement1.Unit + Environment.NewLine
+                + "Movement of column 2 at level " + movementLevel.Value + "= " + String.Format("{0:F2}", movement2.Value) + movement2.Unit + Environment.NewLine
+                + "Differential movement at level " + movementLevel.Value + "= " + String.Format("{0:F2}", diffMovement.Value) + diffMovement.Unit + Environment.NewLine)
+
+                );
         }
     }
 }

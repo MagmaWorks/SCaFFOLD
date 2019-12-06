@@ -64,10 +64,13 @@ namespace EssentialCalcs
             creepMovement = outputValues.CreateDoubleCalcValue("Creep movement", "", "mm", 0);
             shrinkageMovement = outputValues.CreateDoubleCalcValue("Shrinkage movement", "", "mm", 0);
             totalMovement = outputValues.CreateDoubleCalcValue("Total movement", "", "mm", 0);
+
+            UpdateCalc();
         }
 
         public override void UpdateCalc()
         {
+            formulae = new List<Formula>();
             var concProps = ConcProperties.ByGrade(concGrade.ValueAsString);
             var creepCalc = new ConcCreep(concGrade.ValueAsString, relativeHumidity.Value, time.Value, time0.Value, L.Value, W.Value);
             var shrinkageCalc = new ConcShrinkage(concGrade.ValueAsString, relativeHumidity.Value, time.Value, timeShrinkStart.Value, L.Value, W.Value, cementType.ValueAsString);
@@ -87,7 +90,14 @@ namespace EssentialCalcs
             creepMovement.Value = H.Value * creepStrain; 
             shrinkageMovement.Value = H.Value * totalShrinkageStrain.Value;
 
+            formulae.AddRange(creepCalc.GetFormulae());
+            formulae.AddRange(shrinkageCalc.GetFormulae());
+
             totalMovement.Value = creepMovement.Value + shrinkageMovement.Value;
+            formulae.Add(
+                Formula.FormulaWithNarrative("Total movement")
+                .AddFirstExpression(@"\delta="+ String.Format("{0:F2}", totalMovement.Value))
+                );
         }
     }
 }
