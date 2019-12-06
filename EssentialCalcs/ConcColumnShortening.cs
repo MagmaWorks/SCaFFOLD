@@ -205,6 +205,10 @@ namespace EssentialCalcs
             meanCompStr.Value = concProps.fcm;
             shrinkageMovement.Value = H.Value * totalShrinkageStrain.Value;
             totalMovement.Value = this.totalCreepMovement.Value + shrinkageMovement.Value;
+            expressions.Add(
+                Formula.FormulaWithNarrative("Total movement")
+                .AddFirstExpression(String.Format("{0:F3}", totalMovement.Value))
+                );
         }
     }
 }
