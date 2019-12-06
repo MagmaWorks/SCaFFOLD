@@ -12,7 +12,7 @@ namespace EssentialCalcs
 {
     [CalcName("RC Axial and Bending Design")]
     [CalcAlternativeName("TestCalcs.ColumnDesign")]
-    public class ColumnDesign : CalcBase
+    public class ColumnDesign : CalcBase // Test comment
     {
         // Column object
         Column MyColumn;
