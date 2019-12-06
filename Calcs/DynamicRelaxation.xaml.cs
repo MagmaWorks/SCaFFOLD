@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,6 +40,29 @@ namespace Calcs
         public List<string> Calcs { get; private set; }
 
         public List<string> Assemblies { get; private set; }
+
+
+        public string Version
+        {
+            get
+            {
+                return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileMajorPart.ToString()+
+                    "."+
+                    FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileMinorPart.ToString()+
+                    "."
+                    +
+                    FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileBuildPart.ToString()
+                    ;
+            }
+        }
+
+        public string Build
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
 
         public DynamicRelaxation(Window parent, List<CalcCore.CalcAssembly> calcClasses)
         { 

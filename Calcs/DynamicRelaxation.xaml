@@ -23,7 +23,15 @@
                     <BitmapImage UriSource="/resources/MagmaWorks_logo.png"/>
                 </Image.Source>
             </Image>
-            <TextBlock Text="SCaFFOLD" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 15"/>
+            <TextBlock Text="SCaFFOLD" FontFamily="Franklin Gothic Book" FontSize="24" Margin="0 0 0 0"/>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 0">
+                <TextBlock FontFamily="Franklin Gothic Book" FontSize="18" Text="Version: "/>
+                <TextBlock FontFamily="Franklin Gothic Book" FontSize="18" Text="{Binding Version}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0 0 0 15">
+                <TextBlock FontFamily="Franklin Gothic Book" FontSize="10" Text="Build: "/>
+                <TextBlock FontFamily="Franklin Gothic Book" FontSize="10" Text="{Binding Build}"/>
+            </StackPanel>
             <!--<ListView ItemsSource="{Binding Calcs}" FontFamily="Franklin Gothic Book" Margin="15 0 15 25"/>-->
             <ScrollViewer VerticalScrollBarVisibility="Auto" Height="Auto" Margin="15 0 15 15">
                 <StackPanel>
