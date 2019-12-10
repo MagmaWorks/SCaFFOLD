@@ -462,7 +462,7 @@ namespace Calcs
                 int number = 0;
                 while (!reader.EndOfStream)
                 {
-                    CalcCore.ICalc newCalc = new EssentialCalcs.SimpleMoment();
+                    CalcCore.ICalc newCalc;
                     line = reader.ReadLine();
                     lineItems = line.Split(',');
                     if (lineItems.Length > listHeaders.Length)
