@@ -81,6 +81,10 @@ namespace EssentialCalcs
         CalcDouble _hole2PosY;
         CalcDouble _hole2SizeX;
         CalcDouble _hole2SizeY;
+        CalcDouble _hole3PosX;
+        CalcDouble _hole3PosY;
+        CalcDouble _hole3SizeX;
+        CalcDouble _hole3SizeY;
         CalcSelectionList _includeLinksBeyondHole;
         CalcListOfDoubleArrays _studPositions;
         CalcSelectionList _maxBarSize;
@@ -163,6 +167,10 @@ namespace EssentialCalcs
             _hole2PosY = inputValues.CreateDoubleCalcValue("Hole 2 Y position", "", "mm", -300);
             _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole 2 X size", "", "mm", 00);
             _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
+            _hole3PosX = inputValues.CreateDoubleCalcValue("Hole 3 X position", "", "mm", -600);
+            _hole3PosY = inputValues.CreateDoubleCalcValue("Hole 3 Y position", "", "mm", 300);
+            _hole3SizeX = inputValues.CreateDoubleCalcValue("Hole 3 X size", "", "mm", 00);
+            _hole3SizeY = inputValues.CreateDoubleCalcValue("Hole 3 Y size", "", "mm", 150);
             _includeLinksBeyondHole = inputValues.CreateCalcSelectionList("Include links beyond holes", "YES", new List<string> { "YES", "NO" });
             _studPositions = outputValues.CreateCalcListOfDoubleArrays("Stud positions", new List<double[]>());
             _maxBarSize = inputValues.CreateCalcSelectionList("Maximum link diameter", "16", new List<string> { "8", "10", "12", "16", "20", "25", "32", "40" });
@@ -343,9 +351,7 @@ namespace EssentialCalcs
                     betaFormula.Expression.Add(@"e_z =\frac{" + _mz.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ez, 1) + "mm");
                     betaFormula.Expression.Add(@"b_y =" + Math.Round(by, 1) + "mm");
                     betaFormula.Expression.Add(@"b_z =" + Math.Round(bz, 1) + "mm");
-                    //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/ControlPerimeters_Fig_6_13.png");
                     betaFormula.Image = _fig6_13;
-                    //betaFormula.Image = new BitmapImage(uri);
                     break;
                 case "EDGE":
                     double epar = Math.Abs(_my.Value * 1E6 / (_punchingLoad.Value * 1E3));
@@ -363,9 +369,7 @@ namespace EssentialCalcs
                     betaFormula.Expression.Add(@"k=" + Math.Round(k, 2));
                     betaFormula.Expression.Add(@"e_{par} =\left|\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + @"}\right|=" + Math.Round(epar, 1) + "mm");
                     betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2=" + Math.Round(w1, 2));
-                    //Uri uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
                     betaFormula.Image = _fig6_20;
-                    //betaFormula.Image = new BitmapImage(uri2);
                     break;
                 case "CORNER":
                     u1 = controlPerimeterNoHoles.Length;
@@ -373,10 +377,7 @@ namespace EssentialCalcs
                     _beta.Value = u1 / u1red;
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}=" + Math.Round(_beta.Value, 3));
                     betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
-                    //betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
-                    //uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
                     betaFormula.Image = _fig6_20;
-                    //betaFormula.Image = new BitmapImage(uri2);
                     break;
                 case "RE-ENTRANT":
                     _beta.Value = 1.275;
@@ -1535,6 +1536,13 @@ namespace EssentialCalcs
             new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value)),
             });
             }
+            allHoleCorners.Add(new List<Vector2>
+            {
+            new Vector2((float)_hole3PosX.Value, (float)(_hole3PosY.Value + _hole3SizeY.Value)),
+            new Vector2((float)(_hole3PosX.Value + _hole3SizeX.Value), (float)(_hole3PosY.Value + _hole3SizeY.Value)),
+            new Vector2((float)(_hole3PosX.Value + _hole3SizeX.Value), (float)(_hole3PosY.Value)),
+            new Vector2((float)_hole3PosX.Value, (float)(_hole3PosY.Value)),
+            });
 
             _holeEdges = new List<Tuple<Line, Line>>();
             var angles = new List<double>();
