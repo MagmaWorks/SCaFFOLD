@@ -2135,11 +2135,12 @@ namespace EssentialCalcs
                         perimeterFullyInside = false;
                     }
                 }
+                if (perimeterFullyInside)
+                {
+                    return new List<PolyLine>();
+                }
             }
-            if (perimeterFullyInside)
-            {
-                return new List<PolyLine>();
-            }
+
 
 
 
