@@ -363,7 +363,6 @@ namespace Calcs
         {
             try
             {
-
                 var openDialog = new OpenFileDialog();
                 openDialog.Filter = @"Calc files |*.JSON";
                 openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);

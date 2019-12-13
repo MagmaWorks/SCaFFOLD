@@ -23,7 +23,13 @@ namespace CalcCore
         {
             get
             {
-                return this.GetType().ToString();
+                Type type = this.GetType();
+                if (Attribute.IsDefined(type, typeof(CalcCore.CalcNameAttribute)))
+                {
+                    return ((CalcCore.CalcNameAttribute)Attribute.GetCustomAttribute(type, typeof(CalcCore.CalcNameAttribute))).CalcName;
+                }
+                else
+                    return this.GetType().ToString();
             }
         }
 

@@ -25,6 +25,7 @@ namespace EssentialCalcs
 {
     [CalcName("Punching Shear to EC2")]
     [CalcAlternativeName("TestCalcs.PunchingShear")]
+    [CalcAlternativeName("EssentialCalcs.PunchingShear")]
     public class PunchingShear : CalcCore.CalcBase
     {
         CalcSelectionList _colType;
@@ -1536,7 +1537,8 @@ namespace EssentialCalcs
             new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value)),
             });
             }
-            allHoleCorners.Add(new List<Vector2>
+            if (_hole3SizeX.Value != 0 && _hole3SizeY.Value != 0)
+                allHoleCorners.Add(new List<Vector2>
             {
             new Vector2((float)_hole3PosX.Value, (float)(_hole3PosY.Value + _hole3SizeY.Value)),
             new Vector2((float)(_hole3PosX.Value + _hole3SizeX.Value), (float)(_hole3PosY.Value + _hole3SizeY.Value)),
