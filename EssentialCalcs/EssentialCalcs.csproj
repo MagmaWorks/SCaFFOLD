@@ -90,6 +90,7 @@
     <Compile Include="ConcMultiStoreyColumnShortening.cs" />
     <Compile Include="ConcProperties.cs" />
     <Compile Include="ConcCreepAndShrinkage.cs" />
+    <Compile Include="ConcreteCarbonCalculator.cs" />
     <Compile Include="ConcreteStrengthClasses.cs" />
     <Compile Include="ConcShrinkage.cs" />
     <Compile Include="Drophead_Symmetrical.cs" />
