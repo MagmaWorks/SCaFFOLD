@@ -57,7 +57,8 @@ namespace EssentialCalcs
         Double rholink;
         CalcDouble _Asreq;
         CalcDouble _Ascreq;
-        CalcDouble _MEd;
+        CalcDouble _MEd_ULS;
+        CalcDouble _MEd_SLS;
         Double z;
         Double K;
         Double Kdash;
@@ -70,7 +71,10 @@ namespace EssentialCalcs
         int barref;
         int barref2;
         int barrefbase;
-
+        Double linkdiasel;
+        CalcSelectionList _crackwidthlimit;
+        double crackwidthlimit;
+        Double ULStoSLS;
 
         List<Formula> expressions = new List<Formula>();
 
@@ -95,16 +99,17 @@ namespace EssentialCalcs
             //Materials
             _ConcreteGrade = inputValues.CreateCalcSelectionList("Concrete grade f_{ck}", "40", new List<string> { "30", "35", "40", "45", "50", "60", "70", "80", "90" });
             _fy = inputValues.CreateDoubleCalcValue("Rebar Yield", "f_{y}", "N/mm^2", 500);
+            _crackwidthlimit = inputValues.CreateCalcSelectionList("Crack width limit", "0.3", new List<string> { "0.2", "0.3", "0.4"});
 
             //Loads
             _TEd = inputValues.CreateDoubleCalcValue("Torsion Load", "T_{Ed}", "kNm", 0);
             _VEd = inputValues.CreateDoubleCalcValue("Shear Load", "V_{Ed}", "kN", 10);
-            _MEd = inputValues.CreateDoubleCalcValue("Bending Moment", "M_{Ed}", "kNm", 10);
+            _MEd_ULS = inputValues.CreateDoubleCalcValue("Bending Moment ULS", "M_{Ed,ULS}", "kNm", 10);
+            _MEd_SLS = inputValues.CreateDoubleCalcValue("Bending Moment SLS", "M_{Ed,SLS}", "kNm", 7);
 
             //Design
             _Bardiaminlist = inputValues.CreateCalcSelectionList("Min Bar diameter", "16", new List<string> { "10", "12", "16", "20", "25", "32", "40" });
             _linkdiameter = inputValues.CreateCalcSelectionList("Link diameter", "10", new List<string> {"8", "10", "12", "16", "20", "25", "32", "40" });
-
             _Minlink_spacing = inputValues.CreateDoubleCalcValue("Min link spacing", "S_{L,min}", "mm", 100);
             _Minbarspacing = inputValues.CreateDoubleCalcValue("Min Bar spacing", "S_{min}", "mm", 50);
 
@@ -141,10 +146,6 @@ namespace EssentialCalcs
 
         private void resetFields()
         {
-            _Bardia.Value = 16;
-            _Bardiacomp.Value = 16;
-            barref = barrefbase;
-            barref2 = barrefbase;
             _Ascprov.Value = 0;
             _Asprov.Value = 0;
             _notensbars.Value = 2;
@@ -152,6 +153,24 @@ namespace EssentialCalcs
             _Ascreq.Value = 0;
             rho = 0;
             rhototal = 0;
+            _Bardia.Value = double.Parse(_Bardiaminlist.ValueAsString);
+            _Bardiacomp.Value = double.Parse(_Bardiaminlist.ValueAsString);
+            crackwidthlimit = double.Parse(_crackwidthlimit.ValueAsString);
+
+            List<double> bardiameters = new List<double> { 10, 12, 16, 20, 25, 32, 40 };
+            while (bardiameters[barrefbase] != double.Parse(_Bardiaminlist.ValueAsString))
+            {
+                barrefbase = barrefbase + 1;
+            }
+
+            barref = barrefbase;
+            barref2 = barrefbase;
+
+            theta = Math.PI / 8;
+
+            linkdiasel = double.Parse(_linkdiameter.ValueAsString);
+            d = _beamhdim.Value - _Cover.Value - linkdiasel - (_Bardia.Value / 2);
+            d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
 
         }
 
@@ -162,10 +181,10 @@ namespace EssentialCalcs
             formulae = null;
             resetFields();
             expressions = new List<Formula>();
+            List<double> bardiameters = new List<double> { 10, 12, 16, 20, 25, 32, 40 };
 
             // Geometry
             _Area.Value = (_beambdim.Value * _beamhdim.Value);
-
 
             Formula f1 = new Formula();
             f1.Narrative = "Geometry";
@@ -177,72 +196,35 @@ namespace EssentialCalcs
             expressions.Add(f1);
 
             //Materials
-            var concprop = ConcProperties.ByGrade(_ConcreteGrade.ValueAsString);
-
+            
             fyd = _fy.Value / gammas;
 
-            if (concprop.fck > 50)
-            {
-                var concpropadj = ConcProperties.ByGrade("50");
-                fck = concpropadj.fck;
-                fcd = 0.85 * (fck) / gammac; //0.85 Alpha cc value is taken conservatively as struts are in perm compression
-                fctm = concpropadj.fctm;
-                fctd = (concpropadj.fctk005) / gammac; //alpha ct is taken as 1 as recommended
+            var concprop = ConcProperties.ByGrade(_ConcreteGrade.ValueAsString);
 
-                Formula f3 = new Formula();
-                f3.Narrative = "Note:The shear strength of concrete is limited to C50/60";
-                f3.Ref = "3.1.2(2)P";
-                expressions.Add(f3);
+            fck = concprop.fck;
+            fcd = 0.85 * (fck) / gammac; //0.85 Alpha cc value is taken conservatively as struts are in perm compression
+            fctm = concprop.fctm;
+            fctd = (concprop.fctk005) / gammac; //alpha ct is taken as 1 as recommended
 
-                Formula f2 = new Formula();
-                f2.Narrative = "Concrete and reinforcement strength";
-                f2.Expression.Add(@"f_{ck} =" + Math.Round(fck, 1) + @"N/mm^2");
-                f2.Expression.Add(@"f_{cd} = " + Math.Round(fcd, 1) + @" N /mm^2" );
-                f2.Expression.Add(@"f_{ctm} = " + Math.Round(fctm, 1) + @"N /mm^2" );
-                f2.Expression.Add(@"f_{ctd} = " + Math.Round(fctd, 1) + @" N /mm^2" );
-                f2.Expression.Add(@"f_{yd} = " + Math.Round(fyd, 1) + @" N /mm^2" );
-                expressions.Add(f2);
-
-            }
-            else
-            {
-                fck = concprop.fck;
-                fcd = 0.85 * (fck) / gammac; //0.85 Alpha cc value is taken conservatively as struts are in perm compression
-                fctm = concprop.fctm;
-                fctd = (concprop.fctk005) / gammac; //alpha ct is taken as 1 as recommended
-
-                Formula f4 = new Formula();
-                f4.Narrative = "Concrete and reinforcement strength";
-                f4.Expression.Add(@"f_{ck} =" + Math.Round(fck, 1) + @"N/mm^2");
-                f4.Expression.Add(@"f_{cd} = " + Math.Round(fcd, 1) + @" N /mm^2");
-                f4.Expression.Add(@"f_{ctm} = " + Math.Round(fctm, 1) + @"N /mm^2");
-                f4.Expression.Add(@"f_{ctd} = " + Math.Round(fctd, 1) + @" N /mm^2");
-                f4.Expression.Add(@"f_{yd} = " + Math.Round(fyd, 1) + @" N /mm^2");
-                expressions.Add(f4);
-            }
+            Formula f4 = new Formula();
+            f4.Narrative = "Concrete and reinforcement strength";
+            f4.Expression.Add(@"f_{ck} =" + Math.Round(fck, 1) + @"N/mm^2");
+            f4.Expression.Add(@"f_{cd} = " + Math.Round(fcd, 1) + @" N /mm^2");
+            f4.Expression.Add(@"f_{ctm} = " + Math.Round(fctm, 1) + @"N /mm^2");
+            f4.Expression.Add(@"f_{ctd} = " + Math.Round(fctd, 1) + @" N /mm^2");
+            f4.Expression.Add(@"f_{yd} = " + Math.Round(fyd, 1) + @" N /mm^2");
+            expressions.Add(f4);
+            
 
             //Design checks - the below section undertakes the design for bending, torsion and shear
 
             //Bending design
+
+            ULStoSLS = _MEd_SLS.Value / _MEd_ULS.Value;
             
-            //find the min bar diameter in list
-
-            List<double> bardiameters = new List<double> {10,12,16,20,25,32,40};
-            while (bardiameters[barrefbase] !=_Bardia.Value)
-            {
-                barrefbase = barrefbase + 1;
-            }
-
-            barref = barrefbase;
-            barref2 = barrefbase;
-
             //set initial start value
 
-            _Bardia.Value = double.Parse(_Bardiaminlist.ValueAsString);
-            d = _beamhdim.Value - _Cover.Value - double.Parse(_linkdiameter.ValueAsString) - (_Bardia.Value/ 2);
-            d2 = _Cover.Value + double.Parse(_linkdiameter.ValueAsString) + (_Bardiacomp.Value / 2);
-
-            var bres = BendingAreq(_MEd.Value,d, _beambdim.Value, fck, _fy.Value,d2,fyd);
+            var bres = BendingAreq(_MEd_ULS.Value,d, _beambdim.Value, fck, _fy.Value,d2,fyd);
             _Asreq.Value = bres.Item1;
             z = bres.Item2;
             K = bres.Item3;
@@ -251,7 +233,7 @@ namespace EssentialCalcs
             Asmin = bres.Item6;
             
             //get number of bars required tension
-            var bendingbarspac = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, double.Parse(_linkdiameter.ValueAsString));
+            var bendingbarspac = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
             _notensbars.Value = bendingbarspac.Item1;
 
             _Asprov.Value = _notensbars.Value * Math.PI * 0.25 * _Bardia.Value * _Bardia.Value;
@@ -259,7 +241,7 @@ namespace EssentialCalcs
             //get number of bars required compression
             if (_Ascreq.Value > 0)
             {
-                var bendingbarspac2 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, double.Parse(_linkdiameter.ValueAsString));
+                var bendingbarspac2 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
                 _nocompbars.Value = bendingbarspac2.Item1;
 
                 _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
@@ -268,7 +250,7 @@ namespace EssentialCalcs
             rho = (_Asprov.Value) / (_Area.Value);
             rhototal = (_Asprov.Value + _Ascprov.Value) / _Area.Value;
 
-            //increase bar sizes and numbers to suit if minimum values aren't met
+            //increase bar sizes and numbers to suit if required values aren't met
 
             bool bendingcheck=true;
 
@@ -294,9 +276,9 @@ namespace EssentialCalcs
                     barref2 = barref2 + 1;
                     _Bardiacomp.Value = bardiameters[barref2];
 
-                    d2 = _Cover.Value + double.Parse(_linkdiameter.ValueAsString) + (_Bardiacomp.Value / 2);
+                    d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
 
-                    var bres2 = BendingAreq(_MEd.Value, d, _beambdim.Value, fck, _fy.Value, d2,fyd);
+                    var bres2 = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2,fyd);
                     _Asreq.Value = bres2.Item1;
                     z = bres2.Item2;
                     K = bres2.Item3;
@@ -304,7 +286,7 @@ namespace EssentialCalcs
                     _Ascreq.Value = bres2.Item5;
                     Asmin = bres2.Item6;
 
-                    var bendingbarspac3 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, double.Parse(_linkdiameter.ValueAsString));
+                    var bendingbarspac3 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
                     _nocompbars.Value = bendingbarspac3.Item1; // returns zero if current bar diameter cannot fit into section
 
                     _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2); // returns zero if current bar diameter cannot fit into section
@@ -323,9 +305,9 @@ namespace EssentialCalcs
                     barref = barref + 1;
                     _Bardia.Value = bardiameters[barref];
 
-                    d = _beamhdim.Value - _Cover.Value - double.Parse(_linkdiameter.ValueAsString) - (_Bardia.Value / 2);
+                    d = _beamhdim.Value - _Cover.Value - linkdiasel - (_Bardia.Value / 2);
 
-                    var bres1 = BendingAreq(_MEd.Value, d, _beambdim.Value, fck, _fy.Value, d2,fyd);
+                    var bres1 = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2,fyd);
                     _Asreq.Value = bres1.Item1;
                     z = bres1.Item2;
                     K = bres1.Item3;
@@ -333,7 +315,7 @@ namespace EssentialCalcs
                     _Ascreq.Value = bres1.Item5;
                     Asmin = bres1.Item6;
 
-                    var bendingbarspac1 = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, double.Parse(_linkdiameter.ValueAsString));
+                    var bendingbarspac1 = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
                     _notensbars.Value = bendingbarspac1.Item1; // returns zero if current bar diameter cannot fit into section
 
                     _Asprov.Value = _notensbars.Value * Math.PI * 0.25 * _Bardia.Value * _Bardia.Value; // returns zero if current bar diameter cannot fit into section
@@ -361,12 +343,12 @@ namespace EssentialCalcs
                         barref2 = barrefbase;
                         _Bardiacomp.Value = bardiameters[barref2];
 
-                        d2 = _Cover.Value + double.Parse(_linkdiameter.ValueAsString) + (_Bardiacomp.Value / 2);
+                        d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
 
-                        var bres2 = BendingAreq(_MEd.Value, d, _beambdim.Value, fck, _fy.Value, d2, fyd);
+                        var bres2 = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2, fyd);
                         _Ascreq.Value = bres2.Item5;
 
-                        var bendingbarspac3 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, double.Parse(_linkdiameter.ValueAsString));
+                        var bendingbarspac3 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
                         _nocompbars.Value = bendingbarspac3.Item1; // returns zero if current bar diameter cannot fit into section
 
                         _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2); // returns zero if current bar diameter cannot fit into section
@@ -438,12 +420,47 @@ namespace EssentialCalcs
 
                 // VRdmax and TRdmax checks
 
+                //material limits on concrete grades
+
+                if (concprop.fck > 50)
+                {
+                    var concpropadj = ConcProperties.ByGrade("50");
+                    fck = concpropadj.fck;
+                    fcd = 0.85 * (fck) / gammac; //0.85 Alpha cc value is taken conservatively as struts are in perm compression
+                    fctm = concpropadj.fctm;
+                    fctd = (concpropadj.fctk005) / gammac; //alpha ct is taken as 1 as recommended
+
+                    Formula f3 = new Formula();
+                    f3.Narrative = "Note:The shear strength of concrete is limited to C50/60";
+                    f3.Ref = "3.1.2(2)P";
+                    expressions.Add(f3);
+
+                    Formula f2 = new Formula();
+                    f2.Narrative = "Concrete and reinforcement strength";
+                    f2.Expression.Add(@"f_{ck} =" + Math.Round(fck, 1) + @"N/mm^2");
+                    f2.Expression.Add(@"f_{cd} = " + Math.Round(fcd, 1) + @" N /mm^2");
+                    f2.Expression.Add(@"f_{ctm} = " + Math.Round(fctm, 1) + @"N /mm^2");
+                    f2.Expression.Add(@"f_{ctd} = " + Math.Round(fctd, 1) + @" N /mm^2");
+                    f2.Expression.Add(@"f_{yd} = " + Math.Round(fyd, 1) + @" N /mm^2");
+                    expressions.Add(f2);
+
+                }
+                else
+                {
+                    fck = concprop.fck;
+                    fcd = 0.85 * (fck) / gammac; //0.85 Alpha cc value is taken conservatively as struts are in perm compression
+                    fctm = concprop.fctm;
+                    fctd = (concprop.fctk005) / gammac; //alpha ct is taken as 1 as recommended
+
+
+                }
+
                 double checkmax = 2;
-                theta = Math.PI / 8;
+
 
                 Uperi = 2 * (_beamhdim.Value + _beambdim.Value);
                 double teffcalc = _Area.Value / Uperi;
-                double teffmin = 2 * (_Cover.Value + double.Parse(_linkdiameter.ValueAsString) + _Bardia.Value * 0.5);
+                double teffmin = 2 * (_Cover.Value + linkdiasel + _Bardia.Value * 0.5);
                 _teff.Value = Math.Max(teffcalc, teffmin);
                 _Areak.Value = (_beambdim.Value - _teff.Value) * (_beamhdim.Value - _teff.Value);
                 Uperik = 2 * (_beambdim.Value - 2 * _teff.Value + _beamhdim.Value);
@@ -527,7 +544,7 @@ namespace EssentialCalcs
                         }
 
                         //Calc shear links
-                        var res = Shear_links(_VEd.Value, fyd, theta, d, _beambdim.Value, _Cover.Value, double.Parse(_linkdiameter.ValueAsString), _Minlink_spacing.Value, fck, _fy.Value, z);
+                        var res = Shear_links(_VEd.Value, fyd, theta, d, _beambdim.Value, _Cover.Value, linkdiasel, _Minlink_spacing.Value, fck, _fy.Value, z);
                         _Linkspacing.Value = res.Item1;
                         _linklegs.Value = res.Item2;
                         _VRds.Value = res.Item3;
@@ -547,7 +564,7 @@ namespace EssentialCalcs
                             f13.Narrative = "Shear link requirements";
                             f13.Expression = new List<string>();
                             f13.Ref = "(6.8)";
-                            f13.Expression.Add("link diameter=" + Math.Round(double.Parse(_linkdiameter.ValueAsString), 0) + _linkdiameter.Unit);
+                            f13.Expression.Add("link diameter=" + Math.Round(linkdiasel, 0) + _linkdiameter.Unit);
                             f13.Expression.Add(_Linkspacing.Symbol + "=" + Math.Round(_Linkspacing.Value, 0) + _Linkspacing.Unit);
                             f13.Expression.Add(_linklegs.Symbol + "=" + Math.Round(_linklegs.Value, 0));
                             f13.Expression.Add(@"\rho_{links}=" + Math.Round(rholink, 4));
@@ -767,12 +784,14 @@ namespace EssentialCalcs
         }
 
         //Bending reinforcement required
-        public Tuple<double,double,double,double, double,double> BendingAreq(Double bendingMom,Double effd,Double secwidth, Double charCompStr,Double rebaryield, double effd2, double fyd)
+        public Tuple<double,double,double,double, double,double,double> BendingAreq(Double bendingMom,Double effd,Double secwidth, Double charCompStr,Double rebaryield, double effd2, double fyd)
         {
             Double K;
             Double Kdash;
             double k1;
             Double k2;
+            double k3;
+            double k4;
             var concprop = ConcProperties.ByGrade(Convert.ToString(charCompStr));
             Double delta;
             Double xu;
@@ -781,21 +800,31 @@ namespace EssentialCalcs
             Double Asmin;
             Double Acs;
             double strngred;
+            double x;
+            double xred;
+            double rho;
+            double n;
+
+
+
+            strngred = 1;
+            rho = 0.8;
+            n = 1;
 
             //Strength reduction when greater than 50 Mpa when required for determining z,
 
-            strngred = 1;
-
             if (concprop.fck > 50)
             {
-                double rhoc = (0.8 - (fck - 50) / 400) / 0.8;
-                double nc = 1 - (fck - 50) / 200;
-                Double xred = (1 / (rhoc * 0.5)) / 2.5;
-                strngred = rhoc * nc * xred;
+                rho = (0.8 - (fck - 50) / 400);
+                n = 1 - (fck - 50) / 200;
+                xred = (1 / (rho * 0.5));
+                strngred = (rho/0.8) * (n/1) * (xred/2.5);
             }
 
             k1 = 0.4; // as per NA
             k2 = 0.6 + (0.0014 / (concprop.Epsiloncu2/1000));
+            k3 = k1;
+            k4 = k2;
 
             xu = (concprop.Epsiloncu3*effd) / (concprop.Epsiloncu3 + (fyd / 200));
 
@@ -809,12 +838,13 @@ namespace EssentialCalcs
                 As = 0;
                 Acs = 0;
                 Kdash = 0.168;
+                x = 0;
                 Asmin = Math.Min((0.26 * concprop.fctm * secwidth * effd) / (rebaryield), 0.0013 * secwidth * effd);
 
-                return new Tuple<double, double,double, double, double,double>(As, z,K,Kdash,Acs,Asmin);
+                return new Tuple<double, double,double, double, double,double,double>(As, z,K,Kdash,Acs,Asmin,x);
             }
 
-            Kdash = Math.Min(0.6 * delta - 0.18 * Math.Pow(delta, 2) - 0.21, 0.168); //Limit of K' limited to 0.168 as per Concrete centre guidance
+            Kdash = Math.Min((2 * n * (0.85 / 1.5)) * (1 - rho * ((delta-k3)/(2*k4)))*(rho*((delta-k3)/(2*k4))), 0.168); //Limit of K' limited to 0.168 as per Concrete centre guidance
 
             if (K < Kdash)
             {
@@ -822,12 +852,14 @@ namespace EssentialCalcs
                 Asmin = Math.Max((0.26 * concprop.fctm * secwidth*effd) / (rebaryield), 0.0013 * secwidth * effd);
 
                 z = Math.Min( (effd / 2) * (1+Math.Pow(1-3.53*strngred*K,0.5)),0.95*effd);
+                x = (effd - z) / (rho * 0.5);
                 As = (bendingMom * 1000000) / (fyd * z);
-        
+ 
                 if (As < Asmin)
                 {
                     As = Asmin;
                 }
+
 
             }
             else
@@ -835,6 +867,7 @@ namespace EssentialCalcs
                 Asmin = Math.Max((0.26 * concprop.fctm * secwidth * effd) / (rebaryield), 0.0013 * secwidth * effd);
 
                 z = (effd / 2) * (1 + Math.Pow(1 - 3.53 * strngred * Kdash, 0.5));
+                x = (effd - z) / (rho * 0.5);
 
                 Double Mdash = secwidth * Math.Pow(effd, 2) * concprop.fck*(K - Kdash);
                 Acs = (Mdash) / (fyd*(effd-effd2));
@@ -847,7 +880,7 @@ namespace EssentialCalcs
                 }
             }
 
-            return new Tuple<double, double, double,double,double, double>(As, z,K,Kdash,Acs,Asmin);
+            return new Tuple<double, double, double,double,double, double,double>(As, z,K,Kdash,Acs,Asmin,x);
         }
 
         //Bending reinforcement spacing
@@ -895,6 +928,74 @@ namespace EssentialCalcs
             }
 
             return new Tuple<double>(nobars);
+        }
+
+        //crack width calc
+        public Tuple<double, double, double> Crackcontrol(Double fck, Double fstress, double bardia, double nobars, Double d, double Secwidth, double secdepth, double x, double cover, double linkdia)
+        {
+            Double crwidth;
+            Double epsmepcm;
+            double kt = 0.4;
+            var concprop = ConcProperties.ByGrade(Convert.ToString(fck));
+            double fcteff = concprop.fctm;
+            double rhopeff;
+            double Aceff;
+            double hcef;
+            double alphae;
+            double Es;
+            double Srmax;
+            double As;
+            double s;
+            double c;
+            double k1;
+            double k2;
+            double k3;
+            double k4;
+            double Asmin;
+            double kc;
+            double k;
+
+            As = nobars * Math.PI * 0.25 * Math.Pow(bardia, 2);
+            s = (Secwidth - 2 * (cover + linkdia) - bardia) / (nobars - 1);
+
+            //cover to main rebar
+            c = cover + linkdia;
+
+            Es = 200;
+            alphae = Es / concprop.Ecm;
+
+            hcef = Math.Min(2.5 * (secdepth - d), Math.Min(secdepth / 2, (secdepth - x) / 3));
+            Aceff = Secwidth * hcef;
+            rhopeff = As / Aceff;
+
+            epsmepcm =Math.Max( (fstress-kt*(fcteff/rhopeff)*(1+alphae*rhopeff))/Es, 0.6*fstress/Es );
+
+            k1 = 0.8;
+            k2 = 0.5;
+            k3 = 3.4;
+            k4 = 0.425;
+            kc = 0.4;
+            k = 1;
+
+            if (s <= 5 * (cover + bardia * 0.5))
+            {
+                // spacing as per (7.11) in EC2
+                Srmax = k3 * c + (k1 * k2 * k4 * bardia) / rhopeff;
+
+            }
+            else
+            {
+                //Spacing as per (7.14) in EC2
+                Srmax = 1.3 * (secdepth - x);
+
+            }
+
+            crwidth = Srmax * epsmepcm;
+
+            //minimum steel requirements
+            Asmin = (kc*k*fcteff*Aceff) / fstress;
+
+            return new Tuple<double, double, double>(crwidth, Srmax, epsmepcm);
         }
     }
 }
