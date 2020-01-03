@@ -62,6 +62,7 @@ namespace EssentialCalcs
         Double z;
         Double K;
         Double Kdash;
+        Double x;
         CalcDouble _Minbarspacing;
         CalcDouble _Bardia;
         CalcDouble _Bardiacomp;
@@ -75,6 +76,13 @@ namespace EssentialCalcs
         CalcSelectionList _crackwidthlimit;
         double crackwidthlimit;
         Double ULStoSLS;
+        double crackwidth;
+        double Asmincr;
+        double Srmax;
+        double epsmepcm;
+        double minspacgov;
+        double spac;
+        double slsbarstress;
 
         List<Formula> expressions = new List<Formula>();
 
@@ -221,149 +229,166 @@ namespace EssentialCalcs
             //Bending design
 
             ULStoSLS = _MEd_SLS.Value / _MEd_ULS.Value;
-            
-            //set initial start value
-
-            var bres = BendingAreq(_MEd_ULS.Value,d, _beambdim.Value, fck, _fy.Value,d2,fyd);
-            _Asreq.Value = bres.Item1;
-            z = bres.Item2;
-            K = bres.Item3;
-            Kdash = bres.Item4;
-            _Ascreq.Value = bres.Item5;
-            Asmin = bres.Item6;
-            
-            //get number of bars required tension
-            var bendingbarspac = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
-            _notensbars.Value = bendingbarspac.Item1;
-
-            _Asprov.Value = _notensbars.Value * Math.PI * 0.25 * _Bardia.Value * _Bardia.Value;
-
-            //get number of bars required compression
-            if (_Ascreq.Value > 0)
-            {
-                var bendingbarspac2 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
-                _nocompbars.Value = bendingbarspac2.Item1;
-
-                _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
-            }
-
-            rho = (_Asprov.Value) / (_Area.Value);
-            rhototal = (_Asprov.Value + _Ascprov.Value) / _Area.Value;
-
-            //increase bar sizes and numbers to suit if required values aren't met
-
-            bool bendingcheck=true;
-
-            if (_Asprov.Value < _Asreq.Value)
-            {
-                bendingcheck = false;
-            }
-
-            if (_Ascprov.Value < _Ascreq.Value)
-            {
-                bendingcheck = false;
-            }
+           
+            bool bendingcheck = false;
+            bool sectionconcheck = true;
 
             while (bendingcheck == false)
             {
-                //compression steel required
+                //Calculation of required bending reinforcement with
+                var bres = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2, fyd);
+                _Asreq.Value = bres.Item1;
+                z = bres.Item2;
+                K = bres.Item3;
+                Kdash = bres.Item4;
+                _Ascreq.Value = bres.Item5;
+                Asmin = bres.Item6;
+                x = bres.Item7;
 
-                //dbase ensures that the compression steel d value aligns to what was used within the tension steel calc
-                double dbase = d;
+                //get number of bars required tension for bending only
+                var bendingbarspac = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
+                _notensbars.Value = bendingbarspac.Item1;
+                minspacgov = bendingbarspac.Item2;
 
-                while (_Ascprov.Value < _Ascreq.Value)
+                _Asprov.Value = Math.PI * 0.25 * Math.Pow(_Bardia.Value, 2) * _notensbars.Value;
+
+                rho = (_Asprov.Value) / (_Area.Value);
+                spac = (_beambdim.Value - 2 * _Cover.Value - 2 * linkdiasel - _Bardia.Value) / (_notensbars.Value - 1) - _Bardia.Value;
+
+                //crack width calculations
+                slsbarstress = fyd * ULStoSLS * (_Asreq.Value / _Asprov.Value);
+
+                var cres = Crackcontrol(fck, slsbarstress, _Bardia.Value, _notensbars.Value, d, _beambdim.Value, _beamhdim.Value, x, _Cover.Value, linkdiasel, _fy.Value);
+                Asmincr = cres.Item1;
+                crackwidth = cres.Item2;
+                Srmax = cres.Item3;
+                epsmepcm = cres.Item4;
+
+                //get number of bars required compression for bending only
+                if (_Ascreq.Value > 0)
                 {
-                    barref2 = barref2 + 1;
-                    _Bardiacomp.Value = bardiameters[barref2];
+                    var bendingbarspac2 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
+                    _nocompbars.Value = bendingbarspac2.Item1;
 
-                    d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
-
-                    var bres2 = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2,fyd);
-                    _Asreq.Value = bres2.Item1;
-                    z = bres2.Item2;
-                    K = bres2.Item3;
-                    Kdash = bres2.Item4;
-                    _Ascreq.Value = bres2.Item5;
-                    Asmin = bres2.Item6;
-
-                    var bendingbarspac3 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
-                    _nocompbars.Value = bendingbarspac3.Item1; // returns zero if current bar diameter cannot fit into section
-
-                    _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2); // returns zero if current bar diameter cannot fit into section
-
-                    if (_Bardiacomp.Value == bardiameters[6])
-                    {
-
-                        break;
-                    }
-
+                    _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
                 }
 
-                // Tension steel requirements
-                while (_Asprov.Value < _Asreq.Value)
+                rhototal = (_Asprov.Value + _Ascprov.Value) / _Area.Value;
+
+                //checks
+
+
+                if (_Asreq.Value == 0)
                 {
-                    barref = barref + 1;
-                    _Bardia.Value = bardiameters[barref];
+                    sectionconcheck = false;
+                    break;
+                }
+                else if (_Ascprov.Value < _Ascreq.Value)
+                {
+                    if (_Bardiacomp.Value == bardiameters[6])
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        barref2 = barref2 + 1;
+                        _Bardiacomp.Value = bardiameters[barref2];
 
-                    d = _beamhdim.Value - _Cover.Value - linkdiasel - (_Bardia.Value / 2);
-
-                    var bres1 = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2,fyd);
-                    _Asreq.Value = bres1.Item1;
-                    z = bres1.Item2;
-                    K = bres1.Item3;
-                    Kdash = bres1.Item4;
-                    _Ascreq.Value = bres1.Item5;
-                    Asmin = bres1.Item6;
-
-                    var bendingbarspac1 = BendingBarsspacing(_Asreq.Value, _Bardia.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
-                    _notensbars.Value = bendingbarspac1.Item1; // returns zero if current bar diameter cannot fit into section
-
-                    _Asprov.Value = _notensbars.Value * Math.PI * 0.25 * _Bardia.Value * _Bardia.Value; // returns zero if current bar diameter cannot fit into section
-                    rho = (_Asprov.Value) / (_Area.Value);
-                    rhototal = (_Asprov.Value + _Ascprov.Value) / _Area.Value;
-
+                        d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
+                    }
+                }
+                else if (_Asprov.Value < _Asreq.Value)
+                {
                     if (_Bardia.Value == bardiameters[6])
                     {
                         break;
                     }
-
-                }
-
-                //check that the compression steel used the same d as the tension steel calc, if not, reset values to start compression calc again
-
-                if (_Ascreq.Value > 0)
-                {
-                    if (dbase == d)
-                    {
-                        bendingcheck = true;
-                    }
                     else
                     {
-                        barref = barref - 1;
-                        barref2 = barrefbase;
-                        _Bardiacomp.Value = bardiameters[barref2];
+                        //increase bar diameter
+                        barref = barref + 1;
+                        _Bardia.Value = bardiameters[barref];
 
-                        d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
-
-                        var bres2 = BendingAreq(_MEd_ULS.Value, d, _beambdim.Value, fck, _fy.Value, d2, fyd);
-                        _Ascreq.Value = bres2.Item5;
-
-                        var bendingbarspac3 = BendingBarsspacing(_Ascreq.Value, _Bardiacomp.Value, _Minbarspacing.Value, _Cover.Value, _beambdim.Value, linkdiasel);
-                        _nocompbars.Value = bendingbarspac3.Item1; // returns zero if current bar diameter cannot fit into section
-
-                        _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2); // returns zero if current bar diameter cannot fit into section
+                        //strength checks - can a number of bars be found to suit the strength requirements with this bar diameter
+                        d = _beamhdim.Value - _Cover.Value - linkdiasel - (_Bardia.Value / 2);
                     }
 
                 }
                 else
                 {
-                    bendingcheck = true;
+                    //increase number of bars to limit crack widths if required and possible
+
+                    bool crackwidthcheck= false;
+
+                    while (true)
+                    {
+                        _Asprov.Value = Math.PI * 0.25 * Math.Pow(_Bardia.Value, 2) * _notensbars.Value;
+                        rho = (_Asprov.Value) / (_Area.Value);
+                        rhototal = (_Asprov.Value + _Ascprov.Value) / _Area.Value;
+                        spac = (_beambdim.Value - 2 * _Cover.Value - 2 * linkdiasel - _Bardia.Value) / (_notensbars.Value - 1) - _Bardia.Value;
+
+                        slsbarstress = fyd * ULStoSLS * (_Asreq.Value / _Asprov.Value);
+
+                        var cres1 = Crackcontrol(fck, slsbarstress, _Bardia.Value, _notensbars.Value, d, _beambdim.Value, _beamhdim.Value, x, _Cover.Value, linkdiasel, _fy.Value);
+                        Asmincr = cres1.Item1;
+                        crackwidth = cres1.Item2;
+                        Srmax = cres1.Item3;
+                        epsmepcm = cres1.Item4;
+
+                        if (crackwidth > crackwidthlimit)
+                        {
+                            if ((_beambdim.Value - 2 * _Cover.Value - 2 * linkdiasel - _Bardia.Value) / (_notensbars.Value) - _Bardia.Value > minspacgov)
+                            {
+                                _notensbars.Value = _notensbars.Value + 1;
+                            }
+                            else
+                            {
+                               break;
+                            }
+                        }
+                        else if (_Asprov.Value < Asmincr)
+                        {
+                            if ((_beambdim.Value - 2 * _Cover.Value - 2 * linkdiasel - _Bardia.Value) / (_notensbars.Value) - _Bardia.Value > minspacgov)
+                            {
+                                _notensbars.Value = _notensbars.Value + 1;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            bendingcheck = true;
+                            crackwidthcheck = true;
+                            break;
+                        }
+                    }
+
+                    if (crackwidthcheck == false)
+                    {
+                        if (_Bardia.Value == bardiameters[6])
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            //increase bar diameter
+                            barref = barref + 1;
+                            _Bardia.Value = bardiameters[barref];
+
+                            //strength checks - can a number of bars be found to suit the strength requirements with this bar diameter
+                            d = _beamhdim.Value - _Cover.Value - linkdiasel - (_Bardia.Value / 2);
+                        }
+                    }
+
                 }
             }
 
+
             //Check bending reinforcement can be provided then check shear/torsion
 
-            if (_Asreq.Value == 0)
+            if (sectionconcheck = false)
             {
                 Formula f5 = new Formula();
                 f5.Narrative = "Bending Concrete check";
@@ -371,7 +396,7 @@ namespace EssentialCalcs
                 f5.Status = CalcStatus.FAIL;
                 expressions.Add(f5);
             }
-            else if (_Asreq.Value < _Asprov.Value)
+            else if (bendingcheck = true)
             {
                 Formula f5 = new Formula();
                 f5.Narrative = "Bending Reinforcement check";
@@ -418,6 +443,17 @@ namespace EssentialCalcs
                 f5.Status = CalcStatus.PASS;
                 expressions.Add(f5);
 
+                Formula f6 = new Formula();
+                f6.Narrative = "Crack width checks";
+                f6.Expression.Add(@"\sigma_s=" + Math.Round(slsbarstress, 2)+_fy.Unit);
+                f6.Expression.Add(@"S_{r,max}=" + Math.Round( Srmax,2));
+                f6.Expression.Add(@"(\epsilon_{sm}-\epsilon_{cm})=" +Math.Round( epsmepcm,6));
+                f6.Expression.Add(@"w_k=S_{r,max}(\epsilon_{sm}-\epsilon_{cm})="+Math.Round(crackwidth,3)+"mm<"+crackwidthlimit+"mm");
+                f6.Expression.Add(@"A_{s,min}=(k_ckf_{ct,eff}A_{ct})/\sigma_s)="+Math.Round(Asmincr,2) +"mm^2<"+Math.Round( _Asprov.Value,2));
+                f6.Conclusion = "Pass";
+                f6.Status = CalcStatus.PASS;
+                expressions.Add(f6);
+
                 // VRdmax and TRdmax checks
 
                 //material limits on concrete grades
@@ -436,7 +472,7 @@ namespace EssentialCalcs
                     expressions.Add(f3);
 
                     Formula f2 = new Formula();
-                    f2.Narrative = "Concrete and reinforcement strength";
+                    f2.Narrative = "Concrete and reinforcement strength for shear checks";
                     f2.Expression.Add(@"f_{ck} =" + Math.Round(fck, 1) + @"N/mm^2");
                     f2.Expression.Add(@"f_{cd} = " + Math.Round(fcd, 1) + @" N /mm^2");
                     f2.Expression.Add(@"f_{ctm} = " + Math.Round(fctm, 1) + @"N /mm^2");
@@ -445,18 +481,8 @@ namespace EssentialCalcs
                     expressions.Add(f2);
 
                 }
-                else
-                {
-                    fck = concprop.fck;
-                    fcd = 0.85 * (fck) / gammac; //0.85 Alpha cc value is taken conservatively as struts are in perm compression
-                    fctm = concprop.fctm;
-                    fctd = (concprop.fctk005) / gammac; //alpha ct is taken as 1 as recommended
-
-
-                }
 
                 double checkmax = 2;
-
 
                 Uperi = 2 * (_beamhdim.Value + _beambdim.Value);
                 double teffcalc = _Area.Value / Uperi;
@@ -464,8 +490,6 @@ namespace EssentialCalcs
                 _teff.Value = Math.Max(teffcalc, teffmin);
                 _Areak.Value = (_beambdim.Value - _teff.Value) * (_beamhdim.Value - _teff.Value);
                 Uperik = 2 * (_beambdim.Value - 2 * _teff.Value + _beamhdim.Value);
-
-
 
                 while (true)
                 {
@@ -564,7 +588,7 @@ namespace EssentialCalcs
                             f13.Narrative = "Shear link requirements";
                             f13.Expression = new List<string>();
                             f13.Ref = "(6.8)";
-                            f13.Expression.Add("link diameter=" + Math.Round(linkdiasel, 0) + _linkdiameter.Unit);
+                            f13.Expression.Add(@"link diameter=" + Math.Round(linkdiasel, 0) + _linkdiameter.Unit);
                             f13.Expression.Add(_Linkspacing.Symbol + "=" + Math.Round(_Linkspacing.Value, 0) + _Linkspacing.Unit);
                             f13.Expression.Add(_linklegs.Symbol + "=" + Math.Round(_linklegs.Value, 0));
                             f13.Expression.Add(@"\rho_{links}=" + Math.Round(rholink, 4));
@@ -883,8 +907,9 @@ namespace EssentialCalcs
             return new Tuple<double, double, double,double,double, double,double>(As, z,K,Kdash,Acs,Asmin,x);
         }
 
-        //Bending reinforcement spacing
-        public Tuple<double> BendingBarsspacing(Double Asreq, Double mindia, Double minspac, Double cover,Double width,double link)
+        //Bending reinforcement spacing 
+        // returns highest value of bars which either satisfies As,req or fits within section
+        public Tuple<double,double, double> BendingBarsspacing(Double Asreq, Double mindia, Double minspac, Double cover,Double width,double link)
         {
             Double Asprov;
             Double Bardia;
@@ -905,7 +930,10 @@ namespace EssentialCalcs
 
                 if (spac < minspacgov)
                 {
-                    nobars = 0;
+                    //bars cannot fit, provide final number of bars as a return which doesn't provide As,req
+                    nobars = nobars-1;
+                    Asprov = Math.PI * 0.25 * Bardia * Bardia * nobars;
+                    spac = (width - 2 * cover - 2 * link) / (nobars - 1) - Bardia;
                     break;
                 }
                 else
@@ -927,11 +955,11 @@ namespace EssentialCalcs
 
             }
 
-            return new Tuple<double>(nobars);
+            return new Tuple<double, double,double>(nobars, minspacgov, spac);
         }
 
         //crack width calc
-        public Tuple<double, double, double> Crackcontrol(Double fck, Double fstress, double bardia, double nobars, Double d, double Secwidth, double secdepth, double x, double cover, double linkdia)
+        public Tuple<double, double, double, double> Crackcontrol(Double fck, Double fsls, double bardia, double nobars, Double d, double Secwidth, double secdepth, double x, double cover, double linkdia, double fy)
         {
             Double crwidth;
             Double epsmepcm;
@@ -961,14 +989,14 @@ namespace EssentialCalcs
             //cover to main rebar
             c = cover + linkdia;
 
-            Es = 200;
-            alphae = Es / concprop.Ecm;
+            Es = 200000;
+            alphae = Es / (concprop.Ecm*1000);
 
             hcef = Math.Min(2.5 * (secdepth - d), Math.Min(secdepth / 2, (secdepth - x) / 3));
             Aceff = Secwidth * hcef;
             rhopeff = As / Aceff;
 
-            epsmepcm =Math.Max( (fstress-kt*(fcteff/rhopeff)*(1+alphae*rhopeff))/Es, 0.6*fstress/Es );
+            epsmepcm =Math.Max( (fsls-kt*(fcteff/rhopeff)*(1+alphae*rhopeff))/Es, 0.6*fsls/Es );
 
             k1 = 0.8;
             k2 = 0.5;
@@ -993,9 +1021,9 @@ namespace EssentialCalcs
             crwidth = Srmax * epsmepcm;
 
             //minimum steel requirements
-            Asmin = (kc*k*fcteff*Aceff) / fstress;
+            Asmin = (kc*k*fcteff*Aceff) / fy;
 
-            return new Tuple<double, double, double>(crwidth, Srmax, epsmepcm);
+            return new Tuple<double, double, double, double>(Asmin, crwidth, Srmax, epsmepcm);
         }
     }
 }
