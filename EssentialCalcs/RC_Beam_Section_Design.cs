@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 // We need to bring the functionality provided by CalcCore into scope so add a 'using' statement:
 using CalcCore;
+using StructuralDrawing2D;
+using SkiaSharp;
 
 
 namespace EssentialCalcs
@@ -83,6 +85,8 @@ namespace EssentialCalcs
         double minspacgov;
         double spac;
         double slsbarstress;
+        bool bendingcheck;
+        bool sectionconcheck;
 
         List<Formula> expressions = new List<Formula>();
 
@@ -144,16 +148,24 @@ namespace EssentialCalcs
 
             // Call your UpdateCalc() method to run the calc for the first time
             UpdateCalc();
+
         }
 
         //The below generates the narative, expressions is defined as a list
         public override List<Formula> GenerateFormulae()
         {
+            var image = generateImage();
+            expressions.Insert(0, new Formula
+            {
+                Narrative = "Image:",
+                Image = image[0],
+            });
             return expressions;
         }
 
         private void resetFields()
         {
+            
             _Ascprov.Value = 0;
             _Asprov.Value = 0;
             _notensbars.Value = 2;
@@ -180,13 +192,18 @@ namespace EssentialCalcs
             d = _beamhdim.Value - _Cover.Value - linkdiasel - (_Bardia.Value / 2);
             d2 = _Cover.Value + linkdiasel + (_Bardiacomp.Value / 2);
 
+
+
         }
+
+
 
         // this method is used to update your calc whenever input values are changed
         public override void UpdateCalc()
         {
             // reset the formule field. This ensures it will be regenerated with the GenerateFormulae method
             formulae = null;
+            
             resetFields();
             expressions = new List<Formula>();
             List<double> bardiameters = new List<double> { 10, 12, 16, 20, 25, 32, 40 };
@@ -229,7 +246,7 @@ namespace EssentialCalcs
             //Bending design
 
             ULStoSLS = _MEd_SLS.Value / _MEd_ULS.Value;
-           
+
             bool bendingcheck = false;
             bool sectionconcheck = true;
 
@@ -281,12 +298,24 @@ namespace EssentialCalcs
                 if (_Asreq.Value == 0)
                 {
                     sectionconcheck = false;
+                    _Bardiacomp.Value = 16;
+                    _nocompbars.Value = 0;
+                    _notensbars.Value = 0;
+                    _Bardia.Value = 16;
+                    _Asprov.Value = Math.PI * 0.25 * Math.Pow(_Bardia.Value, 2) * _notensbars.Value;
+                    _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
                     break;
                 }
                 else if (_Ascprov.Value < _Ascreq.Value)
                 {
                     if (_Bardiacomp.Value == bardiameters[6])
                     {
+                        _Bardia.Value = 16;
+                        _notensbars.Value = 0;
+                        _Bardiacomp.Value = 16;
+                        _nocompbars.Value = 0;
+                        _Asprov.Value = Math.PI * 0.25 * Math.Pow(_Bardia.Value, 2) * _notensbars.Value;
+                        _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
                         break;
                     }
                     else
@@ -301,6 +330,12 @@ namespace EssentialCalcs
                 {
                     if (_Bardia.Value == bardiameters[6])
                     {
+                        _Bardia.Value = 16;
+                        _notensbars.Value = 0;
+                        _Bardiacomp.Value = 16;
+                        _nocompbars.Value = 0;
+                        _Asprov.Value = Math.PI * 0.25 * Math.Pow(_Bardia.Value, 2) * _notensbars.Value;
+                        _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
                         break;
                     }
                     else
@@ -369,6 +404,12 @@ namespace EssentialCalcs
                     {
                         if (_Bardia.Value == bardiameters[6])
                         {
+                            _Bardia.Value = 16;
+                            _notensbars.Value = 0;
+                            _Bardiacomp.Value = 16;
+                            _nocompbars.Value = 0;
+                            _Asprov.Value = Math.PI * 0.25 * Math.Pow(_Bardia.Value, 2) * _notensbars.Value;
+                            _Ascprov.Value = _nocompbars.Value * Math.PI * 0.25 * Math.Pow(_Bardiacomp.Value, 2);
                             break;
                         }
                         else
@@ -388,7 +429,7 @@ namespace EssentialCalcs
 
             //Check bending reinforcement can be provided then check shear/torsion
 
-            if (sectionconcheck = false)
+            if (sectionconcheck == false)
             {
                 Formula f5 = new Formula();
                 f5.Narrative = "Bending Concrete check";
@@ -396,7 +437,7 @@ namespace EssentialCalcs
                 f5.Status = CalcStatus.FAIL;
                 expressions.Add(f5);
             }
-            else if (bendingcheck = true)
+            else if (bendingcheck == true)
             {
                 Formula f5 = new Formula();
                 f5.Narrative = "Bending Reinforcement check";
@@ -640,6 +681,99 @@ namespace EssentialCalcs
                 expressions.Add(f5);
             }
 
+        }
+
+        private List<SkiaSharp.SKBitmap> generateImage()
+        {
+            double sf = 1 ;
+
+            DisplayDataSet dataset = DisplayDataSet.GetDisplayDataSet();
+            dataset.AddFormattingInstruction("Beam",
+                                             new SkiaSharp.SKPaint { StrokeWidth = 2, Color = SkiaSharp.SKColors.Gray },
+                                             new SkiaSharp.SKPaint { StrokeWidth = 2, Color = SkiaSharp.SKColors.Transparent });
+            dataset.AddFormattingInstruction("Rebar",
+                                             new SkiaSharp.SKPaint { StrokeWidth = 2, Color = SkiaSharp.SKColors.Brown },
+                                             new SkiaSharp.SKPaint { StrokeWidth = 2, Color = SkiaSharp.SKColors.Transparent });
+            dataset.AddFormattingInstruction("Link",
+                                             new SkiaSharp.SKPaint { StrokeWidth = 2, Color = SkiaSharp.SKColors.Transparent },
+                                             new SkiaSharp.SKPaint { StrokeWidth = (float)linkdiasel, Color = SkiaSharp.SKColors.Brown });
+            StructuralDrawing2D.StructuralDrawing2D drawing = new StructuralDrawing2D.StructuralDrawing2D(dataset);
+
+            // axis
+            var pathX = new SkiaSharp.SKPath();
+            pathX.MoveTo((float)(-_beambdim.Value * sf), 0);
+            pathX.LineTo((float)(_beambdim.Value * sf), 0);
+            drawing.AddElement(DisplayFormatPreset.Gridline, pathX, false);
+
+            var pathY = new SkiaSharp.SKPath();
+            pathY.MoveTo(0, (float)(-_beamhdim.Value * sf));
+            pathY.LineTo(0, (float)(_beamhdim.Value * sf));
+            drawing.AddElement(DisplayFormatPreset.Gridline, pathY, false);
+
+            // beam shape
+            var path = new SkiaSharp.SKPath();
+            var rect = new SkiaSharp.SKRect((float)(-_beambdim.Value / 2 * sf), (float)(_beamhdim.Value / 2 * sf), (float)(_beambdim.Value / 2 * sf), (float)(-_beamhdim.Value / 2 * sf));
+            path.AddRect(rect);
+            drawing.AddElement("Beam", path, true);
+
+
+            // rebars btm
+            double dx = (_beambdim.Value - 2 * (_Cover.Value + linkdiasel) - _Bardia.Value) / (_notensbars.Value - 1);
+
+
+            for (int i = 0; i < _notensbars.Value; i++)
+            {
+
+                var pathR = new SkiaSharp.SKPath();
+
+                double x = _Cover.Value + linkdiasel + _Bardia.Value / 2 + i * dx - _beambdim.Value / 2;
+                double y = -_beamhdim.Value / 2 + (_Cover.Value + linkdiasel + _Bardia.Value / 2);
+                pathR.AddCircle((float)(x * sf), (float)(y * sf), (float)(_Bardia.Value / 2 * sf));
+
+                drawing.AddElement("Rebar", pathR, true);
+
+            }
+
+            // rebars top
+            double dxc = (_beambdim.Value - 2 * (_Cover.Value + linkdiasel) - _Bardiacomp.Value) / (_nocompbars.Value - 1);
+
+            for (int i = 0; i < _nocompbars.Value; i++)
+            {
+
+                var pathRC = new SkiaSharp.SKPath();
+
+                double x = _Cover.Value + linkdiasel + _Bardiacomp.Value / 2 + i * dxc - _beambdim.Value / 2;
+                double y = _beamhdim.Value / 2 - (_Cover.Value + linkdiasel + _Bardiacomp.Value / 2);
+                pathRC.AddCircle((float)(x * sf), (float)(y * sf), (float)(_Bardiacomp.Value / 2 * sf));
+
+                drawing.AddElement("Rebar", pathRC, true);
+
+            }
+            
+
+            //rebar link
+
+            var pathlink = new SkiaSharp.SKPath();
+            double linkx = _beambdim.Value/2 - _Cover.Value - linkdiasel/2;
+            double linky = _beamhdim.Value/2 -  _Cover.Value - linkdiasel/2;
+            double linkrad;
+
+            if (linkdiasel > 16)
+            {
+                linkrad = 3.5 * linkdiasel;
+            }
+            else
+            {
+                linkrad = 2 * linkdiasel;
+            }
+
+            var rectli = new SkiaSharp.SKRect((float)(-linkx), (float)(linky), (float)(linkx), (float)(-linky));
+           
+            pathlink.AddRoundedRect(rectli, (float)(linkrad), (float)(linkrad));
+            drawing.AddElement( "Link" ,pathlink, true);
+
+            var bitmap = drawing.GenerateBitmapImage(1000,1000,100);
+            return new List<SKBitmap> { bitmap};
         }
 
         //Concrete resistance to Torsion maximum tre
