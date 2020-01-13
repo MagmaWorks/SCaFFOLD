@@ -78,7 +78,7 @@ namespace Calcs
 
         public BatchVM(List<CalcCore.CalcAssembly> calcAssemblies)
         {
-            _calcs = new List<SimpleCalcVM> { new SimpleCalcVM(new TestCalcs.RC_Beam())};
+            _calcs = new List<SimpleCalcVM> { new SimpleCalcVM(new EssentialCalcs.RC_Beam())};
             _calcNames = new ObservableCollection<string> { "Calc 1" };
             this._calcAssemblies = calcAssemblies;
         }
@@ -102,7 +102,7 @@ namespace Calcs
             int number = 0;
             while (!reader.EndOfStream)
             {
-                CalcCore.ICalc newCalc = new TestCalcs.SimpleMoment();
+                CalcCore.ICalc newCalc = new EssentialCalcs.SimpleMoment();
                 line = reader.ReadLine();
                 lineItems = line.Split(',');
                 foreach (var calc in _calcAssemblies)

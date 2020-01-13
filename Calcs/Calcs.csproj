@@ -284,9 +284,9 @@
       <Project>{6242d040-2b9a-436f-9c50-6a61f1b89960}</Project>
       <Name>DynamicRelaxation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestCalcs\TestCalcs.csproj">
+    <ProjectReference Include="..\EssentialCalcs\EssentialCalcs.csproj">
       <Project>{6212564f-470c-49ef-a4be-1f8e0043ec89}</Project>
-      <Name>TestCalcs</Name>
+      <Name>EssentialCalcs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -345,8 +345,7 @@
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\$(ConfigurationName)\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
-xcopy "$(ProjectDir)resources\CalcsInstaller.nsi" "$(TargetDir)" /Y
-"C:\Program Files (x86)\NSIS\makensis.exe" "$(TargetDir)CalcsInstaller.nsi"
+
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />

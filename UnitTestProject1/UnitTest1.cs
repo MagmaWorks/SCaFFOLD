@@ -23,7 +23,7 @@ namespace UnitTestProject1
         [TestMethod]
         public void TestWoodArmerCalc()
         {
-            TestCalcs.WoodArmer myCalc = new TestCalcs.WoodArmer(6.96, 17.75, -14.83);
+            EssentialCalcs.WoodArmer myCalc = new EssentialCalcs.WoodArmer(6.96, 17.75, -14.83);
             myCalc.UpdateCalc();
             var outputs = myCalc.GetOutputs();
             IEnumerable<CalcCore.CalcValueBase> resultValue =
