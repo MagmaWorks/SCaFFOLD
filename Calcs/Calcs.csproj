@@ -272,9 +272,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalcCore\CalcCore.csproj">
-      <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
-      <Name>CalcCore</Name>
+    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
+      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
+      <Name>CalcCoreStandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\CalcWindowsUtilities\CalcWindowsUtilities.csproj">
       <Project>{35547d5c-c7e0-4a07-87d3-275db1aa7a70}</Project>

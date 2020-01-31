@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="netDxf.netstandard" Version="2.3.0" />
+    <PackageReference Include="SkiaSharp" Version="1.68.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MWGeometry">
+      <HintPath>..\..\SCaFFOLD\Calcs\resources\MWGeometry.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
