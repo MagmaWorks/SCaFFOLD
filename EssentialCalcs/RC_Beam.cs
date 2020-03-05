@@ -7,6 +7,8 @@ using CalcCore;
 
 namespace EssentialCalcs
 {
+    [CalcName("RC Beam")]
+    [CalcAlternativeName("TestCalcs.RC_Beam")]
     public class RC_Beam : CalcCore.CalcBase
     {
         CalcDouble aggregateAdjustmentFactor;
