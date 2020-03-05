@@ -56,9 +56,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalcCore\CalcCore.csproj">
-      <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
-      <Name>CalcCore</Name>
+    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
+      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
+      <Name>CalcCoreStandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicRelaxation\DynamicRelaxation.csproj">
       <Project>{6242d040-2b9a-436f-9c50-6a61f1b89960}</Project>

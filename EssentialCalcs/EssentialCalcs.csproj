@@ -106,17 +106,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PunchingShear-mobile.cs" />
     <Compile Include="RC_Beam.cs" />
-    <Compile Include="RC_Beam_Torsion.cs" />
+    <Compile Include="RC_Beam_Section_Design.cs" />
     <Compile Include="Sections.cs" />
     <Compile Include="SimpleMoment.cs" />
     <Compile Include="StrutBucklingCheck.cs" />
     <Compile Include="WoodArmer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CalcCore\CalcCore.csproj">
-      <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
-      <Name>CalcCore</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="resources\PunchingShear_Fig_6_14.png" />
@@ -146,6 +140,12 @@
     <Content Include="resources\StructuralDrawing2D.dll" />
     <Content Include="resources\Triangle.dll" />
     <Content Include="WW.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
+      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
+      <Name>CalcCoreStandard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
