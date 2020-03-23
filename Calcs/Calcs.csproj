@@ -345,6 +345,8 @@
   <PropertyGroup>
     <PostBuildEvent>xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(ProjectDir)Bin\$(ConfigurationName)\Libraries\" /Y
 xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
+xcopy "$(ProjectDir)resources\CalcsInstaller.nsi" "$(TargetDir)" /Y
+"C:\Program Files (x86)\NSIS\makensis.exe" "$(TargetDir)CalcsInstaller.nsi"
 
 </PostBuildEvent>
   </PropertyGroup>

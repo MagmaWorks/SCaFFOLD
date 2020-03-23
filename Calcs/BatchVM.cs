@@ -102,7 +102,7 @@ namespace Calcs
             int number = 0;
             while (!reader.EndOfStream)
             {
-                CalcCore.ICalc newCalc = new EssentialCalcs.SimpleMoment();
+                CalcCore.ICalc newCalc = new EssentialCalcs.RC_Beam();
                 line = reader.ReadLine();
                 lineItems = line.Split(',');
                 foreach (var calc in _calcAssemblies)

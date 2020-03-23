@@ -47,7 +47,7 @@ Section "SCaFFOLD for Windows (required)"
   ; Put file there
   File "Calcs.exe"
   File "BriefFiniteElementNet.dll"
-  File "CalcCore.dll"
+  File "CalcCoreStandard.dll"
   File "DocumentFormat.OpenXml.dll"
   File "DynamicRelaxation.dll"
   File "HelixToolkit.dll"
