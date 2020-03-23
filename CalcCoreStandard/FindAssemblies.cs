@@ -20,6 +20,16 @@ namespace CalcCore
                 .Where(s => ext.Contains(System.IO.Path.GetExtension(s)));
             var myAssemblies = myFiles.ToList();
 
+            filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Magma Works\SCaFFOLD\Libraries";
+            if (Directory.Exists(filePath))
+            {
+                myFiles = Directory.GetFiles(filePath, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(s => ext.Contains(System.IO.Path.GetExtension(s)));
+                myAssemblies.AddRange(myFiles);
+            }
+
+
+
             foreach (var assembly in myAssemblies)
             {
                 var ass = System.IO.Path.GetFileName(assembly);
