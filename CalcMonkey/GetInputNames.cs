@@ -20,7 +20,7 @@ namespace CalcMonkey
         public GetInputNames()
           : base("Get Input Names", "Input names",
               "",
-              "WhitbyWood", "Calcs")
+              "Magma Works", "Calcs")
         {
         }
 

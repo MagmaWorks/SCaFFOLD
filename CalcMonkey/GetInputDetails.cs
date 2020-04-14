@@ -26,7 +26,7 @@ namespace CalcMonkey
         public GetInputDetails()
           : base("Get details of input", "Input info",
               "",
-              "WhitbyWood", "Calcs")
+              "Magma Works", "Calcs")
         {
         }
 
