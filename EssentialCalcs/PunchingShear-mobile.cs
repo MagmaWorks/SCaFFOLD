@@ -318,6 +318,9 @@ namespace EssentialCalcs
             u1reduced = generateReducedControlPerimeterWithHoles();
             ui = columnOutlines.Sum(a => a.Length);
             u1 = controlPerimeters.Sum(a => a.Length);
+            double u1LimitedPerimeterTR64 = 0;
+            var controlPerimLimitedTR64 = generateLimitedControlPerimeter(_columnAdim.Value, _columnBdim.Value);
+            u1LimitedPerimeterTR64 = controlPerimLimitedTR64.Length;
 
             expressions.Add(new Formula
             {
@@ -361,6 +364,11 @@ namespace EssentialCalcs
                     double k = calck(c1 / c2);
                     double w1 = Math.Pow(c2, 2) / 4 + c1 * c2 + 4 * c1 * d_average + 8 * Math.Pow(d_average, 2) + Math.PI * d_average * c2;
                     var u1 = controlPerimeterNoHoles.Length;
+                    if (u1 > u1LimitedPerimeterTR64)
+                    {
+                        betaFormula.Narrative += "Perimeter u1 limited in accordance with TR64 clause 4.3.2.";
+                    }
+                    u1 = u1LimitedPerimeterTR64;
                     var u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = (u1 / u1red) + k * (u1 / w1) * epar;
                     betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of hte slab.";
@@ -374,6 +382,11 @@ namespace EssentialCalcs
                     break;
                 case "CORNER":
                     u1 = controlPerimeterNoHoles.Length;
+                    if (u1 > u1LimitedPerimeterTR64)
+                    {
+                        betaFormula.Narrative += "Perimeter u1 limited in accordance with TR64 clause 4.3.2.";
+                    }
+                    u1 = u1LimitedPerimeterTR64;
                     u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = u1 / u1red;
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}=" + Math.Round(_beta.Value, 3));
@@ -1968,6 +1981,62 @@ namespace EssentialCalcs
                 case "CORNER":
                     float offx2 = (float)Math.Min(1.5 * d_average, 0.5 * _columnAdim.Value);
                     float offy2 = (float)Math.Min(1.5 * d_average, 0.5 * _columnBdim.Value);
+                    inter2 = perimeter.intersection(new Line(new Vector2(x - offx2, -10000), new Vector2(x - offx2, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x, -y + offy2), new Vector2(10000, -y + offy2)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                case "RE-ENTRANT":
+                    inter2 = perimeter.intersection(new Line(new Vector2(-10000, y), new Vector2(-x, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(-x, 10000)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                default:
+                    break;
+            }
+            return perimeter2;
+        }
+
+        /// <summary>
+        /// Calculates control perimeter limited in length according to TR64 clause 4.8.2
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="depth"></param>
+        /// <returns></returns>
+        private PolyLine generateLimitedControlPerimeter(double width, double depth)
+        {
+            float offsetF = 2f * (float)d_average;
+            float x = (float)width / 2f;
+            float y = (float)depth / 2f;
+            var perimeter = new PolyLine(new List<GeometryBase>
+            {
+                new Line(new Vector2(0, y + offsetF), new Vector2(-x, y+offsetF)),
+                new Arc(){Centre = new Vector2(-x,y), Radius=offsetF, StartAngle=Math.PI/2, EndAngle=Math.PI},
+                new Line(new Vector2(-x-offsetF, y), new Vector2(-x-offsetF, -y)),
+                new Arc(){Centre = new Vector2(-x,-y), Radius=offsetF, StartAngle=Math.PI, EndAngle=1.5*Math.PI},
+                new Line(new Vector2(-x, - y - offsetF), new Vector2(x, - y - offsetF)),
+                new Arc(){Centre = new Vector2(x,-y), Radius=offsetF, StartAngle=1.5*Math.PI, EndAngle=2*Math.PI},
+                new Line(new Vector2(x + offsetF, - y), new Vector2(x +offsetF, y)),
+                new Arc(){Centre = new Vector2(x,y), Radius=offsetF, StartAngle=0, EndAngle=Math.PI/2},
+                new Line(new Vector2(x, y + offsetF), new Vector2(0, y + offsetF)),
+            });
+
+            List<IntersectionResult> inter2;
+            List<IntersectionResult> inter1;
+            PolyLine perimeter2 = perimeter;
+
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    break;
+                case "EDGE":
+                    float offx = (float)Math.Min(3 * d_average, 1 * _columnAdim.Value);
+                    inter2 = perimeter.intersection(new Line(new Vector2(x - offx, -10000), new Vector2(x - offx, 0)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x - offx, 0), new Vector2(x - offx, 10000)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                case "CORNER":
+                    float offx2 = (float)Math.Min(3 * d_average, 1 * _columnAdim.Value);
+                    float offy2 = (float)Math.Min(3 * d_average, 1 * _columnBdim.Value);
                     inter2 = perimeter.intersection(new Line(new Vector2(x - offx2, -10000), new Vector2(x - offx2, y)));
                     inter1 = perimeter.intersection(new Line(new Vector2(x, -y + offy2), new Vector2(10000, -y + offy2)));
                     perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
