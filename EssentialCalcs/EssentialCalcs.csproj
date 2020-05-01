@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arc.cs" />
+    <Compile Include="Minimum Steel.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnDesign.cs" />
     <Compile Include="ConcColumnShortening.cs" />
