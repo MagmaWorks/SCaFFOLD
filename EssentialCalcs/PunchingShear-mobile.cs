@@ -307,6 +307,15 @@ namespace EssentialCalcs
                     Conclusion = "OK"
                 });
             }
+            else if (aspectRatio > 6)
+            {
+                expressions.Add(new Formula
+                {
+                    Narrative = "Check aspect ratio of column",
+                    Expression = new List<string> { Math.Round(aspectRatio, 2) + ">" + 4 },
+                    Conclusion = "Treat column as wall"
+                });
+            }
 
 
             generateHoles();
@@ -336,29 +345,17 @@ namespace EssentialCalcs
                     @"u_1 \text{ is } 2d \text{ from column face}",
                 },
             };
-            if (controlPerimeterNoHoles.Length > u1LimitedPerimeterTR64)
-            {
-                controlPerimsFormula.Narrative += " Perimeter u1 limited in accordance with TR64 clause 4.3.2.";
-                controlPerimsFormula.Expression.AddRange(
+
+            controlPerimsFormula.Expression.AddRange
+                (
                     new List<string>
                     {
-                        "u_{1,no holes} = " + Math.Round(u1LimitedPerimeterTR64, 2) + "mm",
-                        "u_1 = " + Math.Round(u1LimitedPerimeterTR64WithHoles,2) + "mm",
-                    });
+                        "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
+                        "u_1 = " + Math.Round(u1,2) + "mm",
+                    }
 
-            }
-            else
-            {
-                controlPerimsFormula.Expression.AddRange
-                    (
-                        new List<string>
-                        {
-                            "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
-                            "u_1 = " + Math.Round(u1,2) + "mm",
-                        }
+                );
 
-                    );
-            }
 
             expressions.Add(controlPerimsFormula);
 
@@ -389,18 +386,17 @@ namespace EssentialCalcs
                     double k = calck(c1 / c2);
                     double w1 = Math.Pow(c2, 2) / 4 + c1 * c2 + 4 * c1 * d_average + 8 * Math.Pow(d_average, 2) + Math.PI * d_average * c2;
                     var u1noHoles = controlPerimeterNoHoles.Length;
-                    if (u1noHoles > u1LimitedPerimeterTR64)
+                    if (u1noHoles > u1LimitedPerimeterTR64 && (_columnAdim.Value > 3 * d_average || _columnBdim.Value > 3* d_average))
                     {
-                        betaFormula.Narrative += " Perimeter u1 limited in accordance with TR64 clause 4.3.2.";
-                        u1 = u1LimitedPerimeterTR64WithHoles;
+                        betaFormula.Narrative += " Perimeter u1 for beta calc limited in accordance with TR64 clause 4.3.2.";
                         u1noHoles = u1LimitedPerimeterTR64;
                     }
                     var u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = (u1noHoles / u1red) + k * (u1noHoles / w1) * epar;
-                    betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of hte slab.";
+                    betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of the slab.";
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}+k\frac{u_1}{W_1}e_{par}=" + Math.Round(_beta.Value, 3));
-                    betaFormula.Expression.Add(@"u_1=" + Math.Round(u1noHoles, 2) + "mm");
-                    betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1,no holes limited}=" + Math.Round(u1noHoles, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1^*,no holes}=" + Math.Round(u1red, 2) + "mm");
                     betaFormula.Expression.Add(@"k=" + Math.Round(k, 2));
                     betaFormula.Expression.Add(@"e_{par} =\left|\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + @"}\right|=" + Math.Round(epar, 1) + "mm");
                     betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2=" + Math.Round(w1, 2));
@@ -408,16 +404,16 @@ namespace EssentialCalcs
                     break;
                 case "CORNER":
                     u1noHoles = controlPerimeterNoHoles.Length;
-                    if (u1noHoles > u1LimitedPerimeterTR64)
+                    if (u1noHoles > u1LimitedPerimeterTR64 && (_columnAdim.Value > 3 * d_average || _columnBdim.Value > 3 * d_average))
                     {
-                        betaFormula.Narrative += " Perimeter u1 limited in accordance with TR64 clause 4.3.2.";
-                        u1 = u1LimitedPerimeterTR64WithHoles;
+                        betaFormula.Narrative += " Perimeter u1 for beta calc limited in accordance with TR64 clause 4.3.2.";
                         u1noHoles = u1LimitedPerimeterTR64;
                     }
                     u1red = u1reducedNoHoles.Sum(a => a.Length);
                     _beta.Value = u1noHoles / u1red;
-                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}=" + Math.Round(_beta.Value, 3));
-                    betaFormula.Expression.Add(@"u_1=" + Math.Round(u1noHoles, 2) + "mm");
+                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_{1,no holes}}{u_{1^*,no holes}}=" + Math.Round(_beta.Value, 3));
+                    betaFormula.Expression.Add(@"u_{1 no holes limited}=" + Math.Round(u1noHoles, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1^*,no holes}=" + Math.Round(u1red, 2) + "mm");
                     betaFormula.Image = _fig6_20;
                     break;
                 case "RE-ENTRANT":
