@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using netDxf;
 
 
 namespace Calcs
@@ -363,7 +364,6 @@ namespace Calcs
         {
             try
             {
-
                 var openDialog = new OpenFileDialog();
                 openDialog.Filter = @"Calc files |*.JSON";
                 openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -462,7 +462,7 @@ namespace Calcs
                 int number = 0;
                 while (!reader.EndOfStream)
                 {
-                    CalcCore.ICalc newCalc = new EssentialCalcs.SimpleMoment();
+                    CalcCore.ICalc newCalc;
                     line = reader.ReadLine();
                     lineItems = line.Split(',');
                     if (lineItems.Length > listHeaders.Length)

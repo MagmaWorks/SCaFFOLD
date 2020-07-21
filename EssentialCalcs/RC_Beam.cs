@@ -7,6 +7,8 @@ using CalcCore;
 
 namespace EssentialCalcs
 {
+    [CalcName("RC Beam")]
+    [CalcAlternativeName("TestCalcs.RC_Beam")]
     public class RC_Beam : CalcCore.CalcBase
     {
         CalcDouble aggregateAdjustmentFactor;
@@ -58,7 +60,6 @@ namespace EssentialCalcs
         {
             InstanceName = "RC Beam ref A3";
             _typeName = "Rectangular RC Beam Calculation";
-
             initialise();
         }
 

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.0.2</Version>
+    <Authors>Alex Baalham</Authors>
+    <Company>Magma Works</Company>
+    <Description>Core library for SCaFFOLD framework</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/MagmaWorks/SCaFFOLD/blob/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="netDxf.netstandard" Version="2.3.0" />
+    <PackageReference Include="SkiaSharp" Version="1.68.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MWGeometry">
+      <HintPath>..\..\SCaFFOLD\Calcs\resources\MWGeometry.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

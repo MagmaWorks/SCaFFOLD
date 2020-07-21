@@ -15,6 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,12 +28,11 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -272,9 +272,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalcCore\CalcCore.csproj">
-      <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
-      <Name>CalcCore</Name>
+    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
+      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
+      <Name>CalcCoreStandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\CalcWindowsUtilities\CalcWindowsUtilities.csproj">
       <Project>{35547d5c-c7e0-4a07-87d3-275db1aa7a70}</Project>
@@ -347,6 +347,7 @@
 xCopy "$(ProjectDir)resources\Calculation_Template.docx" "$(SolutionDir)CalcMonkey\Bin\Libraries\" /Y
 xcopy "$(ProjectDir)resources\CalcsInstaller.nsi" "$(TargetDir)" /Y
 "C:\Program Files (x86)\NSIS\makensis.exe" "$(TargetDir)CalcsInstaller.nsi"
+
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />

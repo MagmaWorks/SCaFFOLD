@@ -22,7 +22,7 @@ namespace CalcMonkey
         public ConvertCalcListOfDoubleArrays()
           : base("Unpack output values", "Unpack",
               "Unpacks values from calc output into GH",
-              "WhitbyWood", "Calcs")
+              "Magma Works", "Calcs")
         {
         }
 

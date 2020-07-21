@@ -25,6 +25,7 @@ namespace EssentialCalcs
 {
     [CalcName("Punching Shear to EC2")]
     [CalcAlternativeName("TestCalcs.PunchingShear")]
+    [CalcAlternativeName("EssentialCalcs.PunchingShear")]
     public class PunchingShear : CalcCore.CalcBase
     {
         CalcSelectionList _colType;
@@ -81,6 +82,10 @@ namespace EssentialCalcs
         CalcDouble _hole2PosY;
         CalcDouble _hole2SizeX;
         CalcDouble _hole2SizeY;
+        CalcDouble _hole3PosX;
+        CalcDouble _hole3PosY;
+        CalcDouble _hole3SizeX;
+        CalcDouble _hole3SizeY;
         CalcSelectionList _includeLinksBeyondHole;
         CalcListOfDoubleArrays _studPositions;
         CalcSelectionList _maxBarSize;
@@ -163,6 +168,10 @@ namespace EssentialCalcs
             _hole2PosY = inputValues.CreateDoubleCalcValue("Hole 2 Y position", "", "mm", -300);
             _hole2SizeX = inputValues.CreateDoubleCalcValue("Hole 2 X size", "", "mm", 00);
             _hole2SizeY = inputValues.CreateDoubleCalcValue("Hole 2 Y size", "", "mm", 150);
+            _hole3PosX = inputValues.CreateDoubleCalcValue("Hole 3 X position", "", "mm", -600);
+            _hole3PosY = inputValues.CreateDoubleCalcValue("Hole 3 Y position", "", "mm", 300);
+            _hole3SizeX = inputValues.CreateDoubleCalcValue("Hole 3 X size", "", "mm", 00);
+            _hole3SizeY = inputValues.CreateDoubleCalcValue("Hole 3 Y size", "", "mm", 150);
             _includeLinksBeyondHole = inputValues.CreateCalcSelectionList("Include links beyond holes", "YES", new List<string> { "YES", "NO" });
             _studPositions = outputValues.CreateCalcListOfDoubleArrays("Stud positions", new List<double[]>());
             _maxBarSize = inputValues.CreateCalcSelectionList("Maximum link diameter", "16", new List<string> { "8", "10", "12", "16", "20", "25", "32", "40" });
@@ -298,6 +307,15 @@ namespace EssentialCalcs
                     Conclusion = "OK"
                 });
             }
+            else if (aspectRatio > 6)
+            {
+                expressions.Add(new Formula
+                {
+                    Narrative = "Check aspect ratio of column",
+                    Expression = new List<string> { Math.Round(aspectRatio, 2) + ">" + 4 },
+                    Conclusion = "Treat column as wall"
+                });
+            }
 
 
             generateHoles();
@@ -309,8 +327,13 @@ namespace EssentialCalcs
             u1reduced = generateReducedControlPerimeterWithHoles();
             ui = columnOutlines.Sum(a => a.Length);
             u1 = controlPerimeters.Sum(a => a.Length);
+            double u1LimitedPerimeterTR64 = 0;
+            var controlPerimLimitedTR64 = generateLimitedControlPerimeter(_columnAdim.Value, _columnBdim.Value);
+            var controlPerimLimitedTR64WithHoles = generateLimitedControlPerimeterWithHoles();
+            u1LimitedPerimeterTR64 = controlPerimLimitedTR64.Length;
+            double u1LimitedPerimeterTR64WithHoles = controlPerimLimitedTR64WithHoles.Sum(a => a.Length);
 
-            expressions.Add(new Formula
+            Formula controlPerimsFormula = new Formula
             {
                 Narrative = "Determine the effective column face and first control perimeters taking into account the effect of holes. " +
                 "These lengths are determined directly from the geometry - refer to diagram.",
@@ -320,10 +343,21 @@ namespace EssentialCalcs
                     string.Format(@"u_0 = {0} mm", Math.Round(ui, 2)),
                     Environment.NewLine,
                     @"u_1 \text{ is } 2d \text{ from column face}",
-                    "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
-                    "u_1 = " + Math.Round(u1,2) + "mm",
                 },
-            });
+            };
+
+            controlPerimsFormula.Expression.AddRange
+                (
+                    new List<string>
+                    {
+                        "u_{1,no holes} = " + Math.Round(controlPerimeterNoHoles.Length,2) + "mm",
+                        "u_1 = " + Math.Round(u1,2) + "mm",
+                    }
+
+                );
+
+
+            expressions.Add(controlPerimsFormula);
 
             // calc Beta
             Formula betaFormula = new Formula() { Narrative = "Calculate Beta factor." + Environment.NewLine, Ref = "cl 6.4.3" };
@@ -343,9 +377,7 @@ namespace EssentialCalcs
                     betaFormula.Expression.Add(@"e_z =\frac{" + _mz.Symbol + @"}{" + _punchingLoad.Symbol + "}=" + Math.Round(ez, 1) + "mm");
                     betaFormula.Expression.Add(@"b_y =" + Math.Round(by, 1) + "mm");
                     betaFormula.Expression.Add(@"b_z =" + Math.Round(bz, 1) + "mm");
-                    //Uri uri = new Uri("pack://application:,,,/TestCalcs;component/resources/ControlPerimeters_Fig_6_13.png");
                     betaFormula.Image = _fig6_13;
-                    //betaFormula.Image = new BitmapImage(uri);
                     break;
                 case "EDGE":
                     double epar = Math.Abs(_my.Value * 1E6 / (_punchingLoad.Value * 1E3));
@@ -353,30 +385,36 @@ namespace EssentialCalcs
                     double c2 = _columnBdim.Value;
                     double k = calck(c1 / c2);
                     double w1 = Math.Pow(c2, 2) / 4 + c1 * c2 + 4 * c1 * d_average + 8 * Math.Pow(d_average, 2) + Math.PI * d_average * c2;
-                    var u1 = controlPerimeterNoHoles.Length;
+                    var u1noHoles = controlPerimeterNoHoles.Length;
+                    if (u1noHoles > u1LimitedPerimeterTR64 && (_columnAdim.Value > 3 * d_average || _columnBdim.Value > 3* d_average))
+                    {
+                        betaFormula.Narrative += " Perimeter u1 for beta calc limited in accordance with TR64 clause 4.3.2.";
+                        u1noHoles = u1LimitedPerimeterTR64;
+                    }
                     var u1red = u1reducedNoHoles.Sum(a => a.Length);
-                    _beta.Value = (u1 / u1red) + k * (u1 / w1) * epar;
-                    betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of hte slab.";
+                    _beta.Value = (u1noHoles / u1red) + k * (u1noHoles / w1) * epar;
+                    betaFormula.Narrative += "Calculated on the basis of eccentricities about both axes, but moment about the axis parallel to slab edge is towards the interior of the slab.";
                     betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}+k\frac{u_1}{W_1}e_{par}=" + Math.Round(_beta.Value, 3));
-                    betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
-                    betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1,no holes limited}=" + Math.Round(u1noHoles, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1^*,no holes}=" + Math.Round(u1red, 2) + "mm");
                     betaFormula.Expression.Add(@"k=" + Math.Round(k, 2));
                     betaFormula.Expression.Add(@"e_{par} =\left|\frac{" + _my.Symbol + @"}{" + _punchingLoad.Symbol + @"}\right|=" + Math.Round(epar, 1) + "mm");
                     betaFormula.Expression.Add(@"W_1=\frac{c_2^2}{4}+c_1c_2+4c_1d+8d^2+\pi dc_2=" + Math.Round(w1, 2));
-                    //Uri uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
                     betaFormula.Image = _fig6_20;
-                    //betaFormula.Image = new BitmapImage(uri2);
                     break;
                 case "CORNER":
-                    u1 = controlPerimeterNoHoles.Length;
+                    u1noHoles = controlPerimeterNoHoles.Length;
+                    if (u1noHoles > u1LimitedPerimeterTR64 && (_columnAdim.Value > 3 * d_average || _columnBdim.Value > 3 * d_average))
+                    {
+                        betaFormula.Narrative += " Perimeter u1 for beta calc limited in accordance with TR64 clause 4.3.2.";
+                        u1noHoles = u1LimitedPerimeterTR64;
+                    }
                     u1red = u1reducedNoHoles.Sum(a => a.Length);
-                    _beta.Value = u1 / u1red;
-                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_1}{u_{1^*}}=" + Math.Round(_beta.Value, 3));
-                    betaFormula.Expression.Add(@"u_1=" + Math.Round(u1, 2) + "mm");
-                    //betaFormula.Expression.Add(@"u_{1^*}=" + Math.Round(u1red, 2) + "mm");
-                    //uri2 = new Uri("pack://application:,,,/TestCalcs;component/resources/PunchingShear_Fig_6_20.png");
+                    _beta.Value = u1noHoles / u1red;
+                    betaFormula.Expression.Add(_beta.Symbol + @"=\frac{u_{1,no holes}}{u_{1^*,no holes}}=" + Math.Round(_beta.Value, 3));
+                    betaFormula.Expression.Add(@"u_{1 no holes limited}=" + Math.Round(u1noHoles, 2) + "mm");
+                    betaFormula.Expression.Add(@"u_{1^*,no holes}=" + Math.Round(u1red, 2) + "mm");
                     betaFormula.Image = _fig6_20;
-                    //betaFormula.Image = new BitmapImage(uri2);
                     break;
                 case "RE-ENTRANT":
                     _beta.Value = 1.275;
@@ -1502,8 +1540,8 @@ namespace EssentialCalcs
         private double calck(double c1overc2)
         {
             if (c1overc2 <= 0.5) return 0.45;
-            else if (c1overc2 < 1) return (c1overc2 - 0.5) * (0.15 / 0.5) + 0.5;
-            else if (c1overc2 < 3) return (c1overc2 - 1) * (0.2 / 2) + 1;
+            else if (c1overc2 < 1) return (c1overc2 - 0.5) * (0.15 / 0.5) + 0.45;
+            else if (c1overc2 < 3) return (c1overc2 - 1) * (0.2 / 2) + 0.6;
             else return 0.8;
         }
 
@@ -1535,6 +1573,14 @@ namespace EssentialCalcs
             new Vector2((float)_hole2PosX.Value, (float)(_hole2PosY.Value)),
             });
             }
+            if (_hole3SizeX.Value != 0 && _hole3SizeY.Value != 0)
+                allHoleCorners.Add(new List<Vector2>
+            {
+            new Vector2((float)_hole3PosX.Value, (float)(_hole3PosY.Value + _hole3SizeY.Value)),
+            new Vector2((float)(_hole3PosX.Value + _hole3SizeX.Value), (float)(_hole3PosY.Value + _hole3SizeY.Value)),
+            new Vector2((float)(_hole3PosX.Value + _hole3SizeX.Value), (float)(_hole3PosY.Value)),
+            new Vector2((float)_hole3PosX.Value, (float)(_hole3PosY.Value)),
+            });
 
             _holeEdges = new List<Tuple<Line, Line>>();
             var angles = new List<double>();
@@ -1973,6 +2019,62 @@ namespace EssentialCalcs
             return perimeter2;
         }
 
+        /// <summary>
+        /// Calculates control perimeter limited in length according to TR64 clause 4.8.2
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="depth"></param>
+        /// <returns></returns>
+        private PolyLine generateLimitedControlPerimeter(double width, double depth)
+        {
+            float offsetF = 2f * (float)d_average;
+            float x = (float)width / 2f;
+            float y = (float)depth / 2f;
+            var perimeter = new PolyLine(new List<GeometryBase>
+            {
+                new Line(new Vector2(0, y + offsetF), new Vector2(-x, y+offsetF)),
+                new Arc(){Centre = new Vector2(-x,y), Radius=offsetF, StartAngle=Math.PI/2, EndAngle=Math.PI},
+                new Line(new Vector2(-x-offsetF, y), new Vector2(-x-offsetF, -y)),
+                new Arc(){Centre = new Vector2(-x,-y), Radius=offsetF, StartAngle=Math.PI, EndAngle=1.5*Math.PI},
+                new Line(new Vector2(-x, - y - offsetF), new Vector2(x, - y - offsetF)),
+                new Arc(){Centre = new Vector2(x,-y), Radius=offsetF, StartAngle=1.5*Math.PI, EndAngle=2*Math.PI},
+                new Line(new Vector2(x + offsetF, - y), new Vector2(x +offsetF, y)),
+                new Arc(){Centre = new Vector2(x,y), Radius=offsetF, StartAngle=0, EndAngle=Math.PI/2},
+                new Line(new Vector2(x, y + offsetF), new Vector2(0, y + offsetF)),
+            });
+
+            List<IntersectionResult> inter2;
+            List<IntersectionResult> inter1;
+            PolyLine perimeter2 = perimeter;
+
+            switch (_colType.ValueAsString)
+            {
+                case "INTERNAL":
+                    break;
+                case "EDGE":
+                    float offx = (float)Math.Min(3 * d_average, 1 * _columnAdim.Value);
+                    inter2 = perimeter.intersection(new Line(new Vector2(x - offx, -10000), new Vector2(x - offx, 0)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x - offx, 0), new Vector2(x - offx, 10000)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                case "CORNER":
+                    float offx2 = (float)Math.Min(3 * d_average, 1 * _columnAdim.Value);
+                    float offy2 = (float)Math.Min(3 * d_average, 1 * _columnBdim.Value);
+                    inter2 = perimeter.intersection(new Line(new Vector2(x - offx2, -10000), new Vector2(x - offx2, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(x, -y + offy2), new Vector2(10000, -y + offy2)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                case "RE-ENTRANT":
+                    inter2 = perimeter.intersection(new Line(new Vector2(-10000, y), new Vector2(-x, y)));
+                    inter1 = perimeter.intersection(new Line(new Vector2(-x, y), new Vector2(-x, 10000)));
+                    perimeter2 = perimeter.Cut(inter2[0].Parameter, inter1[0].Parameter);
+                    break;
+                default:
+                    break;
+            }
+            return perimeter2;
+        }
+
         private List<Tuple<Vector2, Vector2>> spurStartPoints()
         {
             var returnList = new List<Tuple<Vector2, Vector2>>();
@@ -2125,11 +2227,12 @@ namespace EssentialCalcs
                         perimeterFullyInside = false;
                     }
                 }
+                if (perimeterFullyInside)
+                {
+                    return new List<PolyLine>();
+                }
             }
-            if (perimeterFullyInside)
-            {
-                return new List<PolyLine>();
-            }
+
 
 
 
@@ -2216,6 +2319,12 @@ namespace EssentialCalcs
         private List<PolyLine> generateReducedControlPerimeterWithHoles()
         {
             var perimeter = generateReducedControlPerimeter(_columnAdim.Value, _columnBdim.Value);
+            return generatePerimeterWithHoles(perimeter);
+        }
+
+        private List<PolyLine> generateLimitedControlPerimeterWithHoles()
+        {
+            var perimeter = generateLimitedControlPerimeter(_columnAdim.Value, _columnBdim.Value);
             return generatePerimeterWithHoles(perimeter);
         }
 

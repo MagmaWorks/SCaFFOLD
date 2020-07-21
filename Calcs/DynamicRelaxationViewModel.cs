@@ -9,6 +9,7 @@ using DynamicRelaxation;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Reflection;
 
 namespace Calcs
 {
@@ -26,7 +27,6 @@ namespace Calcs
             get { return model; }
             set { model = value; RaisePropertyChanged(nameof(Model)); }
         }
-
 
         public Model3D Model2
         {

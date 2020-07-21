@@ -12,7 +12,7 @@ namespace EssentialCalcs
 {
     [CalcName("RC Axial and Bending Design")]
     [CalcAlternativeName("TestCalcs.ColumnDesign")]
-    public class ColumnDesign : CalcBase // Test comment
+    public class ColumnDesign : CalcBase // Test Comment
     {
         // Column object
         Column MyColumn;
@@ -80,6 +80,7 @@ namespace EssentialCalcs
         public ColumnDesign()
         {
             // Geometry
+            InstanceName = "My Column Design";
             Lx = inputValues.CreateDoubleCalcValue("Lx", "L_x", "mm", 900);
             Ly = inputValues.CreateDoubleCalcValue("Ly", "L_y", "mm", 300);
             Length = inputValues.CreateDoubleCalcValue("Length", "L", "mm", 3150);
@@ -779,7 +780,7 @@ namespace EssentialCalcs
             var xAxisMarks = getAxisMarks(minPoint.X-axisOverun, maxPoint.X+axisOverun);
             var yAxisMarks = getAxisMarks(minPoint.Y-axisOverun, maxPoint.Y+axisOverun);
             var zAxisMarks = getAxisMarks(minPoint.Z-axisOverun, maxPoint.Z+axisOverun);
-            List<MWText3D> axisText = new List<MWText3D>();
+            //List<MWText3D> axisText = new List<MWText3D>();
 
             List<MWMesh> axisMeshes = new List<MWMesh>();
 
@@ -811,6 +812,9 @@ namespace EssentialCalcs
                 mesh.Brush = new MWBrush(255, 0, 255, 255);
                 myID.Meshes.Add(mesh);
             }
+
+            myID.Text.Add(new MWText3D("3D Interaction Diagram", new MWPoint3D(0,0,maxPoint.Z + 2000), new MWVector3D(1,0,0), 200));
+            myID.Text.Add(new MWText3D("The green octahedron represents current design", new MWPoint3D(0, 0, maxPoint.Z + 1800), new MWVector3D(1, 0, 0), 100));
 
             List<MWMesh> mainAxisMeshes = new List<MWMesh>();
             mainAxisMeshes.Add(MWMesh.makeExtrudedPolygon(new MWPoint3D(minPoint.X-1000, 0, 0), new MWPoint3D(maxPoint.X+1000, 0, 0), 5, 5));

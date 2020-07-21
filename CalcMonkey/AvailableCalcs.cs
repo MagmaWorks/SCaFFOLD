@@ -5,11 +5,16 @@ using Rhino.Geometry;
 using System.Linq;
 using Grasshopper.GUI.Canvas;
 using System.Drawing;
+using System.Windows.Forms;
+using Grasshopper.Kernel.Parameters;
+using GH_IO.Serialization;
 
 namespace CalcMonkey
 {
-    public class AvailableCalcs : GH_Component
+    public class AvailableCalcs : GH_Component, IGH_VariableParameterComponent
     {
+        CalcCore.ICalc calc;
+
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
         /// constructor without any arguments.
@@ -18,17 +23,30 @@ namespace CalcMonkey
         /// new tabs/panels will automatically be created.
         /// </summary>
         public AvailableCalcs()
-          : base("Available Calcs", "Calcs",
-              "List all available types of calculation",
-              "WhitbyWood", "Calcs")
+          : base("SCaFFOLD Calc", "Calc",
+              "Select the SCaFFOLD calc you want to use",
+              "Magma Works", "Calcs")
         {
         }
+
+        private string selectedCalc = "";
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            if (calc != null)
+            {
+                var names = calc.GetInputs();
+                foreach (var name in names)
+                {
+                    if (name.Type == CalcCore.CalcValueType.DOUBLE)
+                    {
+                        pManager.AddNumberParameter(name.Name, "", "", GH_ParamAccess.item);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -37,6 +55,8 @@ namespace CalcMonkey
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddTextParameter("Available calcs", "Calcs", "A list of all the available types of calculation", GH_ParamAccess.list);
+            pManager.AddGenericParameter("ICalc object", "", "A calculation object implementing the ICalc interface.", GH_ParamAccess.item);
+
         }
 
         /// <summary>
@@ -46,13 +66,34 @@ namespace CalcMonkey
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<string> assemblyNames = new List<string>();
-
-            foreach (var item in AvailableCalcsLoader.AvailableCalcs)
+            if (calc == null)
             {
-                assemblyNames.Add(item.Assembly + "." + item.Class.FullName);
+                return;
             }
-            DA.SetDataList(0, assemblyNames);
+
+            var calcInputs = calc.GetInputs();
+            for (int i = 0; i < Params.Input.Count; i++)
+            {
+                var input = Params.Input[i];
+                foreach (var calcInput in calcInputs)
+                {
+                    if (calcInput.Name == input.Name)
+                    {
+                        double inputValue = 0;
+                        if (!DA.GetData(i, ref inputValue)) ;
+                        (calcInput as CalcCore.CalcDouble).Value = inputValue;
+                    }
+                }
+            }
+            calc.UpdateCalc();
+            string output = "";
+            foreach (var outputVal in calc.GetOutputs())
+            {
+                output += outputVal.Name + ": " + outputVal.ValueAsString + ";     ";
+            }
+            DA.SetData(0, output);
+            DA.SetData(1, calc);
+
         }
 
         /// <summary>
@@ -75,6 +116,116 @@ namespace CalcMonkey
         public override Guid ComponentGuid
         {
             get { return new Guid("7dea9fe0-8a80-4166-9f98-4e013775a77b"); }
+        }
+
+        protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalComponentMenuItems(menu);
+            if (calc != null)
+            {
+                return;
+            }
+            var calcsAvailable = AvailableCalcsLoader.AvailableCalcs;          
+            MenuItem subMenu = new MenuItem("SCaFFOLD Calculations available");
+            List<ToolStripMenuItem> subMenuItems = new List<ToolStripMenuItem>();
+            foreach (var item in calcsAvailable)
+            {
+                ToolStripMenuItem newItem = new ToolStripMenuItem(item.Name, null, doClick);
+                newItem.Tag = item.Class;
+                subMenuItems.Add(newItem);
+            }
+            var newitem = new ToolStripMenuItem("SCaFFOLD", null, subMenuItems.ToArray());
+            menu.Items.Add(newitem);
+        }
+
+        void doClick(object sender, EventArgs e)
+        {
+            MessageBox.Show("Tag: " + sender.ToString());
+            var calcInstance = (CalcCore.ICalc)Activator.CreateInstance(((sender as ToolStripMenuItem).Tag) as Type);
+            calc = calcInstance;
+            MessageBox.Show(sender.GetType().ToString());
+
+            foreach (var input in calc.GetInputs())
+            {
+                if (input.Type == CalcCore.CalcValueType.DOUBLE)
+                {
+                    Params.RegisterInputParam(createGHParam(input.Name));
+                }
+
+            }
+
+            this.Name = calc.TypeName;
+
+            Params.OnParametersChanged();
+            this.ExpireSolution(true);
+            
+        }
+
+        public bool CanInsertParameter(GH_ParameterSide side, int index)
+        {
+            return false;
+        }
+
+        public bool CanRemoveParameter(GH_ParameterSide side, int index)
+        {
+            return false;
+        }
+
+        public IGH_Param CreateParameter(GH_ParameterSide side, int index)
+        {
+            return new Param_GenericObject();
+        }
+
+        public bool DestroyParameter(GH_ParameterSide side, int index)
+        {
+            return false;
+        }
+
+        public void VariableParameterMaintenance()
+        {
+            
+        }
+
+        private IGH_Param createGHParam(string name)
+        {
+            IGH_Param param;
+
+            param = new Param_Number();
+            param.Name = name;
+            param.Access = GH_ParamAccess.item;
+            param.Description = "";
+            param.NickName = name;
+
+            return param;
+
+        }
+
+        public override bool Write(GH_IWriter writer)
+        {
+            string name = ((CalcCore.CalcNameAttribute)Attribute.GetCustomAttribute(calc.GetType(), typeof(CalcCore.CalcNameAttribute))).CalcName;
+            writer.SetString("CalcType", name);
+            return base.Write(writer);
+        }
+
+        public override bool Read(GH_IReader reader)
+        {
+
+            if (!base.Read(reader))
+                return false;
+
+            string name = reader.GetString("CalcType");
+            var listOfCalcs = AvailableCalcsLoader.AvailableCalcs;
+
+            foreach (var availableCalc in listOfCalcs)
+            {
+                if (availableCalc.Name == name)
+                {
+                    var calcInstance = (CalcCore.ICalc)Activator.CreateInstance(availableCalc.Class);
+                    this.calc = calcInstance;
+                }
+            }
+
+            return true;
         }
     }
 

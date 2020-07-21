@@ -20,7 +20,7 @@ namespace CalcMonkey
         public CalcDocOutput()
           : base("CalcDocOutput", "docx",
               "Outputs the calculation to an open office word processing document",
-              "WhitbyWood", "Calcs")
+              "Magma Works", "Calcs")
         {
         }
 

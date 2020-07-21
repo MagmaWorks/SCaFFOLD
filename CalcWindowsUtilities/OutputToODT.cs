@@ -205,11 +205,20 @@ namespace CalcCore
                 {
                     if (formula != "")
                     {
-                        //var mathPara = new Paragraph();
-                        var parser = new TexFormulaParser();
-                        var formulaToParse = parser.Parse(formula);
+                        TexFormula formulaToParse = new TexFormula();
+                        try
+                        {
+                            var parser = new TexFormulaParser();
+                            formulaToParse = parser.Parse(formula);
+
+                        }
+                        catch (Exception)
+                        {
+                            var parser = new TexFormulaParser();
+                            formulaToParse = parser.Parse("Error in LaTeX string...");
+                        }
                         var test = formulaToParse.GetRenderer(TexStyle.Script, 100, "Franklin Gothic Book");
-                        if (test.RenderSize.Width >0 && test.RenderSize.Height >0)
+                        if (test.RenderSize.Width > 0 && test.RenderSize.Height > 0)
                         {
                             var formulaImage = formulaToParse.RenderToPng(100, 0, 0, "Franklin Gothic Book");
                             ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
@@ -294,7 +303,18 @@ namespace CalcCore
                 var parser = new TexFormulaParser();
                 if (item.Symbol != "")
                 {
-                    var formulaToParse = parser.Parse(item.Symbol);
+                    TexFormula formulaToParse = new TexFormula();
+                    try
+                    {
+                        parser = new TexFormulaParser();
+                        formulaToParse = parser.Parse(item.Symbol);
+
+                    }
+                    catch (Exception)
+                    {
+                        parser = new TexFormulaParser();
+                        formulaToParse = parser.Parse("Error in LaTeX string...");
+                    }
                     var formulaImage = formulaToParse.RenderToPng(100, 0, 0, "Franklin Gothic Book");
                     ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
                     using (var stream = new MemoryStream(formulaImage))
@@ -332,7 +352,18 @@ namespace CalcCore
                     string toRender = item.ValueAsString + item.Unit;
                     if (toRender != "")
                     {
-                        var formulaToParse = parser.Parse(toRender);
+                        TexFormula formulaToParse = new TexFormula();
+                        try
+                        {
+                            parser = new TexFormulaParser();
+                            formulaToParse = parser.Parse(toRender);
+
+                        }
+                        catch (Exception)
+                        {
+                            parser = new TexFormulaParser();
+                            formulaToParse = parser.Parse("Error in LaTeX string...");
+                        }
                         var formulaImage = formulaToParse.RenderToPng(100, 0, 0, "Franklin Gothic Book");
                         ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Png);
                         using (var stream = new MemoryStream(formulaImage))

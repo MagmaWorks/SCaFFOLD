@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -76,9 +77,9 @@
     <Compile Include="TableVM.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalcCore\CalcCore.csproj">
-      <Project>{9948df11-c3e8-4ed8-bdf0-e67d2aa178ce}</Project>
-      <Name>CalcCore</Name>
+    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
+      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
+      <Name>CalcCoreStandard</Name>
     </ProjectReference>
     <ProjectReference Include="..\Calcs\Calcs.csproj">
       <Project>{c7fb5bc1-fa62-4ddf-afc6-1431026aa72c}</Project>

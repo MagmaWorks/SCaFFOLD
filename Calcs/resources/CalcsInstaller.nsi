@@ -14,7 +14,7 @@ Name "Magma Works SCaFFOLD"
 OutFile "SCaFFOLD.exe"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES64\SCaFFOLDforWindows
+InstallDir "$PROGRAMFILES64\Magma Works\SCaFFOLD"
 
 ; Registry key to check for directory (so if you install again, it will 
 ; overwrite the old one automatically)
@@ -47,7 +47,7 @@ Section "SCaFFOLD for Windows (required)"
   ; Put file there
   File "Calcs.exe"
   File "BriefFiniteElementNet.dll"
-  File "CalcCore.dll"
+  File "CalcCoreStandard.dll"
   File "DocumentFormat.OpenXml.dll"
   File "DynamicRelaxation.dll"
   File "HelixToolkit.dll"
