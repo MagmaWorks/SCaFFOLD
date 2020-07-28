@@ -94,6 +94,19 @@ namespace CalcMonkey
             DA.SetData(0, output);
             DA.SetData(1, calc);
 
+            foreach (var calcOutput in calc.GetOutputs())
+            {
+                for (int i = 0; i < Params.Output.Count; i++)
+                {
+                    var outputGH = Params.Output[i];
+                    if (calcOutput.Name == outputGH.Name)
+                    {
+                        DA.SetData(i, (calcOutput as CalcCore.CalcDouble).Value);
+                    }
+                }
+
+            }
+
         }
 
         /// <summary>
@@ -104,7 +117,7 @@ namespace CalcMonkey
         {
             get
             {
-                return Resource1.CalcLibrary;
+                return Resource1.Calc;
             }
         }
 
@@ -140,10 +153,8 @@ namespace CalcMonkey
 
         void doClick(object sender, EventArgs e)
         {
-            MessageBox.Show("Tag: " + sender.ToString());
             var calcInstance = (CalcCore.ICalc)Activator.CreateInstance(((sender as ToolStripMenuItem).Tag) as Type);
             calc = calcInstance;
-            MessageBox.Show(sender.GetType().ToString());
 
             foreach (var input in calc.GetInputs())
             {
@@ -151,11 +162,19 @@ namespace CalcMonkey
                 {
                     Params.RegisterInputParam(createGHParam(input.Name));
                 }
+            }
 
+            foreach (var output in calc.GetOutputs())
+            {
+                if (output.Type == CalcCore.CalcValueType.DOUBLE)
+                {
+                    Params.RegisterOutputParam(createGHParam(output.Name));
+                }
             }
 
             this.Name = calc.TypeName;
-
+            this.NickName = calc.TypeName;
+            this.Description = "SCaFFOLD Calculation";
             Params.OnParametersChanged();
             this.ExpireSolution(true);
             
@@ -197,7 +216,6 @@ namespace CalcMonkey
             param.NickName = name;
 
             return param;
-
         }
 
         public override bool Write(GH_IWriter writer)

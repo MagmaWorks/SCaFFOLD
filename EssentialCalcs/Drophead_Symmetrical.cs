@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Elements;
 
 namespace EssentialCalcs
 {
+    [CalcName("Drophead Symmetrical")]
     public class DropHead_Symmetrical : CalcCore.CalcBase
     {
         Model model;

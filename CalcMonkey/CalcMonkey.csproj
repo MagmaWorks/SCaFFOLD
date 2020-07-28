@@ -97,6 +97,7 @@
     <Content Include="Resources\ExportToDoc.png" />
     <None Include="Resources\InputDetails.png" />
     <Content Include="Resources\ListInputs.png" />
+    <None Include="Resources\SCaFFOLDforGH Installer.nsi" />
     <None Include="Resources\Unpack.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
