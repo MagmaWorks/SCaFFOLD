@@ -10,6 +10,7 @@ using CalcCore;
 
 namespace EssentialCalcs
 {
+    [CalcName("STM node check")]
     public class NodeCheck : CalcCore.CalcBase
     {
         CalcDouble side1Length;

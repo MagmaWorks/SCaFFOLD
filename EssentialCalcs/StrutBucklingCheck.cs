@@ -7,6 +7,7 @@ using CalcCore;
 
 namespace EssentialCalcs
 {
+    [CalcName("STM Strut buckling")]
     public class StrutBucklingCheck : CalcBase
     {
         List<Formula> expressions;

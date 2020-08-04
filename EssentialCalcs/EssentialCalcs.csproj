@@ -78,9 +78,6 @@
       <HintPath>resources\Triangle.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="WWGeometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WWGeometry.1.0.0\lib\net461\WWGeometry.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arc.cs" />
@@ -141,7 +138,6 @@
     <Content Include="resources\MWGeometry.dll" />
     <Content Include="resources\StructuralDrawing2D.dll" />
     <Content Include="resources\Triangle.dll" />
-    <Content Include="WW.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
