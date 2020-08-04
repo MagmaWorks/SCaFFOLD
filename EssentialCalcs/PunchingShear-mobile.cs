@@ -89,6 +89,7 @@ namespace EssentialCalcs
         CalcSelectionList _includeLinksBeyondHole;
         CalcListOfDoubleArrays _studPositions;
         CalcSelectionList _maxBarSize;
+        CalcSelectionList _minBarSize;
         CalcSelectionList _faceCheck;
         CalcSelectionList _betaCheck;
         CalcDouble _betaProposed;
@@ -175,6 +176,7 @@ namespace EssentialCalcs
             _includeLinksBeyondHole = inputValues.CreateCalcSelectionList("Include links beyond holes", "YES", new List<string> { "YES", "NO" });
             _studPositions = outputValues.CreateCalcListOfDoubleArrays("Stud positions", new List<double[]>());
             _maxBarSize = inputValues.CreateCalcSelectionList("Maximum link diameter", "16", new List<string> { "8", "10", "12", "16", "20", "25", "32", "40" });
+            _minBarSize = inputValues.CreateCalcSelectionList("Minimum link diameter", "8", new List<string> { "8", "10", "12", "16", "20", "25", "32" });
 
             Assembly assembly = GetType().GetTypeInfo().Assembly;
             using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.ControlPerimeters_Fig_6_13.png"))
@@ -1325,7 +1327,8 @@ namespace EssentialCalcs
 
             List<int> allBarSizes = new List<int> { 8, 10, 12, 16, 20, 25, 32, 40 };
             int _maxBarDia = int.Parse(_maxBarSize.ValueAsString);
-            var barSizes = allBarSizes.Where(a => a <= _maxBarDia).ToList();
+            int _minBarDia = int.Parse(_minBarSize.ValueAsString);
+            var barSizes = allBarSizes.Where(a => a <= _maxBarDia && a >= _minBarDia).ToList();
 
             _legDia.Value = calcBarSizeAndDia(_Asw.Value / _linksInFirstPerim.Value, barSizes);
             if (double.IsNaN(_legDia.Value))
