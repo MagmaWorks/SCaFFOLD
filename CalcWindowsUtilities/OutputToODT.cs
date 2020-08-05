@@ -15,8 +15,9 @@ using M = DocumentFormat.OpenXml.Math;
 using System.Windows.Forms;
 using System.Reflection;
 using WpfMath;
+using CalcCore;
 
-namespace CalcCore
+namespace Calcs
 {
     public static class OutputToODT
     {
@@ -77,7 +78,7 @@ namespace CalcCore
                 MessageBox.Show("Oops..." + Environment.NewLine + ex.Message);
                 return;
             }
-            
+
             using (WordprocessingDocument wordDocument =
                 WordprocessingDocument.Open(filePath, true))
             {
@@ -94,9 +95,9 @@ namespace CalcCore
                 var line4 = new Paragraph(new Run(new Text("")));
                 line4.PrependChild<ParagraphProperties>(new ParagraphProperties() { ParagraphStyleId = new ParagraphStyleId() { Val = "NoSpacing" } });
                 headerPart.RootElement.Append(
-                    /*line1,*/ 
-                    line2, 
-                    line3, 
+                    /*line1,*/
+                    line2,
+                    line3,
                     line4);
 
                 bool firstCalc = true;
@@ -262,7 +263,7 @@ namespace CalcCore
                     var paraImage = AddImageToBody(mainPart.GetIdOfPart(imagePart), width, height);
                     cell2.AppendChild(new Paragraph(new Run(paraImage)));
                 }
-                
+
                 TableCell cell3 = new TableCell();
                 cell3.Append(new Paragraph(new Run(new Text(item.Conclusion))));
                 cell3.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "1700" }));
@@ -413,7 +414,7 @@ namespace CalcCore
             var element =
                  new Drawing(
                      new DW.Inline(
-                         new DW.Extent() { Cx = cx, Cy = cy},
+                         new DW.Extent() { Cx = cx, Cy = cy },
                          new DW.EffectExtent()
                          {
                              LeftEdge = 0L,
@@ -457,7 +458,7 @@ namespace CalcCore
                                      new PIC.ShapeProperties(
                                          new A.Transform2D(
                                              new A.Offset() { X = 0L, Y = 0L },
-                                             new A.Extents() { Cx = cx, Cy = cy}),
+                                             new A.Extents() { Cx = cx, Cy = cy }),
                                          new A.PresetGeometry(
                                              new A.AdjustValueList()
                                          )

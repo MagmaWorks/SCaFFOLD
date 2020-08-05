@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 //using System.Windows.Media;
 //using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using CalcCore;
 using MWGeometry;
 //using netDxf.Entities;
@@ -179,6 +178,7 @@ namespace EssentialCalcs
             _minBarSize = inputValues.CreateCalcSelectionList("Minimum link diameter", "8", new List<string> { "8", "10", "12", "16", "20", "25", "32" });
 
             Assembly assembly = GetType().GetTypeInfo().Assembly;
+            var temp = assembly.GetManifestResourceNames();
             using (Stream stream = assembly.GetManifestResourceStream("EssentialCalcs.resources.ControlPerimeters_Fig_6_13.png"))
             {
                 _fig6_13 = SkiaSharp.SKBitmap.Decode(stream);
