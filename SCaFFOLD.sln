@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calcs", "Calcs\Calcs.csproj", "{C7FB5BC1-FA62-4DDF-AFC6-1431026AA72C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{5F6ACB32-68E2-4524-A52B-0B2E3AE2CF50}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcMonkey", "CalcMonkey\CalcMonkey.csproj", "{65351CC9-EB6C-4FE8-9176-AA61DF862D04}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicRelaxation", "DynamicRelaxation\DynamicRelaxation.csproj", "{6242D040-2B9A-436F-9C50-6A61F1B89960}"
@@ -17,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcWindowsUtilities", "Cal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsAppPlugins", "WindowsAppPlugins\WindowsAppPlugins.csproj", "{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EssentialCalcs", "EssentialCalcs\EssentialCalcs.csproj", "{6212564F-470C-49EF-A4BE-1F8E0043EC89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalcCoreStandard", "CalcCoreStandard\CalcCoreStandard.csproj", "{AF2D3236-F22A-45A5-AF1B-38500915622E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcCoreStandard", "CalcCoreStandard\CalcCoreStandard.csproj", "{AF2D3236-F22A-45A5-AF1B-38500915622E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EssentialCalcs", "EssentialCalcs\EssentialCalcs.csproj", "{0C05C48B-4EA3-4CFF-8E1E-F07B450557B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{C7FB5BC1-FA62-4DDF-AFC6-1431026AA72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7FB5BC1-FA62-4DDF-AFC6-1431026AA72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7FB5BC1-FA62-4DDF-AFC6-1431026AA72C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F6ACB32-68E2-4524-A52B-0B2E3AE2CF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F6ACB32-68E2-4524-A52B-0B2E3AE2CF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F6ACB32-68E2-4524-A52B-0B2E3AE2CF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F6ACB32-68E2-4524-A52B-0B2E3AE2CF50}.Release|Any CPU.Build.0 = Release|Any CPU
 		{65351CC9-EB6C-4FE8-9176-AA61DF862D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{65351CC9-EB6C-4FE8-9176-AA61DF862D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65351CC9-EB6C-4FE8-9176-AA61DF862D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,14 +49,14 @@ Global
 		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF482AFB-AF24-4AF3-A5FC-B90C7D549D91}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6212564F-470C-49EF-A4BE-1F8E0043EC89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6212564F-470C-49EF-A4BE-1F8E0043EC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6212564F-470C-49EF-A4BE-1F8E0043EC89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6212564F-470C-49EF-A4BE-1F8E0043EC89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF2D3236-F22A-45A5-AF1B-38500915622E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF2D3236-F22A-45A5-AF1B-38500915622E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF2D3236-F22A-45A5-AF1B-38500915622E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF2D3236-F22A-45A5-AF1B-38500915622E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C05C48B-4EA3-4CFF-8E1E-F07B450557B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C05C48B-4EA3-4CFF-8E1E-F07B450557B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C05C48B-4EA3-4CFF-8E1E-F07B450557B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C05C48B-4EA3-4CFF-8E1E-F07B450557B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

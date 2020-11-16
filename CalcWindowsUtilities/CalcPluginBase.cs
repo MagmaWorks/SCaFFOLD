@@ -12,7 +12,7 @@ namespace Calcs
     {
         protected ICalc _calc;
         public CalcCore.ICalc Calc { get => _calc; }
-        public abstract UserControl Control { get;  }
+        public abstract UserControl Control { get; }
 
         public void CopyValuesBack(ICalc calc)
         {

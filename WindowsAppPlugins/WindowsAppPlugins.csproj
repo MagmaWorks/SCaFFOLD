@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WindowsAppPlugins</RootNamespace>
     <AssemblyName>WindowsAppPlugins</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -77,20 +78,6 @@
     <Compile Include="TableVM.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
-      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
-      <Name>CalcCoreStandard</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Calcs\Calcs.csproj">
-      <Project>{c7fb5bc1-fa62-4ddf-afc6-1431026aa72c}</Project>
-      <Name>Calcs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CalcWindowsUtilities\CalcWindowsUtilities.csproj">
-      <Project>{35547d5c-c7e0-4a07-87d3-275db1aa7a70}</Project>
-      <Name>CalcWindowsUtilities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="ChartControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -107,6 +94,20 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CalcCoreStandard\CalcCoreStandard.csproj">
+      <Project>{af2d3236-f22a-45a5-af1b-38500915622e}</Project>
+      <Name>CalcCoreStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Calcs\Calcs.csproj">
+      <Project>{c7fb5bc1-fa62-4ddf-afc6-1431026aa72c}</Project>
+      <Name>Calcs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CalcWindowsUtilities\CalcWindowsUtilities.csproj">
+      <Project>{35547d5c-c7e0-4a07-87d3-275db1aa7a70}</Project>
+      <Name>CalcWindowsUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

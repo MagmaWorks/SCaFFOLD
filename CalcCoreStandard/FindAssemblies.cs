@@ -34,6 +34,7 @@ namespace CalcCore
             {
                 var ass = System.IO.Path.GetFileName(assembly);
                 Assembly myAssembly = Assembly.LoadFile(assembly);
+                var types = myAssembly.GetTypes();
                 var res = from type in myAssembly.GetTypes()
                           where typeof(CalcCore.ICalc).IsAssignableFrom(type)
                           select type;

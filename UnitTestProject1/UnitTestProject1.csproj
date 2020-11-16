@@ -64,10 +64,6 @@
       <Project>{6242d040-2b9a-436f-9c50-6a61f1b89960}</Project>
       <Name>DynamicRelaxation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EssentialCalcs\EssentialCalcs.csproj">
-      <Project>{6212564f-470c-49ef-a4be-1f8e0043ec89}</Project>
-      <Name>EssentialCalcs</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
