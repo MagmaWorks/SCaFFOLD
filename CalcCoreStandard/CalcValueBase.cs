@@ -14,6 +14,8 @@ namespace CalcCore
         public abstract string ValueAsString { get; set; }
         public CalcStatus Status { get; set; } = CalcStatus.NONE;
         public abstract CalcValueType Type { get; }
+        public bool IsActive { get; set; } = true;
+        public List<string> ValueGroup { get; set; } = new List<string> { "" };
         // description
     }
 
@@ -24,7 +26,9 @@ namespace CalcCore
         FILEPATH,
         FOLDERPATH,
         LISTOFDOUBLEARRAYS,
-        INT
+        INT,
+        STRING,
+        BOOL
     }
 
     public enum CalcStatus

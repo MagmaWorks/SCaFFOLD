@@ -37,6 +37,7 @@ namespace EssentialCalcs
             _burstingForce = outputValues.CreateDoubleCalcValue("Bursting force", "T", "kN", 0);
             _thickness = inputValues.CreateDoubleCalcValue("Thickness", "t", "mm", 300);
             _tensionToReinforce = outputValues.CreateDoubleCalcValue("Tension to reinforce", "T_{tie}", "kN", 0);
+            UpdateCalc();
         }
 
         public override List<Formula> GenerateFormulae()

@@ -46,7 +46,7 @@ Section "SCaFFOLD for Windows (required)"
   
   ; Put file there
   File "Calcs.exe"
-  File "BriefFiniteElementNet.dll"
+  ;File "BriefFiniteElementNet.dll"
   File "CalcCoreStandard.dll"
   File "DocumentFormat.OpenXml.dll"
   File "DynamicRelaxation.dll"
@@ -71,6 +71,7 @@ Section "SCaFFOLD for Windows (required)"
   File "Triangle.dll"
   File "Microsoft.Xaml.Behaviors.dll"
   File "Calcs.exe.config"
+  File "System.Numerics.Vectors.dll"
   
   SetOutPath "$INSTDIR\Libraries"
   File /nonfatal /a /r "Libraries\"

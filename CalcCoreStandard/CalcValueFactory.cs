@@ -29,9 +29,23 @@ namespace CalcCore
             return myVal;
         }
 
+        public CalcString CreateStringCalcValue(string name, string symbol, string unit, string value)
+        {
+            var myVal = new CalcString(name, symbol, unit, value);
+            values.Add(getAvailableKeyName(name), myVal);
+            return myVal;
+        }
+
         public CalcInt CreateIntCalcValue(string name, string symbol, string unit, int value)
         {
             var myVal = new CalcInt(name, symbol, unit, value);
+            values.Add(getAvailableKeyName(name), myVal);
+            return myVal;
+        }
+
+        public CalcBool CreateBoolCalcValue(string name, string symbol, string unit, bool value)
+        {
+            var myVal = new CalcBool(name, symbol, unit, value);
             values.Add(getAvailableKeyName(name), myVal);
             return myVal;
         }

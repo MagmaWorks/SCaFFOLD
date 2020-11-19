@@ -65,13 +65,18 @@ namespace EssentialCalcs
             face2Stress = outputValues.CreateDoubleCalcValue("Face 1 stress", @"\sigma_2", "N/mm^2", 0);
             face3Stress = outputValues.CreateDoubleCalcValue("Face 1 stress", @"\sigma_3", "N/mm^2", 0);
             nodeCompStrength = outputValues.CreateDoubleCalcValue("Node compressive strength", @"\sigma_{Rd,max}", "", 0);
+            exp1 = new Formula();
+            exp2 = new Formula();
+            exp3 = new Formula();
+
+            UpdateCalc();
 
         }
 
 
         public override List<Formula> GenerateFormulae()
         {
-            return new List<Formula>()
+            var returnVal = new List<Formula>()
             {
                 //new Formula() { Image = generateImage()[0] },
                 new Formula() { Narrative = "Node type: " + nodeType + ". "},
@@ -80,6 +85,7 @@ namespace EssentialCalcs
                 exp2,
                 exp3,
             };
+            return returnVal;
         }
 
 
