@@ -16,6 +16,8 @@ namespace Calcs
 {
     public class AppViewModel : ViewModelBase
     {
+        public String activeDirectory;
+
         public List<CalcCore.CalcAssembly> Assemblies { get; set; }
 
         ObservableCollection<CalculationViewModel> _viewModels = new ObservableCollection<CalculationViewModel>();
@@ -132,12 +134,14 @@ namespace Calcs
                         SelectedViewModel = i;
                         System.Windows.MessageBox.Show("Your calculation " + vm.Calc.InstanceName + " has not been saved yet. You have the option to save it now.");
                         saveDialog.FileName = vm.Calc.InstanceName + @".JSON";
-                        saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                        saveDialog.InitialDirectory = activeDirectory != null ? activeDirectory : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                        //saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                         if (saveDialog.ShowDialog() == DialogResult.OK)
                         {
                             filePath = saveDialog.FileName;
                             System.IO.File.WriteAllText(filePath, saveObj);
                             vm.Filepath = filePath;
+                            activeDirectory = Path.GetDirectoryName(saveDialog.FileName);
                         }
                     }
                     else
@@ -180,12 +184,13 @@ namespace Calcs
                 {
                     saveDialog.FileName = ViewModel.Filepath;
                 }
-                
-                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                saveDialog.InitialDirectory = activeDirectory != null ? activeDirectory : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
                 System.IO.File.WriteAllText(filePath, saveObj);
                 ViewModel.Filepath = filePath;
+                activeDirectory = Path.GetDirectoryName(saveDialog.FileName);
             }
             catch (Exception ex)
             {
@@ -290,7 +295,8 @@ namespace Calcs
                 {
                     saveDialog.FileName = ViewModel.Filepath;
                 }
-                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                saveDialog.InitialDirectory = activeDirectory != null ? activeDirectory : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
                 System.IO.File.WriteAllText(filePath, saveObj);
@@ -330,7 +336,8 @@ namespace Calcs
                 var saveDialog = new SaveFileDialog();
                 saveDialog.Filter = @"DXF files | *.dxf";
                 saveDialog.FileName = ViewModel.Calc.InstanceName + @".dxf";
-                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                saveDialog.InitialDirectory = activeDirectory != null ? activeDirectory : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 if (saveDialog.ShowDialog() != DialogResult.OK) return;
                 filePath = saveDialog.FileName;
                 var drawings = ViewModel.Calc.GetDrawings();
@@ -366,9 +373,11 @@ namespace Calcs
             {
                 var openDialog = new OpenFileDialog();
                 openDialog.Filter = @"Calc files |*.JSON";
-                openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                openDialog.InitialDirectory = activeDirectory != null ? activeDirectory : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //openDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 openDialog.Multiselect = true;
                 if (openDialog.ShowDialog() != DialogResult.OK) return;
+                activeDirectory = Path.GetDirectoryName(openDialog.FileName);
                 foreach (var filePath in openDialog.FileNames)
                 {
                     bool inputMissing = false;
