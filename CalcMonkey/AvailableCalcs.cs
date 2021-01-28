@@ -220,9 +220,14 @@ namespace CalcMonkey
 
         public override bool Write(GH_IWriter writer)
         {
-            string name = ((CalcCore.CalcNameAttribute)Attribute.GetCustomAttribute(calc.GetType(), typeof(CalcCore.CalcNameAttribute))).CalcName;
-            writer.SetString("CalcType", name);
-            return base.Write(writer);
+            if(calc != null)
+            {
+                string name = ((CalcCore.CalcNameAttribute)Attribute.GetCustomAttribute(calc.GetType(), typeof(CalcCore.CalcNameAttribute))).CalcName;
+                writer.SetString("CalcType", name);
+                return base.Write(writer);
+            }
+            else
+            return true;
         }
 
         public override bool Read(GH_IReader reader)
