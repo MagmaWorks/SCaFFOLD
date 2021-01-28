@@ -2732,31 +2732,6 @@ namespace EssentialCalcs
 
             var mesh = slabMesh2;
 
-            //MWMesh mesh = new MWMesh();
-            //mesh.addNode(minx, miny, _h.Value/2, new MWPoint2D(0.5,0.5));
-            //mesh.addNode(maxx, miny, _h.Value / 2, new MWPoint2D(0.5, 0.5));
-            //mesh.addNode(maxx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
-            //mesh.addNode(minx, maxy, _h.Value / 2, new MWPoint2D(0.5, 0.5));
-            ////mesh.addNode(minx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            ////mesh.addNode(maxx, miny, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            ////mesh.addNode(maxx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            ////mesh.addNode(minx, maxy, -_h.Value / 2, new MWPoint2D(0.5, 0.5));
-            //mesh.setIndices(new List<int[]>
-            //{
-            //    new int[]{0,2,3 },
-            //    new int[]{0,1,2 },
-            //    //new int[]{7,6,4 },
-            //    //new int[]{6,5,4 },
-            //    //new int[]{0,4,1 },
-            //    //new int[]{1,4,5 },
-            //    //new int[]{0,3,4 },
-            //    //new int[]{4,3,7 },
-            //    //new int[]{7,3,6 },
-            //    //new int[]{6,3,2 },
-            //    //new int[]{2,1,5 },
-            //    //new int[]{5,6,2 }
-
-            //});
             mesh.Opacity = 0.5;
             mesh.Brush = new MWBrush(255, 255, 0);
 

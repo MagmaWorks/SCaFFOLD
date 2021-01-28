@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BriefFiniteElement.NET" Version="1.0.0" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Triangle" Version="0.0.6-Beta3" />
   </ItemGroup>
