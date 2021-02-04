@@ -60,6 +60,12 @@
                 </ContentControl>
             </StackPanel>
         </DataTemplate>
+        <DataTemplate x:Key="BoolTemplate">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding BoolValue}" Margin="60 0 0 0" Width="160"/>
+                <TextBlock Text="{Binding Name}" Width="100"/>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate x:Key="DoubleListTemplate">
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="{Binding Value}"/>
@@ -105,7 +111,10 @@
                                     <DataTrigger Binding="{Binding Type}" Value="DOUBLE">
                                         <Setter Property="ContentTemplate" Value="{StaticResource DoubleTemplate}"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="FILEPATH">
+                                        <DataTrigger Binding="{Binding Type}" Value="BOOL">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource BoolTemplate}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="FILEPATH">
                                         <Setter Property="ContentTemplate" Value="{StaticResource FilePathTemplate}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Type}" Value="FOLDERPATH">
