@@ -43,7 +43,8 @@ namespace CalcMonkey
                 {
                     if (name.Type == CalcCore.CalcValueType.DOUBLE)
                     {
-                        pManager.AddNumberParameter(name.Name, "", "", GH_ParamAccess.item);
+                        int ind = pManager.AddNumberParameter(name.Name, "", "", GH_ParamAccess.item);
+                        pManager[ind].Optional = true;
                     }
                 }
             }
@@ -80,8 +81,8 @@ namespace CalcMonkey
                     if (calcInput.Name == input.Name)
                     {
                         double inputValue = 0;
-                        if (!DA.GetData(i, ref inputValue)) ;
-                        (calcInput as CalcCore.CalcDouble).Value = inputValue;
+                        if (!DA.GetData(i, ref inputValue))
+                            (calcInput as CalcCore.CalcDouble).Value = inputValue;
                     }
                 }
             }
@@ -104,9 +105,7 @@ namespace CalcMonkey
                         DA.SetData(i, (calcOutput as CalcCore.CalcDouble).Value);
                     }
                 }
-
             }
-
         }
 
         /// <summary>
@@ -153,14 +152,22 @@ namespace CalcMonkey
 
         void doClick(object sender, EventArgs e)
         {
-            var calcInstance = (CalcCore.ICalc)Activator.CreateInstance(((sender as ToolStripMenuItem).Tag) as Type);
-            calc = calcInstance;
-
+            try
+            {
+                var calcInstance = (CalcCore.ICalc)Activator.CreateInstance(((sender as ToolStripMenuItem).Tag) as Type);
+                calc = calcInstance;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             foreach (var input in calc.GetInputs())
             {
                 if (input.Type == CalcCore.CalcValueType.DOUBLE)
                 {
                     Params.RegisterInputParam(createGHParam(input.Name));
+                    //int ind = pManager.AddNumberParameter(name.Name, "", "", GH_ParamAccess.item);
+                    //pManager[ind].Optional = true;
                 }
             }
 
@@ -214,6 +221,8 @@ namespace CalcMonkey
             param.Access = GH_ParamAccess.item;
             param.Description = "";
             param.NickName = name;
+            param.Optional = true;
+            
 
             return param;
         }
@@ -232,7 +241,6 @@ namespace CalcMonkey
 
         public override bool Read(GH_IReader reader)
         {
-
             if (!base.Read(reader))
                 return false;
 
@@ -247,9 +255,7 @@ namespace CalcMonkey
                     this.calc = calcInstance;
                 }
             }
-
             return true;
         }
     }
-
 }

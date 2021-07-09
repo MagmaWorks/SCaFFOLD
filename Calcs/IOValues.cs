@@ -58,6 +58,22 @@ namespace Calcs
             }
         }
 
+        public bool BoolValue
+        {
+            get
+            {
+                return (calcValue as CalcCore.CalcBool).Value;
+            }
+            set
+            {
+                (calcValue as CalcCore.CalcBool).Value = value;
+                calc.UpdateCalc();
+                RaisePropertyChanged(nameof(BoolValue));
+                RaisePropertyChanged(nameof(ValueRounded));
+                calcVM.UpdateOutputs();
+            }
+        }
+
         public string ValueRounded
         {
             get
