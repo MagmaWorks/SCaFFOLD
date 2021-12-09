@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CalcCore;
 
 namespace RunInConsole
 {
@@ -10,8 +11,9 @@ namespace RunInConsole
     {
         static void Main(string[] args)
         {
-            var myDynMod = new DynamicRelaxation.DynamicRelaxationSystem();
-            myDynMod.RunSteps(100, 0.1f);
+            var assemblies = CalcCore.FindAssemblies.GetAssemblies();
+            //var myDynMod = new DynamicRelaxation.DynamicRelaxationSystem();
+            //myDynMod.RunSteps(100, 0.1f);
             Console.ReadLine();
         }
     }

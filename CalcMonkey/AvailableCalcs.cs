@@ -81,8 +81,8 @@ namespace CalcMonkey
                     if (calcInput.Name == input.Name)
                     {
                         double inputValue = 0;
-                        if (!DA.GetData(i, ref inputValue))
-                            (calcInput as CalcCore.CalcDouble).Value = inputValue;
+                        if (!DA.GetData(i, ref inputValue)) return;
+                        (calcInput as CalcCore.CalcDouble).Value = inputValue;
                     }
                 }
             }
