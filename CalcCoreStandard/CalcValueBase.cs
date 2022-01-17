@@ -16,27 +16,5 @@ namespace CalcCore
         public abstract CalcValueType Type { get; }
         public bool IsActive { get; set; } = true;
         public List<string> ValueGroup { get; set; } = new List<string> { "" };
-        // description
-    }
-
-    public enum CalcValueType
-    {
-        DOUBLE,
-        SELECTIONLIST,
-        FILEPATH,
-        FOLDERPATH,
-        LISTOFDOUBLEARRAYS,
-        INT,
-        STRING,
-        BOOL
-    }
-
-    public enum CalcStatus
-    {
-        NONE,
-        PASS,
-        JUSTPASS,
-        JUSTFAIL,
-        FAIL
     }
 }
