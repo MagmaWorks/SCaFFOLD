@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <Reference Include="MWGeometry">
-      <HintPath>..\..\Libraries\WWGeometry\WWGeometry\bin\Debug\MWGeometry.dll</HintPath>
+      <HintPath>..\MWGeometry.dll</HintPath>
     </Reference>
   </ItemGroup>
 
