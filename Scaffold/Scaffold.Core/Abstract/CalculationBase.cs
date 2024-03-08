@@ -33,7 +33,7 @@ public abstract class CalculationBase : ICalculation
 
     protected abstract void DefineInputs();
     protected abstract void DefineOutputs();
-    protected abstract void Update();
+    public abstract void Update();
 
     protected abstract IEnumerable<Formula> GenerateFormulae();
 

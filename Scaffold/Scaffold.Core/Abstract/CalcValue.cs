@@ -28,7 +28,7 @@ public abstract class CalcValue<T> : ICalcValue
     public IoDirection Direction { get; }
     public string Name { get; }
     public string Symbol { get; protected set; }
-    public T Value { get; protected set; }
+    public T Value { get; set; }
     public IQuantity Unit { get; set; }
     public CalcStatus Status { get; set; }
         
