@@ -3,7 +3,7 @@ using Scaffold.Core.Models;
 
 namespace Scaffold.Core.Interfaces;
 
-public interface ICalc
+public interface ICalculation
 {
     /// <summary>
     /// e.g. Column 3A
@@ -18,5 +18,8 @@ public interface ICalc
     string Type { get; }
     
     CalcStatus Status { get; }
-    List<Formula> GetFormulae();
+
+    IReadOnlyList<ICalcValue> GetInputs();
+    IReadOnlyList<ICalcValue> GetOutputs();
+    IEnumerable<Formula> GetFormulae();
 }

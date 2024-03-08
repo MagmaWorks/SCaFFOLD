@@ -7,13 +7,13 @@ using Scaffold.Core.Models;
 namespace Scaffold.Core.Abstract;
 
 // TODO: This model should determine if it calculates on each change or later in the pipeline.
-public abstract class CalcBase : ICalc
+public abstract class CalculationBase : ICalculation
 {
     private List<ICalcValue> _inputs;
     private List<ICalcValue> _outputs;
-    protected List<Formula> _formulae;
+    private IEnumerable<Formula> _formulae;
 
-    protected CalcBase()
+    protected CalculationBase()
     {
         var classType = GetType();
         var attr = classType.GetCustomAttribute<CalcMetadataAttribute>();
@@ -26,16 +26,16 @@ public abstract class CalcBase : ICalc
     public string Title { get; set; }
     public string Type { get; }
     public CalcStatus Status { get; protected set; }
-
-    public IReadOnlyList<ICalcValue> Inputs => _inputs;
-    public IReadOnlyList<ICalcValue> Outputs => _outputs;
-    public List<Formula> GetFormulae() => _formulae ??= GenerateFormulae();
+    
+    public IReadOnlyList<ICalcValue> GetInputs() => _inputs ?? [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => _outputs ?? [];
+    public IEnumerable<Formula> GetFormulae() => _formulae ??= GenerateFormulae();
 
     protected abstract void DefineInputs();
     protected abstract void DefineOutputs();
     protected abstract void Update();
 
-    protected abstract List<Formula> GenerateFormulae();
+    protected abstract IEnumerable<Formula> GenerateFormulae();
 
     public void LoadIoCollections()
     {
