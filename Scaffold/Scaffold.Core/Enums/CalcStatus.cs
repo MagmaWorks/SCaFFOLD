@@ -1,11 +1,10 @@
-﻿namespace Scaffold.Core.Enums
+﻿namespace Scaffold.Core.Enums;
+
+public enum CalcStatus
 {
-    public enum CalcStatus
-    {
-        NONE,
-        PASS,
-        JUSTPASS,
-        JUSTFAIL,
-        FAIL
-    }
+    None,
+    Pass,
+    JustPass,
+    JustFail,
+    Fail
 }

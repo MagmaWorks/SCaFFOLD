@@ -1,9 +1,8 @@
-﻿namespace Scaffold.Core.Geometry.Enums
+﻿namespace Scaffold.Core.Geometry.Enums;
+
+public enum IntersectionType
 {
-    public enum IntersectionType
-    {
-        NONE,
-        WITHIN,
-        PROJECTED
-    }
+    NONE,
+    WITHIN,
+    PROJECTED
 }
