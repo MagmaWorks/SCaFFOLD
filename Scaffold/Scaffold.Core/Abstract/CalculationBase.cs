@@ -37,6 +37,20 @@ public abstract class CalculationBase : ICalculation
 
     protected abstract IEnumerable<Formula> GenerateFormulae();
 
+    private static bool IsCalcValueType(Type type)
+    {
+        while (true)
+        {
+            if (type.BaseType == null) 
+                return false;
+
+            if (type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(CalcValue<>)) 
+                return true;
+
+            type = type.BaseType;
+        }
+    }
+
     public void LoadIoCollections()
     {
         if (_inputs != null && _outputs != null)
@@ -51,10 +65,12 @@ public abstract class CalculationBase : ICalculation
         var allProps = GetType().GetRuntimeProperties();
         foreach (var prop in allProps)
         {
-            if (!typeof(CalcValue<>).IsAssignableFrom(prop.PropertyType))
+            if (IsCalcValueType(prop.PropertyType) == false)
                 continue;
 
             var value = (ICalcValue)prop.GetValue(this);
+            
+            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (value?.Direction)
             {
                 case IoDirection.Input:
@@ -64,9 +80,6 @@ public abstract class CalculationBase : ICalculation
                 case IoDirection.Output:
                     _outputs.Add(value);
                     break;
-
-                default:
-                    continue;
             }
         }
     }

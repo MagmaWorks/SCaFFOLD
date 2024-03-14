@@ -22,6 +22,9 @@ public abstract class CalcValue<T> : ICalcValue
                 "DefineOutputs" => IoDirection.Output,
                 _ => IoDirection.Undefined
             };
+            
+            if (Direction != IoDirection.Undefined)
+                break;
         }
     }
 

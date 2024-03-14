@@ -33,6 +33,9 @@ public class AdditionCalculation : CalculationBase
 
     protected override IEnumerable<Formula> GenerateFormulae()
     {
-        return new List<Formula>();
+        return new List<Formula>
+        {
+            new() {Expression = ["x &=& a + b"] }
+        };
     }
 }

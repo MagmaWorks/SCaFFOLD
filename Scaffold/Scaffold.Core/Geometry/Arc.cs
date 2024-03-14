@@ -1,9 +1,11 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using Scaffold.Core.Geometry.Abstract;
 using Scaffold.Core.Geometry.Enums;
 
 namespace Scaffold.Core.Geometry;
 
+[ExcludeFromCodeCoverage] // because we will be using Kris' libs for this from v1.
 public class Arc : GeometryBase
 {
     public Vector2 Centre { get; set; }

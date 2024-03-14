@@ -1,7 +1,9 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Scaffold.Core.Geometry.Abstract;
 
+[ExcludeFromCodeCoverage] // because we will be using Kris' libs for this from v1.
 public abstract class GeometryBase
 {
     public abstract Vector2 Start { get; }

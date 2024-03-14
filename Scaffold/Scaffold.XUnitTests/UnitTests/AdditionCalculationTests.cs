@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Scaffold.Core.Enums;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
@@ -31,10 +32,16 @@ public class AdditionCalculationTests
         calc.Title.Should().Be(title);
         
         calc.LoadIoCollections();
+        calc.GetInputs().ToList().Count.Should().Be(2);
+        calc.GetOutputs().ToList().Count.Should().Be(1);
         
         calc.LeftAssignment.Value.Should().Be(2);
         calc.RightAssignment.Value.Should().Be(3);
         calc.Result.Value.Should().Be(5);
+        calc.Status.Should().Be(CalcStatus.None);
+        
+        // Hits return statement in LoadIoCollections
+        calc.LoadIoCollections();
     }
     
     [Fact]
@@ -52,5 +59,10 @@ public class AdditionCalculationTests
 
         calc.Update();
         calc.Result.Value.Should().Be(9);
+
+        var formulae = calc.GetFormulae().ToList();
+        formulae.Count.Should().Be(1);
+        formulae[0].Expression.Count.Should().Be(1);
+        formulae[0].Expression[0].Should().Be("x &=& a + b");
     }
 }
