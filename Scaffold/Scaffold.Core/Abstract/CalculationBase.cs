@@ -7,7 +7,7 @@ using Scaffold.Core.Models;
 namespace Scaffold.Core.Abstract;
 
 // TODO: This model should determine if it calculates on each change or later in the pipeline.
-public abstract class CalculationBase : ICalculation
+public abstract class CalculationBase : ICalculation, ICalculationMetadata
 {
     private List<ICalcValue> _inputs;
     private List<ICalcValue> _outputs;
@@ -15,11 +15,10 @@ public abstract class CalculationBase : ICalculation
 
     protected CalculationBase()
     {
-        var classType = GetType();
-        var attr = classType.GetCustomAttribute<CalcMetadataAttribute>();
-
-        Title = attr?.Title ?? classType.Name;
-        Type = attr?.TypeName ?? classType.Name;
+        var metadata = this.GetMetadata();
+        
+        Title = metadata.Title;
+        Type = metadata.Type;
         Status = CalcStatus.None;
     }
     
@@ -82,5 +81,20 @@ public abstract class CalculationBase : ICalculation
                     break;
             }
         }
+    }
+}
+
+public static class CalculationBaseExtensions
+{
+    public static ICalculationMetadata GetMetadata(this ICalculation calc)
+    {
+        var implementationType = calc.GetType();
+        var attr = implementationType.GetCustomAttribute<CalcMetadataAttribute>();
+
+        return new CalculationMetadata
+        {
+            Title = attr?.Title ?? implementationType.Name,
+            Type = attr?.TypeName ?? implementationType.Name
+        };
     }
 }
