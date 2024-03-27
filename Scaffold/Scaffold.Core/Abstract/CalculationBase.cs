@@ -15,7 +15,7 @@ public abstract class CalculationBase : ICalculation, ICalculationMetadata
 
     protected CalculationBase()
     {
-        var metadata = this.GetMetadata();
+        var metadata = GetType().GetMetadata();
         
         Title = metadata.Title;
         Type = metadata.Type;
@@ -86,9 +86,8 @@ public abstract class CalculationBase : ICalculation, ICalculationMetadata
 
 public static class CalculationBaseExtensions
 {
-    public static ICalculationMetadata GetMetadata(this ICalculation calc)
+    public static ICalculationMetadata GetMetadata(this Type implementationType)
     {
-        var implementationType = calc.GetType();
         var attr = implementationType.GetCustomAttribute<CalcMetadataAttribute>();
 
         return new CalculationMetadata
