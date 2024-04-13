@@ -5,11 +5,10 @@ namespace Scaffold.Core.Interfaces;
 public interface ICalcValue
 {
     IoDirection Direction { get; }
-    string Name { get; }
+    string DisplayName { get; }
     string Symbol { get; }
-    OasysUnits.IQuantity Unit { get; set; }
-    CalcStatus Status { get; set; }
-        
-    void SetValue(string strValue);
+    CalcStatus Status { get; set; }        
+    void SetValueAsString(string strValue);
+    string GetValueAsString(string format = "");
     string ToString();
 }
