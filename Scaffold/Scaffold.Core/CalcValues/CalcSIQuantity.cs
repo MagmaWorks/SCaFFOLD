@@ -16,7 +16,7 @@ namespace Scaffold.Core.CalcValues
         IQuantity quantity;
         IQuantity ICalcSIQuantity.Quantity => quantity;
 
-        string Unit => quantity.Unit.ToString(); // need to add implementation that converts this to LaTeX
+        string ICalcQuantity.Unit => quantity.Unit.ToString(); 
 
         double ICalcQuantity.Value
         {
@@ -26,7 +26,7 @@ namespace Scaffold.Core.CalcValues
             }
             set
             {
-                quantity.Value = value; //need to create new quantity with same units etc as current but with new value
+                quantity = Quantity.From(value, quantity.Unit);
             }
         }
 
@@ -53,9 +53,9 @@ namespace Scaffold.Core.CalcValues
         {
             double convertedValue;
             if (double.TryParse(strValue, out convertedValue))
-                quantity.Value = convertedValue;    //need to create new quantity with same units etc as current but with new value
+                quantity = Quantity.From(convertedValue, quantity.Unit);  
             else
-                quantity.Value = double.NaN; //discuss expected behaviour here. is it better to throw an exception?
+                quantity = Quantity.From(double.NaN, quantity.Unit); //discuss expected behaviour here. is it better to throw an exception?
             ;
         }
 
