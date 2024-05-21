@@ -9,7 +9,7 @@ public abstract class CalcValue<T> : ICalcValue
 {
     protected CalcValue(string name)
     {
-        Name = name;
+        DisplayName = name;
 
         for (var i = 0; i < 5; i++)
         {
@@ -29,12 +29,14 @@ public abstract class CalcValue<T> : ICalcValue
     }
 
     public IoDirection Direction { get; }
-    public string Name { get; }
+    public string DisplayName { get; }
     public string Symbol { get; protected set; }
+    public string UnitName => Unit?.QuantityInfo.Name ?? "";
+    public CalcStatus Status { get; set; }
     public T Value { get; set; }
     public IQuantity Unit { get; set; }
-    public CalcStatus Status { get; set; }
         
     public abstract void SetValue(string strValue);
+    public virtual string GetValue(string format = "") => Value.ToString();
     public abstract override string ToString();
 }

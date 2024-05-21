@@ -35,7 +35,10 @@ public class AdditionCalculation : CalculationBase
     {
         return new List<Formula>
         {
-            new() {Expression = ["x &=& a + b"] }
+            new()
+            {
+                Expression = ["x &=& a + b"], Conclusion = "Some text here", Ref = "Some ref here"
+            }
         };
     }
 }
