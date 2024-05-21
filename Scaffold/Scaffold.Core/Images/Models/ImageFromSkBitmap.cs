@@ -3,9 +3,14 @@ using SkiaSharp;
 
 namespace Scaffold.Core.Images.Models;
 
-public class ImageFromSkBitmap(SKBitmap bitmap) : ICalcImage
+public class ImageFromSkBitmap : ICalcImage
 {
-    private SKBitmap Bitmap { get; } = bitmap;
+    public ImageFromSkBitmap(SKBitmap bitmap)
+    {
+        Bitmap = bitmap;
+    }
+    
+    private SKBitmap Bitmap { get; }
 
     public SKBitmap GetImage() => Bitmap;
 }

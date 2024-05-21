@@ -3,6 +3,7 @@ using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Images.Models;
 using Scaffold.Core.Models;
+using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
@@ -34,18 +35,18 @@ public class AdditionCalculation : CalculationBase
 
     protected override IEnumerable<Formula> GenerateFormulae()
     {
-        var keyImage = new SkiaSharp.SKBitmap(1000,200);
-        using (var canvas = new SkiaSharp.SKCanvas(keyImage))
-        {
-            var paintText = new SkiaSharp.SKPaint { TextSize = 25, TextAlign = SkiaSharp.SKTextAlign.Left };
-            var paint = new SkiaSharp.SKPaint { Color = SkiaSharp.SKColors.Black, IsAntialias = true };
-            paint.IsStroke = true; paint.StrokeWidth = 5;
-            
-            canvas.DrawCircle(550, 175, 15, paint);
-            canvas.DrawCircle(600, 175, 15, paint);
-            canvas.DrawCircle(650, 175, 15, paint);
-            canvas.DrawText("Shear links", 750, 185, paintText);
-        }
+        // var keyImage = new SKBitmap(1000,200);
+        // using (var canvas = new SKCanvas(keyImage))
+        // {
+        //     var paintText = new SKPaint { TextSize = 25, TextAlign = SKTextAlign.Left };
+        //     var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+        //     paint.IsStroke = true; paint.StrokeWidth = 5;
+        //     
+        //     canvas.DrawCircle(550, 175, 15, paint);
+        //     canvas.DrawCircle(600, 175, 15, paint);
+        //     canvas.DrawCircle(650, 175, 15, paint);
+        //     canvas.DrawText("Shear links", 750, 185, paintText);
+        // }
 
         var list = new List<Formula>
         {
@@ -55,12 +56,12 @@ public class AdditionCalculation : CalculationBase
                 .AddExpression("x &=& a + b")
                 .AddImage(new ImageFromEmbeddedResource("ImageAsEmbeddedResource.png")),
             
-            new("2. Some ref here", "2. Narrative to appear above the expression", "2. Some text here", @"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}")
-                { Image = new ImageFromSkBitmap(keyImage) },
+            // new("2. Some ref here", "2. Narrative to appear above the expression", "2. Some text here", @"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}")
+            //     { Image = new ImageFromSkBitmap(keyImage) },
             
             Formula.New("Final narrative")
                 .WithReference("3.a")
-                .AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
+                //.AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
         };
 
         return list;

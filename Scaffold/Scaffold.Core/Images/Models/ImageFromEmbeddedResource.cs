@@ -5,9 +5,14 @@ using SkiaSharp;
 namespace Scaffold.Core.Images.Models;
 
 // TODO: Expand to more CalcImage types.
-public class ImageFromEmbeddedResource(string embeddedResourceName) : ICalcImage
+public class ImageFromEmbeddedResource : ICalcImage
 {
-    private string EmbeddedResourceName { get; } = embeddedResourceName;
+    public ImageFromEmbeddedResource(string embeddedResourceName)
+    {
+        EmbeddedResourceName = embeddedResourceName;
+    }
+
+    private string EmbeddedResourceName { get; }
     public Assembly Assembly { get; set; }
     
     public SKBitmap GetImage()
