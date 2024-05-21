@@ -27,4 +27,12 @@
       <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="ImageFromPng.png" />
+      <EmbeddedResource Include="ImageAsEmbeddedResource.png" />
+      <None Update="ImageAsRelativePath.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

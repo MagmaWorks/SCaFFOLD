@@ -1,5 +1,5 @@
 ﻿using Scaffold.Core.Enums;
-using SkiaSharp;
+using Scaffold.Core.Images.Interfaces;
 
 namespace Scaffold.Core.Models;
 
@@ -17,12 +17,12 @@ public class Formula
         Status = status;
     }
     
-    public List<string> Expression { get; set; } = [];
+    public List<string> Expression { get; } = [];
     public string Ref { get; set; } = "";
     public string Narrative { get; set; } = "";
     public string Conclusion { get; set; } = "";
     public CalcStatus Status { get; set; } = CalcStatus.None;
-    public SKBitmap Image { get; set; } = null;
+    public ICalcImage Image { get; set; }
 
     
     public static Formula New(string narrative)
@@ -60,7 +60,7 @@ public class Formula
         return this;
     }
 
-    public Formula AddImage(SKBitmap image)
+    public Formula AddImage(ICalcImage image)
     {
         Image = image;
         return this;

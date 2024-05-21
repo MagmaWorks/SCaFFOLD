@@ -1,6 +1,7 @@
 ﻿using Scaffold.Core.Abstract;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
+using Scaffold.Core.Images.Models;
 using Scaffold.Core.Models;
 
 namespace Scaffold.XUnitTests.Core;
@@ -51,10 +52,15 @@ public class AdditionCalculation : CalculationBase
             Formula.New("Narrative to appear above the expression")
                 .WithConclusion("Some text here")
                 .WithReference("Some ref here")
-                .AddExpression("x &=& a + b"),
+                .AddExpression("x &=& a + b")
+                .AddImage(new ImageFromEmbeddedResource("ImageAsEmbeddedResource.png")),
             
             new("2. Some ref here", "2. Narrative to appear above the expression", "2. Some text here", @"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}")
-                { Image = keyImage }
+                { Image = new ImageFromSkBitmap(keyImage) },
+            
+            Formula.New("Final narrative")
+                .WithReference("3.a")
+                .AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
         };
 
         return list;
