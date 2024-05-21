@@ -33,12 +33,30 @@ public class AdditionCalculation : CalculationBase
 
     protected override IEnumerable<Formula> GenerateFormulae()
     {
-        return new List<Formula>
+        var keyImage = new SkiaSharp.SKBitmap(1000,200);
+        using (var canvas = new SkiaSharp.SKCanvas(keyImage))
         {
-            new()
-            {
-                Expression = ["x &=& a + b"], Conclusion = "Some text here", Ref = "Some ref here"
-            }
+            var paintText = new SkiaSharp.SKPaint { TextSize = 25, TextAlign = SkiaSharp.SKTextAlign.Left };
+            var paint = new SkiaSharp.SKPaint { Color = SkiaSharp.SKColors.Black, IsAntialias = true };
+            paint.IsStroke = true; paint.StrokeWidth = 5;
+            
+            canvas.DrawCircle(550, 175, 15, paint);
+            canvas.DrawCircle(600, 175, 15, paint);
+            canvas.DrawCircle(650, 175, 15, paint);
+            canvas.DrawText("Shear links", 750, 185, paintText);
+        }
+
+        var list = new List<Formula>
+        {
+            Formula.New("Narrative to appear above the expression")
+                .WithConclusion("Some text here")
+                .WithReference("Some ref here")
+                .AddExpression("x &=& a + b"),
+            
+            new("2. Some ref here", "2. Narrative to appear above the expression", "2. Some text here", @"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}")
+                { Image = keyImage }
         };
+
+        return list;
     }
 }
