@@ -39,7 +39,7 @@ public class ImageTests
     [Fact]
     public void FromSkBitmap_Ok()
     {
-        var image = new Scaffold.Core.Images.Models.ImageFromSkBitmap(new SkiaSharp.SKBitmap(1000,200));
+        var image = new Scaffold.Core.Images.Models.ImageFromSkBitmap(new SkiaSharp.SKBitmap(1000, 200));
         var result = image.GetImage();
         Assert.NotNull(result);
     }
