@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Scaffold.Core.Images.Interfaces;
+﻿using Scaffold.Core.Images.Interfaces;
 using SkiaSharp;
 
 namespace Scaffold.Core.Images.Models;
@@ -13,16 +12,14 @@ public class ImageFromRelativePath : ICalcImage
     }
 
     private string RelativePathName { get; }
-    public Assembly Assembly { get; set; }
+    public IAssemblyImageReader ImageReader { get; set; }
     
     public SKBitmap GetImage()
     {
-        var fullFilePath = Assembly.Location.Replace(Assembly.ManifestModule.Name, RelativePathName);
-        
-        if (File.Exists(fullFilePath) == false)
+        var assemblyImage = ImageReader.Images.FirstOrDefault(x => x.Path.Contains(RelativePathName));
+        if (assemblyImage == null)
             throw new Exception($"File from relative path '{RelativePathName}' not found.");
 
-        using var stream = File.OpenRead(fullFilePath);
-        return SKBitmap.Decode(stream);
+        return SKBitmap.Decode(assemblyImage.Data);
     }
 }

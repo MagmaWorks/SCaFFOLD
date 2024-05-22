@@ -35,6 +35,7 @@ public class AdditionCalculation : CalculationBase
 
     protected override IEnumerable<Formula> GenerateFormulae()
     {
+        // TODO: Fix FromBitmap.
         // var keyImage = new SKBitmap(1000,200);
         // using (var canvas = new SKCanvas(keyImage))
         // {
@@ -56,12 +57,11 @@ public class AdditionCalculation : CalculationBase
                 .AddExpression("x &=& a + b")
                 .AddImage(new ImageFromEmbeddedResource("ImageAsEmbeddedResource.png")),
             
-            // new("2. Some ref here", "2. Narrative to appear above the expression", "2. Some text here", @"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}")
-            //     { Image = new ImageFromSkBitmap(keyImage) },
+            new("2. Some ref here", "2. Narrative to appear above the expression", "2. Some text here", @"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}"),
             
             Formula.New("Final narrative")
                 .WithReference("3.a")
-                //.AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
+                .AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
         };
 
         return list;

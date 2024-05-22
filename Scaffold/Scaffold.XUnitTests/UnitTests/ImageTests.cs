@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
 
@@ -24,11 +25,10 @@ public class ImageTests
     public void FromRelativePath_Ok()
     {
         const string relativePathName = "ImageAsRelativePath.png";
-        var assembly = Assembly.GetExecutingAssembly();
         
         var image = new Scaffold.Core.Images.Models.ImageFromRelativePath(relativePathName)
         {
-            Assembly = assembly
+            ImageReader = new AssemblyImageReader(relativePathName)
         };
 
         var result = image.GetImage();
