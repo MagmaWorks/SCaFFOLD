@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
 using System.Diagnostics;
 using System.Text;
+using Scaffold.Core.Abstract;
 
 namespace Scaffold.VisualStudio
 {
@@ -63,7 +64,7 @@ namespace Scaffold.VisualStudio
                 StartInfo = new ProcessStartInfo 
                 {
                     FileName = "dotnet",
-                    Arguments = $"build --no-restore",
+                    Arguments = "build --no-restore",
                     RedirectStandardOutput = true,
                     CreateNoWindow = false,
                     WorkingDirectory = path
@@ -76,6 +77,43 @@ namespace Scaffold.VisualStudio
                 response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
             }
 
+            var assemblyReader = new BinariesAssemblyReader(path);
+            var assembly = assemblyReader.GetAssembly();
+
+            if (assembly == null)
+            {
+                await Extensibility.Shell()
+                    .ShowPromptAsync(
+                        "Could not read the project binaries folder to obtain calculation assembly.",
+                                PromptOptions.OK, cancellationToken);
+                return;
+            }
+
+            CalculationBase instance = null;
+            try
+            {
+                instance = (CalculationBase)assembly.CreateInstance("Scaffold.XUnitTests.Core.AdditionCalculation");
+                instance?.LoadIoCollections();
+            }
+            catch (Exception ex)
+            {
+                ;
+            }
+
+            if (instance != null)
+            {
+                response.Append("Inputs").Append(Environment.NewLine);
+                foreach (var input in instance.GetInputs())
+                {
+                    response.Append($"{input.DisplayName}: {input.GetValue()}").Append(Environment.NewLine);
+                }
+
+                response.Append("Outputs").Append(Environment.NewLine);
+                foreach (var output in instance.GetOutputs())
+                {
+                    response.Append($"{output.DisplayName}: {output.GetValue()}").Append(Environment.NewLine);
+                }
+            }
 
             await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
         }
