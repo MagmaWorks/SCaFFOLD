@@ -15,23 +15,8 @@ namespace Scaffold.Core.CalcValues;
 public class CalcSiQuantity : ICalcSIQuantity
 {
     private IQuantity _quantity;
-
-    IQuantity ICalcSIQuantity.Quantity => _quantity;
-    string ICalcQuantity.Unit => _quantity.Unit.ToString(); 
-
-    double ICalcQuantity.Value
-    {
-        get => _quantity.Value;
-        set => _quantity = Quantity.From(value, _quantity.Unit);
-    }
-
-    CalcStatus ICalcValue.Status { get; set; }
-    IoDirection ICalcValue.Direction { get; }
-
-    string _displayName;
-    string ICalcValue.DisplayName => _displayName;
-    string _symbol;
-    string ICalcValue.Symbol => _symbol;
+    private string _displayName;
+    private string _symbol;
 
     public CalcSiQuantity(IQuantity quantity, string name, string symbol)
     {
@@ -40,6 +25,20 @@ public class CalcSiQuantity : ICalcSIQuantity
         _symbol = symbol;
     }
 
+    CalcStatus ICalcValue.Status { get; set; }
+    IoDirection ICalcValue.Direction { get; }
+    
+    string ICalcValue.DisplayName => _displayName;
+    string ICalcValue.Symbol => _symbol;
+    IQuantity ICalcSIQuantity.Quantity => _quantity;
+    string ICalcQuantity.Unit => _quantity.Unit.ToString(); 
+    
+    double ICalcQuantity.Value
+    {
+        get => _quantity.Value;
+        set => _quantity = Quantity.From(value, _quantity.Unit);
+    }
+    
     string ICalcValue.GetValue(string format)
         => _quantity.Value.ToString(CultureInfo.InvariantCulture);
 
