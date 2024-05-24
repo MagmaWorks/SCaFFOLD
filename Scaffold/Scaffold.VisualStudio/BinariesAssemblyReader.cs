@@ -23,8 +23,8 @@ namespace Scaffold.VisualStudio
                 if (Path.GetExtension(file) != ".dll")
                     continue;
 
-                if (file.Contains("Scaffold.Core.dll"))
-                    continue;
+                //if (file.Contains("Scaffold.Core.dll"))
+                //    continue;
 
                 using var stream = File.OpenRead(file);
 

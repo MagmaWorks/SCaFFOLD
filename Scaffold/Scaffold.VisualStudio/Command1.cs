@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using System.Collections;
+using Microsoft;
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
@@ -89,29 +90,41 @@ namespace Scaffold.VisualStudio
                 return;
             }
 
-            CalculationBase instance = null;
+            object instance = null;
             try
             {
-                instance = (CalculationBase)assembly.CreateInstance("Scaffold.XUnitTests.Core.AdditionCalculation");
-                instance?.LoadIoCollections();
+                instance = assembly.CreateInstance("Scaffold.XUnitTests.Core.AdditionCalculation");
+                instance.GetType().GetMethod("LoadIoCollections").Invoke(instance, null);
+                //instance?.LoadIoCollections();
             }
             catch (Exception ex)
             {
-                ;
+                response.Append(Environment.NewLine)
+                    .Append("ERROR GETTING TYPE")
+                    .Append(Environment.NewLine)
+                    .Append(ex.Message);
             }
 
             if (instance != null)
             {
                 response.Append("Inputs").Append(Environment.NewLine);
-                foreach (var input in instance.GetInputs())
+                foreach (var value in 
+                         (IEnumerable)instance.GetType().GetMethod("GetInputs").Invoke(instance, null))
                 {
-                    response.Append($"{input.DisplayName}: {input.GetValue()}").Append(Environment.NewLine);
+                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(instance);
+                    //var propertyValue = value.GetType().GetProperty("DisplayName").GetValue(instance);
+                    response.Append($"{displayName}").Append(Environment.NewLine);
+                    //response.Append($"{input.DisplayName}: {input.GetValue()}").Append(Environment.NewLine);
                 }
 
                 response.Append("Outputs").Append(Environment.NewLine);
-                foreach (var output in instance.GetOutputs())
+                foreach (var value in
+                         (IEnumerable)instance.GetType().GetMethod("GetOutputs").Invoke(instance, null))
                 {
-                    response.Append($"{output.DisplayName}: {output.GetValue()}").Append(Environment.NewLine);
+                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(instance);
+                    //var propertyValue = value.GetType().GetProperty("DisplayName").GetValue(instance);
+                    response.Append($"{displayName}").Append(Environment.NewLine);
+                    //response.Append($"{input.DisplayName}: {input.GetValue()}").Append(Environment.NewLine);
                 }
             }
 
