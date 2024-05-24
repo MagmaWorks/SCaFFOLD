@@ -37,7 +37,7 @@ namespace Scaffold.VisualStudio
                     var loadedAssembly = context.LoadFromStream(memoryStream);
 
                     if (primary == null
-                        && file.Contains("Scaffold.XUnitTests.dll"))
+                        && file.Contains("VsTesting.dll"))
                     {
                         primary = loadedAssembly;
                     }

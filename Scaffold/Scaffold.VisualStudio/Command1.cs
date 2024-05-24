@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
 using System.Diagnostics;
 using System.Text;
-using Scaffold.Core.Abstract;
 
 namespace Scaffold.VisualStudio
 {
@@ -93,7 +92,7 @@ namespace Scaffold.VisualStudio
             object instance = null;
             try
             {
-                instance = assembly.CreateInstance("Scaffold.XUnitTests.Core.AdditionCalculation");
+                instance = assembly.CreateInstance("VsTesting.Core.AdditionCalculation");
                 instance.GetType().GetMethod("LoadIoCollections").Invoke(instance, null);
                 //instance?.LoadIoCollections();
             }
@@ -107,24 +106,22 @@ namespace Scaffold.VisualStudio
 
             if (instance != null)
             {
-                response.Append("Inputs").Append(Environment.NewLine);
+                response.Append(Environment.NewLine).Append("Inputs").Append(Environment.NewLine);
                 foreach (var value in 
                          (IEnumerable)instance.GetType().GetMethod("GetInputs").Invoke(instance, null))
                 {
-                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(instance);
-                    //var propertyValue = value.GetType().GetProperty("DisplayName").GetValue(instance);
-                    response.Append($"{displayName}").Append(Environment.NewLine);
-                    //response.Append($"{input.DisplayName}: {input.GetValue()}").Append(Environment.NewLine);
+                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
+                    var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
+                    response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
                 }
 
-                response.Append("Outputs").Append(Environment.NewLine);
+                response.Append(Environment.NewLine).Append("Outputs").Append(Environment.NewLine);
                 foreach (var value in
                          (IEnumerable)instance.GetType().GetMethod("GetOutputs").Invoke(instance, null))
                 {
-                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(instance);
-                    //var propertyValue = value.GetType().GetProperty("DisplayName").GetValue(instance);
-                    response.Append($"{displayName}").Append(Environment.NewLine);
-                    //response.Append($"{input.DisplayName}: {input.GetValue()}").Append(Environment.NewLine);
+                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
+                    var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
+                    response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
                 }
             }
 
