@@ -62,18 +62,19 @@ namespace Scaffold.VisualStudio
             {
                 StartInfo = new ProcessStartInfo 
                 {
-                    FileName = "cmd.exe",
-                    Arguments = $"dotnet build --no-restore ${path}",
-                    RedirectStandardOutput = false,
-                    CreateNoWindow = false
+                    FileName = "dotnet",
+                    Arguments = $"build --no-restore",
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = false,
+                    WorkingDirectory = path
                 }
             };
 
             process.Start();
-            //while (process.StandardOutput.EndOfStream == false)
-            //{
-            //    response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
-            //}
+            while (process.StandardOutput.EndOfStream == false)
+            {
+                response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
+            }
 
 
             await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
