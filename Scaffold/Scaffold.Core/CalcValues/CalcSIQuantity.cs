@@ -25,13 +25,21 @@ public class CalcSiQuantity : ICalcSIQuantity
         set => _quantity = Quantity.From(value, _quantity.Unit);
     }
 
-    public string UnitName { get; private set; }
     CalcStatus ICalcValue.Status { get; set; }
     IoDirection ICalcValue.Direction { get; }
-        
-    string ICalcValue.DisplayName { get; }
-    string ICalcValue.Symbol { get; }
-        
+
+    string _displayName;
+    string ICalcValue.DisplayName => _displayName;
+    string _symbol;
+    string ICalcValue.Symbol => _symbol;
+
+    public CalcSiQuantity(IQuantity quantity, string name, string symbol)
+    {
+        _quantity = quantity;
+        _displayName = name;
+        _symbol = symbol;
+    }
+
     string ICalcValue.GetValue(string format)
         => _quantity.Value.ToString(CultureInfo.InvariantCulture);
 

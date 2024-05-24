@@ -47,14 +47,14 @@ public class AdditionCalculation : CalculationBase
             Formula.New("Narrative to appear above the expression")
                 .WithConclusion("Some text here")
                 .WithReference("Some ref here")
-                .AddExpression(@"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}")
+                .AddExpression("x &=& a + b")
                 .AddImage(new ImageFromEmbeddedResource("ImageAsEmbeddedResource.png")),
             
             
             Formula.New("2. Narrative to appear above the expression")
                 .WithConclusion("2. Some text here")
                 .WithReference("2. Some ref here")
-                .AddExpression(@"f_{cm}\leq35 \Rightarrow")
+                .AddExpression("x &=& a + b")
                 .AddImage(new ImageFromSkBitmap(keyImage)),
             
             Formula.New("Final narrative")
