@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
 using System.Diagnostics;
+using System.Text;
 
 namespace Scaffold.VisualStudio
 {
@@ -44,11 +45,38 @@ namespace Scaffold.VisualStudio
         /// <inheritdoc />
         public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
         {
+            var response = new StringBuilder();
+
             var project = await context.GetActiveProjectAsync(CancellationToken.None);
-            var currentPath = await context.GetSelectedPathAsync(CancellationToken.None);
-            var activeText = await context.GetActiveTextViewAsync(CancellationToken.None);
-            
-            await this.Extensibility.Shell().ShowPromptAsync("Hello from an extension!", PromptOptions.OK, cancellationToken);
+            if (project?.Path == null)
+            {
+                response.Append("You must open a solution in visual studio before the project can be inspected.");
+                await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
+                return;
+            }
+
+            var lastIndex = project.Path.LastIndexOf(@"\", StringComparison.Ordinal);
+            var path = project.Path[..lastIndex];
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo 
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"dotnet build --no-restore ${path}",
+                    RedirectStandardOutput = false,
+                    CreateNoWindow = false
+                }
+            };
+
+            process.Start();
+            //while (process.StandardOutput.EndOfStream == false)
+            //{
+            //    response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
+            //}
+
+
+            await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
         }
     }
 }
