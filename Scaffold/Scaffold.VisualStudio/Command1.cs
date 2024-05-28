@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
 using System.Diagnostics;
 using System.Text;
+using Scaffold.Core.Abstract;
 
 namespace Scaffold.VisualStudio
 {
@@ -89,12 +90,14 @@ namespace Scaffold.VisualStudio
                 return;
             }
 
-            object instance = null;
             try
             {
-                instance = assembly.CreateInstance("VsTesting.Core.AdditionCalculation");
-                instance.GetType().GetMethod("LoadIoCollections").Invoke(instance, null);
-                //instance?.LoadIoCollections();
+                var types = assembly.GetTypes();
+                var calculation = types.FirstOrDefault(x => x.FullName.Contains("AdditionCalculation"));
+                var instance = assembly.CreateInstance(calculation.FullName);
+                //instance.GetType().GetMethod("LoadIoCollections").Invoke(instance, null);
+                var castInstance = (CalculationBase)instance;
+                castInstance.LoadIoCollections();
             }
             catch (Exception ex)
             {
@@ -104,26 +107,26 @@ namespace Scaffold.VisualStudio
                     .Append(ex.Message);
             }
 
-            if (instance != null)
-            {
-                response.Append(Environment.NewLine).Append("Inputs").Append(Environment.NewLine);
-                foreach (var value in 
-                         (IEnumerable)instance.GetType().GetMethod("GetInputs").Invoke(instance, null))
-                {
-                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
-                    var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
-                    response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
-                }
-
-                response.Append(Environment.NewLine).Append("Outputs").Append(Environment.NewLine);
-                foreach (var value in
-                         (IEnumerable)instance.GetType().GetMethod("GetOutputs").Invoke(instance, null))
-                {
-                    var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
-                    var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
-                    response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
-                }
-            }
+            // if (instance != null)
+            // {
+            //     response.Append(Environment.NewLine).Append("Inputs").Append(Environment.NewLine);
+            //     foreach (var value in 
+            //              (IEnumerable)instance.GetType().GetMethod("GetInputs").Invoke(instance, null))
+            //     {
+            //         var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
+            //         var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
+            //         response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
+            //     }
+            //
+            //     response.Append(Environment.NewLine).Append("Outputs").Append(Environment.NewLine);
+            //     foreach (var value in
+            //              (IEnumerable)instance.GetType().GetMethod("GetOutputs").Invoke(instance, null))
+            //     {
+            //         var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
+            //         var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
+            //         response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
+            //     }
+            // }
 
             await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
         }

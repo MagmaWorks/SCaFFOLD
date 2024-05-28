@@ -20,13 +20,19 @@ namespace Scaffold.VisualStudio
 
             foreach (var file in Directory.GetFiles(binariesFolder))
             {
+                var fullFilePath = file;
+
                 if (Path.GetExtension(file) != ".dll")
                     continue;
 
-                //if (file.Contains("Scaffold.Core.dll"))
-                //    continue;
+                if (fullFilePath.Contains("Scaffold.Core.dll"))
+                {
+                    //continue;
+                    //fullFilePath = @"C:\Users\d.growns\Documents\Repos\Web\Scaffold.App\Scaffold.App\LocalDependencies\Scaffold.Core.dll";
+                    fullFilePath = @"C:\Users\d.growns\Documents\Repos\WPF\SCaFFOLD\Scaffold\Scaffold.VisualStudio\bin\Debug\net8.0-windows\Scaffold.Core.dll";
+                }
 
-                using var stream = File.OpenRead(file);
+                using var stream = File.OpenRead(fullFilePath);
 
                 var memoryStream = new MemoryStream();
                 stream.CopyTo(memoryStream);
@@ -37,19 +43,20 @@ namespace Scaffold.VisualStudio
                     var loadedAssembly = context.LoadFromStream(memoryStream);
 
                     if (primary == null
-                        && file.Contains("VsTesting.dll"))
+                        && fullFilePath.Contains("VsTesting.dll"))
                     {
                         primary = loadedAssembly;
                     }
-
-                    memoryStream.Dispose();
-                    stream.Dispose();
                 }
                 catch (Exception ex)
                 {
+                    ;
+                    throw;
+                }
+                finally
+                {
                     memoryStream.Dispose();
                     stream.Dispose();
-
                 }
 
             }
