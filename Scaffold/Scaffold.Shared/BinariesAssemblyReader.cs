@@ -1,8 +1,7 @@
-﻿using System.IO.Packaging;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Scaffold.VisualStudio
+namespace Scaffold.Shared
 {
     public class BinariesAssemblyReader(string projectPath)
     {
@@ -27,9 +26,9 @@ namespace Scaffold.VisualStudio
 
                 if (fullFilePath.Contains("Scaffold.Core.dll"))
                 {
-                    //continue;
+                    continue;
                     //fullFilePath = @"C:\Users\d.growns\Documents\Repos\Web\Scaffold.App\Scaffold.App\LocalDependencies\Scaffold.Core.dll";
-                    fullFilePath = @"C:\Users\d.growns\Documents\Repos\WPF\SCaFFOLD\Scaffold\Scaffold.VisualStudio\bin\Debug\net8.0-windows\Scaffold.Core.dll";
+                    //fullFilePath = @"C:\Users\d.growns\Documents\Repos\WPF\SCaFFOLD\Scaffold\Scaffold.VisualStudio\bin\Debug\net8.0-windows\Scaffold.Core.dll";
                 }
 
                 using var stream = File.OpenRead(fullFilePath);

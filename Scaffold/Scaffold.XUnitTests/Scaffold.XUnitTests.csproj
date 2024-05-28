@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
+      <ProjectReference Include="..\Scaffold.Shared\Scaffold.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

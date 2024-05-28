@@ -1,6 +1,6 @@
 ﻿using Scaffold.Core.Interfaces;
 
-namespace Scaffold.VisualStudio;
+namespace Scaffold.Shared;
 
 public class LibraryCalculation : ICalculationMetadata
 {
