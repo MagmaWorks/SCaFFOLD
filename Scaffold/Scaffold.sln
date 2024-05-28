@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.XUnitTests", "Scaf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.VisualStudio", "Scaffold.VisualStudio\Scaffold.VisualStudio.csproj", "{743CB25A-2F83-4444-A38D-5E4FF8C1C847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Shared", "Scaffold.Shared\Scaffold.Shared.csproj", "{F57B8D3D-C487-4F72-A944-52783968699A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Console", "Scaffold.Shared\Scaffold.Console.csproj", "{F57B8D3D-C487-4F72-A944-52783968699A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

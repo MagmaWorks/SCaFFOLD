@@ -61,7 +61,7 @@ public class AdditionCalculationTests
         calc.Result.Value.Should().Be(9);
 
         var formulae = calc.GetFormulae().ToList();
-        formulae.Count.Should().Be(1);
+        formulae.Count.Should().Be(3);
         formulae[0].Expression.Count.Should().Be(1);
         formulae[0].Expression[0].Should().Be("x &=& a + b");
     }

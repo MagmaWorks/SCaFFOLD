@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Images.Interfaces;
-
-namespace Scaffold.Shared;
+﻿namespace Scaffold.Console;
 
 public interface ICalculationAssemblyReader 
 {

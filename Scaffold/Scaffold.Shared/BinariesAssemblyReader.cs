@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Scaffold.Shared
+namespace Scaffold.Console
 {
     public class BinariesAssemblyReader(string projectPath)
     {

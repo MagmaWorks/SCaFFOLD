@@ -2,7 +2,7 @@
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Shared;
+namespace Scaffold.Console;
 
 public class CalculationPackage
 {

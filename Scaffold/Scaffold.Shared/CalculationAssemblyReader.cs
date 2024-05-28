@@ -3,7 +3,7 @@ using System.Runtime.Loader;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Shared;
+namespace Scaffold.Console;
 //
 // Below is the reason why this class ignores the core library, allowing us to use design time typecasting of calcs.
 //

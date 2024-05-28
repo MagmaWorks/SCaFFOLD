@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Scaffold.Shared\Scaffold.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Scaffold.Core">
       <HintPath>..\..\..\..\Web\Scaffold.App\Scaffold.App\LocalDependencies\Scaffold.Core.dll</HintPath>
     </Reference>

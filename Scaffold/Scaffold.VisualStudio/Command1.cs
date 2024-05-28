@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Text;
 using Scaffold.Core.Abstract;
 using System.IO.Compression;
-using Scaffold.Shared;
 
 namespace Scaffold.VisualStudio
 {
@@ -80,31 +79,30 @@ namespace Scaffold.VisualStudio
                 response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
             }
 
-            try
-            {
-                var zipStream = File.OpenRead(@"C:\Users\d.growns\Documents\Repos\Web\Scaffold.App\Scaffold.App\LocalDependencies\8d7d3c91-d326-4546-8ca1-014de467d444-Scaffold-XUnitTests-dll-1-0-0-1.zip");
-                var assemblyReader = new AssemblyFromZipReader("Scaffold.XUnitTests.dll");
-                var assembly = assemblyReader.Get(zipStream);
+            //try
+            //{
+            //    var reader = new BinariesAssemblyReader(@"C:\Users\d.growns\Documents\Repos\ScaffoldForVsTesting\VsTesting");
+            //    var assembly = reader.GetAssembly();
 
-                if (assembly.IsLoaded == false)
-                {
-                    await Extensibility.Shell()
-                        .ShowPromptAsync(
-                            "Could not read the project binaries folder to obtain calculation assembly.",
-                            PromptOptions.OK, cancellationToken);
-                    return;
-                }
+            //    if (assembly == null)
+            //    {
+            //        await Extensibility.Shell()
+            //            .ShowPromptAsync(
+            //                "Could not read the project binaries folder to obtain calculation assembly.",
+            //                PromptOptions.OK, cancellationToken);
+            //        return;
+            //    }
 
-                var instance = (CalculationBase)assembly.Assembly.CreateInstance("Scaffold.XUnitTests.Core.AdditionCalculation");
-                instance.LoadIoCollections();
-            }
-            catch (Exception ex)
-            {
-                response.Append(Environment.NewLine)
-                    .Append("ERROR GETTING TYPE")
-                    .Append(Environment.NewLine)
-                    .Append(ex.Message);
-            }
+            //    var instance = (CalculationBase)assembly.CreateInstance("VsTesting.Core.AdditionCalculation");
+            //    instance.LoadIoCollections();
+            //}
+            //catch (Exception ex)
+            //{
+            //    response.Append(Environment.NewLine)
+            //        .Append("ERROR GETTING TYPE")
+            //        .Append(Environment.NewLine)
+            //        .Append(ex.Message);
+            //}
 
             // if (instance != null)
             // {

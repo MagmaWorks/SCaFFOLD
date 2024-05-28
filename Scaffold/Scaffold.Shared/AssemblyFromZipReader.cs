@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace Scaffold.Shared;
+namespace Scaffold.Console;
 
 public class AssemblyFromZipReader : CalculationAssemblyReader, ICalculationAssemblyReader
 {
