@@ -10,26 +10,16 @@ using System.IO.Compression;
 
 namespace Scaffold.VisualStudio
 {
-    /// <summary>
-    /// Command1 handler.
-    /// </summary>
     [VisualStudioContribution]
     internal class Command1 : Command
     {
-        private readonly TraceSource logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Command1"/> class.
-        /// </summary>
-        /// <param name="traceSource">Trace source instance to utilize.</param>
+        private readonly TraceSource _logger;
+        
         public Command1(TraceSource traceSource)
         {
-            // This optional TraceSource can be used for logging in the command. You can use dependency injection to access
-            // other services here as well.
-            this.logger = Requires.NotNull(traceSource, nameof(traceSource));
+            _logger = Requires.NotNull(traceSource, nameof(traceSource));
         }
-
-        /// <inheritdoc />
+        
         public override CommandConfiguration CommandConfiguration => new("%Scaffold.VisualStudio.Command1.DisplayName%")
         {
             // Use this object initializer to set optional parameters for the command. The required parameter,
@@ -37,15 +27,13 @@ namespace Scaffold.VisualStudio
             Icon = new(ImageMoniker.KnownValues.Extension, IconSettings.IconAndText),
             Placements = [CommandPlacement.KnownPlacements.ExtensionsMenu],
         };
-
-        /// <inheritdoc />
+        
         public override Task InitializeAsync(CancellationToken cancellationToken)
         {
             // Use InitializeAsync for any one-time setup or initialization.
             return base.InitializeAsync(cancellationToken);
         }
-
-        /// <inheritdoc />
+        
         public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
         {
             var response = new StringBuilder();
@@ -61,71 +49,34 @@ namespace Scaffold.VisualStudio
             var lastIndex = project.Path.LastIndexOf(@"\", StringComparison.Ordinal);
             var path = project.Path[..lastIndex];
 
-            var process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo 
+                var process = new Process
                 {
-                    FileName = "dotnet",
-                    Arguments = "build --no-restore",
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = false,
-                    WorkingDirectory = path
-                }
-            };
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "Scaffold.Console.exe",
+                        Arguments = path,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = false,
+                        // TODO We need to unfix this from specific path and instead have it installed some other way.
+                        WorkingDirectory = @"C:\Users\d.growns\Documents\Repos\WPF\SCaFFOLD\Scaffold\Scaffold.Console\bin\Debug\net8.0"
+                    }
+                };
 
-            process.Start();
-            while (process.StandardOutput.EndOfStream == false)
+                process.Start();
+                while (process.StandardOutput.EndOfStream == false)
+                {
+                    response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
+                }
+
+                await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
+            }
+            catch (Exception ex)
             {
-                response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
+                ;
             }
 
-            //try
-            //{
-            //    var reader = new BinariesAssemblyReader(@"C:\Users\d.growns\Documents\Repos\ScaffoldForVsTesting\VsTesting");
-            //    var assembly = reader.GetAssembly();
-
-            //    if (assembly == null)
-            //    {
-            //        await Extensibility.Shell()
-            //            .ShowPromptAsync(
-            //                "Could not read the project binaries folder to obtain calculation assembly.",
-            //                PromptOptions.OK, cancellationToken);
-            //        return;
-            //    }
-
-            //    var instance = (CalculationBase)assembly.CreateInstance("VsTesting.Core.AdditionCalculation");
-            //    instance.LoadIoCollections();
-            //}
-            //catch (Exception ex)
-            //{
-            //    response.Append(Environment.NewLine)
-            //        .Append("ERROR GETTING TYPE")
-            //        .Append(Environment.NewLine)
-            //        .Append(ex.Message);
-            //}
-
-            // if (instance != null)
-            // {
-            //     response.Append(Environment.NewLine).Append("Inputs").Append(Environment.NewLine);
-            //     foreach (var value in 
-            //              (IEnumerable)instance.GetType().GetMethod("GetInputs").Invoke(instance, null))
-            //     {
-            //         var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
-            //         var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
-            //         response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
-            //     }
-            //
-            //     response.Append(Environment.NewLine).Append("Outputs").Append(Environment.NewLine);
-            //     foreach (var value in
-            //              (IEnumerable)instance.GetType().GetMethod("GetOutputs").Invoke(instance, null))
-            //     {
-            //         var displayName = value.GetType().GetProperty("DisplayName").GetValue(value);
-            //         var propertyValue = value.GetType().GetProperty("Value").GetValue(value);
-            //         response.Append($"{displayName}: {propertyValue}").Append(Environment.NewLine);
-            //     }
-            // }
-
-            await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
         }
     }
 }
