@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.Extensibility;
-using Microsoft.VisualStudio.Extensibility.UI;
+﻿using Microsoft.VisualStudio.Extensibility.UI;
 
 namespace Scaffold.VisualStudio.AddIn.Windows
 {
@@ -11,8 +10,8 @@ namespace Scaffold.VisualStudio.AddIn.Windows
         /// <summary>
         /// Initializes a new instance of the <see cref="ScaffoldToolWindowContent" /> class.
         /// </summary>
-        public ScaffoldToolWindowContent(VisualStudioExtensibility extensibility)
-            : base(dataContext: new ScaffoldToolWindowVm(extensibility))
+        public ScaffoldToolWindowContent()
+            : base(dataContext: new ScaffoldToolWindowVm())
         {
         }
     }

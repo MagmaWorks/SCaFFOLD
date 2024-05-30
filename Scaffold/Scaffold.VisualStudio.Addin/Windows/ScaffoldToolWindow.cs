@@ -22,7 +22,7 @@ namespace Scaffold.VisualStudio.AddIn.Windows
         
         public override async Task InitializeAsync(CancellationToken cancellationToken)
         {
-            Content = new ScaffoldToolWindowContent(Extensibility);
+            Content = new ScaffoldToolWindowContent();
 
             var listener = (IDocumentEventsListener)Content.DataContext;
             if (listener == null)
