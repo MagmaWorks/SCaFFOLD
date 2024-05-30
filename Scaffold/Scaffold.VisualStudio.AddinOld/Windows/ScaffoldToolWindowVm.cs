@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 
-namespace Scaffold.VisualStudio.AddIn.Windows
+namespace Scaffold.VisualStudio.AddinOld.Windows
 {
     [DataContract]
     internal class ScaffoldToolWindowVm : NotifyPropertyChangedObject, IDocumentEventsListener

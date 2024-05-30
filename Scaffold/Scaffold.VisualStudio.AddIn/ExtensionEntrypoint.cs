@@ -13,10 +13,10 @@ namespace Scaffold.VisualStudio.AddIn
         public override ExtensionConfiguration ExtensionConfiguration => new()
         {
             Metadata = new(
-                    id: "Scaffold.VisualStudio.Addin.d9ffba73-6bab-4d74-8863-d33f8ac837b5",
+                    id: "Scaffold.VisualStudio.AddIn.741b8077-d032-40d6-89f5-d6a46e618877",
                     version: this.ExtensionAssemblyVersion,
                     publisherName: "Publisher name",
-                    displayName: "Scaffold.VisualStudio.Addin",
+                    displayName: "Scaffold.VisualStudio.AddIn",
                     description: "Extension description"),
         };
 

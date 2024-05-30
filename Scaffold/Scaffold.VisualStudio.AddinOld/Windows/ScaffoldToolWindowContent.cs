@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Extensibility.UI;
 
-namespace Scaffold.VisualStudio.AddIn.Windows
+namespace Scaffold.VisualStudio.AddinOld.Windows
 {
     /// <summary>
     /// A remote user control to use as tool window UI content.

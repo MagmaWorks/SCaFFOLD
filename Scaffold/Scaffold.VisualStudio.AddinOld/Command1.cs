@@ -44,7 +44,7 @@
 //            return SanitizeBasePath(workingDirectory);
 //        }
 
-//        public override CommandConfiguration CommandConfiguration => new("%Scaffold.VisualStudio.Addin.Command1.DisplayName%")
+//        public override CommandConfiguration CommandConfiguration => new("%Scaffold.VisualStudio.AddinOld.Command1.DisplayName%")
 //        {
 //            // Use this object initializer to set optional parameters for the command. The required parameter,
 //            // displayName, is set above. DisplayName is localized and references an entry in .vsextension\string-resources.json.

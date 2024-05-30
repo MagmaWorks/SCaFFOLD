@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Extensibility.ToolWindows;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 using Microsoft.VisualStudio.RpcContracts.RemoteUI;
 
-namespace Scaffold.VisualStudio.AddIn.Windows
+namespace Scaffold.VisualStudio.AddinOld.Windows
 {
     [VisualStudioContribution]
     public class ScaffoldToolWindow : ToolWindow
