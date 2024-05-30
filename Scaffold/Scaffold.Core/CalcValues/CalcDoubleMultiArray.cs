@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Scaffold.Core.Abstract;
-using Scaffold.Core.Interfaces;
 
 // TODO: output is not currently formatting.
 namespace Scaffold.Core.CalcValues;
