@@ -7,9 +7,9 @@ namespace Scaffold.VisualStudio.AddIn.Window
     /// ViewModel for the MainWindowContent remote user control.
     /// </summary>
     [DataContract]
-    internal class MainWindowData : NotifyPropertyChangedObject
+    internal class MainWindowViewModel : NotifyPropertyChangedObject
     {
-        public MainWindowData()
+        public MainWindowViewModel()
         {
             HelloCommand = new AsyncCommand((parameter, clientContext, cancellationToken) =>
             {

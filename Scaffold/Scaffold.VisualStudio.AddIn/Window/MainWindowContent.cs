@@ -11,7 +11,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
         /// Initializes a new instance of the <see cref="MainWindowContent" /> class.
         /// </summary>
         public MainWindowContent()
-            : base(dataContext: new MainWindowData())
+            : base(dataContext: new MainWindowViewModel())
         {
         }
     }
