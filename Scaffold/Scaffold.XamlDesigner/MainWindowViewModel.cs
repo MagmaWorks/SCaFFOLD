@@ -10,10 +10,7 @@ namespace Scaffold.XamlDesigner;
 // TODO: Swap visibilities with converters (e.g. when active project is or is not null)
 public class MainWindowViewModel : INotifyPropertyChanged
 {
-    private Visibility _waitingForTabVisibility;
-    private Visibility _activeProjectVisibility;
-    private Visibility _notWatchingVisibility;
-    private Visibility _watchingVisibility;
+    private bool _watcherIsActive;
     private string _activeProjectPath;
 
     public MainWindowViewModel()
@@ -65,8 +62,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         ];
 
         ActiveProjectPath = "file.cs";
-        NotWatchingVisibility = Visibility.Collapsed;
-        WatchingVisibility = Visibility.Visible;
+        WatcherIsActive = true;
     }
     
     public event PropertyChangedEventHandler PropertyChanged;
@@ -84,41 +80,16 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
     public List<TreeItem> Watching { get; }
-    
-    public Visibility WaitingForTabVisibility
+
+    public bool WatcherIsActive
     {
-        get => _waitingForTabVisibility;
-        set => SetField(ref _waitingForTabVisibility, value);
+        get => _watcherIsActive;
+        set => SetField(ref _watcherIsActive, value);
     }
-
-    public Visibility ActiveProjectVisibility
-    {
-        get => _activeProjectVisibility;
-        set => SetField(ref _activeProjectVisibility, value);
-    }
-
-    public Visibility NotWatchingVisibility
-    {
-        get => _notWatchingVisibility;
-        set => SetField(ref _notWatchingVisibility, value);
-    }
-
-
-    public Visibility WatchingVisibility
-    {
-        get => _watchingVisibility;
-        set => SetField(ref _watchingVisibility, value);
-    }
-
 
     public string ActiveProjectPath
     {
         get => _activeProjectPath;
-        set
-        {
-            SetField(ref _activeProjectPath, value);
-            WaitingForTabVisibility = value != null ? Visibility.Collapsed : Visibility.Visible;
-            ActiveProjectVisibility = value != null ? Visibility.Visible : Visibility.Collapsed;
-        }
+        set => SetField(ref _activeProjectPath, value);
     }
 }

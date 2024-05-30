@@ -26,17 +26,22 @@
 
         <converters:BoolToVisibilityConverter 
             x:Key="ReverseBoolToVisibilityConverter"
-            TrueValue="Collapsed" FalseValue="Collapsed"
+            TrueValue="Collapsed" FalseValue="Visible"
         />
 
         <converters:NullToVisibilityConverter 
             x:Key="NullToVisibilityConverter"
             TrueValue="Collapsed" FalseValue="Visible"
         />
+
+        <converters:NullToVisibilityConverter 
+            x:Key="NotNullToVisibilityConverter"
+            TrueValue="Visible" FalseValue="Collapsed"
+        />
     </Window.Resources>
 
     <Grid Margin="10">
-        <StackPanel Orientation="Vertical" Visibility="{Binding NotWatchingVisibility}">
+        <StackPanel Orientation="Vertical" Visibility="{Binding WatcherIsActive, Converter={StaticResource ReverseBoolToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal">
                 <Image
                     Height="32"
@@ -59,7 +64,7 @@
                 HorizontalAlignment="Center"
                 Margin="0,40,0,0"
                 Orientation="Horizontal"
-                Visibility="{Binding WaitingForTabVisibility}">
+                Visibility="{Binding ActiveProjectPath, Converter={StaticResource NotNullToVisibilityConverter}}">
                 <Image
                     Height="24"
                     Source="Images/wait-32.png"
@@ -71,20 +76,20 @@
             <StackPanel
                 HorizontalAlignment="Center"
                 Margin="0,40,0,0"
-                Orientation="Horizontal"
-                Visibility="{Binding ActiveProjectVisibility}">
-                <Button Margin="10,0,0,0">
+                Orientation="Vertical"
+                Visibility="{Binding ActiveProjectPath, Converter={StaticResource NullToVisibilityConverter}}">
+                <Button Margin="10,0,0,0" BorderThickness="0" Padding="10">
                     <Image
                         Height="24"
                         Source="Images/play-24.png"
                         Width="24" />
                 </Button>
 
-                <TextBlock Text="{Binding ActiveProjectPath}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding ActiveProjectPath}" TextWrapping="Wrap" Margin="10,5,0,0" HorizontalAlignment="Center" />
             </StackPanel>
         </StackPanel>
 
-        <Grid Visibility="{Binding WatchingVisibility}">
+        <Grid Visibility="{Binding WatcherIsActive, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
@@ -131,7 +136,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
-                                                <maths:FormulaControl Formula="{Binding Symbol}" Scale="15" Margin="0,5,10,0" />
+                                                <maths:FormulaControl Formula="{Binding Symbol}" Scale="15" Margin="0,4,10,0" />
                                                 <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" Width="125" />
                                                 <TextBlock Text="{Binding Value}" />
                                             </StackPanel>

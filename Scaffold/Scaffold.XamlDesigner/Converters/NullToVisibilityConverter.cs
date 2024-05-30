@@ -22,7 +22,7 @@ namespace Scaffold.XamlDesigner.Converters
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            if (value is IEnumerable enumerable)
+            if (value is IEnumerable and not string)
             {
                 var enumeration = (IEnumerable<object>)value;
                 return enumeration.Any() == false ? TrueValue : FalseValue;
