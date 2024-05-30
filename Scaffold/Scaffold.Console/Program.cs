@@ -169,6 +169,7 @@ namespace Scaffold.Console
             {
                 System.Console.ForegroundColor = ConsoleColor.Red;
                 System.Console.WriteLine(ex.Message);
+                System.Console.ResetColor();
             }
             finally
             {

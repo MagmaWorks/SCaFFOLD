@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Extensibility;
 
+// Note: Add reference to Microsoft.VisualStudio.Shell.15.0 for better XAML editing. TODO REMOVE THIS PACKAGE BEFORE A RELEASE.
 namespace Scaffold.VisualStudio
 {
     /// <summary>

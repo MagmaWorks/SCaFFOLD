@@ -19,7 +19,34 @@ namespace Scaffold.VisualStudio
         {
             _logger = Requires.NotNull(traceSource, nameof(traceSource));
         }
-        
+
+        /// <summary>
+        /// Executing assembly from VS appears to read \ and . as final characters even after last index of.
+        /// This adds additional sanitization to reduce the string further to only textual characters without another directory break.
+        /// </summary>
+        private string SanitizeBasePath(string path)
+        {
+            while (true)
+            {
+                if (path.Last() == '.' || path.Last() == '\\')
+                {
+                    path = path[..^1];
+                    continue;
+                }
+
+                return path;
+            }
+        }
+
+        private string GetWorkingDirectory()
+        {
+            var executingAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var lastIndex = executingAssembly.Location.LastIndexOf(@"\", StringComparison.Ordinal);
+            var workingDirectory = executingAssembly.Location[..lastIndex];
+
+            return SanitizeBasePath(workingDirectory);
+        }
+
         public override CommandConfiguration CommandConfiguration => new("%Scaffold.VisualStudio.Command1.DisplayName%")
         {
             // Use this object initializer to set optional parameters for the command. The required parameter,
@@ -39,15 +66,16 @@ namespace Scaffold.VisualStudio
             var response = new StringBuilder();
 
             var project = await context.GetActiveProjectAsync(CancellationToken.None);
+            var workingDirectory = GetWorkingDirectory();
+            var consolePath = $@"{workingDirectory}\Scaffold.Console.exe";
+
+            var exists = File.Exists(consolePath);
             if (project?.Path == null)
             {
                 response.Append("You must open a solution in visual studio before the project can be inspected.");
                 await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
                 return;
             }
-
-            var lastIndex = project.Path.LastIndexOf(@"\", StringComparison.Ordinal);
-            var path = project.Path[..lastIndex];
 
             try
             {
@@ -56,11 +84,10 @@ namespace Scaffold.VisualStudio
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "Scaffold.Console.exe",
-                        Arguments = path,
+                        Arguments = project.Path,
                         RedirectStandardOutput = true,
                         CreateNoWindow = false,
-                        // TODO We need to unfix this from specific path and instead have it installed some other way.
-                        WorkingDirectory = @"C:\Users\d.growns\Documents\Repos\WPF\SCaFFOLD\Scaffold\Scaffold.Console\bin\Debug\net8.0"
+                        WorkingDirectory = workingDirectory
                     }
                 };
 
@@ -70,10 +97,14 @@ namespace Scaffold.VisualStudio
                     response.Append(await process.StandardOutput.ReadLineAsync(cancellationToken)).Append(Environment.NewLine);
                 }
 
+                if (response.Length == 0)
+                    response.Append("Nothing to add");
+
                 await Extensibility.Shell().ShowPromptAsync(response.ToString(), PromptOptions.OK, cancellationToken);
             }
             catch (Exception ex)
             {
+                await Extensibility.Shell().ShowPromptAsync(ex.Message, PromptOptions.OK, cancellationToken);
                 ;
             }
 
