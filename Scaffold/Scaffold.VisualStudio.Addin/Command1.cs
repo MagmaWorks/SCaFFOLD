@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Extensibility.Shell;
 using System.Diagnostics;
 using System.Text;
 
-namespace Scaffold.VisualStudio.Addin
+namespace Scaffold.VisualStudio.AddIn
 {
     [VisualStudioContribution]
     internal class Command1 : Command

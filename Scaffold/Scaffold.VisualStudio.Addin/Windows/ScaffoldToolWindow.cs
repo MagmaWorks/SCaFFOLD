@@ -1,49 +1,39 @@
 ﻿using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.ToolWindows;
+using Microsoft.VisualStudio.RpcContracts.Documents;
 using Microsoft.VisualStudio.RpcContracts.RemoteUI;
 
-namespace Scaffold.VisualStudio.Addin.Windows
+namespace Scaffold.VisualStudio.AddIn.Windows
 {
-    /// <summary>
-    /// A sample tool window.
-    /// </summary>
     [VisualStudioContribution]
     public class ScaffoldToolWindow : ToolWindow
     {
         private ScaffoldToolWindowContent Content { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ScaffoldToolWindow" /> class.
-        /// </summary>
+        
         public ScaffoldToolWindow()
         {
             Title = "SCaFFOLD explorer";
-            
         }
-
-        /// <inheritdoc />
+        
         public override ToolWindowConfiguration ToolWindowConfiguration => new()
         {
-            // Use this object initializer to set optional parameters for the tool window.
-            Placement = ToolWindowPlacement.Floating,
+            Placement = ToolWindowPlacement.Floating
         };
-
-        /// <inheritdoc />
+        
         public override async Task InitializeAsync(CancellationToken cancellationToken)
         {
-            var result = await Extensibility.Documents().GetOpenDocumentsAsync(cancellationToken);
             Content = new ScaffoldToolWindowContent(Extensibility);
-            // Use InitializeAsync for any one-time setup or initialization.
-            ;
-        }
 
-        /// <inheritdoc />
+            var listener = (IDocumentEventsListener)Content.DataContext;
+            if (listener == null)
+                throw new ArgumentException("The data context should be an IDocumentEventsListener.");
+            
+            await Extensibility.Documents().SubscribeAsync(listener, null, cancellationToken);
+        }
+        
         public override Task<IRemoteUserControl> GetContentAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult<IRemoteUserControl>(Content);
-        }
-
-        /// <inheritdoc />
+            => Task.FromResult<IRemoteUserControl>(Content);
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

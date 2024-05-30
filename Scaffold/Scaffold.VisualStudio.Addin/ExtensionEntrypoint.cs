@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Extensibility;
 
 // Note: Add reference to Microsoft.VisualStudio.Shell.15.0 for better XAML editing. TODO REMOVE THIS PACKAGE BEFORE A RELEASE.
-namespace Scaffold.VisualStudio.Addin
+namespace Scaffold.VisualStudio.AddIn
 {
     /// <summary>
     /// Extension entrypoint for the VisualStudio.Extensibility extension.

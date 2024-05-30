@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 
-namespace Scaffold.VisualStudio.Addin.Windows
+namespace Scaffold.VisualStudio.AddIn.Windows
 {
     /// <summary>
     /// A command for showing a tool window.
