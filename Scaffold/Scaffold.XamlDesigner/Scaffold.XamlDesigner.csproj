@@ -9,7 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Images\delete-24.png" />
       <None Remove="Images\eye-tsp-53-32.png" />
+      <None Remove="Images\green-tick.png" />
       <None Remove="Images\play-24.png" />
       <None Remove="Images\wait-32.png" />
     </ItemGroup>
@@ -23,7 +25,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Resource Include="Images\delete-24.png" />
       <Resource Include="Images\eye-tsp-53-32.png" />
+      <Resource Include="Images\green-tick.png" />
       <Resource Include="Images\play-24.png" />
       <Resource Include="Images\wait-32.png" />
     </ItemGroup>
