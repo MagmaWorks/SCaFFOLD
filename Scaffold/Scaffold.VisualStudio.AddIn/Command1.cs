@@ -13,16 +13,10 @@ namespace Scaffold.VisualStudio.AddIn
     internal class Command1 : Command
     {
         private readonly TraceSource logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Command1"/> class.
-        /// </summary>
-        /// <param name="traceSource">Trace source instance to utilize.</param>
+        
         public Command1(TraceSource traceSource)
         {
-            // This optional TraceSource can be used for logging in the command. You can use dependency injection to access
-            // other services here as well.
-            this.logger = Requires.NotNull(traceSource, nameof(traceSource));
+            logger = Requires.NotNull(traceSource, nameof(traceSource));
         }
 
         /// <inheritdoc />
@@ -44,7 +38,7 @@ namespace Scaffold.VisualStudio.AddIn
         /// <inheritdoc />
         public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
         {
-            await this.Extensibility.Shell().ShowPromptAsync("Hello from an extension!", PromptOptions.OK, cancellationToken);
+            await Extensibility.Shell().ShowPromptAsync("Hello from an extension!", PromptOptions.OK, cancellationToken);
         }
     }
 }

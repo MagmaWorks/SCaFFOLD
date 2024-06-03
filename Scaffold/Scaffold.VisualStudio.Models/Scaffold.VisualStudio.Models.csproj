@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
+      <Reference Include="PresentationCore">
+        <HintPath>..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.6\PresentationCore.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

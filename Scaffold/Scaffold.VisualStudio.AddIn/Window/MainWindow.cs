@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.ToolWindows;
 using Microsoft.VisualStudio.RpcContracts.RemoteUI;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Scaffold.VisualStudio.AddIn.Window
 {
@@ -19,7 +17,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
         /// </summary>
         public MainWindow()
         {
-            this.Title = "SCaFFOLD Explorer";
+            Title = "SCaFFOLD Explorer";
         }
 
         /// <inheritdoc />

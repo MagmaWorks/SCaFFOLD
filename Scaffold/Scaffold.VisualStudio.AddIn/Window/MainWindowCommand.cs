@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Scaffold.VisualStudio.AddIn.Window
 {
@@ -24,7 +22,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
         /// <inheritdoc />
         public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
         {
-            await this.Extensibility.Shell().ShowToolWindowAsync<MainWindow>(activate: true, cancellationToken);
+            await Extensibility.Shell().ShowToolWindowAsync<MainWindow>(activate: true, cancellationToken);
         }
     }
 }

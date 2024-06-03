@@ -3,9 +3,6 @@ using Microsoft.VisualStudio.Extensibility;
 
 namespace Scaffold.VisualStudio.AddIn
 {
-    /// <summary>
-    /// Extension entrypoint for the VisualStudio.Extensibility extension.
-    /// </summary>
     [VisualStudioContribution]
     internal class ExtensionEntrypoint : Extension
     {
@@ -14,13 +11,12 @@ namespace Scaffold.VisualStudio.AddIn
         {
             Metadata = new(
                     id: "Scaffold.VisualStudio.AddIn.741b8077-d032-40d6-89f5-d6a46e618877",
-                    version: this.ExtensionAssemblyVersion,
-                    publisherName: "Publisher name",
+                    version: ExtensionAssemblyVersion,
+                    publisherName: "Magma Works",
                     displayName: "Scaffold.VisualStudio.AddIn",
-                    description: "Extension description"),
+                    description: "SCaFFOLD assistant plugin for rapid development of calculations, providing instant dotnet watch style feedback to your calculations."),
         };
-
-        /// <inheritdoc />
+        
         protected override void InitializeServices(IServiceCollection serviceCollection)
         {
             base.InitializeServices(serviceCollection);

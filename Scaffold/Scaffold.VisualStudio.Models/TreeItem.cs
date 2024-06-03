@@ -1,17 +1,38 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Scaffold.VisualStudio.Models
 {
     public class TreeItem : INotifyPropertyChanged
     {
+        private Visibility _isSuccessVisibility;
+        private Visibility _isFailedVisibility;
         private bool _isExpanded;
 
+        public TreeItem(CalculationResult result)
+        {
+            Result = result;
+            IsSuccessVisibility = result.IsSuccess ? Visibility.Visible : Visibility.Collapsed;
+            IsFailedVisibility = result.IsSuccess ? Visibility.Collapsed : Visibility.Visible;
+        }
+        
         public bool HasIcon { get; set; }
-        public bool Success => Result is { Failure: null };
         public string Name { get; set; }
-        public CalculationResult Result { get; set; }
+        public CalculationResult Result { get; }
 
+        public Visibility IsSuccessVisibility
+        {
+            get => _isSuccessVisibility;
+            set => SetField(ref _isSuccessVisibility, value);
+        }
+        
+        public Visibility IsFailedVisibility
+        {
+            get => _isFailedVisibility;
+            set => SetField(ref _isFailedVisibility, value);
+        }
+        
         public bool IsExpanded
         {
             get => _isExpanded;

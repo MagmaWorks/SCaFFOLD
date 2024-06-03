@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Scaffold.Core.Models;
+using System.Windows;
 using Scaffold.VisualStudio.Models;
 
 namespace Scaffold.VisualStudio.XamlDesigner;
 
 public class MainWindowViewModel : INotifyPropertyChanged
 {
-    private bool _watcherIsActive;
+    private Visibility _waitingForTabVisibility = Visibility.Visible;
+    private Visibility _hasActiveProjectVisibility = Visibility.Collapsed;
+    private Visibility _isWatchingVisibility = Visibility.Collapsed;
     private string _activeProjectPath;
 
     public MainWindowViewModel()
     {
         Watching = 
         [
-            new TreeItem {Name = "AdditionCalculation", HasIcon = true, IsExpanded = true, Result = new CalculationResult
+            new TreeItem(new CalculationResult
             {
                 CalculationDetail = new CalculationDetail
                 {
@@ -30,25 +32,26 @@ public class MainWindowViewModel : INotifyPropertyChanged
                     ],
                     Formulae =
                     [
-                        Formula.New("Narrative to appear above the expression")
-                            .WithConclusion("Some text here")
-                            .WithReference("Some ref here")
-                            .AddExpression(@"\left(x^2 + 2 \cdot x + 2\right) = 0"),
-
-
-
-                        Formula.New("2. Narrative to appear above the expression")
-                            .WithConclusion("2. Some text here")
-                            .WithReference("2. Some ref here")
-                            .AddExpression(@"\left(x^2 + 2 \cdot x + 2\right) = 0"),
-
-
-                        Formula.New("Final narrative").WithReference("3.a")
+                        new DisplayFormula(@"\left(x^2 + 2 \cdot x + 2\right) = 0")
+                        {
+                            Conclusion = "Some text here",
+                            Ref = "Some ref here",
+                            Narrative = "Narrative to appear above the expression"
+                        },
+                        
+                        new DisplayFormula(@"\left(x^2 + 2 \cdot x + 2\right) = 0")
+                        {
+                            Conclusion = "2. Some text here",
+                            Ref = "2. Some ref here",
+                            Narrative = "2. Narrative to appear above the expression"
+                        },
+                        
+                        new DisplayFormula(new List<string>()) {Ref = "3.a"}
                     ]
                 },
                 Failure = null
-            }},
-            new TreeItem {Name = "SubtractionCalculation", HasIcon = true,IsExpanded = true, Result = new CalculationResult
+            }) {Name = "AdditionCalculation", HasIcon = true, IsExpanded = true},
+            new TreeItem(new CalculationResult
             {
                 CalculationDetail = null,
                 Failure = new ExceptionDetail
@@ -56,11 +59,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
                     Message = "ArgumentException",
                     InnerException = "Full error message here"
                 }
-            }}
+            }) {Name = "SubtractionCalculation", HasIcon = true, IsExpanded = true}
         ];
 
+        WaitingForTabVisibility = Visibility.Visible;
         ActiveProjectPath = "file.cs";
-        WatcherIsActive = true;
     }
     
     public event PropertyChangedEventHandler PropertyChanged;
@@ -76,18 +79,34 @@ public class MainWindowViewModel : INotifyPropertyChanged
         field = value;
         OnPropertyChanged(propertyName);
     }
-
-    public List<TreeItem> Watching { get; }
-
-    public bool WatcherIsActive
+    
+    public Visibility WaitingForTabVisibility
     {
-        get => _watcherIsActive;
-        set => SetField(ref _watcherIsActive, value);
+        get => _waitingForTabVisibility;
+        set => SetField(ref _waitingForTabVisibility, value);
+    }
+    
+    public Visibility HasActiveProjectVisibility
+    {
+        get => _hasActiveProjectVisibility;
+        set => SetField(ref _hasActiveProjectVisibility, value);
+    }
+    
+    public Visibility IsWatchingVisibility
+    {
+        get => _isWatchingVisibility;
+        set => SetField(ref _isWatchingVisibility, value);
     }
 
+    public List<TreeItem> Watching { get; }
+    
     public string ActiveProjectPath
     {
         get => _activeProjectPath;
-        set => SetField(ref _activeProjectPath, value);
+        set
+        {
+            SetField(ref _activeProjectPath, value);
+            HasActiveProjectVisibility = string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 }
