@@ -11,10 +11,10 @@ namespace Scaffold.VisualStudio.AddIn.Window
     [DataContract]
     internal class MainWindowViewModel : NotifyPropertyChangedObject
     {
-        private Visibility _inactiveWatcherVisibility = Visibility.Visible;
-        private Visibility _waitingForTabVisibility = Visibility.Collapsed;
+        private Visibility _onLoadVisibility = Visibility.Visible;
+        private Visibility _waitingForTabVisibility = Visibility.Visible;
         private Visibility _hasActiveProjectVisibility = Visibility.Collapsed;
-        
+        private Visibility _isWatchingVisibility = Visibility.Collapsed;
         private string _activeProjectPath;
         
         public MainWindowViewModel()
@@ -24,24 +24,35 @@ namespace Scaffold.VisualStudio.AddIn.Window
             //     Text = $"Hello {parameter as string}!";
             //     return Task.CompletedTask;
             // });
+            var wait = "";
         }
 
-        public Visibility InactiveWatcherVisibility
+        [DataMember]
+        public Visibility OnLoadVisibility
         {
-            get => _inactiveWatcherVisibility;
-            set => SetProperty(ref _inactiveWatcherVisibility, value);
+            get => _onLoadVisibility;
+            set => SetProperty(ref _onLoadVisibility, value);
         }
-        
+
+        [DataMember]
         public Visibility WaitingForTabVisibility
         {
             get => _waitingForTabVisibility;
             set => SetProperty(ref _waitingForTabVisibility, value);
         }
 
+        [DataMember]
         public Visibility HasActiveProjectVisibility
         {
             get => _hasActiveProjectVisibility;
             set => SetProperty(ref _hasActiveProjectVisibility, value);
+        }
+
+        [DataMember]
+        public Visibility IsWatchingVisibility
+        {
+            get => _isWatchingVisibility;
+            set => SetProperty(ref _isWatchingVisibility, value);
         }
         
         [DataMember]
@@ -54,9 +65,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
             set
             {
                 SetProperty(ref _activeProjectPath, value);
-                
-                InactiveWatcherVisibility = Visibility.Collapsed;
-                WaitingForTabVisibility = Visibility.Visible;
+                HasActiveProjectVisibility = string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 

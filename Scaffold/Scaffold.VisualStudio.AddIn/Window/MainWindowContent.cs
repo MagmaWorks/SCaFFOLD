@@ -1,18 +1,11 @@
 ﻿using Microsoft.VisualStudio.Extensibility.UI;
 
-namespace Scaffold.VisualStudio.AddIn.Window
+namespace Scaffold.VisualStudio.AddIn.Window;
+
+internal class MainWindowContent : RemoteUserControl
 {
-    /// <summary>
-    /// A remote user control to use as tool window UI content.
-    /// </summary>
-    internal class MainWindowContent : RemoteUserControl
+    public MainWindowContent()
+        : base(dataContext: new MainWindowViewModel())
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindowContent" /> class.
-        /// </summary>
-        public MainWindowContent()
-            : base(dataContext: new MainWindowViewModel())
-        {
-        }
     }
 }
