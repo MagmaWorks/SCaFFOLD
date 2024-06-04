@@ -2,29 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="Images\delete-24.png" />
-    <Content Remove="Images\eye-tsp-53-32.png" />
-    <Content Remove="Images\green-tick.png" />
-    <Content Remove="Images\play-24.png" />
-    <Content Remove="Images\wait-32.png" />
+    <None Remove="wait-32.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="Images\delete-24.png" />
-    <None Remove="Images\eye-tsp-53-32.png" />
-    <None Remove="Images\green-tick.png" />
-    <None Remove="Images\play-24.png" />
-    <None Remove="Images\wait-32.png" />
-    <None Remove="Window\MainWindowContent.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\delete-24.png">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
-      <Pack>false</Pack>
-    </Resource>
-  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Window\MainWindowContent.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -32,8 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Sdk" Version="17.9.2092" />
-    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Build" Version="17.9.2092" />
+    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Sdk" Version="17.10.2084" />
+    <PackageReference Include="Microsoft.VisualStudio.Extensibility.Build" Version="17.10.2084" />
+    <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="17.10.40170" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\delete-24.png">
+      <Pack>false</Pack>
+    </Resource>
     <Resource Include="Images\eye-tsp-53-32.png">
       <Pack>false</Pack>
     </Resource>
@@ -53,5 +40,9 @@
     <Resource Include="Images\wait-32.png">
       <Pack>false</Pack>
     </Resource>
+    <EmbeddedResource Include="wait-32.png">
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

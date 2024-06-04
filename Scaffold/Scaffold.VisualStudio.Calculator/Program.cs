@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
+using Scaffold.VisualStudio.Models;
 using Scaffold.VsCalculator;
 
 namespace Scaffold.VisualStudio.Calculator
@@ -27,9 +28,9 @@ namespace Scaffold.VisualStudio.Calculator
         {
             if (instance == null)
             {
-                System.Console.ForegroundColor = ConsoleColor.Red;
-                System.Console.WriteLine("FAILED: Could not read instance.");
-                System.Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("FAILED: Could not read instance.");
+                Console.ResetColor();
                 return;
             }
             
@@ -39,21 +40,21 @@ namespace Scaffold.VisualStudio.Calculator
 
         private static void WriteCalcValueList(IEnumerable<ICalcValue> values, string name)
         {
-            System.Console.WriteLine($"----- {name} -----");
+            Console.WriteLine($"----- {name} -----");
             foreach (var value in values)
             {
-                System.Console.WriteLine($"{value.DisplayName}: {value.GetValue()}");
+                Console.WriteLine($"{value.DisplayName}: {value.GetValue()}");
             }
             
-            System.Console.WriteLine("-----");
+            Console.WriteLine("-----");
         }
         
 
 
         private static void WaitForExit()
         {
-            System.Console.WriteLine("Type 'exit' to close the application.");
-            var result = System.Console.ReadLine();
+            Console.WriteLine("Type 'exit' to close the application.");
+            var result = Console.ReadLine();
             if (result?.ToLower() == "exit")
             {
                 Timer.Dispose();
@@ -123,39 +124,27 @@ namespace Scaffold.VisualStudio.Calculator
             {
                 if (Directory.Exists(RootPath) == false)
                 {
-                    System.Console.ForegroundColor = ConsoleColor.Red;
-                    System.Console.WriteLine("The supplied path does not exist - ensure you have a tab open within the project you want to read.");
-                    System.Console.ReadKey();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("The supplied path does not exist - ensure you have a tab open within the project you want to read.");
+                    Console.ReadKey();
                     return;
                 }
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Building project...");
+                Console.ResetColor();
+                
+                var dotnetBuild = new DotnetBuild();
+                var result = dotnetBuild.Run(RootPath);
+
+                foreach (var line in result.Output)
+                    Console.WriteLine(line);
             
-                var process = new Process
+                if (result.ExitCode != 0)
                 {
-                    StartInfo = new ProcessStartInfo 
-                    {
-                        FileName = "dotnet",
-                        Arguments = "build --no-restore",
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = false,
-                        WorkingDirectory = RootPath
-                    }
-                };
-            
-                System.Console.ForegroundColor = ConsoleColor.Yellow;
-                System.Console.WriteLine("Building project...");
-                System.Console.ResetColor();
-            
-                process.Start();
-                while (process.StandardOutput.EndOfStream == false)
-                {
-                    System.Console.WriteLine(process.StandardOutput.ReadLine());
-                }
-            
-                if (process.ExitCode != 0)
-                {
-                    System.Console.ForegroundColor = ConsoleColor.Red;
-                    System.Console.WriteLine("Failed to build project - see error detail above.");
-                    System.Console.ReadKey();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Failed to build project - see error detail above.");
+                    Console.ReadKey();
                     return;
                 }
             
@@ -168,9 +157,9 @@ namespace Scaffold.VisualStudio.Calculator
             }
             catch (Exception ex)
             {
-                System.Console.ForegroundColor = ConsoleColor.Red;
-                System.Console.WriteLine(ex.Message);
-                System.Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.ResetColor();
             }
             finally
             {

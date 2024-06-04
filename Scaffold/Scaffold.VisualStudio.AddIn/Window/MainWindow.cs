@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.ToolWindows;
+using Microsoft.VisualStudio.RpcContracts.Documents;
 using Microsoft.VisualStudio.RpcContracts.RemoteUI;
 
 namespace Scaffold.VisualStudio.AddIn.Window
@@ -10,7 +11,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
     [VisualStudioContribution]
     public class MainWindow : ToolWindow
     {
-        private readonly MainWindowContent content = new();
+        private MainWindowContent Content { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow" /> class.
@@ -28,23 +29,28 @@ namespace Scaffold.VisualStudio.AddIn.Window
         };
 
         /// <inheritdoc />
-        public override Task InitializeAsync(CancellationToken cancellationToken)
+        public override async Task InitializeAsync(CancellationToken cancellationToken)
         {
-            // Use InitializeAsync for any one-time setup or initialization.
-            return Task.CompletedTask;
+            Content = new MainWindowContent();
+
+            var listener = (IDocumentEventsListener)Content.DataContext;
+            if (listener == null)
+                throw new ArgumentException("The data context should be an IDocumentEventsListener.");
+
+            await Extensibility.Documents().SubscribeAsync(listener, null, cancellationToken);
         }
 
         /// <inheritdoc />
         public override Task<IRemoteUserControl> GetContentAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<IRemoteUserControl>(content);
+            return Task.FromResult<IRemoteUserControl>(Content);
         }
 
         /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                content.Dispose();
+                Content.Dispose();
 
             base.Dispose(disposing);
         }
