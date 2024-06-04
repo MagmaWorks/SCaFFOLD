@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.VisualStudio.Extensibility.UI;
 using System.Runtime.Serialization;
-using System.Security;
 using System.Windows;
 using System.Xml;
 using Microsoft.VisualStudio.RpcContracts.Documents;
@@ -27,16 +26,25 @@ namespace Scaffold.VisualStudio.AddIn.Window
         private string _activeProjectPath;
         private bool _watcherIsRunning;
 
+        private ProjectDetails ProjectDetails { get; set; }
         private string LastShownDocumentRead { get; set; }
 
+        // TODO: Stop Watcher
+        // TODO: Target save, throw over to the calculator project.
+        // TODO: Match XAML designer to finished code.
         public MainWindowViewModel()
         {
-            // HelloCommand = new AsyncCommand((parameter, clientContext, cancellationToken) =>
-            // {
-            //     Text = $"Hello {parameter as string}!";
-            //     return Task.CompletedTask;
-            // });
-            var wait = "";
+            StartWatcherCommand = new AsyncCommand((_, _, _) =>
+            {
+                WatcherIsRunning = true;
+                return Task.CompletedTask;
+            });
+
+            StopWatcherCommand = new AsyncCommand((_, _, _) =>
+            {
+                WatcherIsRunning = false;
+                return Task.CompletedTask;
+            });
         }
 
         [DataMember]
@@ -85,11 +93,20 @@ namespace Scaffold.VisualStudio.AddIn.Window
         public bool WatcherIsRunning
         {
             get => _watcherIsRunning;
-            set => SetProperty(ref _watcherIsRunning, value);
+            set
+            {
+                SetProperty(ref _watcherIsRunning, value);
+
+                OnLoadVisibility = value ? Visibility.Collapsed : Visibility.Visible;
+                IsWatchingVisibility = value ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
-        // [DataMember]
-        // public AsyncCommand HelloCommand { get; }
+        [DataMember]
+        public AsyncCommand StartWatcherCommand { get; }
+
+        [DataMember]
+        public AsyncCommand StopWatcherCommand { get; }
 
         public Task OpenedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
         public Task ClosedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
@@ -179,7 +196,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
             if (string.IsNullOrEmpty(LastShownDocumentRead) == false && e.Moniker.AbsolutePath == LastShownDocumentRead)
                 return Task.CompletedTask;
 
-            //LastShownDocumentRead = e.Moniker.AbsolutePath; // TODO: Put back
+            LastShownDocumentRead = e.Moniker.AbsolutePath; 
 
             var fileInfo = new FileInfo(e.Moniker.AbsolutePath);
             var projectDetails = GetProjectDetails(fileInfo.Directory);
@@ -187,6 +204,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
             if (HasCalculations(projectDetails) == false)
                 return Task.CompletedTask;
 
+            ProjectDetails = projectDetails;
             ActiveProjectPath = projectDetails.ProjectFilePath;
             OnLoadVisibility = Visibility.Visible;
             WaitingForTabVisibility = Visibility.Collapsed;

@@ -4,9 +4,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="wait-32.png" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Window\MainWindowContent.xaml">
@@ -22,27 +19,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Scaffold.VisualStudio.Models\Scaffold.VisualStudio.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\delete-24.png">
-      <Pack>false</Pack>
-    </Resource>
-    <Resource Include="Images\eye-tsp-53-32.png">
-      <Pack>false</Pack>
-    </Resource>
-    <Resource Include="Images\green-tick.png">
-      <Pack>false</Pack>
-    </Resource>
-    <Resource Include="Images\play-24.png">
-      <Pack>false</Pack>
-    </Resource>
-    <Resource Include="Images\wait-32.png">
-      <Pack>false</Pack>
-    </Resource>
-    <EmbeddedResource Include="wait-32.png">
-      <Pack>false</Pack>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>
