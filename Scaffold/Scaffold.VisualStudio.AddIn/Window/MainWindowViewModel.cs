@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.RpcContracts.Documents;
 using Scaffold.VisualStudio.AddIn.Classes;
 using Scaffold.VisualStudio.Models;
 using FileInfo = System.IO.FileInfo;
+using System.Diagnostics;
+using System.Text.Json;
 
 // TODO: Catch and display all exceptions in any of this code.
 
@@ -29,7 +31,6 @@ namespace Scaffold.VisualStudio.AddIn.Window
         private ProjectDetails ProjectDetails { get; set; }
         private string LastShownDocumentRead { get; set; }
 
-        // TODO: Stop Watcher
         // TODO: Target save, throw over to the calculator project.
         // TODO: Match XAML designer to finished code.
         public MainWindowViewModel()
@@ -111,7 +112,6 @@ namespace Scaffold.VisualStudio.AddIn.Window
         public Task OpenedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
         public Task ClosedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
         public Task SavingAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
-        public Task SavedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
         public Task RenamedAsync(RenamedDocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
         public Task HiddenAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
 
@@ -131,6 +131,15 @@ namespace Scaffold.VisualStudio.AddIn.Window
 
                 return path;
             }
+        }
+
+        private string GetWorkingDirectory()
+        {
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var lastIndex = executingAssembly.Location.LastIndexOf(@"\", StringComparison.Ordinal);
+            var workingDirectory = executingAssembly.Location[..lastIndex];
+
+            return SanitizeBasePath(workingDirectory);
         }
 
         private static ProjectDetails GetProjectDetails(DirectoryInfo directory)
@@ -166,7 +175,7 @@ namespace Scaffold.VisualStudio.AddIn.Window
             };
         }
 
-        private bool HasCalculations(ProjectDetails projectDetails)
+        private static bool HasCalculations(ProjectDetails projectDetails)
         {
             if (File.Exists(projectDetails.AssemblyPath()) == false)
             {
@@ -183,9 +192,10 @@ namespace Scaffold.VisualStudio.AddIn.Window
                     $"Failed to load the assembly after dotnet build - it could not be found under path {projectDetails.AssemblyPath()}");
             
             var assembly = Assembly.LoadFrom(projectDetails.AssemblyPath());
+            var matchingTypes = assembly.GetCalculationTypes();
 
-            var matchingTypes = assembly.GetTypes().Where(x => x.GetInterface("Scaffold.Core.Interfaces.ICalculation") != null);
-            return matchingTypes.Any();
+            // TODO Dispose of loaded assembly, will require moving to its own app domain / load context.
+            return matchingTypes.Count > 0;
         }
 
         public Task ShownAsync(DocumentEventArgs e, CancellationToken token)
@@ -211,6 +221,29 @@ namespace Scaffold.VisualStudio.AddIn.Window
             HasActiveProjectVisibility = Visibility.Visible;
 
             return Task.CompletedTask;
+        }
+
+        public async Task SavedAsync(DocumentEventArgs e, CancellationToken token)
+        {
+            var workingDirectory = GetWorkingDirectory();
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "Scaffold.VisualStudio.Calculator.exe",
+                    Arguments = $"{ProjectDetails.ProjectFilePath} {ProjectDetails.AssemblyName}",
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = false,
+                    WorkingDirectory = workingDirectory
+                }
+            };
+
+            process.Start();
+
+            var jsonString = await process.StandardOutput.ReadToEndAsync(token);
+            var fullResult = JsonSerializer.Deserialize<CalculationAssemblyResult>(jsonString);
+
+            // TODO: Utilize results.
         }
 
         public void Dispose()

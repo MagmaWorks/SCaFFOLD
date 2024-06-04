@@ -1,6 +1,6 @@
 ﻿namespace Scaffold.VisualStudio.Models;
 
-public class ExceptionDetail
+public class ErrorDetail
 {
     public string Source { get; set; }
     public string Message { get; set; }

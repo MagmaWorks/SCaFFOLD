@@ -1,16 +1,14 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Scaffold.VsCalculator
+namespace Scaffold.VisualStudio.Calculator
 {
-    public class BinariesAssemblyReader(string projectPath)
+    public class BinariesAssemblyReader(string binariesFolder)
     {
-        private string ProjectPath { get; } = projectPath;
+        private string BinariesFolder { get; } = binariesFolder;
 
         public Assembly GetAssembly()
         {
-            // TODO: Folder selection - we can't guarantee the .NET version.
-            var binariesFolder = $@"{ProjectPath}\bin\Debug\net8.0";
             if (Directory.Exists(binariesFolder) == false)
                 return null;
 
@@ -25,12 +23,8 @@ namespace Scaffold.VsCalculator
                     continue;
 
                 if (fullFilePath.Contains("Scaffold.Core.dll"))
-                {
                     continue;
-                    //fullFilePath = @"C:\Users\d.growns\Documents\Repos\Web\Scaffold.App\Scaffold.App\LocalDependencies\Scaffold.Core.dll";
-                    //fullFilePath = @"C:\Users\d.growns\Documents\Repos\WPF\SCaFFOLD\Scaffold\Scaffold.VisualStudio\bin\Debug\net8.0-windows\Scaffold.Core.dll";
-                }
-
+                
                 using var stream = File.OpenRead(fullFilePath);
 
                 var memoryStream = new MemoryStream();

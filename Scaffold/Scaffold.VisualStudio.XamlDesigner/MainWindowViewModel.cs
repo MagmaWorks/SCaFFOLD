@@ -54,7 +54,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
             new TreeItem(new CalculationResult
             {
                 CalculationDetail = null,
-                Failure = new ExceptionDetail
+                Failure = new ErrorDetail
                 {
                     Message = "ArgumentException",
                     InnerException = "Full error message here"
