@@ -9,32 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.10.40171" />
       <PackageReference Include="WpfMath" Version="2.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Resource Include="Images\delete-24.png" />
-      <Resource Include="Images\eye-tsp-53-32.png" />
-      <Resource Include="Images\green-tick.png" />
-      <Resource Include="Images\play-24.png" />
-      <Resource Include="Images\wait-32.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Update="Images\eye-tsp-53-32.png">
-        <IncludeInVSIX>True</IncludeInVSIX>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <Pack>false</Pack>
-      </Content>
-      <Content Update="Images\wait-32.png">
-        <IncludeInVSIX>True</IncludeInVSIX>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <Pack>false</Pack>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Models\" />
     </ItemGroup>
 
     <ItemGroup>

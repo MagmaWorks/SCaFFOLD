@@ -1,60 +1,59 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Scaffold.VisualStudio.Calculator
+namespace Scaffold.VisualStudio.Calculator;
+
+public class BinariesAssemblyReader(string binariesFolder)
 {
-    public class BinariesAssemblyReader(string binariesFolder)
+    private string BinariesFolder { get; } = binariesFolder;
+
+    public Assembly GetAssembly()
     {
-        private string BinariesFolder { get; } = binariesFolder;
+        if (Directory.Exists(binariesFolder) == false)
+            return null;
 
-        public Assembly GetAssembly()
+        var context = new AssemblyLoadContext(null, true);
+        Assembly primary = null;
+
+        foreach (var file in Directory.GetFiles(binariesFolder))
         {
-            if (Directory.Exists(binariesFolder) == false)
-                return null;
+            var fullFilePath = file;
 
-            var context = new AssemblyLoadContext(null, true);
-            Assembly primary = null;
+            if (Path.GetExtension(file) != ".dll")
+                continue;
 
-            foreach (var file in Directory.GetFiles(binariesFolder))
-            {
-                var fullFilePath = file;
-
-                if (Path.GetExtension(file) != ".dll")
-                    continue;
-
-                if (fullFilePath.Contains("Scaffold.Core.dll"))
-                    continue;
+            if (fullFilePath.Contains("Scaffold.Core.dll"))
+                continue;
                 
-                using var stream = File.OpenRead(fullFilePath);
+            using var stream = File.OpenRead(fullFilePath);
 
-                var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
-                memoryStream.Position = 0;
+            var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            memoryStream.Position = 0;
 
-                try
+            try
+            {
+                var loadedAssembly = context.LoadFromStream(memoryStream);
+
+                if (primary == null
+                    && fullFilePath.Contains("VsTesting.dll"))
                 {
-                    var loadedAssembly = context.LoadFromStream(memoryStream);
-
-                    if (primary == null
-                        && fullFilePath.Contains("VsTesting.dll"))
-                    {
-                        primary = loadedAssembly;
-                    }
+                    primary = loadedAssembly;
                 }
-                catch (Exception ex)
-                {
-                    ;
-                    throw;
-                }
-                finally
-                {
-                    memoryStream.Dispose();
-                    stream.Dispose();
-                }
-
+            }
+            catch (Exception ex)
+            {
+                ;
+                throw;
+            }
+            finally
+            {
+                memoryStream.Dispose();
+                stream.Dispose();
             }
 
-            return primary;
         }
+
+        return primary;
     }
 }

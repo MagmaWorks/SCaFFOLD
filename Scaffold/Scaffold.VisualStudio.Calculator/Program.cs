@@ -3,117 +3,118 @@ using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using Scaffold.VisualStudio.Models;
+using Scaffold.VisualStudio.Models.Results;
+using Scaffold.VisualStudio.Models.Scaffold;
 
-namespace Scaffold.VisualStudio.Calculator
+namespace Scaffold.VisualStudio.Calculator;
+
+internal static class Program
 {
-    internal static class Program
+    private static string RootPath { get; set; }
+    private static string BinariesPath { get; set; }
+        
+    private static void Main(string[] args)
     {
-        private static string RootPath { get; set; }
-        private static string BinariesPath { get; set; }
-        
-        private static void Main(string[] args)
-        {
-            if (args.Length != 2)
-                throw new ArgumentException(
-                    "Project root and assembly (bin) root are required parameters.");
+        if (args.Length != 2)
+            throw new ArgumentException(
+                "Project root and assembly (bin) root are required parameters.");
 
-            RootPath = args[0];
-            BinariesPath = args[1];
+        RootPath = args[0];
+        BinariesPath = args[1];
             
-            var result = ReadCalculations();
-            Console.Write(JsonSerializer.Serialize(result));
-        }
+        var result = ReadCalculations();
+        Console.Write(JsonSerializer.Serialize(result));
+    }
         
-        private static void ReadInstance(CalculationBase instance, CalculationResult result)
+    private static void ReadInstance(CalculationBase instance, CalculationResult result)
+    {
+        if (instance == null)
         {
-            if (instance == null)
-            {
-                result.Failure = new ErrorDetail { Message = "FAILED: Could not read instance." };
-                return;
-            }
-
-            result.CalculationDetail = new CalculationDetail
-            {
-                Title = instance.Title,
-                Type = instance.Type,
-                Inputs = WriteCalcValueList(instance.GetInputs()),
-                Outputs = WriteCalcValueList(instance.GetOutputs()),
-                Formulae = WriteDisplayFormulae(instance.GetFormulae())
-            };
+            result.Failure = new ErrorDetail { Message = "FAILED: Could not read instance." };
+            return;
         }
 
-        private static List<CalcValueDetail> WriteCalcValueList(IEnumerable<ICalcValue> calcValues)
-            => calcValues.Select(value => new CalcValueDetail
-            {
-                DisplayName = value.DisplayName, 
-                Symbol = value.Symbol, 
-                Status = value.Status.ToString(), 
-                Value = value.GetValue()
-            }).ToList();
-        
-
-        private static List<DisplayFormula> WriteDisplayFormulae(IEnumerable<Formula> formulae)
-            => formulae.Select(formula => new DisplayFormula(formula.Expression)
-            {
-                Ref = formula.Ref, 
-                Narrative = formula.Narrative, 
-                Conclusion = formula.Conclusion, 
-                Status = formula.Status.ToString()
-            }).ToList();
-        
-        private static CalculationAssemblyResult ReadCalculations()
+        result.CalculationDetail = new CalculationDetail
         {
-            var result = new CalculationAssemblyResult {Results = [] };
+            Title = instance.Title,
+            Type = instance.Type,
+            Inputs = WriteCalcValueList(instance.GetInputs()),
+            Outputs = WriteCalcValueList(instance.GetOutputs()),
+            Formulae = WriteDisplayFormulae(instance.GetFormulae())
+        };
+    }
 
-            try
+    private static List<CalcValueDetail> WriteCalcValueList(IEnumerable<ICalcValue> calcValues)
+        => calcValues.Select(value => new CalcValueDetail
+        {
+            DisplayName = value.DisplayName, 
+            Symbol = value.Symbol, 
+            Status = value.Status.ToString(), 
+            Value = value.GetValue()
+        }).ToList();
+        
+
+    private static List<DisplayFormula> WriteDisplayFormulae(IEnumerable<Formula> formulae)
+        => formulae.Select(formula => new DisplayFormula(formula.Expression)
+        {
+            Ref = formula.Ref, 
+            Narrative = formula.Narrative, 
+            Conclusion = formula.Conclusion, 
+            Status = formula.Status.ToString()
+        }).ToList();
+        
+    private static CalculationAssemblyResult ReadCalculations()
+    {
+        var result = new CalculationAssemblyResult {Results = [] };
+
+        try
+        {
+            if (Directory.Exists(RootPath) == false)
             {
-                if (Directory.Exists(RootPath) == false)
-                {
-                    result.RunError = new ErrorDetail {Message = "The supplied path does not exist - ensure you have a tab open within the project you want to read." };
-                    return result;
-                }
-
-                var dotnetBuild = new DotnetBuild();
-                var buildResult = dotnetBuild.Run(RootPath);
-            
-                if (buildResult.ExitCode != 0)
-                {
-                    result.RunError = new ErrorDetail
-                    {
-                        Source = "dotnet build",
-                        Message = "Failed to build project - see error detail.", 
-                        InnerException = string.Join(",", buildResult.Output)
-                    };
-                    return result;
-                }
-            
-                var reader = new BinariesAssemblyReader(BinariesPath);
-                var assembly = reader.GetAssembly();
-
-                foreach (var calculation in assembly.GetCalculationTypes())
-                {
-                    if (calculation.FullName == null)
-                        continue;
-
-                    var calculationResult = new CalculationResult();
-                    var instance = (CalculationBase)assembly.CreateInstance(calculation.FullName);
-
-                    instance?.LoadIoCollections();
-                    ReadInstance(instance, calculationResult);
-                }
+                result.RunError = new ErrorDetail {Message = "The supplied path does not exist - ensure you have a tab open within the project you want to read." };
+                return result;
             }
-            catch (Exception ex)
+
+            var dotnetBuild = new DotnetBuild();
+            var buildResult = dotnetBuild.Run(RootPath);
+            
+            if (buildResult.ExitCode != 0)
             {
                 result.RunError = new ErrorDetail
                 {
-                    Message = ex.Message, 
-                    InnerException = ex.InnerException?.Message, 
-                    Source = ex.Source,
-                    StackTrace = ex.StackTrace
+                    Source = "dotnet build",
+                    Message = "Failed to build project - see error detail.", 
+                    InnerException = string.Join(",", buildResult.Output)
                 };
+                return result;
             }
+            
+            var reader = new BinariesAssemblyReader(BinariesPath);
+            var assembly = reader.GetAssembly();
 
-            return result;
+            foreach (var calculation in assembly.GetCalculationTypes())
+            {
+                if (calculation.FullName == null)
+                    continue;
+
+                var calculationResult = new CalculationResult();
+                var instance = (CalculationBase)assembly.CreateInstance(calculation.FullName);
+
+                instance?.LoadIoCollections();
+                ReadInstance(instance, calculationResult);
+            }
         }
+        catch (Exception ex)
+        {
+            result.RunError = new ErrorDetail
+            {
+                Message = ex.Message, 
+                InnerException = ex.InnerException?.Message, 
+                Source = ex.Source,
+                StackTrace = ex.StackTrace
+            };
+        }
+
+        return result;
     }
 }

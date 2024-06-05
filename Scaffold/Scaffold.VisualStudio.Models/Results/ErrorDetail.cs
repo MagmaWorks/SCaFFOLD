@@ -1,4 +1,4 @@
-﻿namespace Scaffold.VisualStudio.Models;
+﻿namespace Scaffold.VisualStudio.Models.Results;
 
 public class ErrorDetail
 {

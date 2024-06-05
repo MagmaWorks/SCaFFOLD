@@ -7,9 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Scaffold.VisualStudio.Models;assembly=Scaffold.VisualStudio.Models"
-    xmlns:window="clr-namespace:Scaffold.VisualStudio.AddIn.Window"
+    xmlns:xaml="clr-namespace:Scaffold.VisualStudio.Models.Xaml;assembly=Scaffold.VisualStudio.Models"
     mc:Ignorable="d">
-    <Grid Margin="10" d:DataContext="{d:DesignInstance window:MainWindowViewModel}">
+    <Grid Margin="10" d:DataContext="{d:DesignInstance xaml:MainWindowViewModel}">
         <Grid.Resources>
             <Style BasedOn="{StaticResource {x:Static styles:VsResourceKeys.ThemedDialogLabelStyleKey}}" TargetType="Label" />
             <Style BasedOn="{StaticResource {x:Static styles:VsResourceKeys.TextBoxStyleKey}}" TargetType="TextBox" />

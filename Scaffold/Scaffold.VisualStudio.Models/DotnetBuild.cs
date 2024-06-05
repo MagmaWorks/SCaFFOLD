@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Scaffold.VisualStudio.Models.Results;
 
 namespace Scaffold.VisualStudio.Models;
 

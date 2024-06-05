@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace Scaffold.VisualStudio.Models;
+namespace Scaffold.VisualStudio.Models.Scaffold;
 
 // TODO: Images
 public class DisplayFormula : INotifyPropertyChanged
@@ -15,13 +15,13 @@ public class DisplayFormula : INotifyPropertyChanged
         ExpressionVisibility = Expressions is { Count: 0 }
             ? Visibility.Collapsed : Visibility.Visible;
     }
-    
+
     public DisplayFormula(string expression) : this([expression]) { }
 
     public List<string> Expressions { get; }
     public string Ref { get; set; }
     public string Narrative { get; set; }
-    public string Conclusion { get; set; } 
+    public string Conclusion { get; set; }
     public string Status { get; set; }
 
     public Visibility ExpressionVisibility
@@ -29,7 +29,7 @@ public class DisplayFormula : INotifyPropertyChanged
         get => _expressionVisibility;
         set => SetField(ref _expressionVisibility, value);
     }
-    
+
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

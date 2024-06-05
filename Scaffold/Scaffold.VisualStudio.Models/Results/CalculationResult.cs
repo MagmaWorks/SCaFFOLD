@@ -1,4 +1,6 @@
-﻿namespace Scaffold.VisualStudio.Models;
+﻿using Scaffold.VisualStudio.Models.Scaffold;
+
+namespace Scaffold.VisualStudio.Models.Results;
 
 public class CalculationResult
 {

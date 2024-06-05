@@ -1,4 +1,4 @@
-﻿namespace Scaffold.VisualStudio.Models;
+﻿namespace Scaffold.VisualStudio.Models.Scaffold;
 
 public class CalcValueDetail
 {
