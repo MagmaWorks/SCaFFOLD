@@ -7,5 +7,5 @@ public class CalculationDetail
     public string Status { get; set; }
     public List<CalcValueDetail> Inputs { get; set; }
     public List<CalcValueDetail> Outputs { get; set; }
-    public List<DisplayFormula> Formulae { get; set; }
+    public List<IFormula> Formulae { get; set; }
 }

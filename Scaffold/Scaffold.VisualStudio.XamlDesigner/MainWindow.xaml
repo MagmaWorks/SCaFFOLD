@@ -1,8 +1,22 @@
-﻿<!--
-    The XAML designer is not properly supported with VS Extensibility and Hot Reload does not work
+﻿<!--The XAML designer is not properly supported with VS Extensibility and Hot Reload does not work
     with the XAML designer. Therefore, we have to use the XAML designer in a separate project.
--->
+
+    Copy everything inside the grid where [Copy from here] exists over to the VS AddIn project when you are done with the design,
+    except for Grid.Resources which differ between presentations.
+    For images, download the Visual Studio Image Library and add each image you want to the Images sub-folder for the XAML project only
+    - set them as 'Resource'
+    - Add them as normal <Image /> definitions
+    - Add the 'Tag' property to the image, with its value being the known moniker for the image in VS.
+
+    When the add-in loads, it will replace the <Image /> definitions with Visual Studio CrispImages (CrispImage did not work in standard WPF in my testing, hence the change).
+
+    Further notes:
+    - code-behind in this project is used to simulate events that would be triggered by the VS AddIn
+    - Window background and button background chosen to illustrate that it is not XAML default - in the VS AddIn project, the user's theme will be used.
+    - Many conventions from WPF do not work in the AddIn project (converters etc.), pretty much everything must be done in the ViewModel.
+    - Rather than getting styles attached to target types, the styles are set directly on the controls to ensure they apply properly in both contexts.-->
 <Window
+    Background="#efefef"
     Height="600"
     Title="MainWindow"
     Width="410"
@@ -13,79 +27,124 @@
     xmlns:maths="clr-namespace:WpfMath.Controls;assembly=WpfMath"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:xaml="clr-namespace:Scaffold.VisualStudio.Models.Xaml;assembly=Scaffold.VisualStudio.Models"
-    xmlns:styles="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+    xmlns:xaml="clr-namespace:Scaffold.VisualStudio.Models.Xaml;assembly=Scaffold.VisualStudio.Models.Xaml">
     <Window.DataContext>
         <xaml:MainWindowViewModel />
     </Window.DataContext>
 
     <Grid>
+        <!--  Note: Styles here differ from the VS AddIn project. Do not overwrite the VS AddIn styles  -->
+        <Grid.Resources>
+            <Style TargetType="Label" x:Key="LabelStyle">
+                <Setter Property="Foreground" Value="Black" />
+            </Style>
+            <Style TargetType="Button" x:Key="ButtonStyle">
+                <Setter Property="Background" Value="LightSkyBlue" />
+            </Style>
+            <Style TargetType="TextBlock" x:Key="TextBlockStyle">
+                <Setter Property="Foreground" Value="Black" />
+            </Style>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
-            <Button Name="SimulateOpenTab" Click="OpenTab_Click">Simulate tab opened</Button>
+        <StackPanel
+            Grid.Row="0"
+            Margin="10"
+            Orientation="Vertical">
+            <Button
+                Click="OpenTab_Click"
+                Name="SimulateOpenTab"
+                Style="{StaticResource ButtonStyle}">
+                Simulate tab opened
+            </Button>
 
-            <Button Name="SimulateFileSaved" Click="FileSaved_Click" Margin="0,10,0,0" Visibility="Collapsed">Simulate file saved</Button>
+            <Button
+                Click="FileSaved_Click"
+                Margin="0,10,0,0"
+                Name="SimulateFileSaved"
+                Style="{StaticResource ButtonStyle}"
+                Visibility="Collapsed">
+                Simulate file saved
+            </Button>
         </StackPanel>
 
         <StackPanel Grid.Row="1">
             <Grid Margin="10" d:DataContext="{d:DesignInstance xaml:MainWindowViewModel}">
-
-
+                <!--  [Copy from here]  -->
                 <StackPanel Orientation="Vertical" Visibility="{Binding OnLoadVisibility}">
                     <StackPanel Orientation="Horizontal">
-                        <!--<imaging:CrispImage Width="24" Height="24" Moniker="{x:Static catalog:KnownMonikers.FileSystemWatcher}" />-->
+                        <Image
+                            Height="24"
+                            Source="../Images/FileSystemWatcher.png"
+                            Tag="KnownMonikers.FileSystemWatcher"
+                            Width="24" />
 
-                        <Label FontSize="14" Margin="10,0,0,0">Watch for changes</Label>
+                        <Label
+                            FontSize="14"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource LabelStyle}">
+                            Watch for changes
+                        </Label>
                     </StackPanel>
 
                     <DockPanel Margin="0,15,0,0">
-                        <TextBlock TextWrapping="WrapWithOverflow">
-                Starting the watcher will run all calculations
-                in the watched project until it is stopped.
-                It will provide instant feedback on inputs,
-                outputs and formulae.
+                        <TextBlock Style="{StaticResource TextBlockStyle}" TextWrapping="WrapWithOverflow">
+                            Starting the watcher will run all calculations
+                            in the watched project until it is stopped.
+                            It will provide instant feedback on inputs,
+                            outputs and formulae.
                         </TextBlock>
                     </DockPanel>
 
                     <StackPanel
-            HorizontalAlignment="Center"
-            Margin="0,40,0,0"
-            Orientation="Horizontal"
-            Visibility="{Binding WaitingForTabVisibility}">
-                        <!--<imaging:CrispImage Width="24" Height="24" Moniker="{x:Static catalog:KnownMonikers.StatusWarningOutline}" />-->
-
-                        <Label>Waiting for a tab to open...</Label>
+                        HorizontalAlignment="Center"
+                        Margin="0,40,0,0"
+                        Orientation="Horizontal"
+                        Visibility="{Binding WaitingForTabVisibility}">
+                        <Image
+                            Height="24"
+                            Source="../Images/StatusWarningOutline.png"
+                            Tag="KnownMonikers.StatusWarningOutline"
+                            Width="24" />
+                        <Label Style="{StaticResource LabelStyle}">Waiting for a tab to open...</Label>
                     </StackPanel>
 
                     <StackPanel
-            HorizontalAlignment="Center"
-            Margin="0,40,0,0"
-            Orientation="Vertical"
-            Visibility="{Binding HasActiveProjectVisibility}">
+                        HorizontalAlignment="Center"
+                        Margin="0,40,0,0"
+                        Orientation="Vertical"
+                        Visibility="{Binding HasActiveProjectVisibility}">
                         <Button
-                BorderThickness="0"
-                Margin="10,0,0,0"
-                Padding="10" Name="StartWatcherButton"
-                Command="{Binding StartWatcherCommand}">
-                            <!--<imaging:CrispImage Width="32" Height="32" Moniker="{x:Static catalog:KnownMonikers.Play}" />-->
+                            BorderThickness="0"
+                            Command="{Binding StartWatcherCommand}"
+                            Margin="10,0,0,0"
+                            Name="StartWatcherButton"
+                            Padding="10"
+                            Style="{StaticResource ButtonStyle}">
+                            <Image
+                                Height="32"
+                                Source="../Images/Play.png"
+                                Tag="KnownMonikers.Play"
+                                Width="32" />
                         </Button>
 
                         <TextBlock
-                HorizontalAlignment="Center"
-                Margin="10,5,0,0"
-                Text="{Binding ActiveProjectPath}"
-                TextWrapping="Wrap" />
+                            HorizontalAlignment="Center"
+                            Margin="10,5,0,0"
+                            Style="{StaticResource TextBlockStyle}"
+                            Text="{Binding ActiveProjectPath}"
+                            TextWrapping="Wrap" />
                     </StackPanel>
                 </StackPanel>
 
                 <Grid Visibility="{Binding IsWatchingVisibility}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="500" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -93,148 +152,252 @@
                         <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
-                    <!--<imaging:CrispImage Width="24" Height="24" Moniker="{x:Static catalog:KnownMonikers.Watch}" />-->
+                    <Image
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Height="24"
+                        Source="../Images/Watch.png"
+                        Tag="KnownMonikers.Watch"
+                        Width="24" />
 
                     <Label
-            FontSize="14"
-            Grid.Column="1"
-            Grid.Row="0"
-            Margin="10,5,0,0">
+                        FontSize="14"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="10,5,0,0"
+                        Style="{StaticResource LabelStyle}">
                         Watching
                     </Label>
 
                     <Button
+                        Command="{Binding StopWatcherCommand}"
+                        Grid.Column="2"
+                        Grid.Row="0"
+                        Height="32"
+                        Margin="0,0,0,0"
                         Name="StopWatcherButton"
-            Grid.Column="2"
-            Grid.Row="0"
-            Height="32"
-            Margin="0,0,0,0"
-            Width="32"
-            Command="{Binding StopWatcherCommand}">
-                        <!--<imaging:CrispImage Width="24" Height="24" Moniker="{x:Static catalog:KnownMonikers.Stop}" VerticalAlignment="Center" HorizontalAlignment="Center" />-->
+                        Style="{StaticResource ButtonStyle}"
+                        Width="32">
+                        <Image
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Source="../Images/Stop.png"
+                            Tag="KnownMonikers.Stop"
+                            VerticalAlignment="Center"
+                            Width="24" />
                     </Button>
 
-                    <TreeView
-            BorderThickness="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Grid.Row="1"
-            ItemsSource="{Binding Watching}"
-            Margin="-10,20,0,0">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate DataType="{x:Type xaml:TreeItem}">
-                                <TreeViewItem IsExpanded="{Binding IsExpanded}" Margin="0,0,0,10">
-                                    <TreeViewItem.Header>
-                                        <DockPanel>
-                                            <!--<imaging:CrispImage DockPanel.Dock="Left"
-                                                    Height="16"
-                                                    Width="16"
-                                                    Moniker="{x:Static catalog:KnownMonikers.StatusOK}"
-                                                    Visibility="{Binding IsSuccessVisibility}"/>
+                    <ItemsControl
+                        BorderThickness="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Grid.Row="1" x:Name="WatchingControl"
+                        ItemsSource="{Binding Watching}"
+                        Margin="10">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type xaml:TreeItem}">
+                                <DockPanel>
+                                    <DockPanel
+                                        DockPanel.Dock="Top"
+                                        Margin="0,0,0,10"
+                                        Visibility="{Binding IsFailedVisibility}">
 
-                                            <imaging:CrispImage DockPanel.Dock="Left"
-                                                    Height="16"
-                                                    Width="16"
-                                                    Moniker="{x:Static catalog:KnownMonikers.StatusInvalid}"
-                                                    Visibility="{Binding IsFailedVisibility}"/>-->
+                                        <StackPanel DockPanel.Dock="Top">
+                                            <Image
+                                                DockPanel.Dock="Left"
+                                                Height="16"
+                                                Source="../Images/StatusInvalid.png"
+                                                Tag="KnownMonikers.StatusInvalid"
+                                                Visibility="{Binding IsFailedVisibility}"
+                                                Width="16" />
+
                                             <TextBlock
-                                    DockPanel.Dock="Left"
-                                    FontSize="14"
-                                    Margin="10,4,0,5"
-                                    Text="{Binding Name}" />
-                                        </DockPanel>
-                                    </TreeViewItem.Header>
-
-                                    <StackPanel
-                            Margin="15,0,0,0"
-                            Orientation="Vertical"
-                            Visibility="{Binding IsSuccessVisibility}">
-                                        <TextBlock
-                                FontWeight="Bold"
-                                Margin="0,0,0,5"
-                                Text="Inputs" />
-                                        <ItemsControl ItemsSource="{Binding Result.CalculationDetail.Inputs}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
-                                                        <!--  <maths:FormulaControl  -->
-                                                        <!--  Formula="{Binding Symbol}"  -->
-                                                        <!--  Margin="0,4,10,0"  -->
-                                                        <!--  Scale="15" />  -->
-                                                        <TextBlock
-                                                Text="{Binding DisplayName}"
-                                                TextWrapping="Wrap"
-                                                Width="125" />
-                                                        <TextBlock Text="{Binding Value}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                                FontSize="14"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding Name}" />
+                                        </StackPanel>
 
                                         <TextBlock
-                                FontWeight="Bold"
-                                Margin="0,20,0,5"
-                                Text="Outputs" />
-                                        <ItemsControl ItemsSource="{Binding Result.CalculationDetail.Outputs}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
-                                                        <TextBlock
-                                                Text="{Binding DisplayName}"
-                                                TextWrapping="Wrap"
-                                                Width="125" />
-                                                        <TextBlock Text="{Binding Value}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                            DockPanel.Dock="Top"
+                                            Style="{StaticResource TextBlockStyle}"
+                                            Text="{Binding Error.Source}"
+                                            TextWrapping="Wrap" />
 
                                         <TextBlock
-                                FontWeight="Bold"
-                                Margin="0,20,0,5"
-                                Text="Formulae" />
+                                            DockPanel.Dock="Top"
+                                            Style="{StaticResource TextBlockStyle}"
+                                            Text="{Binding Error.Message}"
+                                            TextWrapping="Wrap" />
 
-                                        <ItemsControl ItemsSource="{Binding Result.CalculationDetail.Formulae}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,0,0,25" Orientation="Vertical">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock
+                                        <TextBlock
+                                            DockPanel.Dock="Top"
+                                            Style="{StaticResource TextBlockStyle}"
+                                            Text="{Binding Error.InnerException}"
+                                            TextWrapping="Wrap" />
+                                    </DockPanel>
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+
+                                        <Button Grid.Row="0" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" 
+                                                Command="{Binding ChangeTreeItemExpansionCommand}" CommandParameter="{Binding}" Click="TreeItem_Clicked">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="32"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="32"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Image
+                                                    Height="24" Grid.Column="0"
+                                                    Source="../Images/Collapse.png"
+                                                    Tag="KnownMonikers.Collapse"
+                                                    VerticalAlignment="Top"
+                                                    Visibility="{Binding IsExpandedVisibility}"
+                                                    Width="24" />
+
+                                                <Image
+                                                    Height="24" Grid.Column="0"
+                                                    Source="../Images/Expand.png"
+                                                    Tag="KnownMonikers.Expand"
+                                                    VerticalAlignment="Top"
+                                                    Visibility="{Binding IsCollapsedVisibility}"
+                                                    Width="24" />
+
+                                                <Image
+                                                    Height="20" Grid.Column="2"
+                                                    Source="../Images/StatusOK.png"
+                                                    Tag="KnownMonikers.StatusOK"
+                                                    VerticalAlignment="Center"
+                                                    Visibility="{Binding IsSuccessVisibility}"
+                                                    Width="20" />
+
+                                                <Image
+                                                    Height="20" Grid.Column="2"
+                                                    Source="../Images/StatusInvalid.png"
+                                                    Tag="KnownMonikers.StatusInvalid"
+                                                    VerticalAlignment="Center"
+                                                    Visibility="{Binding IsFailedVisibility}"
+                                                    Width="20" />
+
+                                                <TextBlock Grid.Column="1"
+                                                           FontSize="14" 
+                                                           Margin="10,0,0,5"
+                                                           Style="{StaticResource TextBlockStyle}"
+                                                           Text="{Binding Name}" />
+                                            </Grid>
+                                        </Button>
+
+                                        <DockPanel
+                                            Grid.Row="1"
+                                            Margin="15,0,0,0"
+                                            Visibility="{Binding IsExpandedVisibility}">
+                                            <DockPanel Visibility="{Binding IsSuccessVisibility}">
+                                                <TextBlock
+                                                    DockPanel.Dock="Top"
                                                     FontWeight="Bold"
-                                                    Text="Ref."
-                                                    Width="30" />
-                                                            <TextBlock Text="{Binding Ref}" TextWrapping="Wrap" />
-                                                        </StackPanel>
+                                                    Margin="0,0,0,5"
+                                                    Style="{StaticResource TextBlockStyle}"
+                                                    Text="Inputs" />
+                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Inputs}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
 
-                                                        <TextBlock
-                                                FontWeight="Bold"
-                                                Margin="0,10,0,5"
-                                                Text="Narrative" />
-                                                        <TextBlock Text="{Binding Narrative}" TextWrapping="Wrap" />
+                                                                <!--  <maths:FormulaControl  -->
+                                                                <!--  Formula="{Binding Symbol}"  -->
+                                                                <!--  Margin="0,4,10,0"  -->
+                                                                <!--  Scale="15" />  -->
 
-                                                        <!--  <ItemsControl  -->
-                                                        <!--  ItemsSource="{Binding Expressions}"  -->
-                                                        <!--  Margin="0,20,0,0"  -->
-                                                        <!--  Visibility="{Binding ExpressionVisibility}">  -->
-                                                        <!--     <ItemsControl.ItemTemplate> -->
-                                                        <!--         <DataTemplate> -->
-                                                        <!--             <maths:FormulaControl Formula="{Binding}" Scale="20" /> -->
-                                                        <!--         </DataTemplate> -->
-                                                        <!--     </ItemsControl.ItemTemplate> -->
-                                                        <!-- </ItemsControl> -->
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
+                                                                <TextBlock
+                                                                    Style="{StaticResource TextBlockStyle}"
+                                                                    Text="{Binding DisplayName}"
+                                                                    TextWrapping="Wrap"
+                                                                    Width="125" />
+                                                                <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
 
-                                    <StackPanel Orientation="Vertical" Visibility="{Binding IsFailedVisibility}">
-                                        <TextBlock Text="{Binding Result.Failure.Message}" />
-                                    </StackPanel>
-                                </TreeViewItem>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
+                                                <TextBlock
+                                                    DockPanel.Dock="Top"
+                                                    FontWeight="Bold"
+                                                    Margin="0,20,0,5"
+                                                    Style="{StaticResource TextBlockStyle}"
+                                                    Text="Outputs" />
+                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Outputs}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Style="{StaticResource TextBlockStyle}"
+                                                                    Text="{Binding DisplayName}"
+                                                                    TextWrapping="Wrap"
+                                                                    Width="125" />
+                                                                <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <TextBlock
+                                                    DockPanel.Dock="Top"
+                                                    FontWeight="Bold"
+                                                    Margin="0,20,0,5"
+                                                    Style="{StaticResource TextBlockStyle}"
+                                                    Text="Formulae" />
+
+                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Formulae}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="10,0,0,25" Orientation="Vertical">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock
+                                                                        FontWeight="Bold"
+                                                                        Style="{StaticResource TextBlockStyle}"
+                                                                        Text="Ref."
+                                                                        Width="30" />
+                                                                    <TextBlock
+                                                                        Style="{StaticResource TextBlockStyle}"
+                                                                        Text="{Binding Ref}"
+                                                                        TextWrapping="Wrap" />
+                                                                </StackPanel>
+
+                                                                <TextBlock
+                                                                    FontWeight="Bold"
+                                                                    Margin="0,10,0,5"
+                                                                    Style="{StaticResource TextBlockStyle}"
+                                                                    Text="Narrative" />
+                                                                <TextBlock
+                                                                    Style="{StaticResource TextBlockStyle}"
+                                                                    Text="{Binding Narrative}"
+                                                                    TextWrapping="Wrap" />
+
+                                                                <!--  <ItemsControl  -->
+                                                                <!--  ItemsSource="{Binding Expressions}"  -->
+                                                                <!--  Margin="0,20,0,0"  -->
+                                                                <!--  Visibility="{Binding ExpressionVisibility}">  -->
+                                                                <!--     <ItemsControl.ItemTemplate> -->
+                                                                <!--         <DataTemplate> -->
+                                                                <!--             <maths:FormulaControl Formula="{Binding}" Scale="20" /> -->
+                                                                <!--         </DataTemplate> -->
+                                                                <!--     </ItemsControl.ItemTemplate> -->
+                                                                <!-- </ItemsControl> -->
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </DockPanel>
+                                        </DockPanel>
+                                    </Grid>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </Grid>
         </StackPanel>

@@ -18,7 +18,7 @@ public class DotnetBuild
                 FileName = "dotnet",
                 Arguments = "build --no-restore",
                 RedirectStandardOutput = true,
-                CreateNoWindow = false,
+                CreateNoWindow = true,
                 WorkingDirectory = workingDirectory
             }
         };

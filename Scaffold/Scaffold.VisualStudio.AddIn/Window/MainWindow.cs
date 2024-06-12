@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.ToolWindows;
-using Microsoft.VisualStudio.Extensibility.UI;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 using Microsoft.VisualStudio.RpcContracts.RemoteUI;
-using Scaffold.VisualStudio.Models.Xaml;
 
 namespace Scaffold.VisualStudio.AddIn.Window;
 

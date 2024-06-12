@@ -3,19 +3,20 @@ using System.Runtime.Loader;
 
 namespace Scaffold.VisualStudio.Calculator;
 
-public class BinariesAssemblyReader(string binariesFolder)
+public class BinariesAssemblyReader(string binariesFolder, string packageName)
 {
     private string BinariesFolder { get; } = binariesFolder;
+    private string PackageName { get; } = packageName;
 
     public Assembly GetAssembly()
     {
-        if (Directory.Exists(binariesFolder) == false)
+        if (Directory.Exists(BinariesFolder) == false)
             return null;
 
         var context = new AssemblyLoadContext(null, true);
         Assembly primary = null;
 
-        foreach (var file in Directory.GetFiles(binariesFolder))
+        foreach (var file in Directory.GetFiles(BinariesFolder))
         {
             var fullFilePath = file;
 
@@ -35,23 +36,14 @@ public class BinariesAssemblyReader(string binariesFolder)
             {
                 var loadedAssembly = context.LoadFromStream(memoryStream);
 
-                if (primary == null
-                    && fullFilePath.Contains("VsTesting.dll"))
-                {
+                if (primary == null && fullFilePath.EndsWith(PackageName))
                     primary = loadedAssembly;
-                }
-            }
-            catch (Exception ex)
-            {
-                ;
-                throw;
             }
             finally
             {
                 memoryStream.Dispose();
                 stream.Dispose();
             }
-
         }
 
         return primary;

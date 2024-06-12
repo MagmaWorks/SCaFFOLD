@@ -6,7 +6,8 @@ public static class ExtensionMethods
 {
     public static List<Type> GetCalculationTypes(this Assembly assembly)
     {
-        var matchingTypes = assembly.GetTypes().Where(x => x.GetInterface("Scaffold.Core.Interfaces.ICalculation") != null);
+        var types = assembly.GetTypes();
+        var matchingTypes = types.Where(x => x.GetInterface("Scaffold.Core.Interfaces.ICalculation") != null);
         return matchingTypes.ToList();
     }
 }

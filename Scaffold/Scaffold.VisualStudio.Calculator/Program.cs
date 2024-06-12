@@ -10,20 +10,34 @@ namespace Scaffold.VisualStudio.Calculator;
 
 internal static class Program
 {
-    private static string RootPath { get; set; }
-    private static string BinariesPath { get; set; }
+    private static ProjectDetails ProjectDetails { get; set; }
         
     private static void Main(string[] args)
     {
-        if (args.Length != 2)
-            throw new ArgumentException(
-                "Project root and assembly (bin) root are required parameters.");
+        var result = new CalculationAssemblyResult {Results = [] };
 
-        RootPath = args[0];
-        BinariesPath = args[1];
-            
-        var result = ReadCalculations();
+        if (ArgumentsAreValid(args, result))
+            ReadCalculations(result);
+        
         Console.Write(JsonSerializer.Serialize(result));
+    }
+
+    private static bool ArgumentsAreValid(string[] args, CalculationAssemblyResult result)
+    {
+        if (args.Length != 1)
+            throw new ArgumentException("Project details model must be passed to the calculator.");
+
+        try
+        {
+            ProjectDetails = JsonSerializer.Deserialize<ProjectDetails>(args[0]);
+        }
+        catch (Exception ex)
+        {
+            AssignRunErrorFromException(result, ex);
+            return false;
+        }
+        
+        return true;
     }
         
     private static void ReadInstance(CalculationBase instance, CalculationResult result)
@@ -54,67 +68,91 @@ internal static class Program
         }).ToList();
         
 
-    private static List<DisplayFormula> WriteDisplayFormulae(IEnumerable<Formula> formulae)
-        => formulae.Select(formula => new DisplayFormula(formula.Expression)
-        {
-            Ref = formula.Ref, 
-            Narrative = formula.Narrative, 
-            Conclusion = formula.Conclusion, 
-            Status = formula.Status.ToString()
-        }).ToList();
-        
-    private static CalculationAssemblyResult ReadCalculations()
+    private static List<IFormula> WriteDisplayFormulae(IEnumerable<Formula> formulae)
     {
-        var result = new CalculationAssemblyResult {Results = [] };
+        var list = new List<IFormula>();
+        foreach (var formula in formulae)
+        {
+            list.Add(new FormulaDetail
+            {
+                Ref = formula.Ref,
+                Narrative = formula.Narrative,
+                Conclusion = formula.Conclusion,
+                Status = formula.Status.ToString(),
+                Expressions = formula.Expression
+            });
+        }
 
+        return list;
+    }
+
+    private static void AssignRunErrorFromException(CalculationAssemblyResult result, Exception ex)
+    {
+        result.RunError = new ErrorDetail
+        {
+            Message = ex.Message, 
+            InnerException = ex.InnerException?.Message, 
+            Source = ex.Source,
+            StackTrace = ex.StackTrace
+        };
+    }
+    
+    private static void ReadCalculations(CalculationAssemblyResult assemblyResult)
+    {
         try
         {
-            if (Directory.Exists(RootPath) == false)
+            if (Directory.Exists(ProjectDetails.ProjectFilePath) == false)
             {
-                result.RunError = new ErrorDetail {Message = "The supplied path does not exist - ensure you have a tab open within the project you want to read." };
-                return result;
+                assemblyResult.RunError = new ErrorDetail {Message = "The supplied path does not exist - ensure you have a tab open within the project you want to read." };
+                return;
             }
 
-            var dotnetBuild = new DotnetBuild();
-            var buildResult = dotnetBuild.Run(RootPath);
+            // var dotnetBuild = new DotnetBuild();
+            // var buildResult = dotnetBuild.Run(ProjectDetails.ProjectFilePath);
+            //
+            // if (buildResult.ExitCode != 0)
+            // {
+            //     assemblyResult.RunError = new ErrorDetail
+            //     {
+            //         Source = "dotnet build",
+            //         Message = "Failed to build project - see error detail.", 
+            //         InnerException = string.Join(",", buildResult.Output)
+            //     };
+            //     return;
+            // }
             
-            if (buildResult.ExitCode != 0)
-            {
-                result.RunError = new ErrorDetail
-                {
-                    Source = "dotnet build",
-                    Message = "Failed to build project - see error detail.", 
-                    InnerException = string.Join(",", buildResult.Output)
-                };
-                return result;
-            }
-            
-            var reader = new BinariesAssemblyReader(BinariesPath);
+            var reader = new BinariesAssemblyReader(ProjectDetails.BinariesPath(), ProjectDetails.PackageName());
             var assembly = reader.GetAssembly();
 
+            if (assembly == null)
+            {
+                assemblyResult.RunError = new ErrorDetail
+                {
+                    Source = "Assembly reader", 
+                    Message = "Failed to load assembly", 
+                    InnerException = ProjectDetails.AssemblyPath()
+                };
+                
+                return;
+            }
+            
             foreach (var calculation in assembly.GetCalculationTypes())
             {
                 if (calculation.FullName == null)
                     continue;
-
+            
                 var calculationResult = new CalculationResult();
                 var instance = (CalculationBase)assembly.CreateInstance(calculation.FullName);
-
+            
                 instance?.LoadIoCollections();
                 ReadInstance(instance, calculationResult);
+
+                assemblyResult.Results.Add(calculationResult);
             }
         }
         catch (Exception ex)
         {
-            result.RunError = new ErrorDetail
-            {
-                Message = ex.Message, 
-                InnerException = ex.InnerException?.Message, 
-                Source = ex.Source,
-                StackTrace = ex.StackTrace
-            };
+            AssignRunErrorFromException(assemblyResult, ex);
         }
-
-        return result;
     }
 }

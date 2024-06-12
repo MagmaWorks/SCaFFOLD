@@ -1,0 +1,117 @@
+﻿using System.Runtime.Serialization;
+using System.Windows;
+using Microsoft.VisualStudio.Extensibility.UI;
+using Scaffold.VisualStudio.Models.Results;
+using Scaffold.VisualStudio.Models.Scaffold;
+
+namespace Scaffold.VisualStudio.Models.Xaml;
+
+[DataContract]
+public class TreeItem : NotifyPropertyChangedObject
+{
+    private Visibility _isSuccessVisibility;
+    private Visibility _isFailedVisibility;
+    private Visibility _isExpandedVisibility;
+    private Visibility _isCollapsedVisibility;
+    private bool _isExpanded;
+    private string _name;
+
+    private TreeItem()
+    {
+        ChangeTreeItemExpansionCommand = new AsyncCommand((_, _, _) =>
+        {
+            IsExpanded = !IsExpanded;
+            return Task.CompletedTask;
+        });
+    }
+
+    public TreeItem(CalculationResult result) : this()
+    {
+        Name = result.IsSuccess ? result.CalculationDetail.Title : result.Failure.Source ?? "Unhandled exception";
+        IsSuccessVisibility = result.IsSuccess ? Visibility.Visible : Visibility.Collapsed;
+        IsFailedVisibility = result.IsSuccess ? Visibility.Collapsed : Visibility.Visible;
+        IsExpanded = false;
+
+        SetLists(result);
+    }
+
+    public TreeItem(ErrorDetail error) : this()
+    {
+        Name = "Run failed";
+        Error = error;
+        IsSuccessVisibility = Visibility.Collapsed;
+        IsFailedVisibility = Visibility.Visible;
+        IsExpanded = true;
+    }
+
+    [DataMember] public ObservableList<CalcValueDetail> Inputs { get; } = [];
+    [DataMember] public ObservableList<CalcValueDetail> Outputs { get; } = [];
+    [DataMember] public ObservableList<DisplayFormula> Formulae { get; } = [];
+    [DataMember] public ErrorDetail Error { get; }
+    [DataMember] public AsyncCommand ChangeTreeItemExpansionCommand { get; set; }
+
+    [DataMember]
+    public Visibility IsSuccessVisibility
+    {
+        get => _isSuccessVisibility;
+        set => SetProperty(ref _isSuccessVisibility, value);
+    }
+
+    [DataMember]
+    public Visibility IsFailedVisibility
+    {
+        get => _isFailedVisibility;
+        set => SetProperty(ref _isFailedVisibility, value);
+    }
+
+    [DataMember]
+    public Visibility IsExpandedVisibility
+    {
+        get => _isExpandedVisibility;
+        set => SetProperty(ref _isExpandedVisibility, value);
+    }
+
+    [DataMember]
+    public Visibility IsCollapsedVisibility
+    {
+        get => _isCollapsedVisibility;
+        set => SetProperty(ref _isCollapsedVisibility, value);
+    }
+
+    [DataMember]
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            SetProperty(ref _isExpanded, value);
+            IsExpandedVisibility = _isExpanded ? Visibility.Visible : Visibility.Collapsed;
+            IsCollapsedVisibility = _isExpanded ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
+    [DataMember]
+    public string Name
+    {
+        get => _name;
+        set => SetProperty(ref _name, value);
+    }
+
+    private void SetLists(CalculationResult result)
+    {
+        foreach (var input in result.CalculationDetail.Inputs)
+            Inputs.Add(input);
+
+        foreach (var output in result.CalculationDetail.Outputs)
+            Outputs.Add(output);
+
+        foreach (var formula in result.CalculationDetail.Formulae)
+            Formulae.Add(new DisplayFormula(formula.Expressions)
+            {
+                Ref = formula.Ref,
+                Narrative = formula.Narrative,
+                Status = formula.Status,
+                Conclusion = formula.Conclusion
+            });
+    }
+}

@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Microsoft.VisualStudio.Core.Imaging;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 using Scaffold.VisualStudio.Models.Xaml;
 
@@ -23,6 +30,9 @@ public partial class MainWindow : Window
         StartWatcherButton.Click += StartWatcher_Click;
         StopWatcherButton.Click += StopWatcher_Click;
         DataContext = ViewModel;
+        
+        OpenTab_Click(null, null);
+        StartWatcher_Click(null, null);
     }
 
     private async void OpenTab_Click(object sender, RoutedEventArgs e)
@@ -40,9 +50,14 @@ public partial class MainWindow : Window
         await ViewModel.SavedAsync(
             new DocumentEventArgs(
                 new Uri("file:///C:/Users/d.growns/Documents/Repos/ScaffoldForVsTesting/VsTesting/Core/AdditionCalculation.cs?vs-version=2")), CancellationToken.None);
+    }
 
+    private async void TreeItem_Clicked(object sender, RoutedEventArgs e)
+    {
+        var button = (Button)e.Source;
+        var treeItem = (TreeItem)button.DataContext;
 
-
+        await treeItem.ChangeTreeItemExpansionCommand.ExecuteAsync(null, null, CancellationToken.None);
     }
 
     private async void StartWatcher_Click(object sender, RoutedEventArgs e)
@@ -57,5 +72,28 @@ public partial class MainWindow : Window
         await ViewModel.StopWatcherCommand.ExecuteAsync(null, null, CancellationToken.None);
 
         SimulateFileSaved.Visibility = Visibility.Collapsed;
+    }
+
+    public static List<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+    {
+        var list = new List<T>();
+        if (depObj == null) 
+            return list;
+
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+        {
+            var child = VisualTreeHelper.GetChild(depObj, i);
+
+            if (child is T dependencyObject)
+                list.Add(dependencyObject);
+            
+            var childItems = FindVisualChildren<T>(child);
+            if (childItems == null || childItems.Any() == false) 
+                continue;
+
+            list.AddRange(childItems);
+        }
+
+        return list;
     }
 }

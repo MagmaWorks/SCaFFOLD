@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Scaffold.VisualStudio.Models\Scaffold.VisualStudio.Models.csproj" />
+    <ProjectReference Include="..\Scaffold.VisualStudio.Calculator\Scaffold.VisualStudio.Calculator.csproj" />
+    <ProjectReference Include="..\Scaffold.VisualStudio.Models.Xaml\Scaffold.VisualStudio.Models.Xaml.csproj" />
   </ItemGroup>
 </Project>

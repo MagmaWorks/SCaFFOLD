@@ -7,9 +7,15 @@ public class ProjectDetails
     public string AssemblyName { get; set; }
     public string ProjectFilePath { get; set; }
 
+    public string BinariesPath()
+        => $@"{ProjectFilePath}\bin\Debug\{TargetFramework}";
+    
     public string AssemblyPath()
+        => $@"{BinariesPath()}\{PackageName()}";
+    
+    public string PackageName()
     {
         var fileType = IsExecutable ? ".exe" : ".dll";
-        return $@"{ProjectFilePath}\bin\Debug\{TargetFramework}\{AssemblyName}{fileType}";
+        return $"{AssemblyName}{fileType}";
     }
 }

@@ -31,9 +31,9 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     private string LastShownDocumentRead { get; set; }
 
     // TODO: Target save, throw over to the calculator project.
-    // TODO: Match XAML designer to finished code.
     public MainWindowViewModel()
     {
+        Watching = new ObservableList<TreeItem>();
         StartWatcherCommand = new AsyncCommand((_, _, _) =>
         {
             WatcherIsRunning = true;
@@ -74,9 +74,9 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         get => _isWatchingVisibility;
         set => SetProperty(ref _isWatchingVisibility, value);
     }
-        
+
     [DataMember]
-    public List<TreeItem> Watching { get; }
+    public ObservableList<TreeItem> Watching { get; }
 
     [DataMember]
     public string ActiveProjectPath
@@ -224,16 +224,21 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
     public async Task SavedAsync(DocumentEventArgs e, CancellationToken token)
     {
-        var workingDirectory = GetWorkingDirectory();
+        //var workingDirectory = GetWorkingDirectory();
+        var workingDirectory =
+            "c:\\users\\d.growns\\appdata\\local\\microsoft\\visualstudio\\17.0_c412194cexp\\vsextensions\\magma works\\scaffold.visualstudio.addin\\1.0.0.0";
+       //var detailsJson = JsonSerializer.Serialize(ProjectDetails); 
+       var detailsJson =
+           "{\\\"IsExecutable\\\":false,\\\"TargetFramework\\\":\\\"net8.0\\\",\\\"AssemblyName\\\":\\\"VsTesting\\\",\\\"ProjectFilePath\\\":\\\"C:\\\\\\\\Users\\\\\\\\d.growns\\\\\\\\Documents\\\\\\\\Repos\\\\\\\\ScaffoldForVsTesting\\\\\\\\VsTesting\\\"}";
+
         var process = new Process
         {
             StartInfo = new ProcessStartInfo
             {
-                FileName = "Scaffold.VisualStudio.Calculator.exe",
-                Arguments = $"{ProjectDetails.ProjectFilePath} {ProjectDetails.AssemblyName}",
+                FileName = $"{workingDirectory}\\Scaffold.VisualStudio.Calculator.exe",
+                Arguments = detailsJson,
                 RedirectStandardOutput = true,
-                CreateNoWindow = false,
-                WorkingDirectory = workingDirectory
+                CreateNoWindow = false
             }
         };
 
@@ -241,16 +246,22 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
         var jsonString = await process.StandardOutput.ReadToEndAsync(token);
         var fullResult = JsonSerializer.Deserialize<CalculationAssemblyResult>(jsonString);
-            
+
         UpdateWatchingList(fullResult);
     }
-
+    
     private void UpdateWatchingList(CalculationAssemblyResult fullResult)
     {
+        //var dt = DateTime.Now;
         Watching.Clear();
+        //for (var i = 0; i < 5; i++)
+        //{
+        //    Watching.Add(new TreeItem(new ErrorDetail {Source = $"Test {dt:HH:mm:ss zz}", Message = $"Message {i}", InnerException = $"IE {i}"}));
+        //}
 
         if (fullResult.RunError == null)
         {
+
             foreach (var calculationResult in fullResult.Results)
             {
                 Watching.Add(new TreeItem(calculationResult));
@@ -258,7 +269,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         }
         else
         {
-            Watching.Add(new TreeItem(fullResult.RunError));
+            Watching.Add(new TreeItem(fullResult.RunError) { IsExpanded = true });
         }
     }
 
