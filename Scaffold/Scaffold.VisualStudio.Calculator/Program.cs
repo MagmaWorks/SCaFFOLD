@@ -107,20 +107,20 @@ internal static class Program
                 return;
             }
 
-            // var dotnetBuild = new DotnetBuild();
-            // var buildResult = dotnetBuild.Run(ProjectDetails.ProjectFilePath);
-            //
-            // if (buildResult.ExitCode != 0)
-            // {
-            //     assemblyResult.RunError = new ErrorDetail
-            //     {
-            //         Source = "dotnet build",
-            //         Message = "Failed to build project - see error detail.", 
-            //         InnerException = string.Join(",", buildResult.Output)
-            //     };
-            //     return;
-            // }
-            
+            var dotnetBuild = new DotnetBuild();
+            var buildResult = dotnetBuild.Run(ProjectDetails.ProjectFilePath);
+
+            if (buildResult.ExitCode != 0)
+            {
+                assemblyResult.RunError = new ErrorDetail
+                {
+                    Source = "dotnet build",
+                    Message = "Failed to build project - see error detail.",
+                    InnerException = string.Join(",", buildResult.Output)
+                };
+                return;
+            }
+
             var reader = new BinariesAssemblyReader(ProjectDetails.BinariesPath(), ProjectDetails.PackageName());
             var assembly = reader.GetAssembly();
 
@@ -141,7 +141,7 @@ internal static class Program
                 if (calculation.FullName == null)
                     continue;
             
-                var calculationResult = new CalculationResult();
+                var calculationResult = new CalculationResult {AssemblyQualifiedTypeName = calculation.FullName};
                 var instance = (CalculationBase)assembly.CreateInstance(calculation.FullName);
             
                 instance?.LoadIoCollections();

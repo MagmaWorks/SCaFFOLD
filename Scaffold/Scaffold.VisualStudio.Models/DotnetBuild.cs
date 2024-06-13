@@ -16,7 +16,7 @@ public class DotnetBuild
             StartInfo = new ProcessStartInfo 
             {
                 FileName = "dotnet",
-                Arguments = "build --no-restore",
+                Arguments = "build ",
                 RedirectStandardOutput = true,
                 CreateNoWindow = true,
                 WorkingDirectory = workingDirectory
@@ -29,6 +29,8 @@ public class DotnetBuild
             result.Output.Add(process.StandardOutput.ReadLine());
 
         result.ExitCode = process.ExitCode;
+        process.Dispose();
+
         return result;
     }
 }

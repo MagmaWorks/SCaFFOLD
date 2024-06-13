@@ -15,6 +15,7 @@
       <None Remove="Images\Play.png" />
       <None Remove="Images\StatusInvalid.png" />
       <None Remove="Images\StatusOK.png" />
+      <None Remove="Images\StatusWarning.png" />
       <None Remove="Images\StatusWarningOutline.png" />
       <None Remove="Images\Stop.png" />
       <None Remove="Images\Watch.png" />
@@ -41,6 +42,7 @@
 	  <Resource Include="Images\FileSystemWatcher.png" />
 	  <Resource Include="Images\StatusInvalid.png" />
 	  <Resource Include="Images\StatusOK.png" />
+	  <Resource Include="Images\StatusWarning.png" />
 	  <Resource Include="Images\StatusWarningOutline.png" />
 	  <Resource Include="Images\Stop.png" />
 	  <Resource Include="Images\Watch.png" />

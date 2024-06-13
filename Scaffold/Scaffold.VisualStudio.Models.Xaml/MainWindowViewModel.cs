@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Extensibility.UI;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 using Scaffold.VisualStudio.Models.Results;
 using FileInfo = System.IO.FileInfo;
-
+// TODO: Allow UI to add build flags (e.g. --no-restore)
 // TODO: Catch and display all exceptions in any of this code.
 
 //
@@ -24,7 +24,13 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     private Visibility _waitingForTabVisibility = Visibility.Visible;
     private Visibility _hasActiveProjectVisibility = Visibility.Collapsed;
     private Visibility _isWatchingVisibility = Visibility.Collapsed;
+    private Visibility _runStateSuccessVisibility = Visibility.Collapsed;
+    private Visibility _runStatePartialVisibility = Visibility.Collapsed;
+    private Visibility _runStateFailedVisibility = Visibility.Collapsed;
     private string _activeProjectPath;
+    private string _runTime;
+    private string _runInformation;
+
     private bool _watcherIsRunning;
 
     private ProjectDetails ProjectDetails { get; set; }
@@ -34,6 +40,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     public MainWindowViewModel()
     {
         Watching = new ObservableList<TreeItem>();
+        RunTime = "No run information available.";
         StartWatcherCommand = new AsyncCommand((_, _, _) =>
         {
             WatcherIsRunning = true;
@@ -76,6 +83,27 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     }
 
     [DataMember]
+    public Visibility RunStateSuccessVisibility
+    {
+        get => _runStateSuccessVisibility;
+        set => SetProperty(ref _runStateSuccessVisibility, value);
+    }
+
+    [DataMember]
+    public Visibility RunStatePartialVisibility
+    {
+        get => _runStatePartialVisibility;
+        set => SetProperty(ref _runStatePartialVisibility, value);
+    }
+
+    [DataMember]
+    public Visibility RunStateFailedVisibility
+    {
+        get => _runStateFailedVisibility;
+        set => SetProperty(ref _runStateFailedVisibility, value);
+    }
+
+    [DataMember]
     public ObservableList<TreeItem> Watching { get; }
 
     [DataMember]
@@ -88,7 +116,21 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
             HasActiveProjectVisibility = string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
         }
     }
-        
+
+    [DataMember]
+    public string RunTime
+    {
+        get => _runTime;
+        set => SetProperty(ref _runTime, value);
+    }
+
+    [DataMember]
+    public string RunInformation
+    {
+        get => _runInformation;
+        set => SetProperty(ref _runInformation, value);
+    }
+
     [DataMember]
     public bool WatcherIsRunning
     {
@@ -224,10 +266,12 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
     public async Task SavedAsync(DocumentEventArgs e, CancellationToken token)
     {
-        //var workingDirectory = GetWorkingDirectory();
-        var workingDirectory =
-            "c:\\users\\d.growns\\appdata\\local\\microsoft\\visualstudio\\17.0_c412194cexp\\vsextensions\\magma works\\scaffold.visualstudio.addin\\1.0.0.0";
-       //var detailsJson = JsonSerializer.Serialize(ProjectDetails); 
+        var runStartTime = DateTime.Now;
+        var workingDirectory = GetWorkingDirectory();
+        // var workingDirectory =
+        //     "c:\\users\\d.growns\\appdata\\local\\microsoft\\visualstudio\\17.0_c412194cexp\\vsextensions\\magma works\\scaffold.visualstudio.addin\\1.0.0.0";
+        //
+        //var detailsJson = JsonSerializer.Serialize(ProjectDetails); 
        var detailsJson =
            "{\\\"IsExecutable\\\":false,\\\"TargetFramework\\\":\\\"net8.0\\\",\\\"AssemblyName\\\":\\\"VsTesting\\\",\\\"ProjectFilePath\\\":\\\"C:\\\\\\\\Users\\\\\\\\d.growns\\\\\\\\Documents\\\\\\\\Repos\\\\\\\\ScaffoldForVsTesting\\\\\\\\VsTesting\\\"}";
 
@@ -247,29 +291,73 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         var jsonString = await process.StandardOutput.ReadToEndAsync(token);
         var fullResult = JsonSerializer.Deserialize<CalculationAssemblyResult>(jsonString);
 
-        UpdateWatchingList(fullResult);
+        process.Dispose();
+
+        UpdateWatchingList(fullResult, runStartTime);
     }
     
-    private void UpdateWatchingList(CalculationAssemblyResult fullResult)
+    private void UpdateWatchingList(CalculationAssemblyResult fullResult, DateTime runStartTime)
     {
+        var successfulResults = 0;
+        var updated = new List<TreeItem>();
+
+        if (fullResult.RunError == null)
+        {
+            foreach (var calculationResult in fullResult.Results)
+            {
+                var existing =
+                    Watching.FirstOrDefault(x => x.AssemblyQualifiedTypeName == calculationResult.AssemblyQualifiedTypeName);
+
+                var treeItem = new TreeItem(calculationResult);
+                if (existing != null)
+                    treeItem.IsExpanded = existing.IsExpanded;
+                
+                if (calculationResult.IsSuccess)
+                    successfulResults++;
+
+                updated.Add(treeItem);
+            }
+        }
+        else
+        {
+            updated.Add(new TreeItem(fullResult.RunError) { IsExpanded = true });
+        }
+
         //var dt = DateTime.Now;
-        Watching.Clear();
         //for (var i = 0; i < 5; i++)
         //{
         //    Watching.Add(new TreeItem(new ErrorDetail {Source = $"Test {dt:HH:mm:ss zz}", Message = $"Message {i}", InnerException = $"IE {i}"}));
         //}
 
-        if (fullResult.RunError == null)
-        {
+        Watching.Clear();
+        Watching.AddRange(updated);
 
-            foreach (var calculationResult in fullResult.Results)
-            {
-                Watching.Add(new TreeItem(calculationResult));
-            }
-        }
-        else
+        var runEndTime = DateTime.Now;
+        var runTime = (runEndTime - runStartTime).TotalSeconds;
+        var successRatio = successfulResults / (double)fullResult.Results.Count;
+
+        RunTime = $"Ran for {Math.Round(runTime, 2)} seconds, finished at {runEndTime:HH:mm:ss}";
+        RunInformation = $"{successfulResults} of {fullResult.Results.Count} successful";
+
+        switch (successRatio)
         {
-            Watching.Add(new TreeItem(fullResult.RunError) { IsExpanded = true });
+            case 1:
+                RunStateSuccessVisibility = Visibility.Visible;
+                RunStatePartialVisibility = Visibility.Collapsed;
+                RunStateFailedVisibility = Visibility.Collapsed;
+                break;
+
+            case 0:
+                RunStateSuccessVisibility = Visibility.Collapsed;
+                RunStatePartialVisibility = Visibility.Collapsed;
+                RunStateFailedVisibility = Visibility.Visible;
+                break;
+
+            default:
+                RunStateSuccessVisibility = Visibility.Collapsed;
+                RunStatePartialVisibility = Visibility.Visible;
+                RunStateFailedVisibility = Visibility.Collapsed;
+                break;
         }
     }
 

@@ -28,6 +28,7 @@ public class TreeItem : NotifyPropertyChangedObject
     public TreeItem(CalculationResult result) : this()
     {
         Name = result.IsSuccess ? result.CalculationDetail.Title : result.Failure.Source ?? "Unhandled exception";
+        AssemblyQualifiedTypeName = result.AssemblyQualifiedTypeName;
         IsSuccessVisibility = result.IsSuccess ? Visibility.Visible : Visibility.Collapsed;
         IsFailedVisibility = result.IsSuccess ? Visibility.Collapsed : Visibility.Visible;
         IsExpanded = false;
@@ -38,16 +39,29 @@ public class TreeItem : NotifyPropertyChangedObject
     public TreeItem(ErrorDetail error) : this()
     {
         Name = "Run failed";
+        
         Error = error;
+        ErrorSourceVisibility = string.IsNullOrEmpty(Error.Source) ? Visibility.Collapsed : Visibility.Visible;
+        ErrorMessageVisibility = string.IsNullOrEmpty(Error.Message) ? Visibility.Collapsed : Visibility.Visible;
+        ErrorInnerExceptionVisibility = string.IsNullOrEmpty(Error.InnerException) ? Visibility.Collapsed : Visibility.Visible;
+        ErrorStackTraceVisibility = string.IsNullOrEmpty(Error.StackTrace) ? Visibility.Collapsed : Visibility.Visible;
+        
         IsSuccessVisibility = Visibility.Collapsed;
         IsFailedVisibility = Visibility.Visible;
         IsExpanded = true;
     }
 
+    [DataMember] public string AssemblyQualifiedTypeName { get; set; }
     [DataMember] public ObservableList<CalcValueDetail> Inputs { get; } = [];
     [DataMember] public ObservableList<CalcValueDetail> Outputs { get; } = [];
     [DataMember] public ObservableList<DisplayFormula> Formulae { get; } = [];
     [DataMember] public ErrorDetail Error { get; }
+    // TODO: Move these into the detail class, once more is merged together.
+    [DataMember] public Visibility ErrorSourceVisibility { get; set; }
+    [DataMember] public Visibility ErrorMessageVisibility { get; set; }
+    [DataMember] public Visibility ErrorInnerExceptionVisibility { get; set; }
+    [DataMember] public Visibility ErrorStackTraceVisibility { get; set; }
+    
     [DataMember] public AsyncCommand ChangeTreeItemExpansionCommand { get; set; }
 
     [DataMember]
