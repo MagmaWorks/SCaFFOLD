@@ -206,13 +206,14 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         if (targetFramework == null)
             throw new ArgumentException(
                 "SCaFFOLD explorer failed to obtain the target framework from the csproj file.");
-            
+        
         return new ProjectDetails
         {
             TargetFramework = targetFramework.InnerText,
             AssemblyName = assemblyName?.InnerText ?? csProj.Name.Replace(".csproj", ""),
             IsExecutable = outputType != null && outputType.InnerText.ToLower() == "exe",
-            ProjectFilePath = directory.FullName
+            ProjectFilePath = directory.FullName,
+            CsProjFile = csProj.Name
         };
     }
 
@@ -273,7 +274,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         //
         //var detailsJson = JsonSerializer.Serialize(ProjectDetails); 
        var detailsJson =
-           "{\\\"IsExecutable\\\":false,\\\"TargetFramework\\\":\\\"net8.0\\\",\\\"AssemblyName\\\":\\\"VsTesting\\\",\\\"ProjectFilePath\\\":\\\"C:\\\\\\\\Users\\\\\\\\d.growns\\\\\\\\Documents\\\\\\\\Repos\\\\\\\\ScaffoldForVsTesting\\\\\\\\VsTesting\\\"}";
+           "{\\\"IsExecutable\\\":false,\\\"TargetFramework\\\":\\\"net8.0\\\",\\\"AssemblyName\\\":\\\"VsTesting\\\",\\\"ProjectFilePath\\\":\\\"C:\\\\\\\\Users\\\\\\\\d.growns\\\\\\\\Documents\\\\\\\\Repos\\\\\\\\ScaffoldForVsTesting\\\\\\\\VsTesting\\\",\\\"CsProjFile\\\":\\\"VsTesting.csproj\\\"}";
 
         var process = new Process
         {

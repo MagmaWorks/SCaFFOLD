@@ -6,9 +6,13 @@ public class ProjectDetails
     public string TargetFramework { get; set; }
     public string AssemblyName { get; set; }
     public string ProjectFilePath { get; set; }
+    public string CsProjFile { get; set; }
 
     public string BinariesPath()
         => $@"{ProjectFilePath}\bin\Debug\{TargetFramework}";
+    
+    public string CsProjPath()
+        => $@"{ProjectFilePath}\{CsProjFile}";
     
     public string AssemblyPath()
         => $@"{BinariesPath()}\{PackageName()}";
