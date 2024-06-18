@@ -111,7 +111,12 @@ internal static class Program
     /// </summary>
     private static void DeletePreviousRuns()
     {
-        var runDirectory = new DirectoryInfo(RunDirectory());
+        var runDirectoryPath = RunDirectory();
+        var runDirectory = new DirectoryInfo(runDirectoryPath);
+
+        if (runDirectory.Exists == false)
+            Directory.CreateDirectory(runDirectoryPath);
+
         foreach (var subDirectory in runDirectory.GetDirectories())
         {
             if (subDirectory.Name == RunId)

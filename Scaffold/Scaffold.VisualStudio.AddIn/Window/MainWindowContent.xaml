@@ -17,12 +17,31 @@
             <Style
                 BasedOn="{StaticResource {x:Static styles:VsResourceKeys.ButtonStyleKey}}"
                 TargetType="Button"
-                x:Key="ButtonStyle" />
+                x:Key="ButtonStyle">
+            </Style>
             <Style TargetType="TextBlock" x:Key="TextBlockStyle">
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}" />
             </Style>
+            <Style x:Key="StopWatcherStyle" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="#c2c2c2" 
+                                    BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="WhiteSmoke"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </Grid.Resources>
-
         <StackPanel Orientation="Vertical" Visibility="{Binding OnLoadVisibility}">
             <StackPanel Orientation="Horizontal">
                 <Image
@@ -89,60 +108,96 @@
             </StackPanel>
         </StackPanel>
 
-        <Grid Visibility="{Binding IsWatchingVisibility}">
+        <Grid Visibility="{Binding IsWatchingVisibility}" 
+                      Margin="0,0,0,10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
-                <RowDefinition Height="500" />
+                <RowDefinition Height="36" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="32" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="36" />
             </Grid.ColumnDefinitions>
 
             <Image
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        Height="24"
-                        Source="../Images/Watch.png"
-                        Tag="KnownMonikers.Watch"
-                        Width="24" />
+                Grid.Column="0"
+                Grid.Row="0"
+                Height="24"
+                Source="../Images/Watch.png"
+                Tag="KnownMonikers.Watch" HorizontalAlignment="Right"
+                Width="24" />
 
             <Label
-                        FontSize="14"
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Margin="10,5,0,0"
-                        Style="{StaticResource LabelStyle}">
+                FontSize="14"
+                Grid.Column="1"
+                Grid.Row="0"
+                Margin="5,5,0,0"
+                Style="{StaticResource LabelStyle}">
                 Watching
             </Label>
 
             <Button
-                        Command="{Binding StopWatcherCommand}"
-                        Grid.Column="2"
-                        Grid.Row="0"
-                        Height="32"
-                        Margin="0,0,0,0"
-                        Name="StopWatcherButton"
-                        Style="{StaticResource ButtonStyle}"
-                        Width="32">
+                Command="{Binding StopWatcherCommand}"
+                Grid.Column="2"
+                Grid.Row="0"
+                Name="StopWatcherButton"
+                Style="{StaticResource StopWatcherStyle}">
                 <Image
-                            Height="24"
-                            HorizontalAlignment="Center"
-                            Source="../Images/Stop.png"
-                            Tag="KnownMonikers.Stop"
-                            VerticalAlignment="Center"
-                            Width="24" />
+                    Height="24" HorizontalAlignment="Left"
+                    Source="../Images/Stop.png"
+                    Tag="KnownMonikers.Stop"
+                    Width="24" />
             </Button>
+
+            <StackPanel Margin="10,0,0,0" 
+                                Orientation="Horizontal" Grid.Row="1" Grid.Column="0"
+                                Grid.ColumnSpan="2">
+                <Image
+                            Height="20"
+                            Source="../Images/StatusOK.png"
+                            Tag="KnownMonikers.StatusOK"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding RunStateSuccessVisibility}"
+                            Width="20" />
+
+                <Image
+                            Height="20"
+                            Source="../Images/StatusInvalid.png"
+                            Tag="KnownMonikers.StatusInvalid"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding RunStateFailedVisibility}"
+                            Width="20" />
+
+                <Image
+                            Height="20"
+                            Source="../Images/StatusWarning.png"
+                            Tag="KnownMonikers.StatusWarning"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding RunStatePartialVisibility}"
+                            Width="20" />
+
+                <TextBlock
+                                   Text="{Binding RunInformation}" 
+                                   Style="{StaticResource TextBlockStyle}"
+                                   Margin="5,0,0,0"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
+                               Text="{Binding RunTime}"
+                               Style="{StaticResource TextBlockStyle}"
+                               Margin="10,0,0,0"/>
 
             <ScrollViewer
                         Grid.Column="0"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="1">
+                        Grid.ColumnSpan="3" Margin="10"
+                        Grid.Row="3">
                 <ItemsControl
                             BorderThickness="0"
                             ItemsSource="{Binding Watching}"
-                            Margin="10">
+                            Margin="0,0,15,0">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -157,6 +212,7 @@
                                             Command="{Binding ChangeTreeItemExpansionCommand}"
                                             CommandParameter="{Binding}"
                                             Grid.Row="0"
+                                            Style="{StaticResource ButtonStyle}"
                                             HorizontalContentAlignment="Stretch">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -212,7 +268,7 @@
 
                                 <DockPanel
                                             Grid.Row="1"
-                                            Margin="32,0,0,0"
+                                            Margin="34,0,0,0"
                                             Visibility="{Binding IsExpandedVisibility}">
                                     <DockPanel
                                                 DockPanel.Dock="Top"
@@ -223,19 +279,29 @@
                                                     DockPanel.Dock="Top"
                                                     Style="{StaticResource TextBlockStyle}"
                                                     Text="{Binding Error.Source}"
-                                                    TextWrapping="Wrap" />
+                                                    TextWrapping="Wrap" Margin="0,0,0,10"
+                                                    Visibility="{Binding ErrorSourceVisibility}" />
 
                                         <TextBlock
                                                     DockPanel.Dock="Top"
                                                     Style="{StaticResource TextBlockStyle}"
                                                     Text="{Binding Error.Message}"
-                                                    TextWrapping="Wrap" />
+                                                    TextWrapping="Wrap" Margin="0,0,0,10"
+                                                    Visibility="{Binding ErrorMessageVisibility}" />
 
                                         <TextBlock
                                                     DockPanel.Dock="Top"
                                                     Style="{StaticResource TextBlockStyle}"
                                                     Text="{Binding Error.InnerException}"
-                                                    TextWrapping="Wrap" />
+                                                    TextWrapping="Wrap" Margin="0,0,0,10"
+                                                    Visibility="{Binding ErrorInnerExceptionVisibility}" />
+
+                                        <TextBlock
+                                                    DockPanel.Dock="Top"
+                                                    Style="{StaticResource TextBlockStyle}"
+                                                    Text="{Binding Error.StackTrace}"
+                                                    TextWrapping="Wrap"
+                                                    Visibility="{Binding ErrorStackTraceVisibility}" />
                                     </DockPanel>
 
                                     <DockPanel Visibility="{Binding IsSuccessVisibility}">

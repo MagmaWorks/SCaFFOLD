@@ -8,8 +8,10 @@ using Microsoft.VisualStudio.Extensibility.UI;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 using Scaffold.VisualStudio.Models.Results;
 using FileInfo = System.IO.FileInfo;
+
 // TODO: Allow UI to add build flags (e.g. --no-restore)
-// TODO: Catch and display all exceptions in any of this code.
+// TODO: Formulae display
+// TODO: Get converters working later.
 
 //
 // Notes
@@ -36,7 +38,6 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     private ProjectDetails ProjectDetails { get; set; }
     private string LastShownDocumentRead { get; set; }
 
-    // TODO: Target save, throw over to the calculator project.
     public MainWindowViewModel()
     {
         Watching = new ObservableList<TreeItem>();

@@ -45,6 +45,25 @@
             <Style TargetType="TextBlock" x:Key="TextBlockStyle">
                 <Setter Property="Foreground" Value="Black" />
             </Style>
+            <Style x:Key="StopWatcherStyle" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="#c2c2c2" 
+                                    BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="WhiteSmoke"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -145,7 +164,7 @@
                 <Grid Visibility="{Binding IsWatchingVisibility}" 
                       Margin="0,0,0,10">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
+                        <RowDefinition Height="36" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -153,7 +172,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="32" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="36" />
                     </Grid.ColumnDefinitions>
 
                     <Image
@@ -177,21 +196,18 @@
                         Command="{Binding StopWatcherCommand}"
                         Grid.Column="2"
                         Grid.Row="0"
-                        Height="32"
-                        Margin="0,0,0,0"
                         Name="StopWatcherButton"
-                        Style="{StaticResource ButtonStyle}"
-                        Width="32">
+                        Style="{StaticResource StopWatcherStyle}">
                         <Image
-                            Height="24"
-                            HorizontalAlignment="Center"
+                            Height="24" HorizontalAlignment="Left"
                             Source="../Images/Stop.png"
                             Tag="KnownMonikers.Stop"
-                            VerticalAlignment="Center"
                             Width="24" />
                     </Button>
 
-                    <StackPanel Margin="10,0,0,0" Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <StackPanel Margin="10,0,0,0" 
+                                Orientation="Horizontal" Grid.Row="1" Grid.Column="0"
+                                Grid.ColumnSpan="2">
                         <Image
                             Height="20"
                             Source="../Images/StatusOK.png"
@@ -218,11 +234,13 @@
 
                         <TextBlock
                                    Text="{Binding RunInformation}" 
+                                   Style="{StaticResource TextBlockStyle}"
                                    Margin="5,0,0,0"/>
                     </StackPanel>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
                                Text="{Binding RunTime}"
+                               Style="{StaticResource TextBlockStyle}"
                                Margin="10,0,0,0"/>
 
                     <ScrollViewer
@@ -248,6 +266,7 @@
                                             Command="{Binding ChangeTreeItemExpansionCommand}"
                                             CommandParameter="{Binding}"
                                             Grid.Row="0"
+                                            Style="{StaticResource ButtonStyle}"
                                             HorizontalContentAlignment="Stretch">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
