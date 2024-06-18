@@ -14,43 +14,6 @@ public class AdditionCalculationTests
 {
     private const string typeName = "Add values";
     private const string title = "Core library tester";
-
-    [Fact]
-    public void Xml_Test()
-    {
-        var file = @"C:\Users\d.growns\Documents\Repos\ScaffoldForVsTesting\VsTesting\VsTesting.csproj";
-        
-        var projectFile = File.ReadAllText(file);
-        var projectFileInfo = new FileInfo(file);
-        
-        var hintPathRegex = new Regex("<HintPath>.*</HintPath>");
-        var hintPaths = hintPathRegex.Matches(projectFile);
-
-        foreach (Match hintPath in hintPaths)
-        {
-            var path = hintPath.Value.Replace("<HintPath>", "").Replace("</HintPath>", "");
-            var hintMatches = Regex.Matches(path, Regex.Escape("..\\")).Count;
-            var hintStr = new StringBuilder();
-            
-            DirectoryInfo parentDirectory = null;
-            
-            for (var i = 0; i < hintMatches; i++)
-            {
-                hintStr.Append(@"..\");
-                parentDirectory = projectFileInfo.Directory?.Parent;
-            }
-
-            parentDirectory = parentDirectory?.Parent; // 1 additional step required for the path but not for the hint str.
-
-            if (parentDirectory == null)
-                throw new ArgumentException("Failed to convert hint path to a realised path.");
-            
-            var newPath = path.Replace(hintStr.ToString(), $@"{parentDirectory.FullName}\");
-            projectFile = projectFile.Replace(path, newPath);
-        }
-
-        File.WriteAllText(file, projectFile);
-    }
     
     [Fact]
     public void DefaultSetup_Unassigned_Expected()

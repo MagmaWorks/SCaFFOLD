@@ -1,22 +1,23 @@
 ﻿using System.Diagnostics;
 using Scaffold.VisualStudio.Models.Results;
 
-namespace Scaffold.VisualStudio.Models;
+namespace Scaffold.VisualStudio.Models.Main;
 
 public class DotnetBuild
 {
     /// <summary>
     /// Wrapper for running dotnet build with the same settings in both targets, Returns stream output lines as individual list items.
     /// </summary>
-    public ProcessResult Run(string workingDirectory)
+    public ProcessResult Run(string workingDirectory, bool withNoRestore)
     {
+        var buildFlags = withNoRestore ? "--no-restore" : "";
         var result = new ProcessResult { Output = new List<string>() };
         var process = new Process
         {
             StartInfo = new ProcessStartInfo 
             {
                 FileName = "dotnet",
-                Arguments = "build ",
+                Arguments = $"build {buildFlags}",
                 RedirectStandardOutput = true,
                 CreateNoWindow = true,
                 WorkingDirectory = workingDirectory

@@ -128,4 +128,16 @@ public class TreeItem : NotifyPropertyChangedObject
                 Conclusion = formula.Conclusion
             });
     }
+
+    public void SetExpanderState(bool alwaysExpandCalculations, TreeItem existingTreeItem)
+    {
+        if (alwaysExpandCalculations)
+        {
+            IsExpanded = true;
+        }
+        else
+        {
+            IsExpanded = existingTreeItem is { IsExpanded: true };
+        }
+    }
 }

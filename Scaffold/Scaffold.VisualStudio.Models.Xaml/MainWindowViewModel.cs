@@ -2,14 +2,15 @@
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Web;
 using System.Windows;
 using System.Xml;
 using Microsoft.VisualStudio.Extensibility.UI;
 using Microsoft.VisualStudio.RpcContracts.Documents;
+using Scaffold.VisualStudio.Models.Main;
 using Scaffold.VisualStudio.Models.Results;
 using FileInfo = System.IO.FileInfo;
 
-// TODO: Allow UI to add build flags (e.g. --no-restore)
 // TODO: Formulae display
 // TODO: Get converters working later.
 
@@ -40,8 +41,10 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
     public MainWindowViewModel()
     {
-        Watching = new ObservableList<TreeItem>();
+        Settings = Globals.GetSettings<DisplaySettings>();
+        Watching = [];
         RunTime = "No run information available.";
+        
         StartWatcherCommand = new AsyncCommand((_, _, _) =>
         {
             WatcherIsRunning = true;
@@ -105,9 +108,6 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     }
 
     [DataMember]
-    public ObservableList<TreeItem> Watching { get; }
-
-    [DataMember]
     public string ActiveProjectPath
     {
         get => _activeProjectPath;
@@ -145,45 +145,17 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         }
     }
 
-    [DataMember]
-    public AsyncCommand StartWatcherCommand { get; set; }
-
-    [DataMember]
-    public AsyncCommand StopWatcherCommand { get; set; }
+    [DataMember] public DisplaySettings Settings { get; set; }
+    [DataMember] public ObservableList<TreeItem> Watching { get; }
+    [DataMember] public AsyncCommand StartWatcherCommand { get; set; }
+    [DataMember] public AsyncCommand StopWatcherCommand { get; set; }
 
     public Task OpenedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
     public Task ClosedAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
     public Task SavingAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
     public Task RenamedAsync(RenamedDocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
     public Task HiddenAsync(DocumentEventArgs e, CancellationToken token) => Task.CompletedTask;
-
-    /// <summary>
-    /// Executing assembly from VS appears to read \ and . as final characters even after last index of.
-    /// This adds additional sanitization to reduce the string further to only textual characters without another directory break.
-    /// </summary>
-    private string SanitizeBasePath(string path)
-    {
-        while (true)
-        {
-            if (path.Last() == '.' || path.Last() == '\\')
-            {
-                path = path[..^1];
-                continue;
-            }
-
-            return path;
-        }
-    }
-
-    private string GetWorkingDirectory()
-    {
-        var executingAssembly = Assembly.GetExecutingAssembly();
-        var lastIndex = executingAssembly.Location.LastIndexOf(@"\", StringComparison.Ordinal);
-        var workingDirectory = executingAssembly.Location[..lastIndex];
-
-        return SanitizeBasePath(workingDirectory);
-    }
-
+    
     private static ProjectDetails GetProjectDetails(DirectoryInfo directory)
     {
         var files = directory.GetFiles("*.csproj");
@@ -218,12 +190,12 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         };
     }
 
-    private static bool HasCalculations(ProjectDetails projectDetails)
+    private bool HasCalculations(ProjectDetails projectDetails)
     {
         if (File.Exists(projectDetails.AssemblyPath()) == false)
         {
             var dotnetBuild = new DotnetBuild();
-            var result = dotnetBuild.Run(projectDetails.ProjectFilePath);
+            var result = dotnetBuild.Run(projectDetails.ProjectFilePath, Settings.DotnetBuildNoRestore);
 
             if (result.ExitCode != 0)
                 throw new ArgumentException(string.Join(',', result.Output));
@@ -269,13 +241,10 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     public async Task SavedAsync(DocumentEventArgs e, CancellationToken token)
     {
         var runStartTime = DateTime.Now;
-        var workingDirectory = GetWorkingDirectory();
-        // var workingDirectory =
-        //     "c:\\users\\d.growns\\appdata\\local\\microsoft\\visualstudio\\17.0_c412194cexp\\vsextensions\\magma works\\scaffold.visualstudio.addin\\1.0.0.0";
-        //
-        //var detailsJson = JsonSerializer.Serialize(ProjectDetails); 
-       var detailsJson =
-           "{\\\"IsExecutable\\\":false,\\\"TargetFramework\\\":\\\"net8.0\\\",\\\"AssemblyName\\\":\\\"VsTesting\\\",\\\"ProjectFilePath\\\":\\\"C:\\\\\\\\Users\\\\\\\\d.growns\\\\\\\\Documents\\\\\\\\Repos\\\\\\\\ScaffoldForVsTesting\\\\\\\\VsTesting\\\",\\\"CsProjFile\\\":\\\"VsTesting.csproj\\\"}";
+        var workingDirectory = Globals.GetWorkingDirectory();
+
+        var detailsJson = JsonSerializer.Serialize(ProjectDetails); 
+        detailsJson = HttpUtility.JavaScriptStringEncode(detailsJson);
 
         var process = new Process
         {
@@ -311,8 +280,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
                     Watching.FirstOrDefault(x => x.AssemblyQualifiedTypeName == calculationResult.AssemblyQualifiedTypeName);
 
                 var treeItem = new TreeItem(calculationResult);
-                if (existing != null)
-                    treeItem.IsExpanded = existing.IsExpanded;
+                treeItem.SetExpanderState(Settings.AlwaysExpandCalculations, existing);
                 
                 if (calculationResult.IsSuccess)
                     successfulResults++;
@@ -324,12 +292,6 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         {
             updated.Add(new TreeItem(fullResult.RunError) { IsExpanded = true });
         }
-
-        //var dt = DateTime.Now;
-        //for (var i = 0; i < 5; i++)
-        //{
-        //    Watching.Add(new TreeItem(new ErrorDetail {Source = $"Test {dt:HH:mm:ss zz}", Message = $"Message {i}", InnerException = $"IE {i}"}));
-        //}
 
         Watching.Clear();
         Watching.AddRange(updated);

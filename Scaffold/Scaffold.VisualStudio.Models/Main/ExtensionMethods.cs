@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Scaffold.VisualStudio.Models;
+namespace Scaffold.VisualStudio.Models.Main;
 
 public static class ExtensionMethods
 {

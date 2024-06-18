@@ -6,6 +6,7 @@ using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using Scaffold.VisualStudio.Models;
+using Scaffold.VisualStudio.Models.Main;
 using Scaffold.VisualStudio.Models.Results;
 using Scaffold.VisualStudio.Models.Scaffold;
 
@@ -128,8 +129,7 @@ internal static class Program
 
     private static string RunDirectory()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        var assemblyLocation = assembly.Location[..assembly.Location.LastIndexOf("\\", StringComparison.Ordinal)];
+        var assemblyLocation = Globals.GetWorkingDirectory();
         return @$"{assemblyLocation}\ScaffoldRuns";
     }
     
@@ -226,9 +226,10 @@ internal static class Program
             ProjectDetails.ProjectFilePath = CopyProjectToLocal();
             
             WriteHintReplacements(originalCsProjFile);
-            
+
+            var settings = Globals.GetSettings<Settings>();
             var dotnetBuild = new DotnetBuild();
-            var buildResult = dotnetBuild.Run(ProjectDetails.ProjectFilePath);
+            var buildResult = dotnetBuild.Run(ProjectDetails.ProjectFilePath, settings.DotnetBuildNoRestore);
 
             if (buildResult.ExitCode != 0)
             {
