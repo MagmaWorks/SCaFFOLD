@@ -17,145 +17,171 @@
             <Style
                 BasedOn="{StaticResource {x:Static styles:VsResourceKeys.ButtonStyleKey}}"
                 TargetType="Button"
-                x:Key="ButtonStyle">
-            </Style>
+                x:Key="ButtonStyle" />
             <Style TargetType="TextBlock" x:Key="TextBlockStyle">
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}" />
             </Style>
-            <Style x:Key="StopWatcherStyle" TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="Transparent"/>
+            <Style TargetType="RadioButton" x:Key="RadioStyle">
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}" />
+            </Style>
+            <Style TargetType="{x:Type Button}" x:Key="StopWatcherStyle">
+                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Border Background="{TemplateBinding Background}" 
-                                    BorderBrush="#c2c2c2" 
-                                    BorderThickness="1">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="#c2c2c2"
+                                BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="WhiteSmoke"/>
+                        <Setter Property="Background" Value="WhiteSmoke" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
         </Grid.Resources>
-        <StackPanel Orientation="Vertical" Visibility="{Binding OnLoadVisibility}">
-            <StackPanel Orientation="Horizontal">
-                <Image
+        <ScrollViewer>
+            <TabControl
+        Background="Transparent"
+        BorderThickness="0,0,0,1"
+        Margin="0,0,10,0"
+        TabStripPlacement="Bottom">
+                <TabItem Header="Calculation watcher" IsSelected="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel
+                    Grid.Row="0"
+                    Orientation="Vertical"
+                    Visibility="{Binding OnLoadVisibility}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image
                             Height="24"
                             Source="../Images/FileSystemWatcher.png"
                             Tag="KnownMonikers.FileSystemWatcher"
                             Width="24" />
 
-                <Label
+                                <Label
                             FontSize="14"
                             Margin="10,0,0,0"
                             Style="{StaticResource LabelStyle}">
-                    Watch for changes
-                </Label>
-            </StackPanel>
+                                    Watch for changes
+                                </Label>
+                            </StackPanel>
 
-            <DockPanel Margin="0,15,0,0">
-                <TextBlock Style="{StaticResource TextBlockStyle}" TextWrapping="WrapWithOverflow">
+                            <DockPanel Margin="0,15,0,0">
+                                <TextBlock Style="{StaticResource TextBlockStyle}" TextWrapping="WrapWithOverflow">
                             Starting the watcher will run all calculations
                             in the watched project until it is stopped.
                             It will provide instant feedback on inputs,
                             outputs and formulae.
-                </TextBlock>
-            </DockPanel>
+                                </TextBlock>
+                            </DockPanel>
 
-            <StackPanel
+                            <StackPanel
                         HorizontalAlignment="Center"
                         Margin="0,40,0,0"
                         Orientation="Horizontal"
                         Visibility="{Binding WaitingForTabVisibility}">
-                <Image
+                                <Image
                             Height="24"
                             Source="../Images/StatusWarningOutline.png"
                             Tag="KnownMonikers.StatusWarningOutline"
                             Width="24" />
-                <Label Style="{StaticResource LabelStyle}">Waiting for a tab to open...</Label>
-            </StackPanel>
+                                <Label Style="{StaticResource LabelStyle}">Waiting for a tab to open...</Label>
+                            </StackPanel>
 
-            <StackPanel
+                            <StackPanel
                         HorizontalAlignment="Center"
                         Margin="0,40,0,0"
                         Orientation="Vertical"
                         Visibility="{Binding HasActiveProjectVisibility}">
-                <Button
+                                <Button
                             BorderThickness="0"
                             Command="{Binding StartWatcherCommand}"
                             Margin="10,0,0,0"
                             Name="StartWatcherButton"
                             Padding="10"
                             Style="{StaticResource ButtonStyle}">
-                    <Image
+                                    <Image
                                 Height="32"
                                 Source="../Images/Play.png"
                                 Tag="KnownMonikers.Play"
                                 Width="32" />
-                </Button>
+                                </Button>
 
-                <TextBlock
+                                <TextBlock
                             HorizontalAlignment="Center"
                             Margin="10,5,0,0"
                             Style="{StaticResource TextBlockStyle}"
                             Text="{Binding ActiveProjectPath}"
                             TextWrapping="Wrap" />
-            </StackPanel>
-        </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
 
-        <Grid Visibility="{Binding IsWatchingVisibility}" 
-                      Margin="0,0,0,10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="36" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="32" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="36" />
-            </Grid.ColumnDefinitions>
+                        <Grid
+                    Grid.Row="1"
+                    Margin="0,0,0,10"
+                    Visibility="{Binding IsWatchingVisibility}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="36" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
+                            </Grid.ColumnDefinitions>
 
-            <Image
-                Grid.Column="0"
-                Grid.Row="0"
-                Height="24"
-                Source="../Images/Watch.png"
-                Tag="KnownMonikers.Watch" HorizontalAlignment="Right"
-                Width="24" />
+                            <Image
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Height="24"
+                        HorizontalAlignment="Right"
+                        Source="../Images/Watch.png"
+                        Tag="KnownMonikers.Watch"
+                        Width="24" />
 
-            <Label
-                FontSize="14"
-                Grid.Column="1"
-                Grid.Row="0"
-                Margin="5,5,0,0"
-                Style="{StaticResource LabelStyle}">
-                Watching
-            </Label>
+                            <Label
+                        FontSize="14"
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="5,5,0,0"
+                        Style="{StaticResource LabelStyle}">
+                                Watching
+                            </Label>
 
-            <Button
-                Command="{Binding StopWatcherCommand}"
-                Grid.Column="2"
-                Grid.Row="0"
-                Name="StopWatcherButton"
-                Style="{StaticResource StopWatcherStyle}">
-                <Image
-                    Height="24" HorizontalAlignment="Left"
-                    Source="../Images/Stop.png"
-                    Tag="KnownMonikers.Stop"
-                    Width="24" />
-            </Button>
+                            <Button
+                        Command="{Binding StopWatcherCommand}"
+                        Grid.Column="2"
+                        Grid.Row="0"
+                        Name="StopWatcherButton"
+                        Style="{StaticResource StopWatcherStyle}">
+                                <Image
+                            Height="24"
+                            HorizontalAlignment="Left"
+                            Source="../Images/Stop.png"
+                            Tag="KnownMonikers.Stop"
+                            Width="24" />
+                            </Button>
 
-            <StackPanel Margin="10,0,0,0" 
-                                Orientation="Horizontal" Grid.Row="1" Grid.Column="0"
-                                Grid.ColumnSpan="2">
-                <Image
+                            <StackPanel
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="1"
+                        Margin="10,0,0,0"
+                        Orientation="Horizontal">
+                                <Image
                             Height="20"
                             Source="../Images/StatusOK.png"
                             Tag="KnownMonikers.StatusOK"
@@ -163,7 +189,7 @@
                             Visibility="{Binding RunStateSuccessVisibility}"
                             Width="20" />
 
-                <Image
+                                <Image
                             Height="20"
                             Source="../Images/StatusInvalid.png"
                             Tag="KnownMonikers.StatusInvalid"
@@ -171,7 +197,7 @@
                             Visibility="{Binding RunStateFailedVisibility}"
                             Width="20" />
 
-                <Image
+                                <Image
                             Height="20"
                             Source="../Images/StatusWarning.png"
                             Tag="KnownMonikers.StatusWarning"
@@ -179,234 +205,288 @@
                             Visibility="{Binding RunStatePartialVisibility}"
                             Width="20" />
 
-                <TextBlock
-                                   Text="{Binding RunInformation}" 
-                                   Style="{StaticResource TextBlockStyle}"
-                                   Margin="5,0,0,0"/>
-            </StackPanel>
+                                <TextBlock
+                            Margin="5,0,0,0"
+                            Style="{StaticResource TextBlockStyle}"
+                            Text="{Binding RunInformation}" />
+                            </StackPanel>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                               Text="{Binding RunTime}"
-                               Style="{StaticResource TextBlockStyle}"
-                               Margin="10,0,0,0"/>
-
-            <ScrollViewer
+                            <TextBlock
                         Grid.Column="0"
-                        Grid.ColumnSpan="3" Margin="10"
-                        Grid.Row="3">
-                <ItemsControl
-                            BorderThickness="0"
-                            ItemsSource="{Binding Watching}"
-                            Margin="0,0,15,0">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="40" />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
+                        Grid.ColumnSpan="2"
+                        Grid.Row="2"
+                        Margin="10,0,0,0"
+                        Style="{StaticResource TextBlockStyle}"
+                        Text="{Binding RunTime}" />
 
-                                <Button
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Command="{Binding ChangeTreeItemExpansionCommand}"
-                                            CommandParameter="{Binding}"
-                                            Grid.Row="0"
-                                            Style="{StaticResource ButtonStyle}"
-                                            HorizontalContentAlignment="Stretch">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="32" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="32" />
-                                        </Grid.ColumnDefinitions>
 
-                                        <Image
-                                                    Grid.Column="0"
-                                                    Height="24"
-                                                    Source="../Images/Collapse.png"
-                                                    Tag="KnownMonikers.Collapse"
-                                                    VerticalAlignment="Top"
-                                                    Visibility="{Binding IsExpandedVisibility}"
-                                                    Width="24" />
+                            <ItemsControl
+                        BorderThickness="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Grid.Row="3"
+                        ItemsSource="{Binding Watching}"
+                        Margin="10,10,0,10">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="40" />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
 
-                                        <Image
-                                                    Grid.Column="0"
-                                                    Height="24"
-                                                    Source="../Images/Expand.png"
-                                                    Tag="KnownMonikers.Expand"
-                                                    VerticalAlignment="Top"
-                                                    Visibility="{Binding IsCollapsedVisibility}"
-                                                    Width="24" />
+                                            <Button
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding ChangeTreeItemExpansionCommand}"
+                                        CommandParameter="{Binding}"
+                                        Grid.Row="0"
+                                        HorizontalContentAlignment="Stretch"
+                                        Style="{StaticResource ButtonStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="32" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="32" />
+                                                    </Grid.ColumnDefinitions>
 
-                                        <Image
-                                                    Grid.Column="2"
-                                                    Height="20"
-                                                    Source="../Images/StatusOK.png"
-                                                    Tag="KnownMonikers.StatusOK"
-                                                    VerticalAlignment="Center"
-                                                    Visibility="{Binding IsSuccessVisibility}"
-                                                    Width="20" />
+                                                    <Image
+                                                Grid.Column="0"
+                                                Height="24"
+                                                Source="../Images/Collapse.png"
+                                                Tag="KnownMonikers.Collapse"
+                                                VerticalAlignment="Top"
+                                                Visibility="{Binding IsExpandedVisibility}"
+                                                Width="24" />
 
-                                        <Image
-                                                    Grid.Column="2"
-                                                    Height="20"
-                                                    Source="../Images/StatusInvalid.png"
-                                                    Tag="KnownMonikers.StatusInvalid"
-                                                    VerticalAlignment="Center"
-                                                    Visibility="{Binding IsFailedVisibility}"
-                                                    Width="20" />
+                                                    <Image
+                                                Grid.Column="0"
+                                                Height="24"
+                                                Source="../Images/Expand.png"
+                                                Tag="KnownMonikers.Expand"
+                                                VerticalAlignment="Top"
+                                                Visibility="{Binding IsCollapsedVisibility}"
+                                                Width="24" />
 
-                                        <TextBlock
-                                                    FontSize="14"
-                                                    Grid.Column="1"
-                                                    Margin="0,1,0,0"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="{Binding Name}" />
-                                    </Grid>
-                                </Button>
+                                                    <Image
+                                                Grid.Column="2"
+                                                Height="20"
+                                                Source="../Images/StatusOK.png"
+                                                Tag="KnownMonikers.StatusOK"
+                                                VerticalAlignment="Center"
+                                                Visibility="{Binding IsSuccessVisibility}"
+                                                Width="20" />
 
-                                <DockPanel
-                                            Grid.Row="1"
-                                            Margin="34,0,0,0"
-                                            Visibility="{Binding IsExpandedVisibility}">
-                                    <DockPanel
+                                                    <Image
+                                                Grid.Column="2"
+                                                Height="20"
+                                                Source="../Images/StatusInvalid.png"
+                                                Tag="KnownMonikers.StatusInvalid"
+                                                VerticalAlignment="Center"
+                                                Visibility="{Binding IsFailedVisibility}"
+                                                Width="20" />
+
+                                                    <TextBlock
+                                                FontSize="14"
+                                                Grid.Column="1"
+                                                Margin="0,1,0,0"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding Name}" />
+                                                </Grid>
+                                            </Button>
+
+                                            <DockPanel
+                                        Grid.Row="1"
+                                        Margin="34,0,0,0"
+                                        Visibility="{Binding IsExpandedVisibility}">
+                                                <DockPanel
+                                            DockPanel.Dock="Top"
+                                            Margin="0,0,0,10"
+                                            Visibility="{Binding IsFailedVisibility}">
+
+                                                    <TextBlock
                                                 DockPanel.Dock="Top"
                                                 Margin="0,0,0,10"
-                                                Visibility="{Binding IsFailedVisibility}">
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding Error.Source}"
+                                                TextWrapping="Wrap"
+                                                Visibility="{Binding ErrorSourceVisibility}" />
 
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="{Binding Error.Source}"
-                                                    TextWrapping="Wrap" Margin="0,0,0,10"
-                                                    Visibility="{Binding ErrorSourceVisibility}" />
+                                                    <TextBlock
+                                                DockPanel.Dock="Top"
+                                                Margin="0,0,0,10"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding Error.Message}"
+                                                TextWrapping="Wrap"
+                                                Visibility="{Binding ErrorMessageVisibility}" />
 
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="{Binding Error.Message}"
-                                                    TextWrapping="Wrap" Margin="0,0,0,10"
-                                                    Visibility="{Binding ErrorMessageVisibility}" />
+                                                    <TextBlock
+                                                DockPanel.Dock="Top"
+                                                Margin="0,0,0,10"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding Error.InnerException}"
+                                                TextWrapping="Wrap"
+                                                Visibility="{Binding ErrorInnerExceptionVisibility}" />
 
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="{Binding Error.InnerException}"
-                                                    TextWrapping="Wrap" Margin="0,0,0,10"
-                                                    Visibility="{Binding ErrorInnerExceptionVisibility}" />
+                                                    <TextBlock
+                                                DockPanel.Dock="Top"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding Error.StackTrace}"
+                                                TextWrapping="Wrap"
+                                                Visibility="{Binding ErrorStackTraceVisibility}" />
+                                                </DockPanel>
 
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="{Binding Error.StackTrace}"
-                                                    TextWrapping="Wrap"
-                                                    Visibility="{Binding ErrorStackTraceVisibility}" />
-                                    </DockPanel>
+                                                <DockPanel Visibility="{Binding IsSuccessVisibility}">
+                                                    <TextBlock
+                                                DockPanel.Dock="Top"
+                                                FontWeight="Bold"
+                                                Margin="0,0,0,5"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="Inputs" />
+                                                    <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Inputs}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
 
-                                    <DockPanel Visibility="{Binding IsSuccessVisibility}">
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    FontWeight="Bold"
-                                                    Margin="0,0,0,5"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="Inputs" />
-                                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Inputs}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
+                                                                    <Image Source="{Binding Symbol}"
+                                                                           Visibility="{Binding SymbolVisibility}"  />
 
-                                                        <!--  <maths:FormulaControl  -->
-                                                        <!--  Formula="{Binding Symbol}"  -->
-                                                        <!--  Margin="0,4,10,0"  -->
-                                                        <!--  Scale="15" />  -->
+                                                                    <TextBlock
+                                                                Style="{StaticResource TextBlockStyle}"
+                                                                Text="{Binding DisplayName}"
+                                                                TextWrapping="Wrap"
+                                                                Width="125" />
+                                                                    <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
 
-                                                        <TextBlock
-                                                                    Style="{StaticResource TextBlockStyle}"
-                                                                    Text="{Binding DisplayName}"
-                                                                    TextWrapping="Wrap"
-                                                                    Width="125" />
-                                                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                                    <TextBlock
+                                                DockPanel.Dock="Top"
+                                                FontWeight="Bold"
+                                                Margin="0,20,0,5"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="Outputs" />
+                                                    <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Outputs}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
+                                                                    <TextBlock
+                                                                Style="{StaticResource TextBlockStyle}"
+                                                                Text="{Binding DisplayName}"
+                                                                TextWrapping="Wrap"
+                                                                Width="125" />
+                                                                    <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
 
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    FontWeight="Bold"
-                                                    Margin="0,20,0,5"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="Outputs" />
-                                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Outputs}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,0,0,5" Orientation="Horizontal">
-                                                        <TextBlock
-                                                                    Style="{StaticResource TextBlockStyle}"
-                                                                    Text="{Binding DisplayName}"
-                                                                    TextWrapping="Wrap"
-                                                                    Width="125" />
-                                                        <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                                    <TextBlock
+                                                DockPanel.Dock="Top"
+                                                FontWeight="Bold"
+                                                Margin="0,20,0,5"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="Formulae" />
 
-                                        <TextBlock
-                                                    DockPanel.Dock="Top"
-                                                    FontWeight="Bold"
-                                                    Margin="0,20,0,5"
-                                                    Style="{StaticResource TextBlockStyle}"
-                                                    Text="Formulae" />
-
-                                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Formulae}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Margin="10,0,0,25" Orientation="Vertical">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock
-                                                                        FontWeight="Bold"
-                                                                        Style="{StaticResource TextBlockStyle}"
-                                                                        Text="Ref."
-                                                                        Width="30" />
-                                                            <TextBlock
-                                                                        Style="{StaticResource TextBlockStyle}"
-                                                                        Text="{Binding Ref}"
-                                                                        TextWrapping="Wrap" />
-                                                        </StackPanel>
-
-                                                        <TextBlock
+                                                    <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Formulae}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Margin="10,0,0,25" Orientation="Vertical">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock
                                                                     FontWeight="Bold"
-                                                                    Margin="0,10,0,5"
                                                                     Style="{StaticResource TextBlockStyle}"
-                                                                    Text="Narrative" />
-                                                        <TextBlock
+                                                                    Text="Ref."
+                                                                    Width="30" />
+                                                                        <TextBlock
                                                                     Style="{StaticResource TextBlockStyle}"
-                                                                    Text="{Binding Narrative}"
+                                                                    Text="{Binding Ref}"
                                                                     TextWrapping="Wrap" />
+                                                                    </StackPanel>
 
-                                                        <!--  <ItemsControl  -->
-                                                        <!--  ItemsSource="{Binding Expressions}"  -->
-                                                        <!--  Margin="0,20,0,0"  -->
-                                                        <!--  Visibility="{Binding ExpressionVisibility}">  -->
-                                                        <!--     <ItemsControl.ItemTemplate> -->
-                                                        <!--         <DataTemplate> -->
-                                                        <!--             <maths:FormulaControl Formula="{Binding}" Scale="20" /> -->
-                                                        <!--         </DataTemplate> -->
-                                                        <!--     </ItemsControl.ItemTemplate> -->
-                                                        <!-- </ItemsControl> -->
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </DockPanel>
-                                </DockPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
+                                                                    <TextBlock
+                                                                FontWeight="Bold"
+                                                                Margin="0,10,0,5"
+                                                                Style="{StaticResource TextBlockStyle}"
+                                                                Text="Narrative" />
+                                                                    <TextBlock
+                                                                Style="{StaticResource TextBlockStyle}"
+                                                                Text="{Binding Narrative}"
+                                                                TextWrapping="Wrap" />
+
+                                                                    <!--  <ItemsControl  -->
+                                                                    <!--  ItemsSource="{Binding Expressions}"  -->
+                                                                    <!--  Margin="0,20,0,0"  -->
+                                                                    <!--  Visibility="{Binding ExpressionVisibility}">  -->
+                                                                    <!--     <ItemsControl.ItemTemplate> -->
+                                                                    <!--         <DataTemplate> -->
+                                                                    <!--             <maths:FormulaControl Formula="{Binding}" Scale="20" /> -->
+                                                                    <!--         </DataTemplate> -->
+                                                                    <!--     </ItemsControl.ItemTemplate> -->
+                                                                    <!-- </ItemsControl> -->
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </DockPanel>
+                                            </DockPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Settings">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock
+                    FontSize="16"
+                    Style="{StaticResource TextBlockStyle}"
+                    Text="Calculation detail expansion" />
+
+                        <StackPanel Margin="10,5,0,0" Orientation="Vertical">
+                            <RadioButton
+                        GroupName="CalculationDetailExpanderSetting"
+                        IsChecked="{Binding Settings.AlwaysExpandCalculations}"
+                        Style="{StaticResource RadioStyle}">
+                                Always expand all calculations
+                            </RadioButton>
+                            <RadioButton
+                        GroupName="CalculationDetailExpanderSetting"
+                        IsChecked="{Binding Settings.RememberLastExpansion}"
+                        Margin="0,5,0,0"
+                        Style="{StaticResource RadioStyle}">
+                                Remember last expanded calculations
+                            </RadioButton>
+                        </StackPanel>
+
+                        <TextBlock
+                    FontSize="16"
+                    Margin="0,25,0,0"
+                    Style="{StaticResource TextBlockStyle}"
+                    Text="Build settings" />
+
+                        <StackPanel Margin="10,5,0,0" Orientation="Vertical">
+                            <RadioButton
+                        GroupName="BuildSettings"
+                        IsChecked="{Binding Settings.DotnetBuild}"
+                        Style="{StaticResource RadioStyle}">
+                                dotnet build (standard)
+                            </RadioButton>
+                            <RadioButton
+                        GroupName="BuildSettings"
+                        IsChecked="{Binding Settings.DotnetBuildNoRestore}"
+                        Margin="0,5,0,0"
+                        Style="{StaticResource RadioStyle}">
+                                dotnet build --no-restore (prevents restore attempt from NuGet)
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </ScrollViewer>
     </Grid>
 </DataTemplate>

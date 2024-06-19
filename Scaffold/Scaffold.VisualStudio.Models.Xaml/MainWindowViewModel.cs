@@ -9,9 +9,10 @@ using Microsoft.VisualStudio.Extensibility.UI;
 using Microsoft.VisualStudio.RpcContracts.Documents;
 using Scaffold.VisualStudio.Models.Main;
 using Scaffold.VisualStudio.Models.Results;
+using Scaffold.VisualStudio.Models.Scaffold;
 using FileInfo = System.IO.FileInfo;
 
-// TODO: Formulae display
+// TODO: Formulae display, images
 // TODO: Get converters working later.
 
 //
@@ -260,14 +261,14 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         process.Start();
 
         var jsonString = await process.StandardOutput.ReadToEndAsync(token);
-        var fullResult = JsonSerializer.Deserialize<CalculationAssemblyResult>(jsonString);
+        var fullResult = JsonSerializer.Deserialize<CalculationAssemblyResult<DisplayFormula>>(jsonString);
 
         process.Dispose();
 
         UpdateWatchingList(fullResult, runStartTime);
     }
     
-    private void UpdateWatchingList(CalculationAssemblyResult fullResult, DateTime runStartTime)
+    private void UpdateWatchingList(CalculationAssemblyResult<DisplayFormula> fullResult, DateTime runStartTime)
     {
         var successfulResults = 0;
         var updated = new List<TreeItem>();

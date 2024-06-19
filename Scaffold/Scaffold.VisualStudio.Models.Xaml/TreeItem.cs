@@ -2,7 +2,6 @@
 using System.Windows;
 using Microsoft.VisualStudio.Extensibility.UI;
 using Scaffold.VisualStudio.Models.Results;
-using Scaffold.VisualStudio.Models.Scaffold;
 
 namespace Scaffold.VisualStudio.Models.Xaml;
 
@@ -25,7 +24,7 @@ public class TreeItem : NotifyPropertyChangedObject
         });
     }
 
-    public TreeItem(CalculationResult result) : this()
+    public TreeItem(CalculationResult<DisplayFormula> result) : this()
     {
         Name = result.IsSuccess ? result.CalculationDetail.Title : result.Failure.Source ?? "Unhandled exception";
         AssemblyQualifiedTypeName = result.AssemblyQualifiedTypeName;
@@ -50,10 +49,10 @@ public class TreeItem : NotifyPropertyChangedObject
         IsFailedVisibility = Visibility.Visible;
         IsExpanded = true;
     }
-
+    
     [DataMember] public string AssemblyQualifiedTypeName { get; set; }
-    [DataMember] public ObservableList<CalcValueDetail> Inputs { get; } = [];
-    [DataMember] public ObservableList<CalcValueDetail> Outputs { get; } = [];
+    [DataMember] public ObservableList<DisplayValueDetail> Inputs { get; } = [];
+    [DataMember] public ObservableList<DisplayValueDetail> Outputs { get; } = [];
     [DataMember] public ObservableList<DisplayFormula> Formulae { get; } = [];
     [DataMember] public ErrorDetail Error { get; }
     // TODO: Move these into the detail class, once more is merged together.
@@ -111,22 +110,31 @@ public class TreeItem : NotifyPropertyChangedObject
         set => SetProperty(ref _name, value);
     }
 
-    private void SetLists(CalculationResult result)
+    private void SetLists(CalculationResult<DisplayFormula> result)
     {
         foreach (var input in result.CalculationDetail.Inputs)
-            Inputs.Add(input);
+            Inputs.Add(new DisplayValueDetail(input));
 
         foreach (var output in result.CalculationDetail.Outputs)
-            Outputs.Add(output);
+            Outputs.Add(new DisplayValueDetail(output));
 
         foreach (var formula in result.CalculationDetail.Formulae)
-            Formulae.Add(new DisplayFormula(formula.Expressions)
+        {
+            var newFormula = new DisplayFormula
             {
                 Ref = formula.Ref,
                 Narrative = formula.Narrative,
-                Status = formula.Status,
-                Conclusion = formula.Conclusion
-            });
+                Conclusion = formula.Conclusion,
+                Status = formula.Status
+            };
+            
+            newFormula.ExpressionVisibility = newFormula.Expressions is { Count: 0 }
+                ? Visibility.Collapsed : Visibility.Visible;
+            
+            Formulae.Add(newFormula);
+        }
+        
+
     }
 
     public void SetExpanderState(bool alwaysExpandCalculations, TreeItem existingTreeItem)

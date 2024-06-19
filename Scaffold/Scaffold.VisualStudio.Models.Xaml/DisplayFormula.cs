@@ -5,21 +5,12 @@ using Scaffold.VisualStudio.Models.Scaffold;
 
 namespace Scaffold.VisualStudio.Models.Xaml;
 
-// TODO: Images
+// TODO: Images, Visibility by converter.
 [DataContract]
 public class DisplayFormula : NotifyPropertyChangedObject, IFormula
 {
     private Visibility _expressionVisibility;
-
-    public DisplayFormula(IEnumerable<string> expressions)
-    {
-        Expressions = expressions?.ToList();
-        ExpressionVisibility = Expressions is { Count: 0 }
-            ? Visibility.Collapsed : Visibility.Visible;
-    }
-
-    public DisplayFormula(string expression) : this([expression]) { }
-
+    
     [DataMember] public List<string> Expressions { get; }
     [DataMember] public string Ref { get; set; }
     [DataMember] public string Narrative { get; set; }

@@ -1,7 +1,9 @@
-﻿namespace Scaffold.VisualStudio.Models.Results;
+﻿using Scaffold.VisualStudio.Models.Scaffold;
 
-public class CalculationAssemblyResult
+namespace Scaffold.VisualStudio.Models.Results;
+
+public class CalculationAssemblyResult<T> where T : IFormula
 {
-    public List<CalculationResult> Results { get; set; }
+    public List<CalculationResult<T>> Results { get; set; }
     public ErrorDetail RunError { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.VisualStudio.Extensibility.UI;
+using Scaffold.VisualStudio.AddIn.Xaml;
 using Scaffold.VisualStudio.Models.Xaml;
 
 namespace Scaffold.VisualStudio.AddIn.Window;
@@ -54,6 +55,9 @@ internal class MainWindowContent : RemoteUserControl
         return xaml.Replace(originalDataTemplateXaml, dataTemplateXaml.ToString());
     }
 
+    private static string TempImageBlock(XamlImageInfo info)
+        => $"<TempImage StartIndex='{info.StartIndex}' EndIndex='{info.EndIndex}'>";
+
     public override async Task<string> GetXamlAsync(CancellationToken cancellationToken)
     {
         var xaml = await base.GetXamlAsync(cancellationToken);
@@ -64,51 +68,66 @@ internal class MainWindowContent : RemoteUserControl
         xaml = AddNamespace(xaml, imagingNamespace);
         xaml = AddNamespace(xaml, catalogNamespace);
 
+        var imageInfoList = new List<XamlImageInfo>();
+
         while (true)
         {
             if (xaml.Contains("<Image") == false)
                 break;
 
-            var start = xaml.IndexOf("<Image", StringComparison.Ordinal);
-            var end = xaml.IndexOf("/>", start, StringComparison.Ordinal) + 2;
-
-            var imageXaml = xaml[start..end];
-            var moniker = GetProperty(imageXaml, "Tag", true);
-            if (moniker == null)
-                throw new ArgumentException("Tag property must exist on the image containing the KnownMoniker for CrispImage.");
-
-            var potentialProperties = new List<string>
+            var info = new XamlImageInfo
             {
-                GetProperty(imageXaml, "Width"),
-                GetProperty(imageXaml, "Height"),
-                GetProperty(imageXaml, "Grid.Row"),
-                GetProperty(imageXaml, "Grid.Column"),
-                GetProperty(imageXaml, "Orientation"),
-                GetProperty(imageXaml, "DockPanel.Dock"),
-                GetProperty(imageXaml, "VerticalAlignment"),
-                GetProperty(imageXaml, "HorizontalAlignment"),
-                GetProperty(imageXaml, "Visibility"),
-                GetProperty(imageXaml, "Margin")
+                StartIndex = xaml.IndexOf("<Image", StringComparison.Ordinal)
             };
 
-            var crispImage = new StringBuilder();
-            crispImage
-                .Append("<imaging:CrispImage")
-                .Append($" Moniker=\"{{x:Static catalog:{moniker}}}\"");
+            info.EndIndex = xaml.IndexOf("/>", info.StartIndex, StringComparison.Ordinal) + 2;
 
-            foreach (var property in potentialProperties)
+            imageInfoList.Add(info);
+            info.ImageContent = xaml[info.StartIndex..info.EndIndex];
+
+            var moniker = GetProperty(info.ImageContent, "Tag", true);
+            if (moniker != null)
             {
-                if (property == null)
-                    continue;
+                var potentialProperties = new List<string>
+                {
+                    GetProperty(info.ImageContent, "Width"),
+                    GetProperty(info.ImageContent, "Height"),
+                    GetProperty(info.ImageContent, "Grid.Row"),
+                    GetProperty(info.ImageContent, "Grid.Column"),
+                    GetProperty(info.ImageContent, "Orientation"),
+                    GetProperty(info.ImageContent, "DockPanel.Dock"),
+                    GetProperty(info.ImageContent, "VerticalAlignment"),
+                    GetProperty(info.ImageContent, "HorizontalAlignment"),
+                    GetProperty(info.ImageContent, "Visibility"),
+                    GetProperty(info.ImageContent, "Margin")
+                };
 
-                crispImage.Append($" {property}");
+                var crispImage = new StringBuilder();
+                crispImage
+                    .Append("<imaging:CrispImage")
+                    .Append($" Moniker=\"{{x:Static catalog:{moniker}}}\"");
+
+                foreach (var property in potentialProperties)
+                {
+                    if (property == null)
+                        continue;
+
+                    crispImage.Append($" {property}");
+                }
+
+                crispImage.Append(" />");
+                info.CrispImageContent = crispImage.ToString();
             }
 
-            crispImage.Append(" />");
-            xaml = xaml.Replace(imageXaml, crispImage.ToString());
+            xaml = xaml.Replace(info.ImageContent, TempImageBlock(info));
         }
 
-        xaml = xaml.Replace("Click=\"TreeItem_Clicked\"", "");
+        foreach (var image in imageInfoList)
+        {
+            var replacement = image.CrispImageContent ?? image.ImageContent;
+            xaml = xaml.Replace(TempImageBlock(image), replacement);
+        }
+
         return xaml;
     }
 }

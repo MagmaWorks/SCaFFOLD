@@ -12,10 +12,8 @@ namespace Scaffold.VisualStudio.Models.Xaml;
 [DataContract]
 public class DisplaySettings : NotifyPropertyChangedObject, ISettings
 {
-    private string FilePath { get; set; }
-    
-    private bool _alwaysExpandCalculations;
-    private bool _rememberLastExpansion = true;
+    private bool _alwaysExpandCalculations = true;
+    private bool _rememberLastExpansion;
     
     private bool _dotnetBuild = true;
     private bool _dotnetBuildNoRestore;

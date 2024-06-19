@@ -30,7 +30,6 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.10.40171" />
-      <PackageReference Include="WpfMath" Version="2.1.0" />
     </ItemGroup>
 
 	<ItemGroup>

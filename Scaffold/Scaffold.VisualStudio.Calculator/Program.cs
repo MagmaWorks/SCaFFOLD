@@ -1,14 +1,14 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using CSharpMath.SkiaSharp;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
-using Scaffold.VisualStudio.Models;
 using Scaffold.VisualStudio.Models.Main;
 using Scaffold.VisualStudio.Models.Results;
 using Scaffold.VisualStudio.Models.Scaffold;
+using SkiaSharp;
 
 namespace Scaffold.VisualStudio.Calculator;
 
@@ -23,7 +23,7 @@ internal static class Program
         
         DeletePreviousRuns();
         
-        var result = new CalculationAssemblyResult {Results = [] };
+        var result = new CalculationAssemblyResult<FormulaDetail> {Results = [] };
 
         if (ArgumentsAreValid(args, result))
             ReadCalculations(result);
@@ -31,7 +31,7 @@ internal static class Program
         Console.Write(JsonSerializer.Serialize(result));
     }
 
-    private static bool ArgumentsAreValid(string[] args, CalculationAssemblyResult result)
+    private static bool ArgumentsAreValid(string[] args, CalculationAssemblyResult<FormulaDetail> result)
     {
         if (args.Length != 1)
             throw new ArgumentException("Project details model must be passed to the calculator.");
@@ -49,7 +49,7 @@ internal static class Program
         return true;
     }
         
-    private static void ReadInstance(CalculationBase instance, CalculationResult result)
+    private static void ReadInstance(CalculationBase instance, CalculationResult<FormulaDetail> result)
     {
         if (instance == null)
         {
@@ -57,29 +57,63 @@ internal static class Program
             return;
         }
 
-        result.CalculationDetail = new CalculationDetail
+        result.CalculationDetail = new CalculationDetail<FormulaDetail>
         {
             Title = instance.Title,
             Type = instance.Type,
-            Inputs = WriteCalcValueList(instance.GetInputs()),
-            Outputs = WriteCalcValueList(instance.GetOutputs()),
+            Inputs = WriteCalcValueList(instance.GetInputs(), "input"),
+            Outputs = WriteCalcValueList(instance.GetOutputs(), "output"),
             Formulae = WriteDisplayFormulae(instance.GetFormulae())
         };
     }
 
-    private static List<CalcValueDetail> WriteCalcValueList(IEnumerable<ICalcValue> calcValues)
-        => calcValues.Select(value => new CalcValueDetail
-        {
-            DisplayName = value.DisplayName, 
-            Symbol = value.Symbol, 
-            Status = value.Status.ToString(), 
-            Value = value.GetValue()
-        }).ToList();
-        
-
-    private static List<IFormula> WriteDisplayFormulae(IEnumerable<Formula> formulae)
+    private static List<CalcValueDetail> WriteCalcValueList(IEnumerable<ICalcValue> calcValues, string imageHeading)
     {
-        var list = new List<IFormula>();
+        var output = new List<CalcValueDetail>();
+
+        var i = 0;
+        foreach (var value in calcValues)
+        {
+            var flatObj = new CalcValueDetail
+            {
+                DisplayName = value.DisplayName,
+                Status = value.Status.ToString(),
+                Value = value.GetValue()
+            };
+            
+            if (string.IsNullOrEmpty(value.Symbol) == false)
+            {
+                var directory = $@"{RunDirectory()}\TemporaryImages";
+                    
+                if (Directory.Exists(directory) == false)
+                    Directory.CreateDirectory(directory);
+
+                using var memoryStream = new MemoryStream();
+                var painter = new MathPainter { LaTeX = value.Symbol };
+                using var png = painter.DrawAsStream();
+
+                png?.CopyTo(memoryStream);
+
+                if (memoryStream.Length > 0)
+                {
+                    var file = @$"{directory}\{imageHeading}-{i}.png";
+                    File.WriteAllBytes(file, memoryStream.ToArray());
+
+                    flatObj.Symbol = file;
+                }
+            }
+            
+            output.Add(flatObj);
+            i++;
+        }
+
+        return output;
+    }
+
+
+    private static List<FormulaDetail> WriteDisplayFormulae(IEnumerable<Formula> formulae)
+    {
+        var list = new List<FormulaDetail>();
         foreach (var formula in formulae)
         {
             list.Add(new FormulaDetail
@@ -95,7 +129,7 @@ internal static class Program
         return list;
     }
 
-    private static void AssignRunErrorFromException(CalculationAssemblyResult result, Exception ex)
+    private static void AssignRunErrorFromException(CalculationAssemblyResult<FormulaDetail> result, Exception ex)
     {
         result.RunError = new ErrorDetail
         {
@@ -112,7 +146,7 @@ internal static class Program
     /// </summary>
     private static void DeletePreviousRuns()
     {
-        var runDirectoryPath = RunDirectory();
+        var runDirectoryPath = RunDirectoryRoot();
         var runDirectory = new DirectoryInfo(runDirectoryPath);
 
         if (runDirectory.Exists == false)
@@ -127,15 +161,18 @@ internal static class Program
         }
     }
 
-    private static string RunDirectory()
+    private static string RunDirectoryRoot()
     {
         var assemblyLocation = Globals.GetWorkingDirectory();
         return @$"{assemblyLocation}\ScaffoldRuns";
     }
+
+    private static string RunDirectory() 
+        => @$"{RunDirectoryRoot()}\{RunId}";
     
     private static string CopyProjectToLocal()
     {
-        var localDirectory = @$"{RunDirectory()}\{RunId}";
+        var localDirectory = RunDirectory();
         Directory.CreateDirectory(localDirectory);
 
         CopyDirectory(ProjectDetails.ProjectFilePath, localDirectory);
@@ -212,7 +249,7 @@ internal static class Program
         File.WriteAllText(ProjectDetails.CsProjPath(), projectFile);
     }
     
-    private static void ReadCalculations(CalculationAssemblyResult assemblyResult)
+    private static void ReadCalculations(CalculationAssemblyResult<FormulaDetail> assemblyResult)
     {
         try
         {
@@ -262,7 +299,7 @@ internal static class Program
                 if (calculation.FullName == null)
                     continue;
             
-                var calculationResult = new CalculationResult {AssemblyQualifiedTypeName = calculation.FullName};
+                var calculationResult = new CalculationResult<FormulaDetail> {AssemblyQualifiedTypeName = calculation.FullName};
                 var instance = (CalculationBase)assembly.CreateInstance(calculation.FullName);
             
                 instance?.LoadIoCollections();
