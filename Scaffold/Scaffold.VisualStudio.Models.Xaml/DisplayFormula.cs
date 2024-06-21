@@ -1,26 +1,25 @@
 ﻿using System.Runtime.Serialization;
 using System.Windows;
 using Microsoft.VisualStudio.Extensibility.UI;
-using Scaffold.VisualStudio.Models.Scaffold;
 
 namespace Scaffold.VisualStudio.Models.Xaml;
 
-// TODO: Images, Visibility by converter.
 [DataContract]
-public class DisplayFormula : NotifyPropertyChangedObject, IFormula
+public class DisplayFormula : NotifyPropertyChangedObject
 {
-    private Visibility _expressionVisibility;
+    private Visibility _imageVisibility;
     
-    [DataMember] public List<string> Expressions { get; }
+    [DataMember] public ObservableList<DisplayExpression> Expressions { get; set; }
     [DataMember] public string Ref { get; set; }
     [DataMember] public string Narrative { get; set; }
     [DataMember] public string Conclusion { get; set; }
     [DataMember] public string Status { get; set; }
+    [DataMember] public string Image { get; set; }
 
     [DataMember]
-    public Visibility ExpressionVisibility
+    public Visibility ImageVisibility
     {
-        get => _expressionVisibility;
-        set => SetProperty(ref _expressionVisibility, value);
+        get => _imageVisibility;
+        set => SetProperty(ref _imageVisibility, value);
     }
 }

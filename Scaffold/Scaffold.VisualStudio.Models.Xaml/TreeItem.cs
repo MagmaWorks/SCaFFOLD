@@ -24,7 +24,7 @@ public class TreeItem : NotifyPropertyChangedObject
         });
     }
 
-    public TreeItem(CalculationResult<DisplayFormula> result) : this()
+    public TreeItem(CalculationResult result) : this()
     {
         Name = result.IsSuccess ? result.CalculationDetail.Title : result.Failure.Source ?? "Unhandled exception";
         AssemblyQualifiedTypeName = result.AssemblyQualifiedTypeName;
@@ -110,7 +110,7 @@ public class TreeItem : NotifyPropertyChangedObject
         set => SetProperty(ref _name, value);
     }
 
-    private void SetLists(CalculationResult<DisplayFormula> result)
+    private void SetLists(CalculationResult result)
     {
         foreach (var input in result.CalculationDetail.Inputs)
             Inputs.Add(new DisplayValueDetail(input));
@@ -125,16 +125,28 @@ public class TreeItem : NotifyPropertyChangedObject
                 Ref = formula.Ref,
                 Narrative = formula.Narrative,
                 Conclusion = formula.Conclusion,
-                Status = formula.Status
+                Status = formula.Status,
+                Image = formula.Image,
+                Expressions = []
             };
-            
-            newFormula.ExpressionVisibility = newFormula.Expressions is { Count: 0 }
+
+            if (formula.Expressions != null)
+                foreach (var expression in formula.Expressions)
+                {
+                    var newExpression = new DisplayExpression
+                    {
+                        Expression = expression,
+                        ExpressionVisibility = string.IsNullOrEmpty(expression) ? Visibility.Collapsed : Visibility.Visible
+                    };
+
+                    newFormula.Expressions.Add(newExpression);
+                }
+
+            newFormula.ImageVisibility = string.IsNullOrEmpty(newFormula.Image)
                 ? Visibility.Collapsed : Visibility.Visible;
             
             Formulae.Add(newFormula);
         }
-        
-
     }
 
     public void SetExpanderState(bool alwaysExpandCalculations, TreeItem existingTreeItem)

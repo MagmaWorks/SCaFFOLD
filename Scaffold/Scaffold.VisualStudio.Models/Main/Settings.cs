@@ -1,7 +1,4 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json;
-
-namespace Scaffold.VisualStudio.Models.Main;
+﻿namespace Scaffold.VisualStudio.Models.Main;
 
 public class Settings : ISettings
 {

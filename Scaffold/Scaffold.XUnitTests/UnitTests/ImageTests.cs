@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using Scaffold.Core.Images.Models;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
@@ -9,13 +9,8 @@ public class ImageTests
     public void FromEmbeddedResource_Ok()
     {
         const string embeddedResourceName = "ImageAsEmbeddedResource.png";
-        var assembly = Assembly.GetExecutingAssembly();
         
-        var image = new Scaffold.Core.Images.Models.ImageFromEmbeddedResource(embeddedResourceName)
-        {
-            Assembly = assembly
-        };
-
+        var image = new ImageFromEmbeddedResource<AdditionCalculation>(embeddedResourceName);
         var result = image.GetImage();
         
         Assert.NotNull(result);
@@ -26,9 +21,9 @@ public class ImageTests
     {
         const string relativePathName = "ImageAsRelativePath.png";
         
-        var image = new Scaffold.Core.Images.Models.ImageFromRelativePath(relativePathName)
+        var image = new ImageFromRelativePath(relativePathName)
         {
-            ImageReader = new AssemblyImageReader(relativePathName)
+            ImageReader = new AssemblyImageReader(relativePathName, typeof(AdditionCalculation))
         };
 
         var result = image.GetImage();
@@ -39,7 +34,7 @@ public class ImageTests
     [Fact]
     public void FromSkBitmap_Ok()
     {
-        var image = new Scaffold.Core.Images.Models.ImageFromSkBitmap(new SkiaSharp.SKBitmap(1000, 200));
+        var image = new ImageFromSkBitmap(new SkiaSharp.SKBitmap(1000, 200));
         var result = image.GetImage();
         Assert.NotNull(result);
     }

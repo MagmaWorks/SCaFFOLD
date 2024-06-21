@@ -48,7 +48,7 @@ public class AdditionCalculation : CalculationBase
                 .WithConclusion("Some text here")
                 .WithReference("Some ref here")
                 .AddExpression("x &=& a + b")
-                .AddImage(new ImageFromEmbeddedResource("ImageAsEmbeddedResource.png")),
+                .AddImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
             
             
             Formula.New("2. Narrative to appear above the expression")

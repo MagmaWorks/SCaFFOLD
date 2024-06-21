@@ -4,14 +4,9 @@ using SkiaSharp;
 namespace Scaffold.Core.Images.Models;
 
 // TODO: Expand to more CalcImage types.
-public class ImageFromRelativePath : ICalcImage
+public class ImageFromRelativePath(string relativePathName) : ICalcImage
 {
-    public ImageFromRelativePath(string relativePathName)
-    {
-        RelativePathName = relativePathName;
-    }
-
-    private string RelativePathName { get; }
+    public string RelativePathName { get; } = relativePathName;
     public IAssemblyImageReader ImageReader { get; set; }
     
     public SKBitmap GetImage()

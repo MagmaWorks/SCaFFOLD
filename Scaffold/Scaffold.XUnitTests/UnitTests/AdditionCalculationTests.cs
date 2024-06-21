@@ -1,7 +1,4 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Scaffold.Core.Enums;
 using Scaffold.XUnitTests.Core;
 
