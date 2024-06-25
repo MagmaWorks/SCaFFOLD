@@ -3,7 +3,6 @@
     StartupUri="MainWindow.xaml"
     x:Class="Scaffold.VisualStudio.XamlDesigner.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:local="clr-namespace:Scaffold.VisualStudio.XamlDesigner"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources />
 </Application>

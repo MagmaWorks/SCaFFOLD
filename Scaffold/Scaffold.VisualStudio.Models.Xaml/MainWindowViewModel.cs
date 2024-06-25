@@ -23,17 +23,10 @@ namespace Scaffold.VisualStudio.Models.Xaml;
 [DataContract]
 public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsListener
 {
-    private Visibility _onLoadVisibility = Visibility.Visible;
-    private Visibility _waitingForTabVisibility = Visibility.Visible;
-    private Visibility _hasActiveProjectVisibility = Visibility.Collapsed;
-    private Visibility _isWatchingVisibility = Visibility.Collapsed;
-    private Visibility _runStateSuccessVisibility = Visibility.Collapsed;
-    private Visibility _runStatePartialVisibility = Visibility.Collapsed;
-    private Visibility _runStateFailedVisibility = Visibility.Collapsed;
     private string _activeProjectPath;
     private string _runTime;
     private string _runInformation;
-
+    private double _successRatio;
     private bool _watcherIsRunning;
 
     private ProjectDetails ProjectDetails { get; set; }
@@ -44,6 +37,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         Settings = Globals.GetSettings<DisplaySettings>();
         Watching = [];
         RunTime = "No run information available.";
+        ActiveProjectPath = null;
         
         StartWatcherCommand = new AsyncCommand((_, _, _) =>
         {
@@ -59,63 +53,10 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
     }
 
     [DataMember]
-    public Visibility OnLoadVisibility
-    {
-        get => _onLoadVisibility;
-        set => SetProperty(ref _onLoadVisibility, value);
-    }
-
-    [DataMember]
-    public Visibility WaitingForTabVisibility
-    {
-        get => _waitingForTabVisibility;
-        set => SetProperty(ref _waitingForTabVisibility, value);
-    }
-
-    [DataMember]
-    public Visibility HasActiveProjectVisibility
-    {
-        get => _hasActiveProjectVisibility;
-        set => SetProperty(ref _hasActiveProjectVisibility, value);
-    }
-
-    [DataMember]
-    public Visibility IsWatchingVisibility
-    {
-        get => _isWatchingVisibility;
-        set => SetProperty(ref _isWatchingVisibility, value);
-    }
-
-    [DataMember]
-    public Visibility RunStateSuccessVisibility
-    {
-        get => _runStateSuccessVisibility;
-        set => SetProperty(ref _runStateSuccessVisibility, value);
-    }
-
-    [DataMember]
-    public Visibility RunStatePartialVisibility
-    {
-        get => _runStatePartialVisibility;
-        set => SetProperty(ref _runStatePartialVisibility, value);
-    }
-
-    [DataMember]
-    public Visibility RunStateFailedVisibility
-    {
-        get => _runStateFailedVisibility;
-        set => SetProperty(ref _runStateFailedVisibility, value);
-    }
-
-    [DataMember]
     public string ActiveProjectPath
     {
         get => _activeProjectPath;
-        set
-        {
-            SetProperty(ref _activeProjectPath, value);
-            HasActiveProjectVisibility = string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
-        }
+        set => SetProperty(ref _activeProjectPath, value);
     }
 
     [DataMember]
@@ -131,18 +72,19 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         get => _runInformation;
         set => SetProperty(ref _runInformation, value);
     }
+    
+    [DataMember]
+    public double SuccessRatio
+    {
+        get => _successRatio;
+        set => SetProperty(ref _successRatio, value);
+    }
 
     [DataMember]
     public bool WatcherIsRunning
     {
         get => _watcherIsRunning;
-        set
-        {
-            SetProperty(ref _watcherIsRunning, value);
-
-            OnLoadVisibility = value ? Visibility.Collapsed : Visibility.Visible;
-            IsWatchingVisibility = value ? Visibility.Visible : Visibility.Collapsed;
-        }
+        set => SetProperty(ref _watcherIsRunning, value);
     }
 
     [DataMember] public DisplaySettings Settings { get; set; }
@@ -231,9 +173,6 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
         ProjectDetails = projectDetails;
         ActiveProjectPath = projectDetails.ProjectFilePath;
-        OnLoadVisibility = Visibility.Visible;
-        WaitingForTabVisibility = Visibility.Collapsed;
-        HasActiveProjectVisibility = Visibility.Visible;
 
         return Task.CompletedTask;
     }
@@ -298,31 +237,10 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
         var runEndTime = DateTime.Now;
         var runTime = (runEndTime - runStartTime).TotalSeconds;
-        var successRatio = successfulResults / (double)fullResult.Results.Count;
-
+        
+        SuccessRatio = successfulResults / (double)fullResult.Results.Count;
         RunTime = $"Ran for {Math.Round(runTime, 2)} seconds, finished at {runEndTime:HH:mm:ss}";
         RunInformation = $"{successfulResults} of {fullResult.Results.Count} successful";
-
-        switch (successRatio)
-        {
-            case 1:
-                RunStateSuccessVisibility = Visibility.Visible;
-                RunStatePartialVisibility = Visibility.Collapsed;
-                RunStateFailedVisibility = Visibility.Collapsed;
-                break;
-
-            case 0:
-                RunStateSuccessVisibility = Visibility.Collapsed;
-                RunStatePartialVisibility = Visibility.Collapsed;
-                RunStateFailedVisibility = Visibility.Visible;
-                break;
-
-            default:
-                RunStateSuccessVisibility = Visibility.Collapsed;
-                RunStatePartialVisibility = Visibility.Visible;
-                RunStateFailedVisibility = Visibility.Collapsed;
-                break;
-        }
     }
 
     public void Dispose()

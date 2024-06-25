@@ -13,7 +13,7 @@
     Further notes:
     - code-behind in this project is used to simulate events that would be triggered by the VS AddIn
     - Window background and button background chosen to illustrate that it is not XAML default - in the VS AddIn project, the user's theme will be used.
-    - Many conventions from WPF do not work in the AddIn project (converters etc.), pretty much everything must be done in the ViewModel.
+    - Converters do not work in the VS project - data triggers have been used instead.
     - Rather than getting styles attached to target types, the styles are set directly on the controls to ensure they apply properly in both contexts.
     - The click handler on ItemsControl has to be removed manually, but this will flag as red in the Vs AddIn project, so it is easy to find-->
 <Window
@@ -108,42 +108,64 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <StackPanel
-                                    Grid.Row="0"
-                                    Orientation="Vertical"
-                                    Visibility="{Binding OnLoadVisibility}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image
-                                            Height="24"
-                                            Source="../Images/FileSystemWatcher.png"
-                                            Tag="KnownMonikers.FileSystemWatcher"
-                                            Width="24" />
+                                <StackPanel Grid.Row="0" Orientation="Vertical">
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
 
-                                        <Label
-                                            FontSize="14"
-                                            Margin="10,0,0,0"
-                                            Style="{StaticResource LabelStyle}">
-                                            Watch for changes
-                                        </Label>
-                                    </StackPanel>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=WatcherIsRunning}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
 
-                                    <DockPanel Margin="0,15,0,0">
-                                        <TextBlock Style="{StaticResource TextBlockStyle}" TextWrapping="WrapWithOverflow">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Height="24"
+                                                Source="../Images/FileSystemWatcher.png"
+                                                Tag="KnownMonikers.FileSystemWatcher"
+                                                Width="24" />
+
+                                            <Label
+                                                FontSize="14"
+                                                Margin="10,0,0,0"
+                                                Style="{StaticResource LabelStyle}">
+                                                Watch for changes
+                                            </Label>
+                                        </StackPanel>
+
+                                        <TextBlock
+                                            Margin="0,15,0,0"
+                                            Style="{StaticResource TextBlockStyle}"
+                                            TextWrapping="WrapWithOverflow">
                                             Starting the watcher will run all calculations
                                             in the watched project until it is stopped.
                                             It will provide instant feedback on inputs,
                                             outputs and formulae.
                                         </TextBlock>
-                                    </DockPanel>
+                                    </StackPanel>
 
                                     <StackPanel
                                         HorizontalAlignment="Center"
                                         Margin="0,40,0,0"
-                                        Orientation="Horizontal"
-                                        Visibility="{Binding WaitingForTabVisibility}">
+                                        Orientation="Horizontal">
+                                        <StackPanel.Style>
+                                            <Style TargetType="{x:Type StackPanel}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=ActiveProjectPath}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
                                         <Image
                                             Height="24"
                                             Source="../Images/StatusWarningOutline.png"
@@ -155,35 +177,69 @@
                                     <StackPanel
                                         HorizontalAlignment="Center"
                                         Margin="0,40,0,0"
-                                        Orientation="Vertical"
-                                        Visibility="{Binding HasActiveProjectVisibility}">
-                                        <Button
-                                            BorderThickness="0"
-                                            Command="{Binding StartWatcherCommand}"
-                                            Margin="10,0,0,0"
-                                            Name="StartWatcherButton"
-                                            Padding="10"
-                                            Style="{StaticResource ButtonStyle}">
-                                            <Image
-                                                Height="32"
-                                                Source="../Images/Play.png"
-                                                Tag="KnownMonikers.Play"
-                                                Width="32" />
-                                        </Button>
+                                        Orientation="Vertical">
+                                        <StackPanel.Style>
+                                            <Style TargetType="{x:Type StackPanel}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=ActiveProjectPath}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
 
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Margin="10,5,0,0"
-                                            Style="{StaticResource TextBlockStyle}"
-                                            Text="{Binding ActiveProjectPath}"
-                                            TextWrapping="Wrap" />
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel.Style>
+                                                <Style TargetType="{x:Type StackPanel}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=WatcherIsRunning}" Value="False">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+
+                                            <Button
+                                                BorderThickness="0"
+                                                Command="{Binding StartWatcherCommand}"
+                                                Margin="10,0,0,0"
+                                                Name="StartWatcherButton"
+                                                Padding="10"
+                                                Style="{StaticResource ButtonStyle}">
+                                                <Image
+                                                    Height="32"
+                                                    Source="../Images/Play.png"
+                                                    Tag="KnownMonikers.Play"
+                                                    Width="32" />
+                                            </Button>
+
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Margin="10,5,0,0"
+                                                Style="{StaticResource TextBlockStyle}"
+                                                Text="{Binding ActiveProjectPath}"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
 
-                                <Grid
-                                    Grid.Row="1"
-                                    Margin="0,0,0,10"
-                                    Visibility="{Binding IsWatchingVisibility}">
+                                <Grid Grid.Row="1" Margin="0,0,0,10">
+                                    <Grid.Style>
+                                        <Style TargetType="{x:Type Grid}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=WatcherIsRunning}" Value="False">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=WatcherIsRunning}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="36" />
                                         <RowDefinition Height="Auto" />
@@ -234,29 +290,77 @@
                                         Grid.Row="1"
                                         Margin="10,0,0,0"
                                         Orientation="Horizontal">
+                                        <StackPanel.Style>
+                                            <Style TargetType="{x:Type StackPanel}">
+                                                <Setter Property="Visibility" Value="Visible" />
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=RunInformation}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+
                                         <Image
                                             Height="20"
                                             Source="../Images/StatusOK.png"
                                             Tag="KnownMonikers.StatusOK"
                                             VerticalAlignment="Center"
-                                            Visibility="{Binding RunStateSuccessVisibility}"
-                                            Width="20" />
+                                            Width="20">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=SuccessRatio}" Value="1">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
 
                                         <Image
                                             Height="20"
                                             Source="../Images/StatusInvalid.png"
                                             Tag="KnownMonikers.StatusInvalid"
                                             VerticalAlignment="Center"
-                                            Visibility="{Binding RunStateFailedVisibility}"
-                                            Width="20" />
+                                            Width="20">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=SuccessRatio}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
 
                                         <Image
                                             Height="20"
                                             Source="../Images/StatusWarning.png"
                                             Tag="KnownMonikers.StatusWarning"
                                             VerticalAlignment="Center"
-                                            Visibility="{Binding RunStatePartialVisibility}"
-                                            Width="20" />
+                                            Width="20">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Setter Property="Visibility" Value="Visible" />
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=SuccessRatio}" Value="0">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=SuccessRatio}" Value="1">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
 
                                         <TextBlock
                                             Margin="5,0,0,0"
@@ -310,8 +414,19 @@
                                                                 Source="../Images/Collapse.png"
                                                                 Tag="KnownMonikers.Collapse"
                                                                 VerticalAlignment="Top"
-                                                                Visibility="{Binding IsExpandedVisibility}"
-                                                                Width="24" />
+                                                                Width="24">
+                                                                <Image.Style>
+                                                                    <Style TargetType="{x:Type Image}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Path=IsExpanded}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Image.Style>
+                                                            </Image>
 
                                                             <Image
                                                                 Grid.Column="0"
@@ -319,8 +434,19 @@
                                                                 Source="../Images/Expand.png"
                                                                 Tag="KnownMonikers.Expand"
                                                                 VerticalAlignment="Top"
-                                                                Visibility="{Binding IsCollapsedVisibility}"
-                                                                Width="24" />
+                                                                Width="24">
+                                                                <Image.Style>
+                                                                    <Style TargetType="{x:Type Image}">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Path=IsExpanded}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Image.Style>
+                                                            </Image>
 
                                                             <Image
                                                                 Grid.Column="2"
@@ -328,8 +454,19 @@
                                                                 Source="../Images/StatusOK.png"
                                                                 Tag="KnownMonikers.StatusOK"
                                                                 VerticalAlignment="Center"
-                                                                Visibility="{Binding IsSuccessVisibility}"
-                                                                Width="20" />
+                                                                Width="20">
+                                                                <Image.Style>
+                                                                    <Style TargetType="{x:Type Image}">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Path=Error}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Image.Style>
+                                                            </Image>
 
                                                             <Image
                                                                 Grid.Column="2"
@@ -337,8 +474,19 @@
                                                                 Source="../Images/StatusInvalid.png"
                                                                 Tag="KnownMonikers.StatusInvalid"
                                                                 VerticalAlignment="Center"
-                                                                Visibility="{Binding IsFailedVisibility}"
-                                                                Width="20" />
+                                                                Width="20">
+                                                                <Image.Style>
+                                                                    <Style TargetType="{x:Type Image}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Path=Error}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Image.Style>
+                                                            </Image>
 
                                                             <TextBlock
                                                                 FontSize="14"
@@ -349,54 +497,125 @@
                                                         </Grid>
                                                     </Button>
 
-                                                    <DockPanel
-                                                        Grid.Row="1"
-                                                        Margin="34,0,0,0"
-                                                        Visibility="{Binding IsExpandedVisibility}">
-                                                        <DockPanel
-                                                            DockPanel.Dock="Top"
-                                                            Margin="0,0,0,10"
-                                                            Visibility="{Binding IsFailedVisibility}">
+                                                    <DockPanel Grid.Row="1" Margin="34,0,0,0">
+                                                        <DockPanel.Style>
+                                                            <Style TargetType="{x:Type DockPanel}">
+                                                                <Setter Property="Visibility" Value="Visible" />
+
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=IsExpanded}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </DockPanel.Style>
+
+
+                                                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                                                            <DockPanel.Style>
+                                                                <Style TargetType="{x:Type DockPanel}">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Path=Error}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </DockPanel.Style>
 
                                                             <TextBlock
                                                                 DockPanel.Dock="Top"
                                                                 Margin="0,0,0,10"
-                                                                Style="{StaticResource TextBlockStyle}"
                                                                 Text="{Binding Error.Source}"
-                                                                TextWrapping="Wrap"
-                                                                Visibility="{Binding ErrorSourceVisibility}" />
+                                                                TextWrapping="Wrap">
+                                                                <TextBlock.Style>
+                                                                    <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Error.Source}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
 
                                                             <TextBlock
                                                                 DockPanel.Dock="Top"
                                                                 Margin="0,0,0,10"
-                                                                Style="{StaticResource TextBlockStyle}"
                                                                 Text="{Binding Error.Message}"
-                                                                TextWrapping="Wrap"
-                                                                Visibility="{Binding ErrorMessageVisibility}" />
+                                                                TextWrapping="Wrap">
+                                                                <TextBlock.Style>
+                                                                    <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Error.Message}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
 
                                                             <TextBlock
                                                                 DockPanel.Dock="Top"
                                                                 Margin="0,0,0,10"
-                                                                Style="{StaticResource TextBlockStyle}"
                                                                 Text="{Binding Error.InnerException}"
-                                                                TextWrapping="Wrap"
-                                                                Visibility="{Binding ErrorInnerExceptionVisibility}" />
+                                                                TextWrapping="Wrap">
+                                                                <TextBlock.Style>
+                                                                    <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Error.InnerException}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
 
                                                             <TextBlock
                                                                 DockPanel.Dock="Top"
-                                                                Style="{StaticResource TextBlockStyle}"
                                                                 Text="{Binding Error.StackTrace}"
-                                                                TextWrapping="Wrap"
-                                                                Visibility="{Binding ErrorStackTraceVisibility}" />
+                                                                TextWrapping="Wrap">
+                                                                <TextBlock.Style>
+                                                                    <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Error.StackTrace}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
                                                         </DockPanel>
 
-                                                        <DockPanel Visibility="{Binding IsSuccessVisibility}">
+                                                        <DockPanel>
+                                                            <DockPanel.Style>
+                                                                <Style TargetType="{x:Type DockPanel}">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Error}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </DockPanel.Style>
+
                                                             <TextBlock
                                                                 DockPanel.Dock="Top"
                                                                 FontWeight="Bold"
                                                                 Margin="0,0,0,5"
                                                                 Style="{StaticResource TextBlockStyle}"
                                                                 Text="Inputs" />
+
                                                             <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Inputs}">
                                                                 <ItemsControl.ItemTemplate>
                                                                     <DataTemplate>
@@ -407,17 +626,21 @@
                                                                             </Grid.ColumnDefinitions>
 
                                                                             <TextBlock
+                                                                                Grid.Column="0"
                                                                                 Style="{StaticResource TextBlockStyle}"
                                                                                 Text="{Binding DisplayName}"
-                                                                                TextWrapping="Wrap" Grid.Column="0"
+                                                                                TextWrapping="Wrap"
                                                                                 Width="125" />
 
-                                                                            <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                                                               <TextBlock Style="{StaticResource TextBlockStyle}" 
-                                                                                Text="{Binding Value}" />
+                                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                                <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
 
-                                                                                <Image Source="{Binding Symbol}" Stretch="Uniform" Margin="10,0,0,0"
-                                                                                    Visibility="{Binding SymbolVisibility}" MaxWidth="12" />
+                                                                                <Image
+                                                                                    Margin="10,0,0,0"
+                                                                                    MaxWidth="12"
+                                                                                    Source="{Binding Symbol}"
+                                                                                    Stretch="Uniform"
+                                                                                    Visibility="{Binding SymbolVisibility}" />
                                                                             </StackPanel>
                                                                         </Grid>
                                                                     </DataTemplate>
@@ -483,19 +706,21 @@
                                                                                 Margin="0,10,0,5"
                                                                                 Style="{StaticResource TextBlockStyle}"
                                                                                 Text="Expression(s)" />
-                                                                            <ItemsControl
-                                                                                ItemsSource="{Binding Expressions}"
-                                                                                Margin="0,20,0,0">
+                                                                            <ItemsControl ItemsSource="{Binding Expressions}" Margin="0,20,0,0">
                                                                                 <ItemsControl.ItemTemplate>
                                                                                     <DataTemplate>
-                                                                                        <Image Visibility="{Binding ExpressionVisibility}"
+                                                                                        <Image
                                                                                             Source="{Binding Expression}"
-                                                                                            Stretch="None"/>
+                                                                                            Stretch="None"
+                                                                                            Visibility="{Binding ExpressionVisibility}" />
                                                                                     </DataTemplate>
                                                                                 </ItemsControl.ItemTemplate>
                                                                             </ItemsControl>
 
-                                                                            <Border Background="White" Margin="0,20,0,0" Visibility="{Binding ImageVisibility}">
+                                                                            <Border
+                                                                                Background="White"
+                                                                                Margin="0,20,0,0"
+                                                                                Visibility="{Binding ImageVisibility}">
                                                                                 <Image Source="{Binding Image}" />
                                                                             </Border>
                                                                         </StackPanel>
