@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.VisualStudio.Extensibility.UI;
 using Scaffold.VisualStudio.Models.Results;
+using Scaffold.VisualStudio.Models.Scaffold;
 
 namespace Scaffold.VisualStudio.Models.Xaml;
 
@@ -37,8 +38,8 @@ public class TreeItem : NotifyPropertyChangedObject
     }
     
     [DataMember] public string AssemblyQualifiedTypeName { get; set; }
-    [DataMember] public ObservableList<DisplayValueDetail> Inputs { get; } = [];
-    [DataMember] public ObservableList<DisplayValueDetail> Outputs { get; } = [];
+    [DataMember] public ObservableList<CalcValueDetail> Inputs { get; } = [];
+    [DataMember] public ObservableList<CalcValueDetail> Outputs { get; } = [];
     [DataMember] public ObservableList<DisplayFormula> Formulae { get; } = [];
     [DataMember] public ErrorDetail Error { get; }
     
@@ -61,10 +62,10 @@ public class TreeItem : NotifyPropertyChangedObject
     private void SetLists(CalculationResult result)
     {
         foreach (var input in result.CalculationDetail.Inputs)
-            Inputs.Add(new DisplayValueDetail(input));
+            Inputs.Add(input);
 
         foreach (var output in result.CalculationDetail.Outputs)
-            Outputs.Add(new DisplayValueDetail(output));
+            Outputs.Add(output);
 
         foreach (var formula in result.CalculationDetail.Formulae)
         {
@@ -80,18 +81,7 @@ public class TreeItem : NotifyPropertyChangedObject
 
             if (formula.Expressions != null)
                 foreach (var expression in formula.Expressions)
-                {
-                    var newExpression = new DisplayExpression
-                    {
-                        Expression = expression,
-                        ExpressionVisibility = string.IsNullOrEmpty(expression) ? Visibility.Collapsed : Visibility.Visible
-                    };
-
-                    newFormula.Expressions.Add(newExpression);
-                }
-
-            newFormula.ImageVisibility = string.IsNullOrEmpty(newFormula.Image)
-                ? Visibility.Collapsed : Visibility.Visible;
+                    newFormula.Expressions.Add(expression);
             
             Formulae.Add(newFormula);
         }

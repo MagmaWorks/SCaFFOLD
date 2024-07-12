@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using System.Windows;
 using Microsoft.VisualStudio.Extensibility.UI;
 
 namespace Scaffold.VisualStudio.Models.Xaml;
@@ -7,16 +6,12 @@ namespace Scaffold.VisualStudio.Models.Xaml;
 [DataContract]
 public class DisplayExpression : NotifyPropertyChangedObject
 {
-    private Visibility _expressionVisibility;
-
-
-    [DataMember]
-    public string Expression { get; set; }
+    private string _expression;
 
     [DataMember]
-    public Visibility ExpressionVisibility
+    public string Expression
     {
-        get => _expressionVisibility;
-        set => SetProperty(ref _expressionVisibility, value);
+        get => _expression;
+        set => SetProperty(ref _expression, value);
     }
 }
