@@ -1,39 +1,48 @@
 ﻿using Scaffold.Core.Abstract;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
+using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
+using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
 [CalcMetadata("Add values", "Core library tester")]
-public class AdditionCalculation : CalculationBase
+public class AdditionCalculation : ICalculation
 {
-    public CalcDouble LeftAssignment { get; set; }
-    public CalcDouble RightAssignment { get; set; }
-    public CalcDouble Result { get; set; }
-
-    private double Add()
-        => LeftAssignment.Value + RightAssignment.Value;
-        
-    protected override void DefineInputs()
+    public AdditionCalculation()
     {
         LeftAssignment = new CalcDouble("Left assignment", 2);
         RightAssignment = new CalcDouble("Right assignment", 3);
-    }
-
-    protected override void DefineOutputs()
-    {
         Result = new CalcDouble("Result", Add());
     }
+    
+    [InputCalcValue] public CalcDouble LeftAssignment { get; set; }
+    [InputCalcValue] public CalcDouble RightAssignment { get; set; }
+    
+    [OutputCalcValue] public CalcDouble Result { get; set; }
 
-    public override void Update()
+    private double Add()
+        => LeftAssignment.Value + RightAssignment.Value;
+
+    public void Update()
     {
         Result.Value = Add();
     }
 
-    protected override IEnumerable<Formula> GenerateFormulae()
+    public IReadOnlyList<ICalcValue> GetInputs()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IReadOnlyList<ICalcValue> GetOutputs()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<Formula> GetFormulae()
     {
         var keyImage = new SKBitmap(400,400);
         using (var canvas = new SKCanvas(keyImage))
@@ -64,4 +73,8 @@ public class AdditionCalculation : CalculationBase
 
         return list;
     }
+
+    public string Title { get; set; }
+    public string Type { get; }
+    public CalcStatus Status { get; }
 }

@@ -19,7 +19,6 @@ public class CalcSiQuantity : ICalcSIQuantity
     }
 
     CalcStatus ICalcValue.Status { get; set; }
-    IoDirection ICalcValue.Direction { get; }
     
     string ICalcValue.DisplayName => _displayName;
     string ICalcValue.Symbol => _symbol;

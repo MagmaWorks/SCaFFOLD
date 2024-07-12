@@ -4,7 +4,6 @@ namespace Scaffold.Core.Interfaces;
 
 public interface ICalcValue
 {
-    IoDirection Direction { get; }
     string DisplayName { get; }
     string Symbol { get; }
     CalcStatus Status { get; set; }    

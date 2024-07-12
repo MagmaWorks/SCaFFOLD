@@ -22,4 +22,6 @@ public interface ICalculation
     public IReadOnlyList<ICalcValue> GetInputs();
     public IReadOnlyList<ICalcValue> GetOutputs();
     public IEnumerable<Formula> GetFormulae();
+    
+    public void Update();
 }

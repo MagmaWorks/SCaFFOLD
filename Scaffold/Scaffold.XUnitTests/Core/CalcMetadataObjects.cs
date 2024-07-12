@@ -1,30 +1,35 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Attributes;
+using Scaffold.Core.Enums;
+using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
 namespace Scaffold.XUnitTests.Core;
 
 [ExcludeFromCodeCoverage]
 [CalcMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
-public class CalcMetadataEmptyConstructor : CalculationBase
+public class CalcMetadataEmptyConstructor : ICalculation
 {
-    protected override void DefineInputs()
+    public string Title { get; set; }
+    public string Type { get; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs()
     {
         throw new NotImplementedException();
     }
 
-    protected override void DefineOutputs()
+    public IReadOnlyList<ICalcValue> GetOutputs()
     {
         throw new NotImplementedException();
     }
 
-    public override void Update()
+    public IEnumerable<Formula> GetFormulae()
     {
         throw new NotImplementedException();
     }
 
-    protected override IEnumerable<Formula> GenerateFormulae()
+    public void Update()
     {
         throw new NotImplementedException();
     }
@@ -32,24 +37,27 @@ public class CalcMetadataEmptyConstructor : CalculationBase
 
 [ExcludeFromCodeCoverage]
 [CalcMetadata("TypeNameSet")]
-public class CalcMetadataTypeNameConstructor : CalculationBase
+public class CalcMetadataTypeNameConstructor : ICalculation
 {
-    protected override void DefineInputs()
+    public string Title { get; set; }
+    public string Type { get; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs()
     {
         throw new NotImplementedException();
     }
 
-    protected override void DefineOutputs()
+    public IReadOnlyList<ICalcValue> GetOutputs()
     {
         throw new NotImplementedException();
     }
 
-    public override void Update()
+    public IEnumerable<Formula> GetFormulae()
     {
         throw new NotImplementedException();
     }
 
-    protected override IEnumerable<Formula> GenerateFormulae()
+    public void Update()
     {
         throw new NotImplementedException();
     }
@@ -57,48 +65,54 @@ public class CalcMetadataTypeNameConstructor : CalculationBase
 
 [ExcludeFromCodeCoverage]
 [CalcMetadata("TypeNameSet", "TitleSet")]
-public class CalcMetadataTypeAndTitleConstructor : CalculationBase
+public class CalcMetadataTypeAndTitleConstructor : ICalculation
 {
-    protected override void DefineInputs()
+    public string Title { get; set; }
+    public string Type { get; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs()
     {
         throw new NotImplementedException();
     }
 
-    protected override void DefineOutputs()
+    public IReadOnlyList<ICalcValue> GetOutputs()
     {
         throw new NotImplementedException();
     }
 
-    public override void Update()
+    public IEnumerable<Formula> GetFormulae()
     {
         throw new NotImplementedException();
     }
 
-    protected override IEnumerable<Formula> GenerateFormulae()
+    public void Update()
     {
         throw new NotImplementedException();
     }
 }
 
 [ExcludeFromCodeCoverage]
-public class CalcMetadataFallback : CalculationBase
+public class CalcMetadataFallback : ICalculation
 {
-    protected override void DefineInputs()
+    public string Title { get; set; }
+    public string Type { get; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs()
     {
         throw new NotImplementedException();
     }
 
-    protected override void DefineOutputs()
+    public IReadOnlyList<ICalcValue> GetOutputs()
     {
         throw new NotImplementedException();
     }
 
-    public override void Update()
+    public IEnumerable<Formula> GetFormulae()
     {
         throw new NotImplementedException();
     }
 
-    protected override IEnumerable<Formula> GenerateFormulae()
+    public void Update()
     {
         throw new NotImplementedException();
     }
