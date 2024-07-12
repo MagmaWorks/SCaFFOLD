@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Scaffold.Core.Abstract;
 using Scaffold.Core.Enums;
 using Scaffold.XUnitTests.Core;
 
@@ -9,19 +10,31 @@ namespace Scaffold.XUnitTests.UnitTests;
 /// </summary>
 public class AdditionCalculationTests
 {
+    private CalculationReader Reader { get; } = new();
     private const string typeName = "Add values";
     private const string title = "Core library tester";
     
     [Fact]
-    public void DefaultSetup_Unassigned_Expected()
+    public void UnreadCalculation_Ok()
     {
         var calc = new AdditionCalculation();
+        calc.Type.Should().BeNull();
+        calc.Title.Should().BeNull();
+    }
+    
+    [Fact]
+    public void Default_Read_Ok()
+    {
+        var calc = new AdditionCalculation();
+        
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
+        
         calc.Type.Should().Be(typeName);
         calc.Title.Should().Be(title);
         
-        calc.LeftAssignment.Should().BeNull();
-        calc.RightAssignment.Should().BeNull();
-        calc.Result.Should().BeNull();
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
     }
     
     // [Fact]

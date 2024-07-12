@@ -31,17 +31,7 @@ public class AdditionCalculation : ICalculation
     {
         Result.Value = Add();
     }
-
-    public IReadOnlyList<ICalcValue> GetInputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IReadOnlyList<ICalcValue> GetOutputs()
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public IEnumerable<Formula> GetFormulae()
     {
         var keyImage = new SKBitmap(400,400);
@@ -75,6 +65,6 @@ public class AdditionCalculation : ICalculation
     }
 
     public string Title { get; set; }
-    public string Type { get; }
+    public string Type { get; set; }
     public CalcStatus Status { get; }
 }
