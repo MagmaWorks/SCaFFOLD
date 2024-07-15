@@ -10,27 +10,10 @@ public abstract class CalcValue<T> : ICalcValue
     protected CalcValue(string name)
     {
         DisplayName = name;
-
-        for (var i = 0; i < 5; i++)
-        {
-            var trace = new StackFrame(i);
-            var method = trace.GetMethod();
-            
-            Direction = method?.Name switch
-            {
-                "DefineInputs" => IoDirection.Input,
-                "DefineOutputs" => IoDirection.Output,
-                _ => IoDirection.Undefined
-            };
-            
-            if (Direction != IoDirection.Undefined)
-                break;
-        }
     }
-
-    public IoDirection Direction { get; }
-    public string DisplayName { get; }
-    public string Symbol { get; protected set; }
+    
+    public string DisplayName { get; set; }
+    public string Symbol { get; set; }
     public string UnitName => Unit?.QuantityInfo.Name ?? "";
     public CalcStatus Status { get; set; }
     public T Value { get; set; }

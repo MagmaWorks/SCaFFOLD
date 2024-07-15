@@ -1,66 +1,201 @@
 ﻿using FluentAssertions;
-using Scaffold.Core.Enums;
+using Scaffold.Core.Abstract;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
 
-/// <summary>
-/// The host application normally calls LoadIoCollections. When it is not called, the default values are expected.
-/// </summary>
 public class AdditionCalculationTests
 {
-    private const string typeName = "Add values";
-    private const string title = "Core library tester";
+    private CalculationReader Reader { get; } = new();
+    private const string TypeName = "Add values";
+    private const string Title = "Core library tester";
     
     [Fact]
-    public void DefaultSetup_Unassigned_Expected()
+    public void UnreadCalculation_Ok()
     {
         var calc = new AdditionCalculation();
-        calc.Type.Should().Be(typeName);
-        calc.Title.Should().Be(title);
-        
-        calc.LeftAssignment.Should().BeNull();
-        calc.RightAssignment.Should().BeNull();
-        calc.Result.Should().BeNull();
+        calc.Type.Should().BeNull();
+        calc.Title.Should().BeNull();
     }
     
     [Fact]
-    public void DefaultSetup_Ok()
+    public void Default_Read_Ok()
     {
         var calc = new AdditionCalculation();
-        calc.Type.Should().Be(typeName);
-        calc.Title.Should().Be(title);
         
-        calc.LoadIoCollections();
-        calc.GetInputs().ToList().Count.Should().Be(2);
-        calc.GetOutputs().ToList().Count.Should().Be(1);
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
         
-        calc.LeftAssignment.Value.Should().Be(2);
-        calc.RightAssignment.Value.Should().Be(3);
-        calc.Result.Value.Should().Be(5);
-        calc.Status.Should().Be(CalcStatus.None);
+        calc.Type.Should().Be(TypeName);
+        calc.Title.Should().Be(Title);
         
-        // Hits return statement in LoadIoCollections
-        calc.LoadIoCollections();
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Left assignment");
+        inputs[1].DisplayName.Should().Be("Right Assignment", because: "Fallback to property name, class did not set DisplayName");
+        outputs[0].DisplayName.Should().Be("Result");
     }
     
+    [Fact]
+    public void Fluent_Read_Ok()
+    {
+        var calc = new AdditionCalculationFluent();
+        
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
+        
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Left assignment");
+        inputs[1].DisplayName.Should().Be("Right Assignment", because: "Fallback to property name, class did not set DisplayName");
+        outputs[0].DisplayName.Should().Be("Result");
+    }
+    
+    [Fact]
+    public void Fluent_DisplayNameSingle_Ok()
+    {
+        var calc = new FluentDisplayNameSingle();
+        var outputs = Reader.GetOutputs(calc);
+
+        outputs[0].DisplayName.Should().Be("Result");
+    }
+    
+    [Fact]
+    public void Fluent_DisplayNameMultiple_Ok()
+    {
+        var calc = new FluentDisplayNameMultiple();
+        var outputs = Reader.GetOutputs(calc);
+
+        outputs[0].DisplayName.Should().Be("Result (1)");
+        outputs[1].DisplayName.Should().Be("Result (2)");
+        
+        outputs[0].Symbol.Should().Be("=");
+        outputs[1].Symbol.Should().Be("=");
+    }
+
+    [Fact]
+    public void FluentPrimitives_Ok()
+    {
+        var calc = new AdditionCalculationFluentPrimitives();
+        
+        //
+        // Initial values
+        //
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
+        
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Left assignment");
+        inputs[1].DisplayName.Should().Be("Right assignment");
+        
+        outputs[0].DisplayName.Should().Be("Result");
+        
+        inputs[0].GetValue().Should().Be("2");
+        inputs[1].GetValue().Should().Be("3");
+        
+        outputs[0].GetValue().Should().Be("5");
+        calc.Result.Should().Be(5);
+        
+        //
+        // Updated values (checking that InternalCalcValue works, pairing with true primitive value)
+        //
+        inputs[0].SetValue("6");
+        
+        Reader.Update(calc);
+        outputs[0].GetValue().Should().Be("9");
+        calc.Result.Should().Be(9);
+    }
+    
+    [Fact]
+    public void FluentPrimitivesJoined_Ok()
+    {
+        var calc = new AdditionCalculationFluentPrimitivesJoined();
+        
+        //
+        // Initial values
+        //
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
+        
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Value (1)");
+        inputs[1].DisplayName.Should().Be("Value (2)");
+        
+        outputs[0].DisplayName.Should().Be("Result");
+        
+        inputs[0].GetValue().Should().Be("2");
+        inputs[1].GetValue().Should().Be("3");
+        
+        outputs[0].GetValue().Should().Be("5");
+        calc.Result.Should().Be(5);
+        
+        //
+        // Updated values (checking that InternalCalcValue works, pairing with true primitive value)
+        //
+        inputs[0].SetValue("6");
+        
+        Reader.Update(calc);
+        outputs[0].GetValue().Should().Be("9");
+        calc.Result.Should().Be(9);
+    }
+    
+    [Fact]
+    public void AttributePrimitives_Ok()
+    {
+        var calc = new AdditionCalculationAttributePrimitives();
+        
+        //
+        // Initial values
+        //
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
+        
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Left Assignment");
+        inputs[1].DisplayName.Should().Be("Right Assignment");
+        
+        outputs[0].DisplayName.Should().Be("Result");
+        
+        inputs[0].GetValue().Should().Be("2");
+        inputs[1].GetValue().Should().Be("3");
+        
+        outputs[0].GetValue().Should().Be("5");
+        calc.Result.Should().Be(5);
+        
+        //
+        // Updated values (checking that InternalCalcValue works, pairing with true primitive value)
+        //
+        inputs[0].SetValue("6");
+        
+        Reader.Update(calc);
+        outputs[0].GetValue().Should().Be("9");
+        calc.Result.Should().Be(9);
+    }
+   
     [Fact]
     public void Updated_FromUI_Ok()
     {
-        var calc = new AdditionCalculation();
-        calc.Type.Should().Be(typeName);
-        calc.Title.Should().Be(title);
-        
-        calc.LoadIoCollections();
+        var calc = new AdditionCalculation
+        {
+            LeftAssignment = { Value = 5 },
+            RightAssignment = { Value = 4 }
+        };
 
-        calc.LeftAssignment.Value = 5;
-        calc.RightAssignment.Value = 4;
         calc.Result.Value.Should().Be(5, because: "result has not changed yet through the update method.");
-
-        calc.Update();
+    
+        Reader.Update(calc);
+        
         calc.Result.Value.Should().Be(9);
-
-        var formulae = calc.GetFormulae().ToList();
+    
+        var formulae = Reader.GetFormulae(calc).ToList();
         formulae.Count.Should().Be(3);
         formulae[0].Expression.Count.Should().Be(1);
         formulae[0].Expression[0].Should().Be("x &=& a + b");

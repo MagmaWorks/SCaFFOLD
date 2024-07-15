@@ -27,12 +27,13 @@
     <ItemGroup>
       <None Remove="ImageFromPng.png" />
       <EmbeddedResource Include="ImageAsEmbeddedResource.png" />
-      <Reference Include="Scaffold.Core">
-        <HintPath>..\..\..\..\Web\Scaffold.App\Scaffold.App\LocalDependencies\Scaffold.Core.dll</HintPath>
-      </Reference>
       <None Update="ImageAsRelativePath.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
     </ItemGroup>
 
 </Project>

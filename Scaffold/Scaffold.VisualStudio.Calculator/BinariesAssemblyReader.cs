@@ -22,10 +22,10 @@ public class BinariesAssemblyReader(string binariesFolder, string packageName)
 
             if (Path.GetExtension(file) != ".dll")
                 continue;
-
-            if (fullFilePath.Contains("Scaffold.Core.dll"))
-                continue;
-                
+            //
+            // if (fullFilePath.Contains("Scaffold.Core.dll"))
+            //     continue;
+            //     
             using var stream = File.OpenRead(fullFilePath);
 
             var memoryStream = new MemoryStream();
