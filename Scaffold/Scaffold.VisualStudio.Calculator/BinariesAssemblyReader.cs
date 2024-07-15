@@ -18,15 +18,10 @@ public class BinariesAssemblyReader(string binariesFolder, string packageName)
 
         foreach (var file in Directory.GetFiles(BinariesFolder))
         {
-            var fullFilePath = file;
-
             if (Path.GetExtension(file) != ".dll")
                 continue;
-            //
-            // if (fullFilePath.Contains("Scaffold.Core.dll"))
-            //     continue;
-            //     
-            using var stream = File.OpenRead(fullFilePath);
+
+            using var stream = File.OpenRead(file);
 
             var memoryStream = new MemoryStream();
             stream.CopyTo(memoryStream);
@@ -36,13 +31,12 @@ public class BinariesAssemblyReader(string binariesFolder, string packageName)
             {
                 var loadedAssembly = context.LoadFromStream(memoryStream);
 
-                if (primary == null && fullFilePath.EndsWith(PackageName))
+                if (primary == null && file.EndsWith(PackageName))
                     primary = loadedAssembly;
             }
             finally
             {
                 memoryStream.Dispose();
-                stream.Dispose();
             }
         }
 

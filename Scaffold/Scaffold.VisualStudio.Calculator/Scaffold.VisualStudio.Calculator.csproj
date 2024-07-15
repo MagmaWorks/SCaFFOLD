@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
     <ProjectReference Include="..\Scaffold.VisualStudio.Models\Scaffold.VisualStudio.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CSharpMath" Version="0.5.1" />
     <PackageReference Include="CSharpMath.SkiaSharp" Version="0.5.1" />
+    <PackageReference Include="Scaffold.Core" Version="0.0.1-alpha" />
   </ItemGroup>
 
 </Project>

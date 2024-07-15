@@ -5,6 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AssemblyName>Scaffold.Core</AssemblyName>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>0.0.1-alpha</Version>
+        <Authors>MagmaWorks</Authors>
+        <PackageProjectUrl>https://github.com/MagmaWorks/SCaFFOLD</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>

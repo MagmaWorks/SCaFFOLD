@@ -59,12 +59,16 @@ internal static class Program
 
         var reader = new CalculationReader();
 
+        // One method call must be made before adding to the flat class, so the reader can obtain metadata information.
+        var inputs = reader.GetInputs(instance);
+        var outputs = reader.GetOutputs(instance);
+        
         result.CalculationDetail = new CalculationDetail
         {
             Title = instance.Title,
             Type = instance.Type,
-            Inputs = WriteCalcValueList(reader.GetInputs(instance), "input"),
-            Outputs = WriteCalcValueList(reader.GetOutputs(instance), "output"),
+            Inputs = WriteCalcValueList(inputs, "input"),
+            Outputs = WriteCalcValueList(outputs, "output"),
             Formulae = WriteDisplayFormulae(instance.GetFormulae(), instance.GetType())
         };
     }
