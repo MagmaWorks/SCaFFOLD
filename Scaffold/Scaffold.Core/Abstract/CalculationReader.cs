@@ -3,6 +3,7 @@ using Scaffold.Core.Attributes;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
+using Scaffold.Core.Static;
 
 namespace Scaffold.Core.Abstract;
 
@@ -20,7 +21,7 @@ public class CalculationReader
 
     private static void ReadMetadata(CacheItem cacheItem)
     {
-        var fallbackValue = cacheItem.Type.Name;
+        var fallbackValue = cacheItem.Type.Name.SplitPascalCaseToString();
         
         var metadata = cacheItem.Type.GetCustomAttribute<CalcMetadataAttribute>();
         if (metadata == null)
@@ -34,6 +35,21 @@ public class CalculationReader
             cacheItem.Calculation.Type = metadata.TypeName ?? fallbackValue;
         }
     }
+
+    private static ICalcValue GetCalcValue(PropertyInfo property, CacheItem cacheItem)
+    {
+        if (property.GetValue(cacheItem.Calculation) is not ICalcValue calcValue)
+        {
+            var propertyType = property.PropertyType;
+            if (propertyType.IsAcceptedPrimitive() == false)
+                return null; 
+                
+            calcValue = new InternalCalcValue(cacheItem.Calculation, propertyType, property.Name);
+        }
+            
+        calcValue.DisplayName ??= property.Name.SplitPascalCaseToString();
+        return calcValue;
+    }
     
     private static void LoadByAttributes(CacheItem cacheItem)
     {
@@ -45,10 +61,9 @@ public class CalculationReader
             if (baseAttribute == null)
                 continue;
 
-            if (property.GetValue(cacheItem.Calculation) is not ICalcValue calcValue)
+            var calcValue = GetCalcValue(property, cacheItem);
+            if (calcValue == null)
                 continue;
-            
-            calcValue.DisplayName ??= property.Name;
             
             switch (baseAttribute.Type)
             {

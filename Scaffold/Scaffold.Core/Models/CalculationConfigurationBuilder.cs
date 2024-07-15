@@ -1,5 +1,8 @@
 ﻿using System.Linq.Expressions;
+using System.Text.RegularExpressions;
+using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.Static;
 
 namespace Scaffold.Core.Models;
 
@@ -14,8 +17,9 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
             Type = type;
         }
         
-        public string Name { get; set; }
-        public Type Type { get; set; }
+        public string Name { get; }
+        public Type Type { get; }
+        public ICalcValue CalcValue { get; set; }
     }
     
     private T ConfigurationContext { get; } = configurationContext;
@@ -24,8 +28,11 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
     internal List<ICalcValue> Inputs { get; } = [];
     internal List<ICalcValue> Outputs { get; } = [];
     
-    private static void ThrowIfNotCalcValue(Type type)
+    private static void ThrowIfNotCalcValueCapable(Type type)
     {
+        if (type.IsAcceptedPrimitive())
+            return; 
+        
         var isCalcValue = type.GetInterface(nameof(ICalcValue)) != null;
         if (isCalcValue == false)
             throw new ArgumentException("Only properties and fields based on ICalcValue can be defined with calculation configuration.");
@@ -38,16 +45,16 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
         
         foreach (var arg in expression.Arguments)
         {
-            ThrowIfNotCalcValue(arg.Type);
+            ThrowIfNotCalcValueCapable(arg.Type);
 
             var memberName = expression.Members[expression.Arguments.IndexOf(arg)].Name;
-            Members.Add(new ContextMember(memberName, expression.Type));
+            Members.Add(new ContextMember(memberName, arg.Type));
         }
     }
 
     private void ReadMemberExpression(MemberExpression expression)
     {
-        ThrowIfNotCalcValue(expression.Type);
+        ThrowIfNotCalcValueCapable(expression.Type);
 
         var member = new ContextMember(expression.Member.Name, expression.Type);
         Members.Add(member);
@@ -55,8 +62,19 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
 
     private ICalcValue GetCalcValue(ContextMember member)
     {
-        var memberInfo = ConfigurationContext.GetType().GetProperty(member.Name);
-        return memberInfo?.GetValue(ConfigurationContext) as ICalcValue;
+        if (member.CalcValue != null)
+            return member.CalcValue;
+
+        if (member.Type.IsAcceptedPrimitive())
+            member.CalcValue = new InternalCalcValue(ConfigurationContext, member.Type, member.Name);
+        else
+            member.CalcValue = 
+                ConfigurationContext
+                    .GetType()
+                    .GetProperty(member.Name)?
+                    .GetValue(ConfigurationContext) as ICalcValue;
+
+        return member.CalcValue;
     }
 
     private void AddToCalcValueCollection(List<ICalcValue> collection)
@@ -64,7 +82,7 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
         foreach (var member in Members)
         {
             var calcValue = GetCalcValue(member);
-            calcValue.DisplayName ??= member.Name;
+            calcValue.DisplayName ??= member.Name.SplitPascalCaseToString();
             collection.Add(calcValue);
         }
     }
@@ -76,7 +94,7 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
     
     public void SetMetadata(string title, string type)
     {
-        var fallbackValue = typeof(T).Name;
+        var fallbackValue = typeof(T).Name.SplitPascalCaseToString();
         
         ConfigurationContext.Title = title ?? fallbackValue;
         ConfigurationContext.Type = type ?? fallbackValue;

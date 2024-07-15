@@ -21,12 +21,11 @@ public class CalcMetadataTests
     [Fact]
     public void CalcMetadataTypeNameConstructor_Ok()
     {
-        const string fallbackValue = nameof(CalcMetadataTypeNameConstructor);
         var calc = new CalcMetadataTypeNameConstructor();
         Reader.Update(calc);
         
         calc.Type.Should().Be("TypeNameSet");
-        calc.Title.Should().Be(fallbackValue);
+        calc.Title.Should().Be("Calc Metadata Type Name Constructor");
     }
     
     [Fact]
@@ -42,7 +41,7 @@ public class CalcMetadataTests
     [Fact]
     public void CalculationBase_FallbackValues_Used_Ok()
     {
-        const string fallbackValue = nameof(CalcMetadataFallback);
+        const string fallbackValue = "Calc Metadata Fallback";
         var calc = new CalcMetadataFallback();
         Reader.Update(calc);
         
@@ -53,23 +52,21 @@ public class CalcMetadataTests
     [Fact]
     public void FluentTitle_Ok()
     {
-        const string fallbackValue = nameof(FluentTitle);
         var calc = new FluentTitle();
         Reader.Update(calc);
         
-        calc.Type.Should().Be(fallbackValue);
+        calc.Type.Should().Be("Fluent Title");
         calc.Title.Should().Be("Core library tester");
     }
     
     [Fact]
     public void FluentType_Ok()
     {
-        const string fallbackValue = nameof(FluentType);
         var calc = new FluentType();
         Reader.Update(calc);
         
         calc.Type.Should().Be("Add values");
-        calc.Title.Should().Be(fallbackValue);
+        calc.Title.Should().Be("Fluent Type");
     }
 
     [Fact] 
