@@ -3,7 +3,7 @@ using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Core.Abstract;
+namespace Scaffold.Core.CalcValues;
 
 internal class InternalCalcValue : ICalcValue
 {
