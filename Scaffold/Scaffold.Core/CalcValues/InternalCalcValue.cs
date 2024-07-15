@@ -5,19 +5,12 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.CalcValues;
 
-internal class InternalCalcValue : ICalcValue
+internal sealed class InternalCalcValue(ICalculation calculation, Type valueType, string memberName) : ICalcValue
 {
-    private ICalculation Calculation { get; }
-    private Type ValueType { get; }
-    private string MemberName { get; }
-    
-    public InternalCalcValue(ICalculation calculation, Type valueType, string memberName)
-    {
-        Calculation = calculation;
-        ValueType = valueType;
-        MemberName = memberName;
-    }
-    
+    private ICalculation Calculation { get; } = calculation;
+    private Type ValueType { get; } = valueType;
+    private string MemberName { get; } = memberName;
+
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
     public string UnitName => Unit?.QuantityInfo.Name ?? "";
@@ -36,15 +29,8 @@ internal class InternalCalcValue : ICalcValue
     
     private object Convert(string input)
     {
-        try
-        {
-            var converter = TypeDescriptor.GetConverter(ValueType);
-            return converter.ConvertFromString(input);
-        }
-        catch (NotSupportedException)
-        {
-            return default;
-        }
+        var converter = TypeDescriptor.GetConverter(ValueType);
+        return converter.ConvertFromString(input);
     }
     
     public void SetValue(string strValue)
