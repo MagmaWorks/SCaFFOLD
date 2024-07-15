@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Abstract;
-using Scaffold.Core.Attributes;
-using Scaffold.Core.CalcValues;
+﻿using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
@@ -9,20 +7,19 @@ using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
-[CalcMetadata("Add values", "Core library tester")]
-public class AdditionCalculation : ICalculation
+public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration<AdditionCalculationFluent>
 {
-    public AdditionCalculation()
+    public AdditionCalculationFluent()
     {
         LeftAssignment = new CalcDouble("Left assignment", 2);
         RightAssignment = new CalcDouble(3);
-        Result = new CalcDouble("Result", Add());
+        Result = new CalcDouble(Add());
     }
     
-    [InputCalcValue] public CalcDouble LeftAssignment { get; set; }
-    [InputCalcValue] public CalcDouble RightAssignment { get; set; }
+    public CalcDouble LeftAssignment { get; set; }
+    public CalcDouble RightAssignment { get; set; }
     
-    [OutputCalcValue] public CalcDouble Result { get; set; }
+    public CalcDouble Result { get; set; }
 
     private double Add()
         => LeftAssignment.Value + RightAssignment.Value;
@@ -67,4 +64,15 @@ public class AdditionCalculation : ICalculation
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
+    
+    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> configurationBuilder)
+    {
+        configurationBuilder
+            .Define(x => new { x.LeftAssignment, x.RightAssignment })
+            .AsInput();
+        
+        configurationBuilder.Define(x => x.Result)
+            .WithDisplayName("Result")
+            .AsOutput();
+    }
 }

@@ -5,11 +5,10 @@ namespace Scaffold.Core.CalcValues;
 
 public sealed class CalcDouble : CalcValue<double> 
 {
-    public CalcDouble(string name, double value) 
-        : base(name)
-    {
-        Value = value;
-    }
+    public CalcDouble(double value) : this(null, value) {}
+    
+    public CalcDouble(string name, double value) : base(name)
+        => Value = value;
     
     public CalcDouble(string name, string symbol, OasysUnits.IQuantity unit, double value) 
         : this(name, value)

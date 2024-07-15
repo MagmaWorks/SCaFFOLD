@@ -20,8 +20,18 @@ public class CalcSiQuantity : ICalcSIQuantity
 
     CalcStatus ICalcValue.Status { get; set; }
     
-    string ICalcValue.DisplayName => _displayName;
-    string ICalcValue.Symbol => _symbol;
+    string ICalcValue.DisplayName
+    {
+        get => _displayName;
+        set => _displayName = value;
+    }
+
+    string ICalcValue.Symbol
+    {
+        get => _symbol;
+        set => _symbol = value;
+    }
+
     IQuantity ICalcSIQuantity.Quantity => _quantity;
     string ICalcQuantity.Unit => _quantity.Unit.ToString(); 
     

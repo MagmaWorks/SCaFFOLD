@@ -49,7 +49,7 @@ internal static class Program
         return true;
     }
         
-    private static void ReadInstance(CalculationBase instance, CalculationResult result)
+    private static void ReadInstance(ICalculation instance, CalculationResult result)
     {
         if (instance == null)
         {
@@ -57,12 +57,14 @@ internal static class Program
             return;
         }
 
+        var reader = new CalculationReader();
+
         result.CalculationDetail = new CalculationDetail
         {
             Title = instance.Title,
             Type = instance.Type,
-            Inputs = WriteCalcValueList(instance.GetInputs(), "input"),
-            Outputs = WriteCalcValueList(instance.GetOutputs(), "output"),
+            Inputs = WriteCalcValueList(reader.GetInputs(instance), "input"),
+            Outputs = WriteCalcValueList(reader.GetOutputs(instance), "output"),
             Formulae = WriteDisplayFormulae(instance.GetFormulae(), instance.GetType())
         };
     }
@@ -308,9 +310,8 @@ internal static class Program
                     continue;
             
                 var calculationResult = new CalculationResult {AssemblyQualifiedTypeName = calculation.FullName};
-                var instance = (CalculationBase)assembly.CreateInstance(calculation.FullName);
-            
-                instance?.LoadIoCollections();
+                var instance = (ICalculation)assembly.CreateInstance(calculation.FullName);
+                
                 ReadInstance(instance, calculationResult);
 
                 assemblyResult.Results.Add(calculationResult);

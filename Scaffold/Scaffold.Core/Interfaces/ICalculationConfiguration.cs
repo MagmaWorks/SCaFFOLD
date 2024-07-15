@@ -1,6 +1,8 @@
-﻿namespace Scaffold.Core.Interfaces;
+﻿using Scaffold.Core.Models;
 
-public interface ICalculationConfiguration<T> where T : ICalculation
+namespace Scaffold.Core.Interfaces;
+
+public interface ICalculationConfiguration<T> where T : class, ICalculation
 {
-    
+    void Configure(CalculationConfigurationBuilder<T> configurationBuilder);
 }

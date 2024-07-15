@@ -14,24 +14,14 @@ public class CalcMetadataEmptyConstructor : ICalculation
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs()
-    {
-        throw new NotImplementedException();
-    }
 
-    public IReadOnlyList<ICalcValue> GetOutputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<Formula> GetFormulae()
-    {
-        throw new NotImplementedException();
-    }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
     {
-        throw new NotImplementedException();
+        // not required.
     }
 }
 
@@ -42,24 +32,13 @@ public class CalcMetadataTypeNameConstructor : ICalculation
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IReadOnlyList<ICalcValue> GetOutputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<Formula> GetFormulae()
-    {
-        throw new NotImplementedException();
-    }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
     {
-        throw new NotImplementedException();
+        // not required.
     }
 }
 
@@ -70,24 +49,13 @@ public class CalcMetadataTypeAndTitleConstructor : ICalculation
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IReadOnlyList<ICalcValue> GetOutputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<Formula> GetFormulae()
-    {
-        throw new NotImplementedException();
-    }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
     {
-        throw new NotImplementedException();
+        // not required.
     }
 }
 
@@ -97,23 +65,12 @@ public class CalcMetadataFallback : ICalculation
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IReadOnlyList<ICalcValue> GetOutputs()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<Formula> GetFormulae()
-    {
-        throw new NotImplementedException();
-    }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
     {
-        throw new NotImplementedException();
+        // not required.
     }
 }

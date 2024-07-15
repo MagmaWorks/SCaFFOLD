@@ -1,18 +1,14 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
-using Scaffold.Core.Enums;
 using Scaffold.XUnitTests.Core;
-
+// Special TODO: base types to a calc value type (e.g. double > CalcDouble under the hood).
 namespace Scaffold.XUnitTests.UnitTests;
 
-/// <summary>
-/// The host application normally calls LoadIoCollections. When it is not called, the default values are expected.
-/// </summary>
 public class AdditionCalculationTests
 {
     private CalculationReader Reader { get; } = new();
-    private const string typeName = "Add values";
-    private const string title = "Core library tester";
+    private const string TypeName = "Add values";
+    private const string Title = "Core library tester";
     
     [Fact]
     public void UnreadCalculation_Ok()
@@ -30,11 +26,53 @@ public class AdditionCalculationTests
         var inputs = Reader.GetInputs(calc);
         var outputs = Reader.GetOutputs(calc);
         
-        calc.Type.Should().Be(typeName);
-        calc.Title.Should().Be(title);
+        calc.Type.Should().Be(TypeName);
+        calc.Title.Should().Be(Title);
         
         inputs.Count.Should().Be(2);
         outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Left assignment");
+        inputs[1].DisplayName.Should().Be("RightAssignment", because: "Fallback to property name, class did not set DisplayName");
+        outputs[0].DisplayName.Should().Be("Result");
+    }
+    
+    [Fact]
+    public void Fluent_Read_Ok()
+    {
+        var calc = new AdditionCalculationFluent();
+        
+        var inputs = Reader.GetInputs(calc);
+        var outputs = Reader.GetOutputs(calc);
+        
+        inputs.Count.Should().Be(2);
+        outputs.Count.Should().Be(1);
+        
+        inputs[0].DisplayName.Should().Be("Left assignment");
+        inputs[1].DisplayName.Should().Be("RightAssignment", because: "Fallback to property name, class did not set DisplayName");
+        outputs[0].DisplayName.Should().Be("Result");
+    }
+    
+    [Fact]
+    public void Fluent_DisplayNameSingle_Ok()
+    {
+        var calc = new FluentDisplayNameSingle();
+        var outputs = Reader.GetOutputs(calc);
+
+        outputs[0].DisplayName.Should().Be("Result");
+    }
+    
+    [Fact]
+    public void Fluent_DisplayNameMultiple_Ok()
+    {
+        var calc = new FluentDisplayNameMultiple();
+        var outputs = Reader.GetOutputs(calc);
+
+        outputs[0].DisplayName.Should().Be("Result (1)");
+        outputs[1].DisplayName.Should().Be("Result (2)");
+        
+        outputs[0].Symbol.Should().Be("=");
+        outputs[1].Symbol.Should().Be("=");
     }
     
     // [Fact]
