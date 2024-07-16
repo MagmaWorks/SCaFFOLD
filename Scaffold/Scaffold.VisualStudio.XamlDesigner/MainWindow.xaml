@@ -14,6 +14,9 @@
     - code-behind in this project is used to simulate events that would be triggered by the VS AddIn
     - Window background and button background chosen to illustrate that it is not XAML default - in the VS AddIn project, the user's theme will be used.
     - Converters do not work in the VS project - data triggers have been used instead.
+    - Wrap all images that need to have visibility in an outer control like border.
+            The image content will be replaced with CrispImages on VS so the definition will get broken when using data triggers inside an image control.
+            Instead, place the data trigger on the border.
     - Rather than getting styles attached to target types, the styles are set directly on the controls to ensure they apply properly in both contexts.
     - The click handler on ItemsControl has to be removed manually, but this will flag as red in the Vs AddIn project, so it is easy to find-->
 <Window
@@ -302,14 +305,9 @@
                                             </Style>
                                         </StackPanel.Style>
 
-                                        <Image
-                                            Height="20"
-                                            Source="../Images/StatusOK.png"
-                                            Tag="KnownMonikers.StatusOK"
-                                            VerticalAlignment="Center"
-                                            Width="20">
-                                            <Image.Style>
-                                                <Style TargetType="{x:Type Image}">
+                                        <Border Background="Transparent" BorderThickness="0">
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
 
                                                     <Style.Triggers>
@@ -318,17 +316,18 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Image.Style>
-                                        </Image>
+                                            </Border.Style>
+                                            <Image
+                                                Height="20"
+                                                Source="../Images/StatusOK.png"
+                                                Tag="KnownMonikers.StatusOK"
+                                                VerticalAlignment="Center"
+                                                Width="20" />
+                                        </Border>
 
-                                        <Image
-                                            Height="20"
-                                            Source="../Images/StatusInvalid.png"
-                                            Tag="KnownMonikers.StatusInvalid"
-                                            VerticalAlignment="Center"
-                                            Width="20">
-                                            <Image.Style>
-                                                <Style TargetType="{x:Type Image}">
+                                        <Border Background="Transparent" BorderThickness="0">
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
 
                                                     <Style.Triggers>
@@ -337,17 +336,18 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Image.Style>
-                                        </Image>
+                                            </Border.Style>
+                                            <Image
+                                                Height="20"
+                                                Source="../Images/StatusInvalid.png"
+                                                Tag="KnownMonikers.StatusInvalid"
+                                                VerticalAlignment="Center"
+                                                Width="20" />
+                                        </Border>
 
-                                        <Image
-                                            Height="20"
-                                            Source="../Images/StatusWarning.png"
-                                            Tag="KnownMonikers.StatusWarning"
-                                            VerticalAlignment="Center"
-                                            Width="20">
-                                            <Image.Style>
-                                                <Style TargetType="{x:Type Image}">
+                                        <Border Background="Transparent" BorderThickness="0">
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Visibility" Value="Visible" />
 
                                                     <Style.Triggers>
@@ -359,8 +359,14 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Image.Style>
-                                        </Image>
+                                            </Border.Style>
+                                            <Image
+                                                Height="20"
+                                                Source="../Images/StatusWarning.png"
+                                                Tag="KnownMonikers.StatusWarning"
+                                                VerticalAlignment="Center"
+                                                Width="20" />
+                                        </Border>
 
                                         <TextBlock
                                             Margin="5,0,0,0"
@@ -408,15 +414,12 @@
                                                                 <ColumnDefinition Width="32" />
                                                             </Grid.ColumnDefinitions>
 
-                                                            <Image
-                                                                Grid.Column="0"
-                                                                Height="24"
-                                                                Source="../Images/Collapse.png"
-                                                                Tag="KnownMonikers.Collapse"
-                                                                VerticalAlignment="Top"
-                                                                Width="24">
-                                                                <Image.Style>
-                                                                    <Style TargetType="{x:Type Image}">
+                                                            <Border
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Grid.Column="0">
+                                                                <Border.Style>
+                                                                    <Style TargetType="{x:Type Border}">
                                                                         <Setter Property="Visibility" Value="Visible" />
 
                                                                         <Style.Triggers>
@@ -425,18 +428,21 @@
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </Image.Style>
-                                                            </Image>
+                                                                </Border.Style>
+                                                                <Image
+                                                                    Height="24"
+                                                                    Source="../Images/Collapse.png"
+                                                                    Tag="KnownMonikers.Collapse"
+                                                                    VerticalAlignment="Top"
+                                                                    Width="24" />
+                                                            </Border>
 
-                                                            <Image
-                                                                Grid.Column="0"
-                                                                Height="24"
-                                                                Source="../Images/Expand.png"
-                                                                Tag="KnownMonikers.Expand"
-                                                                VerticalAlignment="Top"
-                                                                Width="24">
-                                                                <Image.Style>
-                                                                    <Style TargetType="{x:Type Image}">
+                                                            <Border
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Grid.Column="0">
+                                                                <Border.Style>
+                                                                    <Style TargetType="{x:Type Border}">
                                                                         <Setter Property="Visibility" Value="Collapsed" />
 
                                                                         <Style.Triggers>
@@ -445,18 +451,21 @@
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </Image.Style>
-                                                            </Image>
+                                                                </Border.Style>
+                                                                <Image
+                                                                    Height="24"
+                                                                    Source="../Images/Expand.png"
+                                                                    Tag="KnownMonikers.Expand"
+                                                                    VerticalAlignment="Top"
+                                                                    Width="24" />
+                                                            </Border>
 
-                                                            <Image
-                                                                Grid.Column="2"
-                                                                Height="20"
-                                                                Source="../Images/StatusOK.png"
-                                                                Tag="KnownMonikers.StatusOK"
-                                                                VerticalAlignment="Center"
-                                                                Width="20">
-                                                                <Image.Style>
-                                                                    <Style TargetType="{x:Type Image}">
+                                                            <Border
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Grid.Column="2">
+                                                                <Border.Style>
+                                                                    <Style TargetType="{x:Type Border}">
                                                                         <Setter Property="Visibility" Value="Collapsed" />
 
                                                                         <Style.Triggers>
@@ -465,18 +474,21 @@
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </Image.Style>
-                                                            </Image>
+                                                                </Border.Style>
+                                                                <Image
+                                                                    Height="20"
+                                                                    Source="../Images/StatusOK.png"
+                                                                    Tag="KnownMonikers.StatusOK"
+                                                                    VerticalAlignment="Center"
+                                                                    Width="20" />
+                                                            </Border>
 
-                                                            <Image
-                                                                Grid.Column="2"
-                                                                Height="20"
-                                                                Source="../Images/StatusInvalid.png"
-                                                                Tag="KnownMonikers.StatusInvalid"
-                                                                VerticalAlignment="Center"
-                                                                Width="20">
-                                                                <Image.Style>
-                                                                    <Style TargetType="{x:Type Image}">
+                                                            <Border
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                Grid.Column="2">
+                                                                <Border.Style>
+                                                                    <Style TargetType="{x:Type Border}">
                                                                         <Setter Property="Visibility" Value="Visible" />
 
                                                                         <Style.Triggers>
@@ -485,8 +497,14 @@
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </Image.Style>
-                                                            </Image>
+                                                                </Border.Style>
+                                                                <Image
+                                                                    Height="20"
+                                                                    Source="../Images/StatusInvalid.png"
+                                                                    Tag="KnownMonikers.StatusInvalid"
+                                                                    VerticalAlignment="Center"
+                                                                    Width="20" />
+                                                            </Border>
 
                                                             <TextBlock
                                                                 FontSize="14"
@@ -500,11 +518,11 @@
                                                     <DockPanel Grid.Row="1" Margin="34,0,0,0">
                                                         <DockPanel.Style>
                                                             <Style TargetType="{x:Type DockPanel}">
-                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                <Setter Property="Visibility" Value="Collapsed" />
 
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding Path=IsExpanded}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Setter Property="Visibility" Value="Visible" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -635,13 +653,9 @@
                                                                             <StackPanel Grid.Column="1" Orientation="Horizontal">
                                                                                 <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding Value}" />
 
-                                                                                <Image
-                                                                                    Margin="10,0,0,0"
-                                                                                    MaxWidth="12"
-                                                                                    Source="{Binding Symbol}"
-                                                                                    Stretch="Uniform">
-                                                                                    <Image.Style>
-                                                                                        <Style TargetType="{x:Type Image}">
+                                                                                <Border Background="Transparent" BorderThickness="0">
+                                                                                    <Border.Style>
+                                                                                        <Style TargetType="{x:Type Border}">
                                                                                             <Setter Property="Visibility" Value="Visible" />
 
                                                                                             <Style.Triggers>
@@ -650,8 +664,13 @@
                                                                                                 </DataTrigger>
                                                                                             </Style.Triggers>
                                                                                         </Style>
-                                                                                    </Image.Style>
-                                                                                </Image>
+                                                                                    </Border.Style>
+                                                                                    <Image
+                                                                                        Margin="10,0,0,0"
+                                                                                        MaxWidth="12"
+                                                                                        Source="{Binding Symbol}"
+                                                                                        Stretch="Uniform" />
+                                                                                </Border>
                                                                             </StackPanel>
                                                                         </Grid>
                                                                     </DataTemplate>
@@ -720,9 +739,9 @@
                                                                             <ItemsControl ItemsSource="{Binding Expressions}" Margin="0,20,0,0">
                                                                                 <ItemsControl.ItemTemplate>
                                                                                     <DataTemplate>
-                                                                                        <Image Source="{Binding}" Stretch="None">
-                                                                                            <Image.Style>
-                                                                                                <Style TargetType="{x:Type Image}">
+                                                                                        <Border Background="Transparent" BorderThickness="0">
+                                                                                            <Border.Style>
+                                                                                                <Style TargetType="{x:Type Border}">
                                                                                                     <Setter Property="Visibility" Value="Visible" />
 
                                                                                                     <Style.Triggers>
@@ -731,8 +750,9 @@
                                                                                                         </DataTrigger>
                                                                                                     </Style.Triggers>
                                                                                                 </Style>
-                                                                                            </Image.Style>
-                                                                                        </Image>
+                                                                                            </Border.Style>
+                                                                                            <Image Source="{Binding}" Stretch="None" />
+                                                                                        </Border>
                                                                                     </DataTemplate>
                                                                                 </ItemsControl.ItemTemplate>
                                                                             </ItemsControl>
@@ -806,7 +826,7 @@
                                         IsChecked="{Binding Settings.DotnetBuildNoRestore}"
                                         Margin="0,5,0,0"
                                         Style="{StaticResource RadioStyle}">
-                                        dotnet build --no-restore (prevents restore attempt from NuGet)
+                                        <TextBlock Text="dotnet build --no-restore (prevents restore attempt from NuGet)" TextWrapping="Wrap" />
                                     </RadioButton>
                                 </StackPanel>
                             </StackPanel>

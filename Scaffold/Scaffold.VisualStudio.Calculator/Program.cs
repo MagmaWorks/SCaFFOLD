@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using CSharpMath.SkiaSharp;
@@ -167,8 +168,15 @@ internal static class Program
         {
             if (subDirectory.Name == RunId)
                 continue;
-            
-            subDirectory.Delete(true);
+
+            try
+            {
+                subDirectory.Delete(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to delete previous run  folder {subDirectory}; {ex.Message}");
+            }
         }
     }
 
