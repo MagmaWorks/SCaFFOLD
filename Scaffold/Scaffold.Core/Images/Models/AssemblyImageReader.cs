@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Scaffold.Core.Images.Interfaces;
+﻿using Scaffold.Core.Images.Interfaces;
 
 namespace Scaffold.Core.Images.Models;
 

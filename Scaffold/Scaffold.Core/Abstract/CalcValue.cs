@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using OasysUnits;
+﻿using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 

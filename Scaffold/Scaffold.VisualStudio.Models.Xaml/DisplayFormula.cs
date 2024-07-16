@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using System.Windows;
 using Microsoft.VisualStudio.Extensibility.UI;
 
 namespace Scaffold.VisualStudio.Models.Xaml;

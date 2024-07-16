@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Web;
-using System.Windows;
 using System.Xml;
 using Microsoft.VisualStudio.Extensibility.UI;
 using Microsoft.VisualStudio.RpcContracts.Documents;
@@ -131,28 +129,6 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         };
     }
 
-    private bool HasCalculations(ProjectDetails projectDetails)
-    {
-        if (File.Exists(projectDetails.AssemblyPath()) == false)
-        {
-            var dotnetBuild = new DotnetBuild();
-            var result = dotnetBuild.Run(projectDetails.ProjectFilePath, Settings.DotnetBuildNoRestore);
-
-            if (result.ExitCode != 0)
-                throw new ArgumentException(string.Join(',', result.Output));
-        }
-
-        // Note: This is run a second time on purpose - if it still doesn't exist, it is exceptional.
-        if (File.Exists(projectDetails.AssemblyPath()) == false)
-            throw new ArgumentException(
-                $"Failed to load the assembly after dotnet build - it could not be found under path {projectDetails.AssemblyPath()}");
-            
-        var assembly = Assembly.LoadFrom(projectDetails.AssemblyPath());
-        var matchingTypes = assembly.GetCalculationTypes();
-        
-        return matchingTypes.Count > 0;
-    }
-
     public Task ShownAsync(DocumentEventArgs e, CancellationToken token)
     {
         if (WatcherIsRunning)
@@ -165,10 +141,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
 
         var fileInfo = new FileInfo(e.Moniker.AbsolutePath);
         var projectDetails = GetProjectDetails(fileInfo.Directory);
-
-        if (HasCalculations(projectDetails) == false)
-            return Task.CompletedTask;
-
+        
         ProjectDetails = projectDetails;
         ActiveProjectPath = projectDetails.ProjectFilePath;
 
@@ -229,16 +202,17 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
         {
             updated.Add(new TreeItem(fullResult.RunError) { IsExpanded = true });
         }
-
-        Watching.Clear();
-        Watching.AddRange(updated);
-
+        
         var runEndTime = DateTime.Now;
         var runTime = (runEndTime - runStartTime).TotalSeconds;
         
         SuccessRatio = successfulResults / (double)fullResult.Results.Count;
         RunTime = $"Ran for {Math.Round(runTime, 2)} seconds, finished at {runEndTime:HH:mm:ss}";
         RunInformation = $"{successfulResults} of {fullResult.Results.Count} successful";
+        Watching.Clear();
+        
+        if (updated.Count > 0)
+            Watching.AddRange(updated);
     }
 
     public void Dispose()
