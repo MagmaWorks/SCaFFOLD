@@ -3,6 +3,7 @@ using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.Internals;
 using Scaffold.Core.Models;
 using Scaffold.Core.Static;
 

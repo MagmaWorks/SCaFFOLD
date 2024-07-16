@@ -6,7 +6,6 @@ namespace Scaffold.VisualStudio.AddIn;
 [VisualStudioContribution]
 internal class ExtensionEntrypoint : Extension
 {
-    /// <inheritdoc/>
     public override ExtensionConfiguration ExtensionConfiguration => new()
     {
         Metadata = new(
@@ -20,7 +19,5 @@ internal class ExtensionEntrypoint : Extension
     protected override void InitializeServices(IServiceCollection serviceCollection)
     {
         base.InitializeServices(serviceCollection);
-
-        // You can configure dependency injection here by adding services to the serviceCollection.
     }
 }

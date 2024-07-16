@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using CSharpMath.SkiaSharp;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using Scaffold.VisualStudio.Models.Main;
@@ -49,7 +50,7 @@ internal static class Program
         return true;
     }
         
-    private static void ReadInstance(ICalculation instance, CalculationResult result)
+    private static void ReadInstance(ICalculation instance, CalculationResult result, string binariesPath)
     {
         if (instance == null)
         {
@@ -69,7 +70,7 @@ internal static class Program
             Type = instance.Type,
             Inputs = WriteCalcValueList(inputs, "input"),
             Outputs = WriteCalcValueList(outputs, "output"),
-            Formulae = WriteDisplayFormulae(instance.GetFormulae(), instance.GetType())
+            Formulae = WriteDisplayFormulae(instance.GetFormulae(), binariesPath)
         };
     }
 
@@ -100,7 +101,7 @@ internal static class Program
         return output;
     }
 
-    private static List<FormulaDetail> WriteDisplayFormulae(IEnumerable<Formula> formulae, Type calculationType)
+    private static List<FormulaDetail> WriteDisplayFormulae(IEnumerable<Formula> formulae, string folderPath)
     {
         var list = new List<FormulaDetail>();
         var i = 0;
@@ -124,9 +125,8 @@ internal static class Program
             
             if (formula.Image != null)
             {
-                // TODO: The location is null. Instead use the path we have read.
-                // if (formula.Image is ImageFromRelativePath relativePath)
-                //     relativePath.ImageReader = new AssemblyImageReader(relativePath.RelativePathName, calculationType);
+                if (formula.Image is ImageFromRelativePath relativePath)
+                    relativePath.ImageReader = new AssemblyImageReader(relativePath.RelativePathName, folderPath);
                         
                 var bitmap = formula.Image.GetImage();
                 using var snapshot = bitmap.Encode(SKEncodedImageFormat.Png, 100).AsStream();
@@ -316,7 +316,7 @@ internal static class Program
                 var calculationResult = new CalculationResult {AssemblyQualifiedTypeName = calculation.FullName};
                 var instance = (ICalculation)assembly.CreateInstance(calculation.FullName);
                 
-                ReadInstance(instance, calculationResult);
+                ReadInstance(instance, calculationResult, ProjectDetails.BinariesPath());
 
                 assemblyResult.Results.Add(calculationResult);
             }

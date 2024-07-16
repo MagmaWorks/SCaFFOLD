@@ -720,13 +720,13 @@
                                                                             <ItemsControl ItemsSource="{Binding Expressions}" Margin="0,20,0,0">
                                                                                 <ItemsControl.ItemTemplate>
                                                                                     <DataTemplate>
-                                                                                        <Image Source="{Binding Expression}" Stretch="None">
+                                                                                        <Image Source="{Binding}" Stretch="None">
                                                                                             <Image.Style>
                                                                                                 <Style TargetType="{x:Type Image}">
                                                                                                     <Setter Property="Visibility" Value="Visible" />
 
                                                                                                     <Style.Triggers>
-                                                                                                        <DataTrigger Binding="{Binding Path=Expression}" Value="{x:Null}">
+                                                                                                        <DataTrigger Binding="{Binding}" Value="{x:Null}">
                                                                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                                                                         </DataTrigger>
                                                                                                     </Style.Triggers>

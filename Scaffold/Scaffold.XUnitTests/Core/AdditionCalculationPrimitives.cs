@@ -1,10 +1,7 @@
 ﻿using Scaffold.Core.Attributes;
-using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
-using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
-using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
@@ -35,6 +32,7 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
         configurationBuilder
             .Define(x => x.LeftAssignment)
             .WithDisplayName("Left assignment")
+            .WithSymbol("L")
             .AsInput();
         
         configurationBuilder

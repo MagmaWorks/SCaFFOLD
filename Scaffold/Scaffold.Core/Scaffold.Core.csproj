@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <AssemblyName>Scaffold.Core</AssemblyName>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>0.0.2-alpha</Version>
+        <Version>0.0.3-alpha</Version>
         <Authors>MagmaWorks</Authors>
         <PackageProjectUrl>https://github.com/MagmaWorks/SCaFFOLD</PackageProjectUrl>
     </PropertyGroup>

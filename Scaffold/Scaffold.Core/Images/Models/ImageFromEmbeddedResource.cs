@@ -5,7 +5,6 @@ using SkiaSharp;
 
 namespace Scaffold.Core.Images.Models;
 
-// TODO: Expand to more CalcImage types.
 public class ImageFromEmbeddedResource<T> : ICalcImage
     where T : ICalculation
 {

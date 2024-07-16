@@ -3,7 +3,6 @@ using System.Text.Json;
 using Microsoft.VisualStudio.Extensibility.UI;
 using Scaffold.VisualStudio.Models.Main;
 
-// TODO: Converter so radios can share a single property with reversal.
 namespace Scaffold.VisualStudio.Models.Xaml;
 
 /// <summary>

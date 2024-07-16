@@ -3,7 +3,6 @@ using SkiaSharp;
 
 namespace Scaffold.Core.Images.Models;
 
-// TODO: Expand to more CalcImage types.
 public class ImageFromRelativePath(string relativePathName) : ICalcImage
 {
     public string RelativePathName { get; } = relativePathName;

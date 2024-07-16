@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using Scaffold.Core.Abstract;
-using Scaffold.Core.CalcValues;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.Internals;
 using Scaffold.Core.Static;
 
 namespace Scaffold.Core.Models;

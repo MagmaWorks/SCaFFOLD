@@ -7,13 +7,9 @@ public class AssemblyImageReader : IAssemblyImageReader
 {
     private readonly List<AssemblyImage> _images = new();
 
-    public AssemblyImageReader(string relativePathName, Type typeInAssembly)
+    public AssemblyImageReader(string relativePathName, string folderPath)
     {
-        var assembly = Assembly.GetAssembly(typeInAssembly);
-        if (assembly == null)
-            throw new Exception("Assembly not found.");
-        
-        var fullFilePath = assembly.Location.Replace(assembly.ManifestModule.Name, relativePathName);
+        var fullFilePath = $@"{folderPath}\{relativePathName}";
         using var stream = File.OpenRead(fullFilePath);
         
         var memoryStream = new MemoryStream();

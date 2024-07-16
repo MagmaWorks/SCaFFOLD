@@ -12,7 +12,6 @@ using Scaffold.VisualStudio.Models.Results;
 using FileInfo = System.IO.FileInfo;
 
 // TODO: Formula text colour based on VS theme, remove border.
-// TODO: Get converters working later.
 
 //
 // Notes
@@ -150,8 +149,7 @@ public class MainWindowViewModel : NotifyPropertyChangedObject, IDocumentEventsL
             
         var assembly = Assembly.LoadFrom(projectDetails.AssemblyPath());
         var matchingTypes = assembly.GetCalculationTypes();
-
-        // TODO Dispose of loaded assembly, will require moving to its own app domain / load context.
+        
         return matchingTypes.Count > 0;
     }
 

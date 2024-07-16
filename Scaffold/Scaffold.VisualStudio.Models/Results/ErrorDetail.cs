@@ -2,7 +2,6 @@
 
 namespace Scaffold.VisualStudio.Models.Results;
 
-// TODO: Error chunks as a list so we can add some margins.
 [DataContract]
 public class ErrorDetail
 {
