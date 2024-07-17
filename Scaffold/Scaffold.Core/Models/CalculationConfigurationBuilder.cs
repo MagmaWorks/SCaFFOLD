@@ -88,16 +88,6 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
     
     public void AsInput() => AddToCalcValueCollection(Inputs);
     public void AsOutput() => AddToCalcValueCollection(Outputs);
-    public void SetTitle(string title) => SetMetadata(title, null);
-    public void SetType(string type) => SetMetadata(null, type);
-    
-    public void SetMetadata(string title, string type)
-    {
-        var fallbackValue = typeof(T).Name.SplitPascalCaseToString();
-        
-        ConfigurationContext.Title = title ?? fallbackValue;
-        ConfigurationContext.Type = type ?? fallbackValue;
-    }
     
     public CalculationConfigurationBuilder<T> Define<TProperty>(Expression<Func<T, TProperty>> expression)
     {

@@ -1,7 +1,7 @@
 ﻿namespace Scaffold.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class CalcMetadataAttribute : Attribute
+public class CalculationMetadataAttribute : Attribute
 {
     public string TypeName { get; set; }
     public string Title { get; set; }
@@ -9,21 +9,21 @@ public class CalcMetadataAttribute : Attribute
     /// <summary>
     /// Define type and title using property names.
     /// </summary>
-    public CalcMetadataAttribute(){}
+    public CalculationMetadataAttribute(){}
     
     /// <summary>
     /// Define just the type name of this calculation, independent of the class name.
     /// e.g. Punching Shear to EC2
     /// </summary>
-    public CalcMetadataAttribute(string name) => TypeName = name;
+    public CalculationMetadataAttribute(string typeName) => TypeName = typeName;
     
     /// <summary>
     /// Define just the type name of this calculation, independent of the class name.
     /// e.g. Column 3A
     /// </summary>
-    public CalcMetadataAttribute(string name, string title)
+    public CalculationMetadataAttribute(string typeName, string title)
     {
-        TypeName = name;
+        TypeName = typeName;
         Title = title;
     }
 }

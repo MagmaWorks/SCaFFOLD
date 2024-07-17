@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
-[CalcMetadata("Add values", "Core library tester")]
+[CalculationMetadata("Add values", "Core library tester")]
 public class AdditionCalculation : ICalculation
 {
     public AdditionCalculation()

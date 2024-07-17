@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Interfaces;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
@@ -49,33 +50,13 @@ public class CalcMetadataTests
         calc.Title.Should().Be(fallbackValue);
     }
     
-    [Fact]
-    public void FluentTitle_Ok()
-    {
-        var calc = new FluentTitle();
-        Reader.Update(calc);
-        
-        calc.Type.Should().Be("Fluent Title");
-        calc.Title.Should().Be("Core library tester");
-    }
-    
-    [Fact]
-    public void FluentType_Ok()
-    {
-        var calc = new FluentType();
-        Reader.Update(calc);
-        
-        calc.Type.Should().Be("Add values");
-        calc.Title.Should().Be("Fluent Type");
-    }
-
     [Fact] 
-    public void FluentMetadata_Ok()
+    public void GetMetadata_WithoutCache_Ok()
     {
-        var calc = new FluentMetadata();
-        Reader.Update(calc);
+        var calc = new FluentDisplayNameSingle();
+        var metadata = CalculationReader.GetMetadata((ICalculation) calc);
         
-        calc.Title.Should().Be("Core library tester");
-        calc.Type.Should().Be("Add values");
+        metadata.Title.Should().Be("TitleSet");
+        metadata.Type.Should().Be("TypeNameSet");
     }
 }

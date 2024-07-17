@@ -7,7 +7,7 @@ using Scaffold.Core.Models;
 namespace Scaffold.XUnitTests.Core;
 
 [ExcludeFromCodeCoverage]
-[CalcMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
+[CalculationMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
 public class CalcMetadataEmptyConstructor : ICalculation
 {
     public string Title { get; set; }
@@ -25,7 +25,7 @@ public class CalcMetadataEmptyConstructor : ICalculation
 }
 
 [ExcludeFromCodeCoverage]
-[CalcMetadata("TypeNameSet")]
+[CalculationMetadata("TypeNameSet")]
 public class CalcMetadataTypeNameConstructor : ICalculation
 {
     public string Title { get; set; }
@@ -42,7 +42,7 @@ public class CalcMetadataTypeNameConstructor : ICalculation
 }
 
 [ExcludeFromCodeCoverage]
-[CalcMetadata("TypeNameSet", "TitleSet")]
+[CalculationMetadata("TypeNameSet", "TitleSet")]
 public class CalcMetadataTypeAndTitleConstructor : ICalculation
 {
     public string Title { get; set; }

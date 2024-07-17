@@ -1,10 +1,12 @@
-﻿using Scaffold.Core.CalcValues;
+﻿using Scaffold.Core.Attributes;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
 namespace Scaffold.XUnitTests.Core;
 
+[CalculationMetadata("TypeNameSet", "TitleSet")]
 public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<FluentDisplayNameSingle>
 {
     public FluentDisplayNameSingle()

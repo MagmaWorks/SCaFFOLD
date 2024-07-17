@@ -1,4 +1,5 @@
-﻿using Scaffold.Core.CalcValues;
+﻿using Scaffold.Core.Attributes;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
@@ -7,6 +8,7 @@ using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
+[CalculationMetadata("Add values", "Core library tester")]
 public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration<AdditionCalculationFluent>
 {
     public AdditionCalculationFluent()
@@ -67,8 +69,6 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
     
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
     {
-        builder.SetMetadata("Core library tester", "Add values");
-        
         builder
             .Define(x => new { x.LeftAssignment, x.RightAssignment })
             .AsInput();

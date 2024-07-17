@@ -20,20 +20,20 @@ public class CalculationReader
 
     private List<CacheItem> Cache { get; } = [];
 
-    private static void ReadMetadata(CacheItem cacheItem)
+    private static void ReadMetadata(Type type, ICalculation calculation)
     {
-        var fallbackValue = cacheItem.Type.Name.SplitPascalCaseToString();
+        var fallbackValue = type.Name.SplitPascalCaseToString();
         
-        var metadata = cacheItem.Type.GetCustomAttribute<CalcMetadataAttribute>();
+        var metadata = type.GetCustomAttribute<CalculationMetadataAttribute>();
         if (metadata == null)
         {
-            cacheItem.Calculation.Title = fallbackValue;
-            cacheItem.Calculation.Type = fallbackValue;
+            calculation.Title = fallbackValue;
+            calculation.Type = fallbackValue;
         }
         else
         {
-            cacheItem.Calculation.Title = metadata.Title ?? fallbackValue;
-            cacheItem.Calculation.Type = metadata.TypeName ?? fallbackValue;
+            calculation.Title = metadata.Title ?? fallbackValue;
+            calculation.Type = metadata.TypeName ?? fallbackValue;
         }
     }
 
@@ -54,8 +54,6 @@ public class CalculationReader
     
     private static void LoadByAttributes(CacheItem cacheItem)
     {
-        ReadMetadata(cacheItem);
-        
         foreach (var property in cacheItem.Type.GetProperties())
         {
             var baseAttribute = property.GetCustomAttribute<CalcValueTypeAttribute>();
@@ -110,23 +108,43 @@ public class CalculationReader
             LoadByAttributes(newCacheItem);
         }
         
+        ReadMetadata(newCacheItem.Type, newCacheItem.Calculation);
         Cache.Add(newCacheItem);
         
         return newCacheItem;
     }
     
+    /// <summary>
+    /// Gets metadata only. For full cached loading of the calculation use the type parameter version of this method.
+    /// If you are passing in the calculation instance, it will automatically use the type parameter overload.
+    /// </summary>
+    public static CalculationMetadata GetMetadata(ICalculation calculation)
+    {
+        ReadMetadata(calculation.GetType(), calculation);
+        return new CalculationMetadata {Title = calculation.Title, Type = calculation.Type};
+    }
+    
+    /// <summary>
+    /// Gets metadata, loading calculation from/into cache for later manipulation.
+    /// </summary>
     public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return new CalculationMetadata {Title = cached.Calculation.Title, Type = cached.Calculation.Type};
     }
 
+    /// <summary>
+    /// Gets inputs, loading calculation from/into cache for later manipulation.
+    /// </summary>
     public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return cached.Inputs;
     }
     
+    /// <summary>
+    /// Gets outputs, loading calculation from/into cache for later manipulation.
+    /// </summary>
     public IReadOnlyList<ICalcValue> GetOutputs<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
@@ -134,6 +152,7 @@ public class CalculationReader
     }
     
     /// <summary>
+    /// Gets formulae, loading calculation from/into cache for later manipulation.
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
@@ -144,6 +163,7 @@ public class CalculationReader
     }
     
     /// <summary>
+    /// Updates the calculation, loading calculation from/into cache for later manipulation.
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
