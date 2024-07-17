@@ -168,9 +168,13 @@ public class AdditionCalculationTests
         outputs.Count.Should().Be(1);
         
         inputs[0].DisplayName.Should().Be("Left Assignment");
+        inputs[0].Symbol.Should().Be("L");
+        
         inputs[1].DisplayName.Should().Be("Right Assignment");
+        inputs[1].Symbol.Should().Be("R");
         
         outputs[0].DisplayName.Should().Be("Result");
+        outputs[0].Symbol.Should().Be("=");
         
         inputs[0].GetValue().Should().Be("2");
         inputs[1].GetValue().Should().Be("3");

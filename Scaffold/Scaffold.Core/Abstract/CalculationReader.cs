@@ -64,6 +64,9 @@ public class CalculationReader
             if (calcValue == null)
                 continue;
             
+            calcValue.DisplayName = baseAttribute.DisplayName ?? calcValue.DisplayName;
+            calcValue.Symbol = baseAttribute.Symbol ?? calcValue.Symbol;
+            
             switch (baseAttribute.Type)
             {
                 case CalcValueType.Input:

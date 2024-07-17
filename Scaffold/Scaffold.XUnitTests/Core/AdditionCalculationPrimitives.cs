@@ -93,10 +93,14 @@ public class AdditionCalculationAttributePrimitives : ICalculation
         Result = Add();
     }
     
-    [InputCalcValue] public double LeftAssignment { get; set; }
-    [InputCalcValue] public double RightAssignment { get; set; }
+    [InputCalcValue("L")] 
+    public double LeftAssignment { get; set; }
     
-    [OutputCalcValue] public double Result { get; set; }
+    [InputCalcValue("R")] 
+    public double RightAssignment { get; set; }
+    
+    [OutputCalcValue("=")] 
+    public double Result { get; set; }
 
     private double Add() => LeftAssignment + RightAssignment;
     public void Update() => Result = Add();
