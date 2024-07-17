@@ -4,5 +4,5 @@ namespace Scaffold.Core.Interfaces;
 
 public interface ICalculationConfiguration<T> where T : class, ICalculation
 {
-    void Configure(CalculationConfigurationBuilder<T> configurationBuilder);
+    void Configure(CalculationConfigurationBuilder<T> builder);
 }

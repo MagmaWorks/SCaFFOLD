@@ -27,20 +27,20 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
     public string Type { get; set; }
     public CalcStatus Status { get; }
     
-    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> builder)
     {
-        configurationBuilder
+        builder
             .Define(x => x.LeftAssignment)
             .WithDisplayName("Left assignment")
             .WithSymbol("L")
             .AsInput();
         
-        configurationBuilder
+        builder
             .Define(x => x.RightAssignment)
             .WithDisplayName("Right assignment")
             .AsInput();
         
-        configurationBuilder.Define(x => x.Result)
+        builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
     }
@@ -71,14 +71,14 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
     public string Type { get; set; }
     public CalcStatus Status { get; }
     
-    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitivesJoined> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitivesJoined> builder)
     {
-        configurationBuilder
+        builder
             .Define(x => new { x.LeftAssignment, x.RightAssignment })
             .WithDisplayName("Value")
             .AsInput();
         
-        configurationBuilder.Define(x => x.Result)
+        builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
     }

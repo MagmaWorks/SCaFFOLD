@@ -83,7 +83,7 @@ public class CalculationReader
         }
     }
     
-    private CacheItem Load<T>(T calculation) where T : class, ICalculation
+    private CacheItem GetCachedItem<T>(T calculation) where T : class, ICalculation
     {
         var cachedCalculation = Cache.FirstOrDefault(x => ReferenceEquals(x.Calculation, calculation));        
         if (cachedCalculation != null)
@@ -114,16 +114,22 @@ public class CalculationReader
         
         return newCacheItem;
     }
+    
+    public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation
+    {
+        var cached = GetCachedItem(calculation);
+        return new CalculationMetadata {Title = cached.Calculation.Title, Type = cached.Calculation.Type};
+    }
 
     public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation
     {
-        var cached = Load(calculation);
+        var cached = GetCachedItem(calculation);
         return cached.Inputs;
     }
     
     public IReadOnlyList<ICalcValue> GetOutputs<T>(T calculation) where T : class, ICalculation
     {
-        var cached = Load(calculation);
+        var cached = GetCachedItem(calculation);
         return cached.Outputs;
     }
     
@@ -133,7 +139,7 @@ public class CalculationReader
     /// </summary>
     public IEnumerable<Formula> GetFormulae<T>(T calculation)  where T : class, ICalculation
     {
-        var cached = Load(calculation);
+        var cached = GetCachedItem(calculation);
         return cached.Calculation.GetFormulae();
     }
     
@@ -143,7 +149,7 @@ public class CalculationReader
     /// </summary>
     public void Update<T>(T calculation)  where T : class, ICalculation
     {
-        var cached = Load(calculation);
+        var cached = GetCachedItem(calculation);
         cached.Calculation.Update();
     }
 }

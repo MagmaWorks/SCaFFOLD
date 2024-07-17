@@ -23,11 +23,15 @@ public class AdditionCalculationTests
     {
         var calc = new AdditionCalculation();
         
+        var metadata = Reader.GetMetadata(calc);
         var inputs = Reader.GetInputs(calc);
         var outputs = Reader.GetOutputs(calc);
         
         calc.Type.Should().Be(TypeName);
         calc.Title.Should().Be(Title);
+
+        metadata.Type.Should().Be(TypeName);
+        metadata.Title.Should().Be(Title);
         
         inputs.Count.Should().Be(2);
         outputs.Count.Should().Be(1);
@@ -41,9 +45,13 @@ public class AdditionCalculationTests
     public void Fluent_Read_Ok()
     {
         var calc = new AdditionCalculationFluent();
-        
+
+        var metadata = Reader.GetMetadata(calc);
         var inputs = Reader.GetInputs(calc);
         var outputs = Reader.GetOutputs(calc);
+        
+        metadata.Type.Should().Be(TypeName);
+        metadata.Title.Should().Be(Title);
         
         inputs.Count.Should().Be(2);
         outputs.Count.Should().Be(1);

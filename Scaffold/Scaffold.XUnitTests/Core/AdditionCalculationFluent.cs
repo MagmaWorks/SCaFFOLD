@@ -65,13 +65,15 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
     public string Type { get; set; }
     public CalcStatus Status { get; }
     
-    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
     {
-        configurationBuilder
+        builder.SetMetadata("Core library tester", "Add values");
+        
+        builder
             .Define(x => new { x.LeftAssignment, x.RightAssignment })
             .AsInput();
         
-        configurationBuilder.Define(x => x.Result)
+        builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
     }

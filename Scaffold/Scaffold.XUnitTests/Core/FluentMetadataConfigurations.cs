@@ -16,9 +16,9 @@ public class FluentTitle : ICalculation, ICalculationConfiguration<FluentTitle>
         // not required
     }
 
-    public void Configure(CalculationConfigurationBuilder<FluentTitle> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<FluentTitle> builder)
     {
-        configurationBuilder.SetTitle("Core library tester");
+        builder.SetTitle("Core library tester");
     }
 }
 
@@ -34,9 +34,9 @@ public class FluentType : ICalculation, ICalculationConfiguration<FluentType>
         // not required
     }
 
-    public void Configure(CalculationConfigurationBuilder<FluentType> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<FluentType> builder)
     {
-        configurationBuilder.SetType("Add values");
+        builder.SetType("Add values");
     }
 }
 
@@ -52,8 +52,8 @@ public class FluentMetadata : ICalculation, ICalculationConfiguration<FluentMeta
         // not required
     }
 
-    public void Configure(CalculationConfigurationBuilder<FluentMetadata> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<FluentMetadata> builder)
     {
-        configurationBuilder.SetMetadata("Core library tester", "Add values");
+        builder.SetMetadata("Core library tester", "Add values");
     }
 }

@@ -25,9 +25,9 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
     public string Type { get; set; }
     public CalcStatus Status { get; }
     
-    public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> builder)
     {
-        configurationBuilder.Define(x => x.Result)
+        builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
     }
@@ -55,9 +55,9 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
     public string Type { get; set; }
     public CalcStatus Status { get; }
     
-    public void Configure(CalculationConfigurationBuilder<FluentDisplayNameMultiple> configurationBuilder)
+    public void Configure(CalculationConfigurationBuilder<FluentDisplayNameMultiple> builder)
     {
-        configurationBuilder
+        builder
             .Define(x => new { x.Result, x.AnotherResult })
             .WithDisplayName("Result")
             .WithSymbol("=")
