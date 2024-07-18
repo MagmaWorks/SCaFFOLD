@@ -2,7 +2,7 @@
 
 namespace Scaffold.Core.Interfaces;
 
-public interface ICalculationConfiguration<T> where T : class, ICalculation
+public interface ICalculationConfiguration<T> where T : class, ICalculation, new()
 {
     void Configure(CalculationConfigurationBuilder<T> builder);
 }

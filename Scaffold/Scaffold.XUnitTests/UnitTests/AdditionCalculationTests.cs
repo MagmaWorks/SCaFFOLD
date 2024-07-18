@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Interfaces;
+using Scaffold.Core.Models;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
@@ -81,6 +83,19 @@ public class AdditionCalculationTests
         
         outputs[0].Symbol.Should().Be("=");
         outputs[1].Symbol.Should().Be("=");
+    }
+
+    [Fact]
+    public void Fluent_InvokedByActivator_Ok()
+    {
+        var activated = Activator.CreateInstance(typeof(FluentDisplayNameMultiple));
+        var outputs = Reader.GetOutputs((ICalculation)activated);
+        
+         outputs[0].DisplayName.Should().Be("Result (1)");
+         outputs[1].DisplayName.Should().Be("Result (2)");
+        
+         outputs[0].Symbol.Should().Be("=");
+         outputs[1].Symbol.Should().Be("=");
     }
 
     [Fact]

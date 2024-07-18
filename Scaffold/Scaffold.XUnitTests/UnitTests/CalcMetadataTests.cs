@@ -49,14 +49,4 @@ public class CalcMetadataTests
         calc.Type.Should().Be(fallbackValue);
         calc.Title.Should().Be(fallbackValue);
     }
-    
-    [Fact] 
-    public void GetMetadata_WithoutCache_Ok()
-    {
-        var calc = new FluentDisplayNameSingle();
-        var metadata = CalculationReader.GetMetadata((ICalculation) calc);
-        
-        metadata.Title.Should().Be("TitleSet");
-        metadata.Type.Should().Be("TypeNameSet");
-    }
 }

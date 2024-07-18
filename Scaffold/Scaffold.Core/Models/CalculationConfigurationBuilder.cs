@@ -5,7 +5,13 @@ using Scaffold.Core.Static;
 
 namespace Scaffold.Core.Models;
 
-public class CalculationConfigurationBuilder<T>(T configurationContext)
+public abstract class CalculationConfigurationBuilderBase
+{
+    internal List<ICalcValue> Inputs { get; } = [];
+    internal List<ICalcValue> Outputs { get; } = [];
+}
+
+public class CalculationConfigurationBuilder<T>(T configurationContext) : CalculationConfigurationBuilderBase
     where T : class, ICalculation
 {
     private class ContextMember
@@ -23,9 +29,6 @@ public class CalculationConfigurationBuilder<T>(T configurationContext)
     
     private T ConfigurationContext { get; } = configurationContext;
     private List<ContextMember> Members { get; } = [];
-    
-    internal List<ICalcValue> Inputs { get; } = [];
-    internal List<ICalcValue> Outputs { get; } = [];
     
     private static void ThrowIfNotCalcValueCapable(Type type)
     {

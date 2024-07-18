@@ -95,16 +95,21 @@ public class CalculationReader
         var isFluentConfiguration =
             newCacheItem.Type
                 .GetInterfaces()
-                .FirstOrDefault(x => x.FullName != null && x.FullName.Contains(nameof(ICalculationConfiguration<T>))) != null;
-
+                .FirstOrDefault(x => x.FullName != null && x.FullName.Contains(typeof(ICalculationConfiguration<>).Name)) != null;
+        
         if (isFluentConfiguration)
         {
-            var configurationBuilder = new CalculationConfigurationBuilder<T>(calculation);
-            var configurable = (ICalculationConfiguration<T>) calculation;
-            configurable.Configure(configurationBuilder);
+            var builderType = typeof(CalculationConfigurationBuilder<>).MakeGenericType([calculation.GetType()]);
+            var configurationBuilder = Activator.CreateInstance(builderType, [calculation]);
             
-            newCacheItem.Inputs.AddRange(configurationBuilder.Inputs);
-            newCacheItem.Outputs.AddRange(configurationBuilder.Outputs);
+            var configurationType = typeof(ICalculationConfiguration<>).MakeGenericType([calculation.GetType()]);
+            configurationType.GetMethod("Configure")?.Invoke(calculation, [configurationBuilder]);
+            
+            if (configurationBuilder is CalculationConfigurationBuilderBase baseBuilder)
+            {
+                newCacheItem.Inputs.AddRange(baseBuilder.Inputs);
+                newCacheItem.Outputs.AddRange(baseBuilder.Outputs);
+            }
         }
         else
         {
@@ -116,21 +121,11 @@ public class CalculationReader
         
         return newCacheItem;
     }
-    
-    /// <summary>
-    /// Gets metadata only. For full cached loading of the calculation use the type parameter version of this method.
-    /// If you are passing in the calculation instance, it will automatically use the type parameter overload.
-    /// </summary>
-    public static CalculationMetadata GetMetadata(ICalculation calculation)
-    {
-        ReadMetadata(calculation.GetType(), calculation);
-        return new CalculationMetadata {Title = calculation.Title, Type = calculation.Type};
-    }
-    
+
     /// <summary>
     /// Gets metadata, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation
+    public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation, new()
     {
         var cached = GetCachedItem(calculation);
         return new CalculationMetadata {Title = cached.Calculation.Title, Type = cached.Calculation.Type};
@@ -139,7 +134,7 @@ public class CalculationReader
     /// <summary>
     /// Gets inputs, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation
+    public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation, new()
     {
         var cached = GetCachedItem(calculation);
         return cached.Inputs;
@@ -159,7 +154,7 @@ public class CalculationReader
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
-    public IEnumerable<Formula> GetFormulae<T>(T calculation)  where T : class, ICalculation
+    public IEnumerable<Formula> GetFormulae<T>(T calculation)  where T : class, ICalculation, new()
     {
         var cached = GetCachedItem(calculation);
         return cached.Calculation.GetFormulae();
@@ -170,7 +165,7 @@ public class CalculationReader
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
-    public void Update<T>(T calculation)  where T : class, ICalculation
+    public void Update<T>(T calculation)  where T : class, ICalculation, new()
     {
         var cached = GetCachedItem(calculation);
         cached.Calculation.Update();
