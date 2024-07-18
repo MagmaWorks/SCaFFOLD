@@ -125,7 +125,7 @@ public class CalculationReader
     /// <summary>
     /// Gets metadata, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation, new()
+    public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return new CalculationMetadata {Title = cached.Calculation.Title, Type = cached.Calculation.Type};
@@ -134,7 +134,7 @@ public class CalculationReader
     /// <summary>
     /// Gets inputs, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation, new()
+    public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return cached.Inputs;
@@ -154,7 +154,7 @@ public class CalculationReader
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
-    public IEnumerable<Formula> GetFormulae<T>(T calculation)  where T : class, ICalculation, new()
+    public IEnumerable<Formula> GetFormulae<T>(T calculation)  where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return cached.Calculation.GetFormulae();
@@ -165,7 +165,7 @@ public class CalculationReader
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
-    public void Update<T>(T calculation)  where T : class, ICalculation, new()
+    public void Update<T>(T calculation)  where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         cached.Calculation.Update();
