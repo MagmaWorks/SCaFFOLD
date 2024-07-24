@@ -70,11 +70,11 @@ public class CalculationReader
             switch (baseAttribute.Type)
             {
                 case CalcValueType.Input:
-                    cacheItem.Inputs.Add(calcValue);
+                    cacheItem.Inputs.InsertCalcValue(calcValue);
                     break;
                 
                 case CalcValueType.Output:
-                    cacheItem.Outputs.Add(calcValue);
+                    cacheItem.Outputs.InsertCalcValue(calcValue);
                     break;
                 
                 default:

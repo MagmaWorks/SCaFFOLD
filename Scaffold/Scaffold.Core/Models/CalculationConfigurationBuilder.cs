@@ -85,7 +85,8 @@ public class CalculationConfigurationBuilder<T>(T configurationContext) : Calcul
         {
             var calcValue = GetCalcValue(member);
             calcValue.DisplayName ??= member.Name.SplitPascalCaseToString();
-            collection.Add(calcValue);
+
+            collection.InsertCalcValue(calcValue);
         }
     }
     

@@ -227,4 +227,22 @@ public class AdditionCalculationTests
         formulae[0].Expression.Count.Should().Be(1);
         formulae[0].Expression[0].Should().Be("x &=& a + b");
     }
+    
+    [Fact]
+    public void DuplicateDisplayNames_Ok()
+    {
+        var calc = new DuplicateDisplayNames();
+        var inputs = Reader.GetInputs(calc);
+        inputs[0].DisplayName.Should().Be("Value");
+        inputs[1].DisplayName.Should().Be("Value (1)");
+    }
+    
+    [Fact]
+    public void DuplicateDisplayNames_Fluent_Ok()
+    {
+        var calc = new DuplicateDisplayNamesFluent();
+        var inputs = Reader.GetInputs(calc);
+        inputs[0].DisplayName.Should().Be("Value");
+        inputs[1].DisplayName.Should().Be("Value (1)");
+    }
 }
