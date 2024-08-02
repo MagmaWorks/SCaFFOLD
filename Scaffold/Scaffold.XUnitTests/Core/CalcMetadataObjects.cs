@@ -1,105 +1,75 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Scaffold.Core.Abstract;
 using Scaffold.Core.Attributes;
+using Scaffold.Core.Enums;
+using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
 namespace Scaffold.XUnitTests.Core;
 
 [ExcludeFromCodeCoverage]
-[CalcMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
-public class CalcMetadataEmptyConstructor : CalculationBase
+[CalculationMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
+public class CalcMetadataEmptyConstructor : ICalculation
 {
-    protected override void DefineInputs()
-    {
-        throw new NotImplementedException();
-    }
+    public string Title { get; set; }
+    public string Type { get; set; }
+    public CalcStatus Status { get; }
 
-    protected override void DefineOutputs()
-    {
-        throw new NotImplementedException();
-    }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
-    public override void Update()
+    public void Update()
     {
-        throw new NotImplementedException();
-    }
-
-    protected override IEnumerable<Formula> GenerateFormulae()
-    {
-        throw new NotImplementedException();
+        // not required.
     }
 }
 
 [ExcludeFromCodeCoverage]
-[CalcMetadata("TypeNameSet")]
-public class CalcMetadataTypeNameConstructor : CalculationBase
+[CalculationMetadata("TypeNameSet")]
+public class CalcMetadataTypeNameConstructor : ICalculation
 {
-    protected override void DefineInputs()
-    {
-        throw new NotImplementedException();
-    }
+    public string Title { get; set; }
+    public string Type { get; set; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
-    protected override void DefineOutputs()
+    public void Update()
     {
-        throw new NotImplementedException();
-    }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
-    protected override IEnumerable<Formula> GenerateFormulae()
-    {
-        throw new NotImplementedException();
+        // not required.
     }
 }
 
 [ExcludeFromCodeCoverage]
-[CalcMetadata("TypeNameSet", "TitleSet")]
-public class CalcMetadataTypeAndTitleConstructor : CalculationBase
+[CalculationMetadata("TypeNameSet", "TitleSet")]
+public class CalcMetadataTypeAndTitleConstructor : ICalculation
 {
-    protected override void DefineInputs()
-    {
-        throw new NotImplementedException();
-    }
+    public string Title { get; set; }
+    public string Type { get; set; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
-    protected override void DefineOutputs()
+    public void Update()
     {
-        throw new NotImplementedException();
-    }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
-    protected override IEnumerable<Formula> GenerateFormulae()
-    {
-        throw new NotImplementedException();
+        // not required.
     }
 }
 
 [ExcludeFromCodeCoverage]
-public class CalcMetadataFallback : CalculationBase
+public class CalcMetadataFallback : ICalculation
 {
-    protected override void DefineInputs()
-    {
-        throw new NotImplementedException();
-    }
+    public string Title { get; set; }
+    public string Type { get; set; }
+    public CalcStatus Status { get; }
+    public IReadOnlyList<ICalcValue> GetInputs() => [];
+    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IEnumerable<Formula> GetFormulae() => [];
 
-    protected override void DefineOutputs()
+    public void Update()
     {
-        throw new NotImplementedException();
-    }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
-    protected override IEnumerable<Formula> GenerateFormulae()
-    {
-        throw new NotImplementedException();
+        // not required.
     }
 }

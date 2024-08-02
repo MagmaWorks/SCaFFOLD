@@ -15,11 +15,11 @@ public interface ICalculation
     /// If you do not specify a value, the class name will be used.
     /// e.g. Punching Shear to EC2
     /// </summary>
-    public string Type { get; }
+    public string Type { get; set; }
     
     public CalcStatus Status { get; }
-
-    public IReadOnlyList<ICalcValue> GetInputs();
-    public IReadOnlyList<ICalcValue> GetOutputs();
+    
     public IEnumerable<Formula> GetFormulae();
+    
+    public void Update();
 }

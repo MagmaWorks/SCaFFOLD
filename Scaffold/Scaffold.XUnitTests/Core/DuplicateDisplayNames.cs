@@ -1,4 +1,5 @@
-﻿using Scaffold.Core.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
@@ -8,13 +9,13 @@ using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 
-[CalculationMetadata("Add values", "Core library tester")]
-public class AdditionCalculation : ICalculation
+[CalculationMetadata("Duplicate", "Duplicate tester")]
+public class DuplicateDisplayNames : ICalculation
 {
-    public AdditionCalculation()
+    public DuplicateDisplayNames()
     {
-        LeftAssignment = new CalcDouble("Left assignment", 2);
-        RightAssignment = new CalcDouble(3);
+        LeftAssignment = new CalcDouble("Value", 2);
+        RightAssignment = new CalcDouble("Value", 3);
         Result = new CalcDouble("Result", Add());
     }
     
@@ -66,4 +67,25 @@ public class AdditionCalculation : ICalculation
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
+}
+
+public class DuplicateDisplayNamesFluent : ICalculation, ICalculationConfiguration<DuplicateDisplayNamesFluent>
+{
+    public double LeftAssignment { get; set; } = 2;
+    public double RightAssignment { get; set; } = 3;
+    public IEnumerable<Formula> GetFormulae() => new List<Formula>();
+    public string Title { get; set; }
+    public string Type { get; set; }
+    public CalcStatus Status { get; }
+    
+    public void Update()
+    {
+        //
+    }
+    
+    public void Configure(CalculationConfigurationBuilder<DuplicateDisplayNamesFluent> builder)
+    {
+        builder.Define(x => x.LeftAssignment).WithDisplayName("Value").AsInput();
+        builder.Define(x => x.RightAssignment).WithDisplayName("Value").AsInput();
+    }
 }

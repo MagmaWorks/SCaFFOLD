@@ -1,4 +1,5 @@
-﻿using Scaffold.Core.Images.Models;
+﻿using System.Reflection;
+using Scaffold.Core.Images.Models;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
@@ -20,10 +21,13 @@ public class ImageTests
     public void FromRelativePath_Ok()
     {
         const string relativePathName = "ImageAsRelativePath.png";
+        var executingAssembly = Assembly.GetExecutingAssembly();
+        var lastIndex = executingAssembly.Location.LastIndexOf(@"\", StringComparison.Ordinal);
+        var workingDirectory = executingAssembly.Location[..lastIndex];
         
         var image = new ImageFromRelativePath(relativePathName)
         {
-            ImageReader = new AssemblyImageReader(relativePathName, typeof(AdditionCalculation))
+            ImageReader = new AssemblyImageReader(relativePathName, workingDirectory)
         };
 
         var result = image.GetImage();

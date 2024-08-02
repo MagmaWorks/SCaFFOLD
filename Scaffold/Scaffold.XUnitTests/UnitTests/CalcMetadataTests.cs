@@ -1,14 +1,20 @@
 ﻿using FluentAssertions;
+using Scaffold.Core.Abstract;
+using Scaffold.Core.Interfaces;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
 
 public class CalcMetadataTests
 {
+    private CalculationReader Reader { get; } = new();
+    
     [Fact]
     public void CalcMetadataEmptyConstructor_Ok()
     {
         var calc = new CalcMetadataEmptyConstructor();
+        Reader.Update(calc);
+        
         calc.Type.Should().Be("TypeNameSet");
         calc.Title.Should().Be("TitleSet");
     }
@@ -16,17 +22,19 @@ public class CalcMetadataTests
     [Fact]
     public void CalcMetadataTypeNameConstructor_Ok()
     {
-        const string fallbackValue = nameof(CalcMetadataTypeNameConstructor);
         var calc = new CalcMetadataTypeNameConstructor();
+        Reader.Update(calc);
         
         calc.Type.Should().Be("TypeNameSet");
-        calc.Title.Should().Be(fallbackValue);
+        calc.Title.Should().Be("Calc Metadata Type Name Constructor");
     }
     
     [Fact]
     public void CalcMetadataTypeAndTitleConstructor_Ok()
     {
-        var calc = new CalcMetadataTypeAndTitleConstructor();
+        var calc = new CalcMetadataEmptyConstructor();
+        Reader.Update(calc);
+        
         calc.Type.Should().Be("TypeNameSet");
         calc.Title.Should().Be("TitleSet");
     }
@@ -34,8 +42,9 @@ public class CalcMetadataTests
     [Fact]
     public void CalculationBase_FallbackValues_Used_Ok()
     {
-        const string fallbackValue = nameof(CalcMetadataFallback);
+        const string fallbackValue = "Calc Metadata Fallback";
         var calc = new CalcMetadataFallback();
+        Reader.Update(calc);
         
         calc.Type.Should().Be(fallbackValue);
         calc.Title.Should().Be(fallbackValue);

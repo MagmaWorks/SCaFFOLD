@@ -5,12 +5,24 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <AssemblyName>Scaffold.Core</AssemblyName>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>0.0.11-alpha</Version>
+        <Authors>MagmaWorks</Authors>
+        <PackageProjectUrl>https://github.com/MagmaWorks/SCaFFOLD</PackageProjectUrl>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>embedded</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="OasysUnits" Version="1.0.0" />
       <PackageReference Include="SkiaSharp" Version="2.88.8" />
-      <PackageReference Include="System.Drawing.Common" Version="8.0.5" />
+      <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
     </ItemGroup>
 
 </Project>
