@@ -12,23 +12,23 @@ namespace Scaffold.Calculations
 {
     public class PunchingShear : ICalculation
     {
-        public string Title { get => "test"; set => throw new NotImplementedException(); }
+        public string Title { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Type { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public string Type => "punching";
-
-        public CalcStatus Status => CalcStatus.None;
+        public CalcStatus Status => throw new NotImplementedException();
 
         public IEnumerable<Formula> GetFormulae()
         {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<ICalcValue> GetInputs()
-        {
-            throw new NotImplementedException();
+        public PunchingShear()
+            {
+
+        
         }
 
-        public IReadOnlyList<ICalcValue> GetOutputs()
+        public void Update()
         {
             throw new NotImplementedException();
         }
