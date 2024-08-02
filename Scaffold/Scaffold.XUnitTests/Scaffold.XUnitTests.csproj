@@ -33,6 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Scaffold.Calculations\Scaffold.Calculations.csproj" />
       <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
     </ItemGroup>
 

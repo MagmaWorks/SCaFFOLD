@@ -1,26 +1,39 @@
-﻿using Scaffold.Core.Enums;
+﻿using Scaffold.Core.Attributes;
+using Scaffold.Core.CalcValues;
+using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Scaffold.Calculations
 {
     public class PunchingShear : ICalculation
     {
-        public string Title { get => "test"; set => throw new NotImplementedException(); }
-        string ICalculation.Type { get; set; }
+        string _title = "Example";
+        public string Title { get => _title; set => _title = value; }
+        string _type = "Punching Shear to EC2";
+        public string Type { get => _type; set => _type = value; }
 
-        public CalcStatus Status => throw new NotImplementedException();
+        [InputCalcValue("F", "Punching Force")]
+        public double _force { get; set; } = 1000;
+
+        [OutputCalcValue("R", "Resistance")]
+        public double _resistance { get; set; } = 0;
 
         public CalcStatus Status => CalcStatus.None;
 
         public IEnumerable<Formula> GetFormulae()
         {
-            throw new NotImplementedException();
+            return new List<Formula>();
         }
-        public void Update()
-        public IReadOnlyList<ICalcValue> GetOutputs()
+        public PunchingShear()
         {
-            throw new NotImplementedException();
+
+        }
+
+        public void Update()
+        {
+            _resistance = _force * 2;
         }
     }
 }
