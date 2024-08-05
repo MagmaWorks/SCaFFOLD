@@ -9,10 +9,8 @@ namespace Scaffold.Calculations
 {
     public class PunchingShear : ICalculation
     {
-        string _title = "Example";
-        public string Title { get => _title; set => _title = value; }
-        string _type = "Punching Shear to EC2";
-        public string Type { get => _type; set => _type = value; }
+        public string Title { get; set; } = "Example";
+        public string Type { get; set; } = "Punching Shear to EC2";
 
         [InputCalcValue("F", "Punching Force")]
         public double _force { get; set; } = 1000;

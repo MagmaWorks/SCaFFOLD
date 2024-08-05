@@ -159,7 +159,7 @@ public class CalculationReader
         var cached = GetCachedItem(calculation);
         return cached.Calculation.GetFormulae();
     }
-    
+     
     /// <summary>
     /// Updates the calculation, loading calculation from/into cache for later manipulation.
     /// Wrapper implemented to keep all reading features together.
