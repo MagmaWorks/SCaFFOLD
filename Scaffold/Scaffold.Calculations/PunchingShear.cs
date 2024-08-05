@@ -15,10 +15,13 @@ namespace Scaffold.Calculations
         public string Type { get => _type; set => _type = value; }
 
         [InputCalcValue("F", "Punching Force")]
-        public double _force { get; set; } = 1000;
+        public double _force { get; set; } = 1004;
 
         [OutputCalcValue("R", "Resistance")]
         public double _resistance { get; set; } = 0;
+
+        [InputCalcValue("G", "grade")]
+        public string _grade { get; set; } = "RC40";
 
         public CalcStatus Status => CalcStatus.None;
 
