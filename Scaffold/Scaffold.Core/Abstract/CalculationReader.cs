@@ -10,15 +10,23 @@ namespace Scaffold.Core.Abstract;
 
 public class CalculationReader
 {
-    private class CacheItem(ICalculation calculation, Type type)
+    private class CacheItem
     {
-        public ICalculation Calculation { get; } = calculation;
-        public Type Type { get; } = type;
-        public List<ICalcValue> Inputs { get; } = [];
-        public List<ICalcValue> Outputs { get; } = [];
+        public ICalculation Calculation { get; }
+        public Type Type { get; } 
+        public List<ICalcValue> Inputs { get; } 
+        public List<ICalcValue> Outputs { get; } 
+
+        public CacheItem (ICalculation calculation, Type type)
+        {
+            Type = type;
+            Calculation = calculation;
+            Inputs = new List<ICalcValue>();
+            Outputs = new List<ICalcValue>();
+        }
     }
 
-    private List<CacheItem> Cache { get; } = [];
+    private List<CacheItem> Cache { get; } = new List<CacheItem>();
 
     private static void ReadMetadata(Type type, ICalculation calculation)
     {
@@ -99,11 +107,11 @@ public class CalculationReader
         
         if (isFluentConfiguration)
         {
-            var builderType = typeof(CalculationConfigurationBuilder<>).MakeGenericType([calculation.GetType()]);
-            var configurationBuilder = Activator.CreateInstance(builderType, [calculation]);
+            var builderType = typeof(CalculationConfigurationBuilder<>).MakeGenericType(calculation.GetType());
+            var configurationBuilder = Activator.CreateInstance(builderType, calculation);
             
-            var configurationType = typeof(ICalculationConfiguration<>).MakeGenericType([calculation.GetType()]);
-            configurationType.GetMethod("Configure")?.Invoke(calculation, [configurationBuilder]);
+            var configurationType = typeof(ICalculationConfiguration<>).MakeGenericType(calculation.GetType());
+            configurationType.GetMethod("Configure")?.Invoke(calculation, new object[] { configurationBuilder });
             
             if (configurationBuilder is CalculationConfigurationBuilderBase baseBuilder)
             {

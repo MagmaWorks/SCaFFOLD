@@ -7,13 +7,22 @@ namespace Scaffold.Core.Models;
 
 public abstract class CalculationConfigurationBuilderBase
 {
-    internal List<ICalcValue> Inputs { get; } = [];
-    internal List<ICalcValue> Outputs { get; } = [];
+    internal List<ICalcValue> Inputs { get; } = new List<ICalcValue>();
+    internal List<ICalcValue> Outputs { get; } = new List<ICalcValue>();
+
+    public CalculationConfigurationBuilderBase()
+        {
+        }
 }
 
-public class CalculationConfigurationBuilder<T>(T configurationContext) : CalculationConfigurationBuilderBase
+public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilderBase
     where T : class, ICalculation
 {
+    public CalculationConfigurationBuilder(T configurationContext)
+    {
+        ConfigurationContext = configurationContext;
+    }
+
     private class ContextMember
     {
         public ContextMember(string name, Type type)
@@ -27,8 +36,8 @@ public class CalculationConfigurationBuilder<T>(T configurationContext) : Calcul
         public ICalcValue CalcValue { get; set; }
     }
     
-    private T ConfigurationContext { get; } = configurationContext;
-    private List<ContextMember> Members { get; } = [];
+    private T ConfigurationContext { get; } 
+    private List<ContextMember> Members { get; } = new List<ContextMember>();
     
     private static void ThrowIfNotCalcValueCapable(Type type)
     {

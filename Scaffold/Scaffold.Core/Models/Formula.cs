@@ -17,7 +17,7 @@ public class Formula
         Status = status;
     }
     
-    public List<string> Expression { get; } = [];
+    public List<string> Expression { get; } = new List<string>();
     public string Ref { get; set; } = "";
     public string Narrative { get; set; } = "";
     public string Conclusion { get; set; } = "";
