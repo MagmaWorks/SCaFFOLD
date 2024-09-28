@@ -44,7 +44,12 @@ namespace SCaFFOLDForGrasshopper
             // You can often supply default values when creating parameters.
             // All parameters must have the correct access type. If you want 
             // to import lists or trees of values, modify the ParamAccess flag.
-
+            if (embeddedCalc == null)
+            {
+                embeddedCalc = new PunchingShear();
+                inputs = reader.GetInputs(embeddedCalc);
+            }
+            
             if (inputs == null) { return; };
 
 
