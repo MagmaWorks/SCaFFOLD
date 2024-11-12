@@ -46,17 +46,17 @@ namespace EssentialCalcs
 
         private void initialise()
         {
-            _columnData1 = inputValues.CreateCalcListOfDoubleArrays("List of column data 2: T, H, L1, T1, L2, T2, W, L",
+            _columnData1 = inputValues.CreateCalcListOfDoubleArrays("List of column data 2: T, H, L1, T1, L2, T2, L3, T3, W, L",
                 new List<double[]>
                     {
-                        new double[]{0, 35000, 1400, 56, 2800, 112, 1000, 1000 },
-                        new double[]{112, 35000, 1400, 168, 2800, 224, 800, 800 }
+                        new double[]{0, 35000, 1400, 56, 2800, 112, 1500, 168, 1000, 1000 },
+                        new double[]{112, 35000, 1400, 168, 2800, 224, 1000, 300, 800, 800 }
                     });
-            _columnData2 = inputValues.CreateCalcListOfDoubleArrays("List of column data 1: T, H, L1, T1, L2, T2, W, L",
+            _columnData2 = inputValues.CreateCalcListOfDoubleArrays("List of column data 1: T, H, L1, T1, L2, T2, L3, T3, W, L",
                 new List<double[]>
                     {
-                        new double[]{0, 35000, 1400, 56, 2800, 112, 1400, 1400 },
-                        new double[]{112, 35000, 1400, 168, 2800, 224, 900, 900 }
+                        new double[]{0, 35000, 1400, 56, 2800, 112, 1200, 168, 1400, 1400 },
+                        new double[]{112, 35000, 1400, 168, 2800, 224, 1200, 300, 900, 900 }
                     });
             concGrade = inputValues.CreateCalcSelectionList("Concrete grade", "35", new List<string> { "30", "35", "40", "45", "50", "60", "70", "80", "90" });
             notionalcreepcoeff = outputValues.CreateDoubleCalcValue("Notional creep coefficient", @"\varphi(t,t_0)", "", 0);
@@ -106,14 +106,15 @@ namespace EssentialCalcs
                         var _data = _columnData1.Value[j];
                         loadTimes.Add(new double[] { _data[2], _data[3] - startTime });
                         loadTimes.Add(new double[] { _data[4], _data[5] - startTime });
+                        loadTimes.Add(new double[] { _data[6], _data[7] - startTime });
                     }
                     ConcColumnShortening calc = new ConcColumnShortening(loadTimes,
                         concGrade.ValueAsString,
                         relativeHumidity1.Value,
                         time.Value - startTime,
                         timeShrinkStart.Value,
-                        _coldata[6],
-                        _coldata[7],
+                        _coldata[8],
+                        _coldata[9],
                         _coldata[1]);
                     calc.UpdateCalc();
                     columnCalcs1.Add(calc);
@@ -133,14 +134,15 @@ namespace EssentialCalcs
                         var _data = _columnData2.Value[j];
                         loadTimes.Add(new double[] { _data[2], _data[3] - startTime });
                         loadTimes.Add(new double[] { _data[4], _data[5] - startTime });
+                        loadTimes.Add(new double[] { _data[6], _data[7] - startTime });
                     }
                     ConcColumnShortening calc = new ConcColumnShortening(loadTimes,
                         concGrade.ValueAsString,
                         relativeHumidity1.Value,
                         time.Value - startTime,
                         timeShrinkStart.Value,
-                        _coldata[6],
-                        _coldata[7],
+                        _coldata[8],
+                        _coldata[9],
                         _coldata[1]);
                     calc.UpdateCalc();
                     columnCalcs2.Add(calc); 
