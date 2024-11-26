@@ -1,13 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
 using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
-using System;
-using System.Collections.Generic;
-using Scaffold.Core;
 using Scaffold.Calculations;
-using Scaffold.Core.Interfaces;
-using System.Xml.Linq;
+using Scaffold.Core;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLDForGrasshopper
 {
@@ -49,7 +49,7 @@ namespace SCaFFOLDForGrasshopper
                 embeddedCalc = new PunchingShear();
                 inputs = reader.GetInputs(embeddedCalc);
             }
-            
+
             if (inputs == null) { return; };
 
 

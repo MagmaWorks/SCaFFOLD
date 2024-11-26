@@ -11,13 +11,13 @@ public class AssemblyImageReader : IAssemblyImageReader
     {
         var fullFilePath = $@"{folderPath}\{relativePathName}";
         using var stream = File.OpenRead(fullFilePath);
-        
+
         var memoryStream = new MemoryStream();
         stream.CopyTo(memoryStream);
         memoryStream.Position = 0;
-        
-        _images.Add(new AssemblyImage {Path = relativePathName, Data = memoryStream.ToArray()});
+
+        _images.Add(new AssemblyImage { Path = relativePathName, Data = memoryStream.ToArray() });
     }
-    
+
     public IReadOnlyList<AssemblyImage> Images => _images;
 }

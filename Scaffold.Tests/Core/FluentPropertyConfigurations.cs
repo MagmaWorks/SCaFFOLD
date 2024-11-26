@@ -13,9 +13,9 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
     {
         Result = new CalcDouble(1);
     }
-    
+
     public CalcDouble Result { get; set; }
-    
+
     public void Update()
     {
         // not required
@@ -26,7 +26,7 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    
+
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> builder)
     {
         builder.Define(x => x.Result)
@@ -42,10 +42,10 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
         Result = new CalcDouble(1);
         AnotherResult = new CalcDouble(2);
     }
-    
+
     public CalcDouble Result { get; set; }
     public CalcDouble AnotherResult { get; set; }
-    
+
     public void Update()
     {
         // not required
@@ -56,7 +56,7 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    
+
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameMultiple> builder)
     {
         builder

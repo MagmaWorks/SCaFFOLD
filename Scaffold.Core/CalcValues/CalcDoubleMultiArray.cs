@@ -12,20 +12,20 @@
 //    public CalcDoubleMultiArray(string name, List<double[]> multiDimensionalArray)
 //    {
 //        Value = multiDimensionalArray ?? new List<double[]>(); 
-        
+
 //    }
 
 
 //    public override void SetValue(string strValue)
 //    {
 //        var valueList = new List<double[]>();
-            
+
 //        if (!strValue.StartsWith("{{") || !strValue.EndsWith("}}"))
 //        {
 //            valueList.Add(new[] { double.NaN });
 //            return;
 //        }
-            
+
 //        var parts = strValue.Split(new string[] { "}{" }, StringSplitOptions.None);
 //        parts[0] = parts.First().Remove(0, 2);
 //        parts[parts.Count() - 1] = parts.Last().Remove(parts.Last().Length - 2, 2);
@@ -42,7 +42,7 @@
 //            }
 //            valueList.Add(lineEntries);
 //        }
-            
+
 //        Value = valueList;
 //    }
 
@@ -63,8 +63,8 @@
 
 //        var final = new StringBuilder();
 //        final.Append('{').Append(innerStr).Append('}');
-            
+
 //        return final.ToString();
 //    }
-        
+
 //}

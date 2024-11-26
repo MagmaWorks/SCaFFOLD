@@ -11,8 +11,8 @@ public abstract class CalculationConfigurationBuilderBase
     internal List<ICalcValue> Outputs { get; } = new List<ICalcValue>();
 
     public CalculationConfigurationBuilderBase()
-        {
-        }
+    {
+    }
 }
 
 public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilderBase
@@ -30,20 +30,20 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
             Name = name;
             Type = type;
         }
-        
+
         public string Name { get; }
         public Type Type { get; }
         public ICalcValue CalcValue { get; set; }
     }
-    
-    private T ConfigurationContext { get; } 
+
+    private T ConfigurationContext { get; }
     private List<ContextMember> Members { get; } = new List<ContextMember>();
-    
+
     private static void ThrowIfNotCalcValueCapable(Type type)
     {
         if (type.IsAcceptedPrimitive())
-            return; 
-        
+            return;
+
         var isCalcValue = type.GetInterface(nameof(ICalcValue)) != null;
         if (isCalcValue == false)
             throw new ArgumentException("Only properties and fields based on ICalcValue can be defined with calculation configuration.");
@@ -53,7 +53,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
     {
         if (expression.Members == null)
             return;
-        
+
         foreach (var arg in expression.Arguments)
         {
             ThrowIfNotCalcValueCapable(arg.Type);
@@ -79,7 +79,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         if (member.Type.IsAcceptedPrimitive())
             member.CalcValue = new InternalCalcValue(ConfigurationContext, member.Type, member.Name);
         else
-            member.CalcValue = 
+            member.CalcValue =
                 ConfigurationContext
                     .GetType()
                     .GetProperty(member.Name)?
@@ -98,46 +98,46 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
             collection.InsertCalcValue(calcValue);
         }
     }
-    
+
     public void AsInput() => AddToCalcValueCollection(Inputs);
     public void AsOutput() => AddToCalcValueCollection(Outputs);
-    
+
     public CalculationConfigurationBuilder<T> Define<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         Members.Clear();
-        
+
         switch (expression.Body)
         {
             case NewExpression newExpression:
                 ReadNewExpression(newExpression);
                 break;
-            
+
             case MemberExpression memberExpression:
                 ReadMemberExpression(memberExpression);
                 break;
-            
+
             default:
                 throw new ArgumentException("Expression type not supported for calculation configuration.");
         }
 
         return this;
     }
-    
+
     public CalculationConfigurationBuilder<T> WithDisplayName(string name)
     {
         var i = 1;
         var useIndex = Members.Count > 1;
-        
+
         foreach (var member in Members)
         {
             var calcValue = GetCalcValue(member);
             calcValue.DisplayName = useIndex ? $"{name} ({i})" : name;
             i++;
         }
-        
+
         return this;
     }
-    
+
     public CalculationConfigurationBuilder<T> WithSymbol(string symbol)
     {
         foreach (var member in Members)
@@ -145,7 +145,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
             var calcValue = GetCalcValue(member);
             calcValue.Symbol = symbol;
         }
-        
+
         return this;
     }
 }
