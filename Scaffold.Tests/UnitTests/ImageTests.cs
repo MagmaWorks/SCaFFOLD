@@ -22,8 +22,7 @@ public class ImageTests
     {
         const string relativePathName = "ImageAsRelativePath.png";
         var executingAssembly = Assembly.GetExecutingAssembly();
-        var lastIndex = executingAssembly.Location.LastIndexOf(@"\", StringComparison.Ordinal);
-        var workingDirectory = executingAssembly.Location[..lastIndex];
+        var workingDirectory = Directory.GetCurrentDirectory();
 
         var image = new ImageFromRelativePath(relativePathName)
         {
