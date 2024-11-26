@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Core", "Scaffold.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Calculations", "Scaffold.Calculations\Scaffold.Calculations.csproj", "{A0271CB4-B2DC-4377-A628-C6D443E88D31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.XUnitTests", "Scaffold.XUnitTests\Scaffold.XUnitTests.csproj", "{F7EDF5A4-1652-4064-A4DC-C5B5D2CA0E9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Tests", "Scaffold.Tests\Scaffold.Tests.csproj", "{F7EDF5A4-1652-4064-A4DC-C5B5D2CA0E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCaFFOLDForGrasshopper", "SCaFFOLDForGrasshopper\SCaFFOLDForGrasshopper.csproj", "{C2E997AB-2DB7-468A-9C50-78F13B31ADE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Grasshopper", "Scaffold.Grasshopper\Scaffold.Grasshopper.csproj", "{C2E997AB-2DB7-468A-9C50-78F13B31ADE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
