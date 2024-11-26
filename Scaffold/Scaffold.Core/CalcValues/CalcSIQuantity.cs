@@ -37,7 +37,7 @@ public class CalcSiQuantity : ICalcSIQuantity
     
     double ICalcQuantity.Value
     {
-        get => _quantity.Value;
+        get => (double)_quantity.Value;
         set => _quantity = Quantity.From(value, _quantity.Unit);
     }
     

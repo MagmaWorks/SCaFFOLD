@@ -1,6 +1,6 @@
 # SCaFFOLD
 *Structural Calculations Framework*
-
+![GitHub Actions Workflow Status](https://github.com/MagmaWorks/SCaFFOLD/actions/workflows/on-merge-to-main.yml/badge.svg)
 Free, Open and Lightweight Design
 
 <img src="Calcs/resources/CalcSplash.gif" width="300">
@@ -15,3 +15,15 @@ Calcs - Windows desktop application (WPF).
 DynamicRelaxation - dynamic relaxation engine, used for animation in Calcs splash screen.
 RunInConsole - console app client for CalcCore.
 TestCalcs - various calcuations written for the framework.
+
+## Latest release
+[![Releasestatus](https://github.com/MagmaWorks/SCaFFOLD/actions/workflows/on-release.yml/badge.svg)](https://github.com/MagmaWorks/SCaFFOLD/releases)
+[![NuGet Version](https://img.shields.io/nuget/v/MagmaWorks.SCaFFOLD.Profiles)](https://www.nuget.org/packages?q=Magmaworks.SCaFFOLD)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/MagmaWorks/SCaFFOLD)
+![GitHub Release Date](https://img.shields.io/github/release-date/MagmaWorks/SCaFFOLD)
+
+
+## Contributing 
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/MagmaWorks/SCaFFOLD/issues)
+![GitHub contributors](https://img.shields.io/github/contributors/MagmaWorks/SCaFFOLD)
+![GitHub top language](https://img.shields.io/github/languages/top/MagmaWorks/SCaFFOLD)
