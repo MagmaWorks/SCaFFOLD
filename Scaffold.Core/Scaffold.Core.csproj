@@ -29,15 +29,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\README.md">
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\LICENSE">
+    <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\MagmaWorks.png">
+    <None Include="..\MagmaWorks.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -45,8 +45,8 @@
 
   <ItemGroup>
     <PackageReference Include="OasysUnits" Version="1.1.0" />
-    <PackageReference Include="SkiaSharp" Version="2.88.8" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
+    <PackageReference Include="SkiaSharp" Version="3.0.0-preview.5.4" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
   </ItemGroup>
 
 </Project>
