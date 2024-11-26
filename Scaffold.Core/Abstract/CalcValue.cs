@@ -10,14 +10,14 @@ public abstract class CalcValue<T> : ICalcValue
     {
         DisplayName = name;
     }
-    
+
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
     public string UnitName => Unit?.QuantityInfo.Name ?? "";
     public CalcStatus Status { get; set; }
     public T Value { get; set; }
     public IQuantity Unit { get; set; }
-        
+
     public abstract void SetValue(string strValue);
     public virtual string GetValue(string format = "") => Value.ToString();
     public abstract override string ToString();

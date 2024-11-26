@@ -16,7 +16,7 @@ public class Formula
         Expression.Add(expression);
         Status = status;
     }
-    
+
     public List<string> Expression { get; } = new List<string>();
     public string Ref { get; set; } = "";
     public string Narrative { get; set; } = "";
@@ -24,7 +24,7 @@ public class Formula
     public CalcStatus Status { get; set; } = CalcStatus.None;
     public ICalcImage Image { get; set; }
 
-    
+
     public static Formula New(string narrative)
     {
         return new Formula { Narrative = narrative };

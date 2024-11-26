@@ -2,6 +2,6 @@
 
 public interface ICalcSIQuantity : ICalcQuantity
 {
-    public OasysUnits.IQuantity Quantity { get;  } 
+    public OasysUnits.IQuantity Quantity { get; }
 
 }

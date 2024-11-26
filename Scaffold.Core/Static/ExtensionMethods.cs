@@ -5,10 +5,10 @@ namespace Scaffold.Core.Static;
 public static class ExtensionMethods
 {
     internal static bool IsAcceptedPrimitive(this Type type)
-        => type == typeof(double) 
+        => type == typeof(double)
            || type == typeof(int) || type == typeof(long) || type == typeof(short)
            || type == typeof(float) || type == typeof(decimal) || type == typeof(bool);
-    
+
     internal static string SplitPascalCaseToString(this string pascalCaseStr)
     {
         var r = new Regex(@"

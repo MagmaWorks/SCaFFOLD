@@ -1,8 +1,8 @@
-﻿using Scaffold.Core.Attributes;
+﻿using System.Collections.Generic;
+using Scaffold.Core.Attributes;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
-using System.Collections.Generic;
 
 namespace Scaffold.Calculations
 {

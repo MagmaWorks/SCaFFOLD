@@ -1,6 +1,8 @@
 # SCaFFOLD
 *Structural Calculations Framework*
+
 ![GitHub Actions Workflow Status](https://github.com/MagmaWorks/SCaFFOLD/actions/workflows/on-merge-to-main.yml/badge.svg)
+
 Free, Open and Lightweight Design
 
 <img src="Calcs/resources/CalcSplash.gif" width="300">

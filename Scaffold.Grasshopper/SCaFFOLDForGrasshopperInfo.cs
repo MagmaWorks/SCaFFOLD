@@ -1,7 +1,7 @@
-﻿using Grasshopper;
-using Grasshopper.Kernel;
-using System;
+﻿using System;
 using System.Drawing;
+using Grasshopper;
+using Grasshopper.Kernel;
 
 namespace SCaFFOLDForGrasshopper
 {

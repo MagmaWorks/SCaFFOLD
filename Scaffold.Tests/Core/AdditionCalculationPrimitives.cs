@@ -13,10 +13,10 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
         RightAssignment = 3;
         Result = Add();
     }
-    
+
     public double LeftAssignment { get; set; }
     public double RightAssignment { get; set; }
-    
+
     public double Result { get; set; }
 
     private double Add() => LeftAssignment + RightAssignment;
@@ -26,7 +26,7 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    
+
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> builder)
     {
         builder
@@ -34,12 +34,12 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
             .WithDisplayName("Left assignment")
             .WithSymbol("L")
             .AsInput();
-        
+
         builder
             .Define(x => x.RightAssignment)
             .WithDisplayName("Right assignment")
             .AsInput();
-        
+
         builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
@@ -57,10 +57,10 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
         RightAssignment = 3;
         Result = Add();
     }
-    
+
     public double LeftAssignment { get; set; }
     public double RightAssignment { get; set; }
-    
+
     public double Result { get; set; }
 
     private double Add() => LeftAssignment + RightAssignment;
@@ -70,14 +70,14 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
     public string Title { get; set; }
     public string Type { get; set; }
     public CalcStatus Status { get; }
-    
+
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitivesJoined> builder)
     {
         builder
             .Define(x => new { x.LeftAssignment, x.RightAssignment })
             .WithDisplayName("Value")
             .AsInput();
-        
+
         builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
@@ -92,14 +92,14 @@ public class AdditionCalculationAttributePrimitives : ICalculation
         RightAssignment = 3;
         Result = Add();
     }
-    
-    [InputCalcValue("L")] 
+
+    [InputCalcValue("L")]
     public double LeftAssignment { get; set; }
-    
-    [InputCalcValue("R")] 
+
+    [InputCalcValue("R")]
     public double RightAssignment { get; set; }
-    
-    [OutputCalcValue("=")] 
+
+    [OutputCalcValue("=")]
     public double Result { get; set; }
 
     private double Add() => LeftAssignment + RightAssignment;
