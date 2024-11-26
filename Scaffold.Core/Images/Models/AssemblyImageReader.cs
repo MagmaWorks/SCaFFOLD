@@ -9,7 +9,7 @@ public class AssemblyImageReader : IAssemblyImageReader
 
     public AssemblyImageReader(string relativePathName, string folderPath)
     {
-        var fullFilePath = $@"{folderPath}\{relativePathName}";
+        var fullFilePath = $@"{folderPath}/{relativePathName}";
         using var stream = File.OpenRead(fullFilePath);
 
         var memoryStream = new MemoryStream();
