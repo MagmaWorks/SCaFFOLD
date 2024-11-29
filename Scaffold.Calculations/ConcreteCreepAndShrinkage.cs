@@ -1,16 +1,12 @@
-﻿using Scaffold.Core.Attributes;
+﻿using System.Collections.Generic;
+using Scaffold.Core.Attributes;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scaffold.Calculations
 {
-    public class ConcCreepAndShrinkage : ICalculation
+    public class ConcreteCreepAndShrinkage : ICalculation
     {
         public string Title { get; set; } = "";
         public string Type { get; set; } = "Concrete Creep and Shrinkage";
@@ -18,9 +14,7 @@ namespace Scaffold.Calculations
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
         [InputCalcValue(@"\varphi(t,t_0)", "Notional Creep Coefficient")]
-        public double notionalCreepCoeff { get; } = 0;
-
-
+        public double NotionalCreepCoefficient { get; } = 0;
 
         public IEnumerable<Formula> GetFormulae()
         {

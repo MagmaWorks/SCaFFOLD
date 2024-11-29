@@ -1,10 +1,5 @@
 ﻿using Scaffold.Calculations;
 using Scaffold.Core.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scaffold.XUnitTests.UnitTests
 {
@@ -15,7 +10,7 @@ namespace Scaffold.XUnitTests.UnitTests
         public void CreepAndShrinkageTest1()
         {
             var reader = new CalculationReader();
-            var calculation = new ConcCreepAndShrinkage();
+            var calculation = new ConcreteCreepAndShrinkage();
             // Do stuff here
             calculation.Update();
 
