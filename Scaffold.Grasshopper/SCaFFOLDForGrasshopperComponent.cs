@@ -30,7 +30,7 @@ namespace SCaFFOLDForGrasshopper
             "Construct an Archimedean, or arithmetic, spiral given its radii and number of turns.",
             "Magma Works", "SCaFFOLD")
         {
-            embeddedCalc = new Scaffold.Calculations.PunchingShear();
+            embeddedCalc = new ConcreteCreepAndShrinkage();
             inputs = reader.GetInputs(embeddedCalc);
             outputs = reader.GetOutputs(embeddedCalc);
         }
@@ -46,7 +46,7 @@ namespace SCaFFOLDForGrasshopper
             // to import lists or trees of values, modify the ParamAccess flag.
             if (embeddedCalc == null)
             {
-                embeddedCalc = new PunchingShear();
+                embeddedCalc = new ConcreteCreepAndShrinkage();
                 inputs = reader.GetInputs(embeddedCalc);
             }
 
