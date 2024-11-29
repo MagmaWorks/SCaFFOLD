@@ -1,10 +1,10 @@
-﻿using Scaffold.Calculations;
-using Scaffold.Core.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Scaffold.Calculations;
+using Scaffold.Core.Abstract;
 
 namespace Scaffold.XUnitTests.UnitTests
 {

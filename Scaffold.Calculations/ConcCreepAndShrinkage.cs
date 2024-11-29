@@ -1,12 +1,12 @@
-﻿using Scaffold.Core.Attributes;
-using Scaffold.Core.Enums;
-using Scaffold.Core.Interfaces;
-using Scaffold.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Scaffold.Core.Attributes;
+using Scaffold.Core.Enums;
+using Scaffold.Core.Interfaces;
+using Scaffold.Core.Models;
 
 namespace Scaffold.Calculations
 {
@@ -29,7 +29,7 @@ namespace Scaffold.Calculations
 
         public void Update()
         {
-            
+
         }
     }
 }
