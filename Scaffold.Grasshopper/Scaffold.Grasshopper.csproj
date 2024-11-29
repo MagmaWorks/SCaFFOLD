@@ -1,5 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	
+  <PropertyGroup>
+    <MinVerMinimumMajorMinor>0.0</MinVerMinimumMajorMinor>
+    <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
   <PropertyGroup>
     <!-- Select the framework(s) you wish to target.
         Rhino 6: net45
