@@ -23,7 +23,7 @@ namespace Scaffold.Calculations
 
         public void Update()
         {
-            
+
         }
     }
 }
