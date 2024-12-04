@@ -64,8 +64,8 @@ public class DuplicateDisplayNames : ICalculation
         return list;
     }
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 }
 
@@ -74,8 +74,8 @@ public class DuplicateDisplayNamesFluent : ICalculation, ICalculationConfigurati
     public double LeftAssignment { get; set; } = 2;
     public double RightAssignment { get; set; } = 3;
     public IEnumerable<Formula> GetFormulae() => new List<Formula>();
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Update()

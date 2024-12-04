@@ -16,8 +16,8 @@ public class AdditionCalculationTests
     public void UnreadCalculation_Ok()
     {
         var calc = new AdditionCalculation();
-        calc.Type.Should().BeNull();
-        calc.Title.Should().BeNull();
+        calc.CalculationName.Should().BeNull();
+        calc.ReferenceName.Should().BeNull();
     }
 
     [Fact]
@@ -29,8 +29,8 @@ public class AdditionCalculationTests
         var inputs = Reader.GetInputs(calc);
         var outputs = Reader.GetOutputs(calc);
 
-        calc.Type.Should().Be(TypeName);
-        calc.Title.Should().Be(Title);
+        calc.CalculationName.Should().Be(TypeName);
+        calc.ReferenceName.Should().Be(Title);
 
         metadata.Type.Should().Be(TypeName);
         metadata.Title.Should().Be(Title);

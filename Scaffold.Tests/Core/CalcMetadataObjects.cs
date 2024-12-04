@@ -10,8 +10,8 @@ namespace Scaffold.XUnitTests.Core;
 [CalculationMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
 public class CalcMetadataEmptyConstructor : ICalculation
 {
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public IReadOnlyList<ICalcValue> GetInputs() => [];
@@ -28,8 +28,8 @@ public class CalcMetadataEmptyConstructor : ICalculation
 [CalculationMetadata("TypeNameSet")]
 public class CalcMetadataTypeNameConstructor : ICalculation
 {
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
     public IReadOnlyList<ICalcValue> GetInputs() => [];
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
@@ -45,8 +45,8 @@ public class CalcMetadataTypeNameConstructor : ICalculation
 [CalculationMetadata("TypeNameSet", "TitleSet")]
 public class CalcMetadataTypeAndTitleConstructor : ICalculation
 {
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
     public IReadOnlyList<ICalcValue> GetInputs() => [];
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
@@ -61,8 +61,8 @@ public class CalcMetadataTypeAndTitleConstructor : ICalculation
 [ExcludeFromCodeCoverage]
 public class CalcMetadataFallback : ICalculation
 {
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
     public IReadOnlyList<ICalcValue> GetInputs() => [];
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
