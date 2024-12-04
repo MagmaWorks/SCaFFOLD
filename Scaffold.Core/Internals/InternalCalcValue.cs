@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
@@ -41,13 +42,17 @@ internal sealed class InternalCalcValue : ICalcValue
         return converter.ConvertFromString(input);
     }
 
-    public void SetValue(string strValue)
+    public bool TryParse(string strValue)
     {
-        var newValue = Convert(strValue);
-        var member = Calculation.GetType().GetProperty(MemberName);
+        object newValue = Convert(strValue);
+        PropertyInfo member = Calculation.GetType().GetProperty(MemberName);
+        if (member != null)
+        {
+            member?.SetValue(Calculation, newValue);
+        }
 
-        member?.SetValue(Calculation, newValue);
+        return member != null;
     }
 
-    public string GetValue(string format = "") => Value.ToString();
+    public string ValueAsString() => Value.ToString();
 }

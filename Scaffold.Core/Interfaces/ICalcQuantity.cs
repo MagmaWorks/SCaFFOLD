@@ -1,7 +1,10 @@
-﻿namespace Scaffold.Core.Interfaces;
+﻿using OasysUnits;
 
-public interface ICalcQuantity : ICalcValue
+namespace Scaffold.Core.Interfaces;
+
+public interface ICalcQuantity<TQuantity> : ICalcValue where TQuantity : IQuantity
 {
     string Unit { get; }
-    double Value { get; set; }
+    double Value { get; }
+    public TQuantity Quantity { get; }
 }
