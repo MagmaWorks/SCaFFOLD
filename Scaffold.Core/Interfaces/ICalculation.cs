@@ -15,7 +15,7 @@ public interface ICalculation
     /// By default, this will use CalcNameAttribute if it exists, otherwise it will use the value you specify.
     /// If you do not specify a value, the class name will be used.
     /// </summary>
-    public string CalculationName { get; }
+    public string CalculationName { get; set; }
 
     public CalcStatus Status { get; }
 

@@ -40,8 +40,8 @@ public class CalculationReader
         }
         else
         {
-            calculation.ReferenceName = metadata.Title ?? fallbackValue;
-            calculation.CalculationName = metadata.TypeName ?? fallbackValue;
+            calculation.ReferenceName = metadata.ReferenceName ?? fallbackValue;
+            calculation.CalculationName = metadata.CalculationName ?? fallbackValue;
         }
     }
 

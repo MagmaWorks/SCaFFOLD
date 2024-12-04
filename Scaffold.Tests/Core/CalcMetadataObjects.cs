@@ -7,7 +7,7 @@ using Scaffold.Core.Models;
 namespace Scaffold.XUnitTests.Core;
 
 [ExcludeFromCodeCoverage]
-[CalculationMetadata(TypeName = "TypeNameSet", Title = "TitleSet")]
+[CalculationMetadata(CalculationName = "TypeNameSet", ReferenceName = "TitleSet")]
 public class CalcMetadataEmptyConstructor : ICalculation
 {
     public string ReferenceName { get; set; }
