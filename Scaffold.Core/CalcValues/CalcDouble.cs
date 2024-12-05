@@ -18,7 +18,7 @@ public sealed class CalcDouble : CalcValue<double>
 
     public override bool TryParse(string strValue)
     {
-        if (double.TryParse(strValue, out var result))
+        if (double.TryParse(strValue, out double result))
         {
             Value = result;
             return true;
