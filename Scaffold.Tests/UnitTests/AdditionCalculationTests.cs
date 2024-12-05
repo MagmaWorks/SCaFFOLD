@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
-using Scaffold.Core.Models;
 using Scaffold.XUnitTests.Core;
 
 namespace Scaffold.XUnitTests.UnitTests;
