@@ -20,11 +20,7 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
         RightAssignment = 3;
         Result = Add();
     }
-
-    private double Add() => LeftAssignment + RightAssignment;
-    public void Update() => Result = Add();
-    public IEnumerable<Formula> GetFormulae() => [];
-
+    
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> builder)
     {
         builder
@@ -42,6 +38,10 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
             .WithDisplayName("Result")
             .AsOutput();
     }
+
+    public IEnumerable<Formula> GetFormulae() => [];
+    public void Update() => Result = Add();
+    private double Add() => LeftAssignment + RightAssignment;
 }
 
 /// <summary>
@@ -49,25 +49,19 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
 /// </summary>
 public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitivesJoined>
 {
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
+    public double LeftAssignment { get; set; }
+    public double RightAssignment { get; set; }
+    public double Result { get; set; }
+
     public AdditionCalculationFluentPrimitivesJoined()
     {
         LeftAssignment = 2;
         RightAssignment = 3;
         Result = Add();
     }
-
-    public double LeftAssignment { get; set; }
-    public double RightAssignment { get; set; }
-
-    public double Result { get; set; }
-
-    private double Add() => LeftAssignment + RightAssignment;
-    public void Update() => Result = Add();
-    public IEnumerable<Formula> GetFormulae() => [];
-
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitivesJoined> builder)
     {
@@ -80,6 +74,10 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
             .WithDisplayName("Result")
             .AsOutput();
     }
+
+    public IEnumerable<Formula> GetFormulae() => [];
+    public void Update() => Result = Add();
+    private double Add() => LeftAssignment + RightAssignment;
 }
 
 public class AdditionCalculationAttributePrimitives : ICalculation
@@ -87,13 +85,6 @@ public class AdditionCalculationAttributePrimitives : ICalculation
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
-
-    public AdditionCalculationAttributePrimitives()
-    {
-        LeftAssignment = 2;
-        RightAssignment = 3;
-        Result = Add();
-    }
 
     [InputCalcValue("L")]
     public double LeftAssignment { get; set; }
@@ -104,7 +95,14 @@ public class AdditionCalculationAttributePrimitives : ICalculation
     [OutputCalcValue("=")]
     public double Result { get; set; }
 
-    private double Add() => LeftAssignment + RightAssignment;
-    public void Update() => Result = Add();
+    public AdditionCalculationAttributePrimitives()
+    {
+        LeftAssignment = 2;
+        RightAssignment = 3;
+        Result = Add();
+    }
+
     public IEnumerable<Formula> GetFormulae() => [];
+    public void Update() => Result = Add();
+    private double Add() => LeftAssignment + RightAssignment;
 }
