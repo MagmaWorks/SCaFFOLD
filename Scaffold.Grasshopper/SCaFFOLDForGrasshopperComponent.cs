@@ -11,8 +11,8 @@ namespace SCaFFOLDForGrasshopper
     {
         ICalculation embeddedCalc;
         private CalculationReader reader = new();
-        private IReadOnlyList<ICalcValue> inputs;
-        private IReadOnlyList<ICalcValue> outputs;
+        private IReadOnlyList<ICalculationParameter> inputs;
+        private IReadOnlyList<ICalculationParameter> outputs;
 
         /// <summary>
         /// Each implementation of GH_Component must provide a public 

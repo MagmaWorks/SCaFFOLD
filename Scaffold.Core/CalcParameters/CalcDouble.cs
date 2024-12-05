@@ -2,7 +2,7 @@
 
 namespace Scaffold.Core.CalcValues;
 
-public sealed class CalcDouble : CalcValue<double>
+public sealed class CalcDouble : ACalculationParameter<double>
 {
     public CalcDouble(double value) : this(null, value) { }
 

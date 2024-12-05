@@ -4,7 +4,7 @@ namespace Scaffold.Core.Internals;
 
 internal static class InternalExtensionMethods
 {
-    private static string UniqueDisplayName(List<ICalcValue> collection, string displayName)
+    private static string UniqueDisplayName<T>(List<ICalculationParameter<T>> collection, string displayName)
     {
         var rootName = displayName;
         var i = 0;
@@ -18,7 +18,7 @@ internal static class InternalExtensionMethods
         return displayName;
     }
 
-    internal static void InsertCalcValue(this List<ICalcValue> collection, ICalcValue calcValue)
+    internal static void InsertCalcValue<T>(this List<ICalculationParameter<T>> collection, ICalculationParameter<T> calcValue)
     {
         calcValue.DisplayName = UniqueDisplayName(collection, calcValue.DisplayName);
         collection.Add(calcValue);

@@ -2,7 +2,7 @@
 
 namespace Scaffold.Core.CalcValues;
 
-public class CalcSelectionList : CalcValue<string>
+public class CalcSelectionList : ACalculationParameter<string>
 {
     public List<string> SelectionList { get; private set; }
 

@@ -1,21 +1,25 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using OasysUnits;
-using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Internals;
 
-internal sealed class InternalCalcValue : ICalcValue
+internal sealed class InternalCalcValue : ICalculationParameter<object>
 {
     private ICalculation Calculation { get; }
     private Type ValueType { get; }
     private string MemberName { get; }
-
+    public string Unit { get; }
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
-    public string UnitName => Unit?.QuantityInfo.Name ?? "";
-    public CalcStatus Status { get; set; }
+    public object Value
+    {
+        get
+        {
+            PropertyInfo member = Calculation.GetType().GetProperty(MemberName);
+            return member?.GetValue(Calculation);
+        }
+    }
 
     public InternalCalcValue(ICalculation calculation, Type valueType, string memberName)
     {
@@ -23,18 +27,6 @@ internal sealed class InternalCalcValue : ICalcValue
         ValueType = valueType;
         MemberName = memberName;
     }
-
-
-    public object Value
-    {
-        get
-        {
-            var member = Calculation.GetType().GetProperty(MemberName);
-            return member?.GetValue(Calculation);
-        }
-    }
-
-    public IQuantity Unit { get; set; }
 
     private object Convert(string input)
     {

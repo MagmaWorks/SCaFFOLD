@@ -14,8 +14,8 @@ public class CalcMetadataEmptyConstructor : ICalculation
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
-    public IReadOnlyList<ICalcValue> GetInputs() => [];
-    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetInputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
@@ -31,8 +31,8 @@ public class CalcMetadataTypeNameConstructor : ICalculation
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs() => [];
-    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetInputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
@@ -48,8 +48,8 @@ public class CalcMetadataTypeAndTitleConstructor : ICalculation
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs() => [];
-    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetInputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()
@@ -64,8 +64,8 @@ public class CalcMetadataFallback : ICalculation
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
-    public IReadOnlyList<ICalcValue> GetInputs() => [];
-    public IReadOnlyList<ICalcValue> GetOutputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetInputs() => [];
+    public IReadOnlyList<ICalculationParameter<object>> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
     public void Update()

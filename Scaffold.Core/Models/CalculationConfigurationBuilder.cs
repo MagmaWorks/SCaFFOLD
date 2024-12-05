@@ -7,18 +7,18 @@ namespace Scaffold.Core.Models;
 
 public abstract class CalculationConfigurationBuilderBase
 {
-    internal List<ICalcValue> Inputs { get; } = new List<ICalcValue>();
-    internal List<ICalcValue> Outputs { get; } = new List<ICalcValue>();
+    internal List<ICalculationParameter<object>> Inputs { get; } = new List<ICalculationParameter<object>>();
+    internal List<ICalculationParameter<object>> Outputs { get; } = new List<ICalculationParameter<object>>();
 
     public CalculationConfigurationBuilderBase()
     {
     }
 }
 
-public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilderBase
-    where T : class, ICalculation
+public class CalculationConfigurationBuilder<Calc> : CalculationConfigurationBuilderBase
+    where Calc : class, ICalculation
 {
-    public CalculationConfigurationBuilder(T configurationContext)
+    public CalculationConfigurationBuilder(Calc configurationContext)
     {
         ConfigurationContext = configurationContext;
     }
@@ -33,10 +33,10 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
 
         public string Name { get; }
         public Type Type { get; }
-        public ICalcValue CalcValue { get; set; }
+        public ICalculationParameter<object> CalcValue { get; set; }
     }
 
-    private T ConfigurationContext { get; }
+    private Calc ConfigurationContext { get; }
     private List<ContextMember> Members { get; } = new List<ContextMember>();
 
     private static void ThrowIfNotCalcValueCapable(Type type)
@@ -44,7 +44,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         if (type.IsAcceptedPrimitive())
             return;
 
-        var isCalcValue = type.GetInterface(nameof(ICalcValue)) != null;
+        var isCalcValue = type.GetInterface(nameof(ICalculationParameter<object>)) != null;
         if (isCalcValue == false)
             throw new ArgumentException("Only properties and fields based on ICalcValue can be defined with calculation configuration.");
     }
@@ -71,7 +71,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         Members.Add(member);
     }
 
-    private ICalcValue GetCalcValue(ContextMember member)
+    private ICalculationParameter<object> GetCalcValue(ContextMember member)
     {
         if (member.CalcValue != null)
             return member.CalcValue;
@@ -83,12 +83,12 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
                 ConfigurationContext
                     .GetType()
                     .GetProperty(member.Name)?
-                    .GetValue(ConfigurationContext) as ICalcValue;
+                    .GetValue(ConfigurationContext) as ICalculationParameter<object>;
 
         return member.CalcValue;
     }
 
-    private void AddToCalcValueCollection(List<ICalcValue> collection)
+    private void AddToCalcValueCollection(List<ICalculationParameter<object>> collection)
     {
         foreach (var member in Members)
         {
@@ -102,7 +102,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
     public void AsInput() => AddToCalcValueCollection(Inputs);
     public void AsOutput() => AddToCalcValueCollection(Outputs);
 
-    public CalculationConfigurationBuilder<T> Define<TProperty>(Expression<Func<T, TProperty>> expression)
+    public CalculationConfigurationBuilder<Calc> Define<TProperty>(Expression<Func<Calc, TProperty>> expression)
     {
         Members.Clear();
 
@@ -123,7 +123,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         return this;
     }
 
-    public CalculationConfigurationBuilder<T> WithDisplayName(string name)
+    public CalculationConfigurationBuilder<Calc> WithDisplayName(string name)
     {
         var i = 1;
         var useIndex = Members.Count > 1;
@@ -138,7 +138,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         return this;
     }
 
-    public CalculationConfigurationBuilder<T> WithSymbol(string symbol)
+    public CalculationConfigurationBuilder<Calc> WithSymbol(string symbol)
     {
         foreach (var member in Members)
         {

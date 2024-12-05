@@ -13,16 +13,16 @@ public class CalculationReader
     private class CacheItem
     {
         public ICalculation Calculation { get; }
-        public Type Type { get; }
-        public List<ICalcValue> Inputs { get; }
-        public List<ICalcValue> Outputs { get; }
+        public Type CalcType { get; }
+        public List<ICalculationParameter<object>> Inputs { get; }
+        public List<ICalculationParameter<object>> Outputs { get; }
 
-        public CacheItem(ICalculation calculation, Type type)
+        public CacheItem(ICalculation calculation)
         {
-            Type = type;
+            CalcType = calculation.GetType();
             Calculation = calculation;
-            Inputs = new List<ICalcValue>();
-            Outputs = new List<ICalcValue>();
+            Inputs = new List<ICalculationParameter<object>>();
+            Outputs = new List<ICalculationParameter<object>>();
         }
     }
 
@@ -45,9 +45,9 @@ public class CalculationReader
         }
     }
 
-    private static ICalcValue GetCalcValue(PropertyInfo property, CacheItem cacheItem)
+    private static ICalculationParameter<object> GetCalcValue(PropertyInfo property, CacheItem cacheItem)
     {
-        if (property.GetValue(cacheItem.Calculation) is not ICalcValue calcValue)
+        if (property.GetValue(cacheItem.Calculation) is not ICalculationParameter<object> calcValue)
         {
             var propertyType = property.PropertyType;
             if (propertyType.IsAcceptedPrimitive() == false)
@@ -62,7 +62,7 @@ public class CalculationReader
 
     private static void LoadByAttributes(CacheItem cacheItem)
     {
-        foreach (var property in cacheItem.Type.GetProperties())
+        foreach (var property in cacheItem.CalcType.GetProperties())
         {
             var baseAttribute = property.GetCustomAttribute<CalcValueTypeAttribute>();
             if (baseAttribute == null)
@@ -92,22 +92,22 @@ public class CalculationReader
         }
     }
 
-    private CacheItem GetCachedItem<T>(T calculation) where T : class, ICalculation
+    private CacheItem GetCachedItem<Calc>(Calc calculation) where Calc : class, ICalculation
     {
         var cachedCalculation = Cache.FirstOrDefault(x => ReferenceEquals(x.Calculation, calculation));
         if (cachedCalculation != null)
             return cachedCalculation;
 
-        var newCacheItem = new CacheItem(calculation, calculation.GetType());
+        var newCacheItem = new CacheItem(calculation);
 
         var isFluentConfiguration =
-            newCacheItem.Type
+            newCacheItem.CalcType
                 .GetInterfaces()
                 .FirstOrDefault(x => x.FullName != null && x.FullName.Contains(typeof(ICalculationConfiguration<>).Name)) != null;
 
         if (isFluentConfiguration)
         {
-            var builderType = typeof(CalculationConfigurationBuilder<>).MakeGenericType(calculation.GetType());
+            var builderType = typeof(CalculationConfigurationBuilder<Calc>).MakeGenericType(calculation.GetType());
             var configurationBuilder = Activator.CreateInstance(builderType, calculation);
 
             var configurationType = typeof(ICalculationConfiguration<>).MakeGenericType(calculation.GetType());
@@ -124,7 +124,7 @@ public class CalculationReader
             LoadByAttributes(newCacheItem);
         }
 
-        ReadMetadata(newCacheItem.Type, newCacheItem.Calculation);
+        ReadMetadata(newCacheItem.CalcType, newCacheItem.Calculation);
         Cache.Add(newCacheItem);
 
         return newCacheItem;
@@ -133,7 +133,7 @@ public class CalculationReader
     /// <summary>
     /// Gets metadata, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation
+    public CalculationMetadata GetMetadata<Calc>(Calc calculation) where Calc : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return new CalculationMetadata { Title = cached.Calculation.ReferenceName, Type = cached.Calculation.CalculationName };
@@ -142,7 +142,7 @@ public class CalculationReader
     /// <summary>
     /// Gets inputs, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public IReadOnlyList<ICalcValue> GetInputs<T>(T calculation) where T : class, ICalculation
+    public IReadOnlyList<ICalculationParameter<object>> GetInputs<Calc>(Calc calculation) where Calc : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return cached.Inputs;
@@ -151,7 +151,7 @@ public class CalculationReader
     /// <summary>
     /// Gets outputs, loading calculation from/into cache for later manipulation.
     /// </summary>
-    public IReadOnlyList<ICalcValue> GetOutputs<T>(T calculation) where T : class, ICalculation
+    public IReadOnlyList<ICalculationParameter<object>> GetOutputs<Calc>(Calc calculation) where Calc : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return cached.Outputs;

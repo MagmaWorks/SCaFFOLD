@@ -3,17 +3,16 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
 
-public abstract class CalcValue<T> : ICalcValue
+public abstract class ACalculationParameter<T> : ICalculationParameter<T>
 {
     public string DisplayName { get; set; }
-    public string Symbol { get; set; }
-    public CalcStatus Status { get; set; }
     public T Value { get; set; }
-    public string Unit { get; set; } = string.Empty;
+    public virtual string Symbol { get; set; } = string.Empty;
+    public virtual string Unit { get; set; } = string.Empty;
     public abstract bool TryParse(string strValue);
     public string ValueAsString() => $"{Value}{Unit}";
 
-    protected CalcValue(string name)
+    protected ACalculationParameter(string name)
     {
         DisplayName = name;
     }
