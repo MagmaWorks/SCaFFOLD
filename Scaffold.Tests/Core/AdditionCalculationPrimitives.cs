@@ -20,7 +20,7 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
         RightAssignment = 3;
         Result = Add();
     }
-    
+
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> builder)
     {
         builder
