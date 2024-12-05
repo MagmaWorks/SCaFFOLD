@@ -63,8 +63,8 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         return list;
     }
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
