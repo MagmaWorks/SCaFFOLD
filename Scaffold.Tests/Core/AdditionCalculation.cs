@@ -46,18 +46,18 @@ public class AdditionCalculation : ICalculation
                 .WithConclusion("Some text here")
                 .WithReference("Some ref here")
                 .AddExpression("x &=& a + b")
-                .AddImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
+                .SetImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
 
 
             Formula.New("2. Narrative to appear above the expression")
                 .WithConclusion("2. Some text here")
                 .WithReference("2. Some ref here")
                 .AddExpression("x &=& a + b")
-                .AddImage(new ImageFromSkBitmap(keyImage)),
+                .SetImage(new ImageFromSkBitmap(keyImage)),
 
             Formula.New("Final narrative")
                 .WithReference("3.a")
-                .AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
+                .SetImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
         };
 
         return list;

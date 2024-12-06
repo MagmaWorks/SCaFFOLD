@@ -1,29 +1,29 @@
 ﻿using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Interfaces;
+using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Models;
 
-public class Formula
+public class Formula : IFormula
 {
-    private Formula() { }
-
-    public Formula(string reference, string narrative, string conclusion, string expression,
-        CalcStatus status = CalcStatus.None)
-    {
-        Ref = reference;
-        Narrative = narrative;
-        Conclusion = conclusion;
-        Expression.Add(expression);
-        Status = status;
-    }
-
     public List<string> Expression { get; } = new List<string>();
-    public string Ref { get; set; } = "";
+    public string Reference { get; set; } = "";
     public string Narrative { get; set; } = "";
     public string Conclusion { get; set; } = "";
     public CalcStatus Status { get; set; } = CalcStatus.None;
     public ICalcImage Image { get; set; }
 
+    private Formula() { }
+
+    public Formula(string reference, string narrative, string conclusion, string expression,
+        CalcStatus status = CalcStatus.None)
+    {
+        Reference = reference;
+        Narrative = narrative;
+        Conclusion = conclusion;
+        Expression.Add(expression);
+        Status = status;
+    }
 
     public static Formula New(string narrative)
     {
@@ -44,7 +44,7 @@ public class Formula
 
     public Formula WithReference(string reference)
     {
-        Ref = reference;
+        Reference = reference;
         return this;
     }
 
@@ -60,7 +60,7 @@ public class Formula
         return this;
     }
 
-    public Formula AddImage(ICalcImage image)
+    public Formula SetImage(ICalcImage image)
     {
         Image = image;
         return this;
