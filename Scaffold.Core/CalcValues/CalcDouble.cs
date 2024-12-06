@@ -16,17 +16,6 @@ public sealed class CalcDouble : CalcValue<double>
         Unit = unit?.Trim();
     }
 
-    public override bool TryParse(string strValue)
-    {
-        if (double.TryParse(strValue, out double result))
-        {
-            Value = result;
-            return true;
-        }
-
-        return false;
-    }
-
     public static implicit operator double(CalcDouble value) => value.Value;
 
     public static CalcDouble operator +(CalcDouble x, CalcDouble y)
