@@ -3,7 +3,7 @@ using Scaffold.Core.Models;
 
 namespace Scaffold.Core.Interfaces;
 
-public interface ICalculation
+public interface ICalculation : ICalculationStatus
 {
     /// <summary>
     /// The general name of the calculation this class sets out to cover, e.g. 'Punching Shear to EC2'.
@@ -16,9 +16,6 @@ public interface ICalculation
     /// The name of the member this instance covers, e.g. 'Column C3'
     /// </summary>
     public string ReferenceName { get; set; }
-
-
-    public CalcStatus Status { get; }
 
     public IEnumerable<Formula> GetFormulae();
 
