@@ -35,5 +35,4 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
     }
 
     public string ValueAsString() => Quantity.ToString().Replace(" ", string.Empty);
-
 }
