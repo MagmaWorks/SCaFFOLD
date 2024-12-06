@@ -58,7 +58,7 @@ namespace Scaffold.Tests.UnitTests
             Assert.Equal(10.0, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1 + l2", result.DisplayName);
+            Assert.Equal("l1+l2", result.DisplayName);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Scaffold.Tests.UnitTests
             Assert.Equal(-1, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1 - l2", result.DisplayName);
+            Assert.Equal("l1-l2", result.DisplayName);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Scaffold.Tests.UnitTests
             Assert.Equal(4.5 * 5.5, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m²", result.Unit);
-            Assert.Equal("l1 * l2", result.DisplayName);
+            Assert.Equal("l1·l2", result.DisplayName);
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace Scaffold.Tests.UnitTests
             Assert.Equal(4.5 / 5.5, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.True(string.IsNullOrEmpty(result.Unit));
-            Assert.Equal("l1 / l2", result.DisplayName);
+            Assert.Equal("l1/l2", result.DisplayName);
         }
     }
 }
