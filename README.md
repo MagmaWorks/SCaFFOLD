@@ -5,8 +5,6 @@
 
 Free, Open and Lightweight Design
 
-<img src="Calcs/resources/CalcSplash.gif" width="300">
-
 SCaFFOLD is a framework designed to make it easy for engineers to write calculations in code once and to have access to those calculations wherever they need them - whether that's accessing them through a Windows app, mobile apps or embedded within CAD or analysis packages. SCaFFOLD is open source and made available under the MIT license.
 
 Any project using the framework will need to reference the CalcCore library. Calculations can be supplied by any library containing classes that implement the ICalc interface from CalcCore.
@@ -29,3 +27,5 @@ TestCalcs - various calcuations written for the framework.
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/MagmaWorks/SCaFFOLD/issues)
 ![GitHub contributors](https://img.shields.io/github/contributors/MagmaWorks/SCaFFOLD)
 ![GitHub top language](https://img.shields.io/github/languages/top/MagmaWorks/SCaFFOLD)
+
+[![Made with contrib.rocks](https://contrib.rocks/image?repo=MagmaWorks/SCaFFOLD)](https://contrib.rocks)
