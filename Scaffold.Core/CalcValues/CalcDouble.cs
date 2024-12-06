@@ -28,4 +28,24 @@ public sealed class CalcDouble : CalcValue<double>
     }
 
     public static implicit operator double(CalcDouble value) => value.Value;
+
+    public static CalcDouble operator +(CalcDouble c1, CalcDouble c2)
+    {
+        return new CalcDouble(c1.Value + c2.Value);
+    }
+
+    public static CalcDouble operator -(CalcDouble c1, CalcDouble c2)
+    {
+        return new CalcDouble(c1.Value - c2.Value);
+    }
+
+    public static CalcDouble operator *(CalcDouble c1, CalcDouble c2)
+    {
+        return new CalcDouble(c1.Value * c2.Value);
+    }
+
+    public static CalcDouble operator /(CalcDouble c1, CalcDouble c2)
+    {
+        return new CalcDouble(c1.Value / c2.Value);
+    }
 }
