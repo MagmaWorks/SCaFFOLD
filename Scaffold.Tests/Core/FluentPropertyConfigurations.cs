@@ -23,8 +23,8 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
 
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> builder)
@@ -53,8 +53,8 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
 
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameMultiple> builder)

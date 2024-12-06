@@ -7,9 +7,6 @@ namespace Scaffold.XUnitTests.Core;
 
 public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitives>
 {
-    public string Title { get; set; }
-    public string Type { get; set; }
-    public CalcStatus Status { get; }
     public double LeftAssignment { get; set; }
     public double RightAssignment { get; set; }
     public double Result { get; set; }
@@ -24,6 +21,10 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
     private double Add() => LeftAssignment + RightAssignment;
     public void Update() => Result = Add();
     public IEnumerable<Formula> GetFormulae() => [];
+
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> builder)
     {
@@ -65,8 +66,8 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
     public void Update() => Result = Add();
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitivesJoined> builder)
@@ -84,10 +85,6 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
 
 public class AdditionCalculationAttributePrimitives : ICalculation
 {
-    public string Title { get; set; }
-    public string Type { get; set; }
-    public CalcStatus Status { get; }
-
     public AdditionCalculationAttributePrimitives()
     {
         LeftAssignment = 2;
@@ -107,4 +104,8 @@ public class AdditionCalculationAttributePrimitives : ICalculation
     private double Add() => LeftAssignment + RightAssignment;
     public void Update() => Result = Add();
     public IEnumerable<Formula> GetFormulae() => [];
+
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
 }
