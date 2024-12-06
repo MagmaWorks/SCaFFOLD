@@ -64,6 +64,6 @@ public sealed class CalcDouble : CalcValue<double>
             ? string.Empty : $"{x.DisplayName} {operation} {y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         string unit = x.Unit == y.Unit ? x.Unit : string.Empty;
-        return (name,  symbol, unit);
+        return (name, symbol, unit);
     }
 }
