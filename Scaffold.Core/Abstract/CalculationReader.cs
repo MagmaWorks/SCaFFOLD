@@ -162,7 +162,7 @@ public class CalculationReader
     /// Wrapper implemented to keep all reading features together.
     /// This method can be called directly on the calculation also.
     /// </summary>
-    public IEnumerable<Formula> GetFormulae<T>(T calculation) where T : class, ICalculation
+    public IList<IFormula> GetFormulae<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
         return cached.Calculation.GetFormulae();
@@ -176,6 +176,6 @@ public class CalculationReader
     public void Update<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
-        cached.Calculation.Update();
+        cached.Calculation.Calculate();
     }
 }

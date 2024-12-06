@@ -25,6 +25,11 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         Result = new CalcDouble(Add());
     }
 
+    public void Calculate()
+    {
+        Result.Value = Add();
+    }
+
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
     {
         builder
@@ -36,7 +41,7 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
             .AsOutput();
     }
 
-    public IEnumerable<Formula> GetFormulae()
+    public IList<IFormula> GetFormulae()
     {
         var keyImage = new SKBitmap(400, 400);
         using (var canvas = new SKCanvas(keyImage))
@@ -45,7 +50,7 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
             canvas.DrawText("Drawn from SKBitmap", 25, 25, paintText);
         }
 
-        var list = new List<Formula>
+        var list = new List<IFormula>
         {
             Formula.New("Narrative to appear above the expression")
                 .WithConclusion("Some text here")
@@ -66,11 +71,6 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         };
 
         return list;
-    }
-
-    public void Update()
-    {
-        Result.Value = Add();
     }
 
     private double Add()

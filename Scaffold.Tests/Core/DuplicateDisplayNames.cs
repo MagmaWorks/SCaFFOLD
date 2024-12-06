@@ -11,6 +11,13 @@ namespace Scaffold.XUnitTests.Core;
 [CalculationMetadata("Duplicate", "Duplicate tester")]
 public class DuplicateDisplayNames : ICalculation
 {
+    public string CalculationName { get; set; }
+    public string ReferenceName { get; set; }
+    public CalcStatus Status { get; }
+    [InputCalcValue] public CalcDouble LeftAssignment { get; set; }
+    [InputCalcValue] public CalcDouble RightAssignment { get; set; }
+    [OutputCalcValue] public CalcDouble Result { get; set; }
+
     public DuplicateDisplayNames()
     {
         LeftAssignment = new CalcDouble("Value", 2);
@@ -18,20 +25,12 @@ public class DuplicateDisplayNames : ICalculation
         Result = new CalcDouble("Result", Add());
     }
 
-    [InputCalcValue] public CalcDouble LeftAssignment { get; set; }
-    [InputCalcValue] public CalcDouble RightAssignment { get; set; }
-
-    [OutputCalcValue] public CalcDouble Result { get; set; }
-
-    private double Add()
-        => LeftAssignment.Value + RightAssignment.Value;
-
-    public void Update()
+    public void Calculate()
     {
         Result.Value = Add();
     }
 
-    public IEnumerable<Formula> GetFormulae()
+    public IList<IFormula> GetFormulae()
     {
         var keyImage = new SKBitmap(400, 400);
         using (var canvas = new SKCanvas(keyImage))
@@ -40,7 +39,7 @@ public class DuplicateDisplayNames : ICalculation
             canvas.DrawText("Drawn from SKBitmap", 25, 25, paintText);
         }
 
-        var list = new List<Formula>
+        var list = new List<IFormula>
         {
             Formula.New("Narrative to appear above the expression")
                 .WithConclusion("Some text here")
@@ -63,21 +62,19 @@ public class DuplicateDisplayNames : ICalculation
         return list;
     }
 
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
+    private double Add()
+        => LeftAssignment.Value + RightAssignment.Value;
 }
 
 public class DuplicateDisplayNamesFluent : ICalculation, ICalculationConfiguration<DuplicateDisplayNamesFluent>
 {
+    public string CalculationName { get; set; }
+    public string ReferenceName { get; set; }
+    public CalcStatus Status { get; }
     public double LeftAssignment { get; set; } = 2;
     public double RightAssignment { get; set; } = 3;
-    public IEnumerable<Formula> GetFormulae() => new List<Formula>();
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
 
-    public void Update()
+    public void Calculate()
     {
         //
     }
@@ -87,4 +84,6 @@ public class DuplicateDisplayNamesFluent : ICalculation, ICalculationConfigurati
         builder.Define(x => x.LeftAssignment).WithDisplayName("Value").AsInput();
         builder.Define(x => x.RightAssignment).WithDisplayName("Value").AsInput();
     }
+
+    public IList<IFormula> GetFormulae() => new List<IFormula>();
 }
