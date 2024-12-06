@@ -5,6 +5,18 @@ namespace Scaffold.Tests.UnitTests
     public class CalcDoubleTests
     {
         [Fact]
+        public void ParseFromStringTest()
+        {
+            // Assemble
+            var calcDouble = new CalcDouble(4.5);
+
+            // Act
+            // Assert
+            Assert.True(calcDouble.TryParse("5.5"));
+            Assert.Equal(5.5, calcDouble.Value);
+        }
+
+        [Fact]
         public void ImplicitOperatorTest()
         {
             // Assemble
