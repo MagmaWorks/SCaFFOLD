@@ -18,5 +18,5 @@ public interface ICalculation : ICalculationStatus
 
     public IEnumerable<Formula> GetFormulae();
 
-    public void Update();
+    public void Calculate();
 }

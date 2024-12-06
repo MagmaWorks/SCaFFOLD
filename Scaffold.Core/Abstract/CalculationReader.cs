@@ -176,6 +176,6 @@ public class CalculationReader
     public void Update<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
-        cached.Calculation.Update();
+        cached.Calculation.Calculate();
     }
 }

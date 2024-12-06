@@ -12,7 +12,7 @@ namespace Scaffold.XUnitTests.UnitTests
             var reader = new CalculationReader();
             var calculation = new ConcreteCreepAndShrinkage();
             // Do stuff here
-            calculation.Update();
+            calculation.Calculate();
 
             var metadata = reader.GetMetadata(calculation);
             var inputs = reader.GetInputs(calculation);

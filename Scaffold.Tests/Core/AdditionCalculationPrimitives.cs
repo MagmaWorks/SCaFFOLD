@@ -42,7 +42,7 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
     }
 
     public IEnumerable<Formula> GetFormulae() => [];
-    public void Update() => Result = Add();
+    public void Calculate() => Result = Add();
     private double Add() => LeftAssignment + RightAssignment;
 }
 
@@ -78,7 +78,7 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
     }
 
     public IEnumerable<Formula> GetFormulae() => [];
-    public void Update() => Result = Add();
+    public void Calculate() => Result = Add();
     private double Add() => LeftAssignment + RightAssignment;
 }
 
@@ -106,6 +106,6 @@ public class AdditionCalculationAttributePrimitives : ICalculation
 
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public void Update() => Result = Add();
+    public void Calculate() => Result = Add();
     private double Add() => LeftAssignment + RightAssignment;
 }

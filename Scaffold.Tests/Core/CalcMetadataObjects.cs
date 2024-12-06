@@ -18,7 +18,7 @@ public class CalcMetadataEmptyConstructor : ICalculation
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public void Update()
+    public void Calculate()
     {
         // not required.
     }
@@ -35,7 +35,7 @@ public class CalcMetadataTypeNameConstructor : ICalculation
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public void Update()
+    public void Calculate()
     {
         // not required.
     }
@@ -52,7 +52,7 @@ public class CalcMetadataTypeAndTitleConstructor : ICalculation
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public void Update()
+    public void Calculate()
     {
         // not required.
     }
@@ -68,7 +68,7 @@ public class CalcMetadataFallback : ICalculation
     public IReadOnlyList<ICalcValue> GetOutputs() => [];
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public void Update()
+    public void Calculate()
     {
         // not required.
     }

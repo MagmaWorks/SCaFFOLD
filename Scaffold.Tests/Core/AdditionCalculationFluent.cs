@@ -68,7 +68,7 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         return list;
     }
 
-    public void Update()
+    public void Calculate()
     {
         Result.Value = Add();
     }

@@ -19,7 +19,7 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
         Result = new CalcDouble(1);
     }
 
-    public void Update()
+    public void Calculate()
     {
         // not required
     }
@@ -49,7 +49,7 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
         AnotherResult = new CalcDouble(2);
     }
 
-    public void Update()
+    public void Calculate()
     {
         // not required
     }

@@ -1,4 +1,5 @@
-﻿using Scaffold.Core.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
@@ -26,7 +27,7 @@ public class DuplicateDisplayNames : ICalculation
     private double Add()
         => LeftAssignment.Value + RightAssignment.Value;
 
-    public void Update()
+    public void Calculate()
     {
         Result.Value = Add();
     }
@@ -46,25 +47,25 @@ public class DuplicateDisplayNames : ICalculation
                 .WithConclusion("Some text here")
                 .WithReference("Some ref here")
                 .AddExpression("x &=& a + b")
-                .SetImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
+                .AddImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
 
 
             Formula.New("2. Narrative to appear above the expression")
                 .WithConclusion("2. Some text here")
                 .WithReference("2. Some ref here")
                 .AddExpression("x &=& a + b")
-                .SetImage(new ImageFromSkBitmap(keyImage)),
+                .AddImage(new ImageFromSkBitmap(keyImage)),
 
             Formula.New("Final narrative")
                 .WithReference("3.a")
-                .SetImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
+                .AddImage(new ImageFromRelativePath("ImageAsRelativePath.png"))
         };
 
         return list;
     }
 
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
+    public string Title { get; set; }
+    public string Type { get; set; }
     public CalcStatus Status { get; }
 }
 
@@ -73,11 +74,11 @@ public class DuplicateDisplayNamesFluent : ICalculation, ICalculationConfigurati
     public double LeftAssignment { get; set; } = 2;
     public double RightAssignment { get; set; } = 3;
     public IEnumerable<Formula> GetFormulae() => new List<Formula>();
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
+    public string Title { get; set; }
+    public string Type { get; set; }
     public CalcStatus Status { get; }
 
-    public void Update()
+    public void Calculate()
     {
         //
     }

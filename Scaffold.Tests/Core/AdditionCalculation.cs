@@ -62,7 +62,7 @@ public class AdditionCalculation : ICalculation
 
         return list;
     }
-    public void Update()
+    public void Calculate()
     {
         Result.Value = Add();
     }

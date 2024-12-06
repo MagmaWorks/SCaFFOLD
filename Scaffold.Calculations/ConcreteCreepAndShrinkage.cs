@@ -8,8 +8,8 @@ namespace Scaffold.Calculations
 {
     public class ConcreteCreepAndShrinkage : ICalculation
     {
-        public string ReferenceName { get; set; } = "";
-        public string CalculationName { get; set; } = "Concrete Creep and Shrinkage";
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "Concrete Creep and Shrinkage";
 
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
@@ -21,7 +21,7 @@ namespace Scaffold.Calculations
             return new List<Formula>();
         }
 
-        public void Update()
+        public void Calculate()
         {
 
         }
