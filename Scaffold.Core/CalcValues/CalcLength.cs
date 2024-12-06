@@ -41,7 +41,7 @@ public sealed class CalcLength : CalcQuantity<Length>
             ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
         Area.TryParse($"0 {Length.GetAbbreviation(unit)}²", out Area area);
-        Volume.TryParse($"0 {Length.GetAbbreviation(unit)}²", out Volume vol);
+        Volume.TryParse($"0 {Length.GetAbbreviation(unit)}³", out Volume vol);
         return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(area.Unit), vol.Unit), name, "");
     }
 
