@@ -32,7 +32,7 @@ public sealed class CalcDouble : CalcValue<double>
 
     public static CalcDouble operator *(CalcDouble x, CalcDouble y)
     {
-        (string name, string symbol, string unit) = OperatorMetadataHelper(x, y, '*');
+        (string name, string symbol, string unit) = OperatorMetadataHelper(x, y, '·');
         if (!string.IsNullOrEmpty(unit))
         {
             unit = $"{unit}²";
@@ -50,7 +50,7 @@ public sealed class CalcDouble : CalcValue<double>
     private static (string name, string symbol, string unit) OperatorMetadataHelper(CalcDouble x, CalcDouble y, char operation)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName} {operation} {y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         string unit = x.Unit == y.Unit ? x.Unit : string.Empty;
         return (name,  symbol, unit);
