@@ -117,19 +117,19 @@ public class AdditionCalculationTests
 
         outputs[0].DisplayName.Should().Be("Result");
 
-        inputs[0].GetValue().Should().Be("2");
-        inputs[1].GetValue().Should().Be("3");
+        inputs[0].ValueAsString().Should().Be("2");
+        inputs[1].ValueAsString().Should().Be("3");
 
-        outputs[0].GetValue().Should().Be("5");
+        outputs[0].ValueAsString().Should().Be("5");
         calc.Result.Should().Be(5);
 
         //
         // Updated values (checking that InternalCalcValue works, pairing with true primitive value)
         //
-        inputs[0].SetValue("6");
+        inputs[0].TryParse("6");
 
         Reader.Update(calc);
-        outputs[0].GetValue().Should().Be("9");
+        outputs[0].ValueAsString().Should().Be("9");
         calc.Result.Should().Be(9);
     }
 
@@ -152,19 +152,19 @@ public class AdditionCalculationTests
 
         outputs[0].DisplayName.Should().Be("Result");
 
-        inputs[0].GetValue().Should().Be("2");
-        inputs[1].GetValue().Should().Be("3");
+        inputs[0].ValueAsString().Should().Be("2");
+        inputs[1].ValueAsString().Should().Be("3");
 
-        outputs[0].GetValue().Should().Be("5");
+        outputs[0].ValueAsString().Should().Be("5");
         calc.Result.Should().Be(5);
 
         //
         // Updated values (checking that InternalCalcValue works, pairing with true primitive value)
         //
-        inputs[0].SetValue("6");
+        inputs[0].TryParse("6");
 
         Reader.Update(calc);
-        outputs[0].GetValue().Should().Be("9");
+        outputs[0].ValueAsString().Should().Be("9");
         calc.Result.Should().Be(9);
     }
 
@@ -191,19 +191,19 @@ public class AdditionCalculationTests
         outputs[0].DisplayName.Should().Be("Result");
         outputs[0].Symbol.Should().Be("=");
 
-        inputs[0].GetValue().Should().Be("2");
-        inputs[1].GetValue().Should().Be("3");
+        inputs[0].ValueAsString().Should().Be("2");
+        inputs[1].ValueAsString().Should().Be("3");
 
-        outputs[0].GetValue().Should().Be("5");
+        outputs[0].ValueAsString().Should().Be("5");
         calc.Result.Should().Be(5);
 
         //
         // Updated values (checking that InternalCalcValue works, pairing with true primitive value)
         //
-        inputs[0].SetValue("6");
+        inputs[0].TryParse("6");
 
         Reader.Update(calc);
-        outputs[0].GetValue().Should().Be("9");
+        outputs[0].ValueAsString().Should().Be("9");
         calc.Result.Should().Be(9);
     }
 

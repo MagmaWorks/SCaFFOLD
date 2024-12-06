@@ -7,17 +7,16 @@ namespace Scaffold.XUnitTests.Core;
 
 public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitives>
 {
+    public double LeftAssignment { get; set; }
+    public double RightAssignment { get; set; }
+    public double Result { get; set; }
+
     public AdditionCalculationFluentPrimitives()
     {
         LeftAssignment = 2;
         RightAssignment = 3;
         Result = Add();
     }
-
-    public double LeftAssignment { get; set; }
-    public double RightAssignment { get; set; }
-
-    public double Result { get; set; }
 
     private double Add() => LeftAssignment + RightAssignment;
     public void Update() => Result = Add();

@@ -2,30 +2,29 @@
 
 namespace Scaffold.Core.CalcValues;
 
-public class CalcSelectionList : CalcValue<List<string>>
+public class CalcSelectionList : CalcValue<string>
 {
-    private readonly List<string> _selectionList;
+    public List<string> SelectionList { get; private set; }
 
     public CalcSelectionList(string name, string selectedValue, IEnumerable<string> values)
         : base(name)
     {
-        _selectionList = values.ToList();
-
-        var existing = SelectionList.FirstOrDefault(x => x == selectedValue);
-        Value = existing == null ? SelectionList[0] : selectedValue;
+        SelectionList = values.ToList();
+        string selectedItem = SelectionList.FirstOrDefault(x => x == selectedValue);
+        Value = selectedItem == null ? SelectionList[0] : selectedValue;
     }
 
-    public IReadOnlyList<string> SelectionList => _selectionList;
-    public string Value { get; private set; }
-
-    public override void SetValue(string strValue)
+    public override bool TryParse(string strValue)
     {
-        var exists = SelectionList.FirstOrDefault(x => x == strValue);
+        string exists = SelectionList.FirstOrDefault(x => x == strValue);
         if (exists == null)
-            return;
+        {
+            return false;
+        }
 
         Value = strValue;
+        return true;
     }
 
-    public override string ToString() => string.Join(", ", Value);
+    public override string ToString() => string.Join(", ", SelectionList);
 }

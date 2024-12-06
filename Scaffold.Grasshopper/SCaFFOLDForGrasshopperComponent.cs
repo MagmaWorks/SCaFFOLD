@@ -84,12 +84,12 @@ namespace SCaFFOLDForGrasshopper
             double inputVal = 0;
             DA.GetData(0, ref inputVal);
 
-            inputs[0].SetValue(inputVal.ToString());
+            inputs[0].TryParse(inputVal.ToString());
 
             embeddedCalc.Update();
 
             // Finally assign the spiral to the output parameter.
-            DA.SetData(0, outputs[0].GetValue());
+            DA.SetData(0, outputs[0].ValueAsString());
         }
 
         /// <summary>
