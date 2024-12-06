@@ -7,9 +7,11 @@ namespace Scaffold.XUnitTests.Core;
 
 public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitives>
 {
+
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
+
     public double LeftAssignment { get; set; }
     public double RightAssignment { get; set; }
     public double Result { get; set; }
@@ -103,6 +105,7 @@ public class AdditionCalculationAttributePrimitives : ICalculation
     }
 
     public IEnumerable<Formula> GetFormulae() => [];
+
     public void Update() => Result = Add();
     private double Add() => LeftAssignment + RightAssignment;
 }

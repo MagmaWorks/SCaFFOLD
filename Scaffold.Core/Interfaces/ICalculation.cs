@@ -17,7 +17,6 @@ public interface ICalculation
     /// </summary>
     public string ReferenceName { get; set; }
 
-
     public CalcStatus Status { get; }
 
     public IEnumerable<Formula> GetFormulae();
