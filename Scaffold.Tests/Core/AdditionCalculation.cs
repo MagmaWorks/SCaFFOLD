@@ -31,7 +31,7 @@ public class AdditionCalculation : ICalculation
         Result = new CalcDouble("Result", Add());
     }
 
-    public IEnumerable<Formula> GetFormulae()
+    public IList<IFormula> GetFormulae()
     {
         var keyImage = new SKBitmap(400, 400);
         using (var canvas = new SKCanvas(keyImage))
@@ -40,14 +40,13 @@ public class AdditionCalculation : ICalculation
             canvas.DrawText("Drawn from SKBitmap", 25, 25, paintText);
         }
 
-        var list = new List<Formula>
+        var list = new List<IFormula>
         {
             Formula.New("Narrative to appear above the expression")
                 .WithConclusion("Some text here")
                 .WithReference("Some ref here")
                 .AddExpression("x &=& a + b")
                 .SetImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
-
 
             Formula.New("2. Narrative to appear above the expression")
                 .WithConclusion("2. Some text here")

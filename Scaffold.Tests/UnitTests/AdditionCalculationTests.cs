@@ -105,8 +105,8 @@ public class AdditionCalculationTests
         //
         // Initial values
         //
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         inputs.Count.Should().Be(2);
         outputs.Count.Should().Be(1);

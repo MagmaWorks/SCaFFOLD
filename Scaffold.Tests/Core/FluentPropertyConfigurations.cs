@@ -23,15 +23,14 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
     {
         // not required
     }
-
-    public IEnumerable<Formula> GetFormulae() => [];
-
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> builder)
     {
         builder.Define(x => x.Result)
             .WithDisplayName("Result")
             .AsOutput();
     }
+
+    public IList<IFormula> GetFormulae() => [];
 }
 
 public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration<FluentDisplayNameMultiple>
@@ -39,7 +38,6 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
-
     public CalcDouble Result { get; set; }
     public CalcDouble AnotherResult { get; set; }
 
@@ -54,8 +52,6 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
         // not required
     }
 
-    public IEnumerable<Formula> GetFormulae() => [];
-
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameMultiple> builder)
     {
         builder
@@ -64,4 +60,6 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
             .WithSymbol("=")
             .AsOutput();
     }
+
+    public IList<IFormula> GetFormulae() => [];
 }
