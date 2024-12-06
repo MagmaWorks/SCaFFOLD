@@ -2,7 +2,7 @@
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Core.CalcValues;
+namespace Scaffold.Core.Abstract;
 
 public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
 {
