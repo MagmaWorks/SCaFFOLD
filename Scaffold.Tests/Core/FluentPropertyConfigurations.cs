@@ -25,7 +25,7 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
     }
 
     public IEnumerable<Formula> GetFormulae() => [];
-
+    
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> builder)
     {
         builder.Define(x => x.Result)
