@@ -63,7 +63,7 @@ public class AdditionCalculation : ICalculation
         return list;
     }
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 }

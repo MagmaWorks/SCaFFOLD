@@ -35,13 +35,13 @@ public class CalculationReader
         var metadata = type.GetCustomAttribute<CalculationMetadataAttribute>();
         if (metadata == null)
         {
-            calculation.Title = fallbackValue;
-            calculation.Type = fallbackValue;
+            calculation.ReferenceName = fallbackValue;
+            calculation.CalculationName = fallbackValue;
         }
         else
         {
-            calculation.Title = metadata.Title ?? fallbackValue;
-            calculation.Type = metadata.TypeName ?? fallbackValue;
+            calculation.ReferenceName = metadata.ReferenceName ?? fallbackValue;
+            calculation.CalculationName = metadata.CalculationName ?? fallbackValue;
         }
     }
 
@@ -136,7 +136,7 @@ public class CalculationReader
     public CalculationMetadata GetMetadata<T>(T calculation) where T : class, ICalculation
     {
         var cached = GetCachedItem(calculation);
-        return new CalculationMetadata { Title = cached.Calculation.Title, Type = cached.Calculation.Type };
+        return new CalculationMetadata { Title = cached.Calculation.ReferenceName, Type = cached.Calculation.CalculationName };
     }
 
     /// <summary>

@@ -23,8 +23,8 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
     public void Update() => Result = Add();
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitives> builder)
@@ -67,8 +67,8 @@ public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculat
     public void Update() => Result = Add();
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluentPrimitivesJoined> builder)
@@ -106,7 +106,7 @@ public class AdditionCalculationAttributePrimitives : ICalculation
     public void Update() => Result = Add();
     public IEnumerable<Formula> GetFormulae() => [];
 
-    public string Title { get; set; }
-    public string Type { get; set; }
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 }
