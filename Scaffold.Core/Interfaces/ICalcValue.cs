@@ -2,11 +2,10 @@
 
 namespace Scaffold.Core.Interfaces;
 
-public interface ICalcValue
+public interface ICalcValue : ICalculationStatus
 {
     string DisplayName { get; set; }
     string Symbol { get; set; }
-    CalcStatus Status { get; set; }
     bool TryParse(string strValue);
     string ValueAsString();
 }
