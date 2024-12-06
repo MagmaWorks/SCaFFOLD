@@ -26,4 +26,6 @@ public sealed class CalcDouble : CalcValue<double>
 
         return false;
     }
+
+    public static implicit operator double(CalcDouble value) => value.Value;
 }

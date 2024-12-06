@@ -73,6 +73,5 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         return list;
     }
 
-    private double Add()
-        => LeftAssignment.Value + RightAssignment.Value;
+    private double Add() => LeftAssignment + RightAssignment;
 }

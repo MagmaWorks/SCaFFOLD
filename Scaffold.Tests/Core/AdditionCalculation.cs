@@ -31,6 +31,11 @@ public class AdditionCalculation : ICalculation
         Result = new CalcDouble("Result", Add());
     }
 
+    public void Calculate()
+    {
+        Result.Value = Add();
+    }
+
     public IList<IFormula> GetFormulae()
     {
         var keyImage = new SKBitmap(400, 400);
@@ -61,10 +66,6 @@ public class AdditionCalculation : ICalculation
 
         return list;
     }
-    public void Calculate()
-    {
-        Result.Value = Add();
-    }
-    private double Add()
-        => LeftAssignment.Value + RightAssignment.Value;
+
+    private double Add() => LeftAssignment + RightAssignment;
 }

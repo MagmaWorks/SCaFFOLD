@@ -20,6 +20,8 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
         Symbol = symbol;
     }
 
+    public static implicit operator T(CalcQuantity<T> value) => value.Quantity;
+
     public bool TryParse(string strValue)
     {
         if (OasysUnits.Quantity.TryParse(
@@ -33,4 +35,5 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
     }
 
     public string ValueAsString() => Quantity.ToString().Replace(" ", string.Empty);
+
 }
