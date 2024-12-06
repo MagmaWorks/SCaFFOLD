@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using Grasshopper;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 using Scaffold.Calculations;
-using Scaffold.Core;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 

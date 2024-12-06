@@ -11,24 +11,24 @@ namespace Scaffold.XUnitTests.Core;
 [CalculationMetadata("Add values", "Core library tester")]
 public class AdditionCalculation : ICalculation
 {
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
+
+    [InputCalcValue]
+    public CalcDouble LeftAssignment { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble RightAssignment { get; set; }
+
+    [OutputCalcValue]
+    public CalcDouble Result { get; set; }
+
     public AdditionCalculation()
     {
         LeftAssignment = new CalcDouble("Left assignment", 2);
         RightAssignment = new CalcDouble(3);
         Result = new CalcDouble("Result", Add());
-    }
-
-    [InputCalcValue] public CalcDouble LeftAssignment { get; set; }
-    [InputCalcValue] public CalcDouble RightAssignment { get; set; }
-
-    [OutputCalcValue] public CalcDouble Result { get; set; }
-
-    private double Add()
-        => LeftAssignment.Value + RightAssignment.Value;
-
-    public void Update()
-    {
-        Result.Value = Add();
     }
 
     public IEnumerable<Formula> GetFormulae()
@@ -62,8 +62,10 @@ public class AdditionCalculation : ICalculation
 
         return list;
     }
-
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
+    public void Update()
+    {
+        Result.Value = Add();
+    }
+    private double Add()
+        => LeftAssignment.Value + RightAssignment.Value;
 }

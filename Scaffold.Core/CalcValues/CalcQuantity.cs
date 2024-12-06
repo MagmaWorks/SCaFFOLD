@@ -4,16 +4,16 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.CalcValues;
 
-public abstract class CalcQuantity<TQuantity> : ICalcQuantity<TQuantity> where TQuantity : IQuantity
+public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
 {
-    public TQuantity Quantity { get; set; }
+    public T Quantity { get; set; }
     public string Unit => Quantity.ToString().Replace(Value.ToString(), string.Empty).Trim();
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
     public double Value => (double)Quantity.Value;
 
-    public CalcQuantity(TQuantity quantity, string name, string symbol)
+    public CalcQuantity(T quantity, string name, string symbol)
     {
         Quantity = quantity;
         DisplayName = name;
@@ -25,7 +25,7 @@ public abstract class CalcQuantity<TQuantity> : ICalcQuantity<TQuantity> where T
         if (OasysUnits.Quantity.TryParse(
             Quantity.QuantityInfo.ValueType, strValue, out IQuantity quantity))
         {
-            Quantity = (TQuantity)quantity;
+            Quantity = (T)quantity;
             return true;
         }
 

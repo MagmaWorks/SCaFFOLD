@@ -9,12 +9,15 @@ namespace Scaffold.XUnitTests.Core;
 [CalculationMetadata("TypeNameSet", "TitleSet")]
 public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<FluentDisplayNameSingle>
 {
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
+    public CalcDouble Result { get; set; }
+
     public FluentDisplayNameSingle()
     {
         Result = new CalcDouble(1);
     }
-
-    public CalcDouble Result { get; set; }
 
     public void Update()
     {
@@ -22,10 +25,6 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
     }
 
     public IEnumerable<Formula> GetFormulae() => [];
-
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameSingle> builder)
     {
@@ -37,14 +36,18 @@ public class FluentDisplayNameSingle : ICalculation, ICalculationConfiguration<F
 
 public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration<FluentDisplayNameMultiple>
 {
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
+
+    public CalcDouble Result { get; set; }
+    public CalcDouble AnotherResult { get; set; }
+
     public FluentDisplayNameMultiple()
     {
         Result = new CalcDouble(1);
         AnotherResult = new CalcDouble(2);
     }
-
-    public CalcDouble Result { get; set; }
-    public CalcDouble AnotherResult { get; set; }
 
     public void Update()
     {
@@ -52,10 +55,6 @@ public class FluentDisplayNameMultiple : ICalculation, ICalculationConfiguration
     }
 
     public IEnumerable<Formula> GetFormulae() => [];
-
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
 
     public void Configure(CalculationConfigurationBuilder<FluentDisplayNameMultiple> builder)
     {

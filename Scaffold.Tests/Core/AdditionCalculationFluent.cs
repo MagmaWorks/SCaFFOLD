@@ -11,6 +11,13 @@ namespace Scaffold.XUnitTests.Core;
 [CalculationMetadata("Add values", "Core library tester")]
 public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration<AdditionCalculationFluent>
 {
+    public string ReferenceName { get; set; }
+    public string CalculationName { get; set; }
+    public CalcStatus Status { get; }
+    public CalcDouble LeftAssignment { get; set; }
+    public CalcDouble RightAssignment { get; set; }
+    public CalcDouble Result { get; set; }
+
     public AdditionCalculationFluent()
     {
         LeftAssignment = new CalcDouble("Left assignment", 2);
@@ -18,17 +25,15 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         Result = new CalcDouble(Add());
     }
 
-    public CalcDouble LeftAssignment { get; set; }
-    public CalcDouble RightAssignment { get; set; }
-
-    public CalcDouble Result { get; set; }
-
-    private double Add()
-        => LeftAssignment.Value + RightAssignment.Value;
-
-    public void Update()
+    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
     {
-        Result.Value = Add();
+        builder
+            .Define(x => new { x.LeftAssignment, x.RightAssignment })
+            .AsInput();
+
+        builder.Define(x => x.Result)
+            .WithDisplayName("Result")
+            .AsOutput();
     }
 
     public IEnumerable<Formula> GetFormulae()
@@ -63,18 +68,11 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
         return list;
     }
 
-    public string ReferenceName { get; set; }
-    public string CalculationName { get; set; }
-    public CalcStatus Status { get; }
-
-    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
+    public void Update()
     {
-        builder
-            .Define(x => new { x.LeftAssignment, x.RightAssignment })
-            .AsInput();
-
-        builder.Define(x => x.Result)
-            .WithDisplayName("Result")
-            .AsOutput();
+        Result.Value = Add();
     }
+
+    private double Add()
+        => LeftAssignment.Value + RightAssignment.Value;
 }

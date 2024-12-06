@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Scaffold.Core.Attributes;
+﻿using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
