@@ -20,7 +20,7 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
 
     public AdditionCalculationFluent()
     {
-        LeftAssignment = new CalcDouble("Left assignment", 2);
+        LeftAssignment = new CalcDouble(2, "Left assignment");
         RightAssignment = new CalcDouble(3);
         Result = new CalcDouble(Add());
     }

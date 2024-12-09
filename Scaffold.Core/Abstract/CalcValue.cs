@@ -11,12 +11,17 @@ public abstract class CalcValue<T> : ICalcValue
     public CalcStatus Status { get; set; }
     public T Value { get; set; }
     public string Unit { get; set; } = string.Empty;
-    public string ValueAsString() => $"{Value}{Unit}";
+    public string ValueAsString() => ToString();
 
-    protected CalcValue(string name)
+    protected CalcValue(T value, string name, string symbol, string unit = "")
     {
+        Value = value;
         DisplayName = name;
+        Symbol = symbol?.Trim();
+        Unit = unit?.Trim();
     }
+
+    public static implicit operator T(CalcValue<T> value) => value.Value;
 
     public virtual bool TryParse(string input)
     {
@@ -33,4 +38,16 @@ public abstract class CalcValue<T> : ICalcValue
 
         return false;
     }
+
+    internal static (string name, string symbol, string unit) OperatorMetadataHelper(
+        CalcValue<T> x, CalcValue<T> y, char operation)
+    {
+        string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
+            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+        string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
+        string unit = x.Unit == y.Unit ? x.Unit : string.Empty;
+        return (name, symbol, unit);
+    }
+
+    public override string ToString() => $"{Value}{Unit}";
 }

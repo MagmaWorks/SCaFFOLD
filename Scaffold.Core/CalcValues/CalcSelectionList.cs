@@ -7,7 +7,7 @@ public class CalcSelectionList : CalcValue<string>
     public List<string> SelectionList { get; private set; }
 
     public CalcSelectionList(string name, string selectedValue, IEnumerable<string> values)
-        : base(name)
+        : base(selectedValue, name, string.Empty, string.Empty)
     {
         SelectionList = values.ToList();
         string selectedItem = SelectionList.FirstOrDefault(x => x == selectedValue);
