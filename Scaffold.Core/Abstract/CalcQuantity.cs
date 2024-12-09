@@ -2,12 +2,12 @@
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Core.CalcValues;
+namespace Scaffold.Core.Abstract;
 
 public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
 {
     public T Quantity { get; set; }
-    public string Unit => Quantity.ToString().Replace(Value.ToString(), string.Empty).Trim();
+    public string Unit => Quantity.ToString().Split(' ')[1];
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
@@ -35,5 +35,4 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
     }
 
     public string ValueAsString() => Quantity.ToString().Replace(" ", string.Empty);
-
 }
