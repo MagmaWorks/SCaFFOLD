@@ -48,8 +48,8 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         public void AdditionSameUnitOperatorTest()
         {
             // Assemble
-            var calcDouble1 = new CalcDouble("l1", "L", 4.5, "m");
-            var calcDouble2 = new CalcDouble("l2", "L", 5.5, "m");
+            var calcDouble1 = new CalcDouble(4.5, "l1", "L", "m");
+            var calcDouble2 = new CalcDouble(5.5, "l2", "L", "m");
 
             // Act
             CalcDouble result = calcDouble1 + calcDouble2;
@@ -79,8 +79,8 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         public void SubtractionSameUnitOperatorTest()
         {
             // Assemble
-            var calcDouble1 = new CalcDouble("l1", "L", 4.5, "m");
-            var calcDouble2 = new CalcDouble("l2", "L", 5.5, "m");
+            var calcDouble1 = new CalcDouble(4.5, "l1", "L", "m");
+            var calcDouble2 = new CalcDouble(5.5, "l2", "L", "m");
 
             // Act
             CalcDouble result = calcDouble1 - calcDouble2;
@@ -110,8 +110,8 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         public void MultiplicationSameUnitOperatorTest()
         {
             // Assemble
-            var calcDouble1 = new CalcDouble("l1", "L", 4.5, "m");
-            var calcDouble2 = new CalcDouble("l2", "L", 5.5, "m");
+            var calcDouble1 = new CalcDouble(4.5, "l1", "L", "m");
+            var calcDouble2 = new CalcDouble(5.5, "l2", "L", "m");
 
             // Act
             CalcDouble result = calcDouble1 * calcDouble2;
@@ -141,8 +141,8 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         public void DivisionSameUnitOperatorTest()
         {
             // Assemble
-            var calcDouble1 = new CalcDouble("l1", "L", 4.5, "m");
-            var calcDouble2 = new CalcDouble("l2", "L", 5.5, "m");
+            var calcDouble1 = new CalcDouble(4.5, "l1", "L", "m");
+            var calcDouble2 = new CalcDouble(5.5, "l2", "L", "m");
 
             // Act
             CalcDouble result = calcDouble1 / calcDouble2;
