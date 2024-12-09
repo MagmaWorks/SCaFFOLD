@@ -1,4 +1,5 @@
 ﻿using OasysUnits;
+using OasysUnits.Units;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
@@ -21,6 +22,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
     }
 
     public static implicit operator T(CalcQuantity<T> value) => value.Quantity;
+    public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
     public bool TryParse(string strValue)
     {
@@ -34,5 +36,16 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
         return false;
     }
 
-    public string ValueAsString() => Quantity.ToString().Replace(" ", string.Empty);
+    public string ValueAsString() => ToString();
+    public override string ToString() => Quantity.ToString().Replace(" ", string.Empty);
+
+    internal static (string name, string symbol, U unit) OperatorMetadataHelper<U>(
+        CalcQuantity<T> x, CalcQuantity<T> y, char operation) where U : Enum
+    {
+        string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
+            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+        string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
+        U unit = (U)x.Quantity.Unit;
+        return (name, symbol, unit);
+    }
 }
