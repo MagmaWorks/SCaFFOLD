@@ -51,7 +51,7 @@ namespace Scaffold.Tests.UnitTests
         {
             // Assemble
             var calcLength1 = new CalcLength(4.5, LengthUnit.Centimeter, "l1", "L");
-            var calcLength2 = new CalcLength(5.5, LengthUnit.Centimeter, "l2", "L");
+            var calcLength2 = new CalcLength(0.055, LengthUnit.Meter, "l2", "L");
 
             // Act
             CalcLength result = calcLength1 + calcLength2;
@@ -68,7 +68,7 @@ namespace Scaffold.Tests.UnitTests
         {
             // Assemble
             var calcLength1 = new CalcLength(4.5, LengthUnit.Centimeter, "l1", "L");
-            var calcLength2 = new CalcLength(5.5, LengthUnit.Centimeter, "l2", "L");
+            var calcLength2 = new CalcLength(0.055, LengthUnit.Meter, "l2", "L");
 
             // Act
             CalcLength result = calcLength1 - calcLength2;
@@ -85,7 +85,7 @@ namespace Scaffold.Tests.UnitTests
         {
             // Assemble
             var calcLength1 = new CalcLength(4.5, LengthUnit.Centimeter, "l1", "L");
-            var calcLength2 = new CalcLength(5.5, LengthUnit.Centimeter, "l2", "L");
+            var calcLength2 = new CalcLength(0.055, LengthUnit.Meter, "l2", "L");
 
             // Act
             CalcArea result = calcLength1 * calcLength2;
@@ -144,7 +144,7 @@ namespace Scaffold.Tests.UnitTests
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
             Assert.Equal("l1/l2", result.DisplayName);
-            Assert.Equal("L", result.Symbol);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
     }
