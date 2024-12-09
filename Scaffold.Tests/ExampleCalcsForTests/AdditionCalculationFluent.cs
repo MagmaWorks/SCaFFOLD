@@ -6,34 +6,39 @@ using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using SkiaSharp;
 
-namespace Scaffold.XUnitTests.Core;
+namespace Scaffold.XUnitTests.ExampleCalcsForTests;
 
 [CalculationMetadata("Add values", "Core library tester")]
-public class AdditionCalculation : ICalculation
+public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration<AdditionCalculationFluent>
 {
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
-
-    [InputCalcValue]
     public CalcDouble LeftAssignment { get; set; }
-
-    [InputCalcValue]
     public CalcDouble RightAssignment { get; set; }
-
-    [OutputCalcValue]
     public CalcDouble Result { get; set; }
 
-    public AdditionCalculation()
+    public AdditionCalculationFluent()
     {
         LeftAssignment = new CalcDouble("Left assignment", 2);
         RightAssignment = new CalcDouble(3);
-        Result = new CalcDouble("Result", Add());
+        Result = new CalcDouble(Add());
     }
 
     public void Calculate()
     {
         Result.Value = Add();
+    }
+
+    public void Configure(CalculationConfigurationBuilder<AdditionCalculationFluent> builder)
+    {
+        builder
+            .Define(x => new { x.LeftAssignment, x.RightAssignment })
+            .AsInput();
+
+        builder.Define(x => x.Result)
+            .WithDisplayName("Result")
+            .AsOutput();
     }
 
     public IList<IFormula> GetFormulae()
@@ -52,6 +57,7 @@ public class AdditionCalculation : ICalculation
                 .WithReference("Some ref here")
                 .AddExpression("x &=& a + b")
                 .SetImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
+
 
             Formula.New("2. Narrative to appear above the expression")
                 .WithConclusion("2. Some text here")

@@ -28,8 +28,8 @@
 
   <ItemGroup>
     <None Remove="ImageFromPng.png" />
-    <EmbeddedResource Include="ImageAsEmbeddedResource.png" />
-    <None Update="ImageAsRelativePath.png">
+    <EmbeddedResource Include="Resources\ImageAsEmbeddedResource.png" />
+    <None Update="Resources\ImageAsRelativePath.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

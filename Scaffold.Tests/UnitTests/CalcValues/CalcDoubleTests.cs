@@ -1,6 +1,6 @@
 ﻿using Scaffold.Core.CalcValues;
 
-namespace Scaffold.Tests.UnitTests
+namespace Scaffold.Tests.UnitTests.CalcValues
 {
     public class CalcDoubleTests
     {
