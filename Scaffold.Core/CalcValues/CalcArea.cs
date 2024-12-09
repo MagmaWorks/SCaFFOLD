@@ -1,6 +1,7 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcValues;
 
@@ -33,9 +34,8 @@ public sealed class CalcArea : CalcQuantity<Area>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
         AreaUnit unit = x.Quantity.Unit;
-        Length.TryParse($"0 {Area.GetAbbreviation(unit).Replace("²", string.Empty)}", out Length length);
-        Volume.TryParse($"0 {Area.GetAbbreviation(unit).Replace("²", "³")}", out Volume vol);
-        return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(length.Unit), vol.Unit), name, "");
+        return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
+            unit.GetEquivilantVolumeUnit()), name, "");
     }
 
     public static CalcInertia operator *(CalcArea x, CalcArea y)
@@ -43,8 +43,8 @@ public sealed class CalcArea : CalcQuantity<Area>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
         AreaUnit unit = x.Quantity.Unit;
-        AreaMomentOfInertia.TryParse($"0 {Area.GetAbbreviation(unit).Replace("²", "⁴")}", out AreaMomentOfInertia res);
-        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit), res.Unit), name, "");
+        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit),
+            unit.GetEquivilantInertiaUnit()), name, "");
     }
 
     public static CalcLength operator /(CalcArea x, CalcLength y)
@@ -52,8 +52,8 @@ public sealed class CalcArea : CalcQuantity<Area>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}/{y.DisplayName}";
         AreaUnit unit = x.Quantity.Unit;
-        Length.TryParse($"0 {Area.GetAbbreviation(unit).Replace("²", string.Empty)}", out Length res);
-        return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(res.Unit), res.Unit), name, "");
+        LengthUnit lengthUnit = unit.GetEquivilantLengthUnit();
+        return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(lengthUnit), lengthUnit), name, "");
     }
 
     public static CalcDouble operator /(CalcArea x, CalcArea y)

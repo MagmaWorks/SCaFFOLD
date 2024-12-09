@@ -1,6 +1,7 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcValues;
 
@@ -31,8 +32,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcArea operator *(CalcLength x, CalcLength y)
     {
         (string name, string symbol, LengthUnit unit) = OperatorMetadataHelper(x, y, '·');
-        Area.TryParse($"0 {Length.GetAbbreviation(unit)}²", out Area res);
-        return new CalcArea(new Area(x.Quantity.As(unit) * y.Quantity.As(unit), res.Unit), name, symbol);
+        return new CalcArea(new Area(x.Quantity.As(unit) * y.Quantity.As(unit), unit.GetEquivilantAreaUnit()), name, symbol);
     }
 
     public static CalcVolume operator *(CalcLength x, CalcArea y)
@@ -40,9 +40,8 @@ public sealed class CalcLength : CalcQuantity<Length>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
-        Area.TryParse($"0 {Length.GetAbbreviation(unit)}²", out Area area);
-        Volume.TryParse($"0 {Length.GetAbbreviation(unit)}³", out Volume vol);
-        return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(area.Unit), vol.Unit), name, "");
+        return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantAreaUnit()),
+            unit.GetEquivilantVolumeUnit()), name, "");
     }
 
     public static CalcInertia operator *(CalcLength x, CalcVolume y)
@@ -50,9 +49,8 @@ public sealed class CalcLength : CalcQuantity<Length>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
-        AreaMomentOfInertia.TryParse($"0 {Length.GetAbbreviation(unit)}⁴", out AreaMomentOfInertia res);
-        Volume.TryParse($"0 {Length.GetAbbreviation(unit)}³", out Volume vol);
-        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(vol.Unit), res.Unit), name, "");
+        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantVolumeUnit()),
+            unit.GetEquivilantInertiaUnit()), name, "");
     }
 
     public static CalcDouble operator /(CalcLength x, CalcLength y)

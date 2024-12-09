@@ -1,6 +1,7 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcValues;
 
@@ -33,9 +34,8 @@ public sealed class CalcVolume : CalcQuantity<Volume>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
         VolumeUnit unit = x.Quantity.Unit;
-        AreaMomentOfInertia.TryParse($"0 {Volume.GetAbbreviation(unit).Replace("³", "⁴")}", out AreaMomentOfInertia res);
-        Length.TryParse($"0 {Volume.GetAbbreviation(unit).Replace("³", string.Empty)}", out Length length);
-        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(length.Unit), res.Unit), name, "");
+        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
+            unit.GetEquivilantInertiaUnit()), name, "");
     }
 
     public static CalcArea operator /(CalcVolume x, CalcLength y)
@@ -43,9 +43,8 @@ public sealed class CalcVolume : CalcQuantity<Volume>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}/{y.DisplayName}";
         VolumeUnit unit = x.Quantity.Unit;
-        Area.TryParse($"0 {Volume.GetAbbreviation(unit).Replace("³", "²")}", out Area area);
-        Length.TryParse($"0 {Volume.GetAbbreviation(unit).Replace("³", string.Empty)}", out Length length);
-        return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(length.Unit), area.Unit), name, "");
+        return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
+            unit.GetEquivilantAreaUnit()), name, "");
     }
 
     public static CalcDouble operator /(CalcVolume x, CalcVolume y)
@@ -59,7 +58,7 @@ public sealed class CalcVolume : CalcQuantity<Volume>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
-        VolumeUnit unit = x.Quantity.Unit == y.Quantity.Unit ? x.Quantity.Unit : VolumeUnit.CubicMeter;
+        VolumeUnit unit = x.Quantity.Unit;
         return (name, symbol, unit);
     }
 }
