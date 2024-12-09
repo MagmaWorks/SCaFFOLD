@@ -3,7 +3,7 @@ using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
-namespace Scaffold.XUnitTests.Core;
+namespace Scaffold.XUnitTests.ExampleCalcsForTests;
 
 public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitives>
 {

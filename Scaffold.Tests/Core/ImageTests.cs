@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Scaffold.Core.Images.Models;
-using Scaffold.XUnitTests.Core;
+using Scaffold.XUnitTests.ExampleCalcsForTests;
 
-namespace Scaffold.XUnitTests.UnitTests;
+namespace Scaffold.XUnitTests.Core;
 
 public class ImageTests
 {
@@ -22,7 +22,7 @@ public class ImageTests
     {
         const string relativePathName = "ImageAsRelativePath.png";
         var executingAssembly = Assembly.GetExecutingAssembly();
-        var workingDirectory = Directory.GetCurrentDirectory();
+        var workingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
 
         var image = new ImageFromRelativePath(relativePathName)
         {

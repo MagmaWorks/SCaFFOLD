@@ -1,8 +1,7 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
-using Scaffold.XUnitTests.Core;
 
-namespace Scaffold.XUnitTests.UnitTests;
+namespace Scaffold.XUnitTests.Core;
 
 public class CalcMetadataTests
 {

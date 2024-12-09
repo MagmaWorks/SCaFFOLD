@@ -2,6 +2,7 @@
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 using Scaffold.XUnitTests.Core;
+using Scaffold.XUnitTests.ExampleCalcsForTests;
 
 namespace Scaffold.XUnitTests.UnitTests;
 
