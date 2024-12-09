@@ -2,7 +2,7 @@
 
 namespace Scaffold.Core.CalcValues;
 
-public sealed class CalcBool : CalcValue<bool>
+public sealed class CalcBool : CalcValue<bool>, IEquatable<CalcBool>
 {
     public CalcBool(bool value = false)
         : base(value, null, string.Empty, string.Empty) { }
@@ -49,6 +49,13 @@ public sealed class CalcBool : CalcValue<bool>
             return false;
         }
 
-        throw new NotImplementedException();
+        if (obj is CalcBool other)
+        {
+            other.Equals(this);
+        }
+
+        return false;
     }
+
+    public bool Equals(CalcBool other) => throw new NotImplementedException();
 }

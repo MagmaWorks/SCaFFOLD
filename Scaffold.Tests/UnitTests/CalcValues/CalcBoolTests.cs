@@ -116,5 +116,19 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.False(expectedFalse2);
             Assert.Equal("fake1≠fake2", expectedFalse2.DisplayName);
         }
+
+        [Fact]
+        public void EqualsTest()
+        {
+            // Assemble
+            var calcBooltrue = new CalcBool(true, "truth");
+            var calcBoolfalse = new CalcBool(false, "fake");
+
+            // Act
+            // Assert
+            Assert.False(calcBooltrue.Equals(calcBoolfalse));
+            Assert.True(calcBooltrue.Equals(calcBooltrue));
+            Assert.True(calcBoolfalse.Equals(calcBoolfalse));
+        }
     }
 }
