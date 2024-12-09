@@ -58,4 +58,9 @@ public sealed class CalcBool : CalcValue<bool>, IEquatable<CalcBool>
     }
 
     public bool Equals(CalcBool other) => throw new NotImplementedException();
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
+    }
 }
