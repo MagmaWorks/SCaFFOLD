@@ -135,11 +135,11 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void DivisionLengthOperatorTest()
         {
             // Assemble
-            var calcArea1 = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a", "A");
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a", "A");
             var calcLength = new CalcLength(0.055, LengthUnit.Meter, "l", "L");
 
             // Act
-            CalcLength result = calcArea1 / calcLength;
+            CalcLength result = calcArea / calcLength;
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);

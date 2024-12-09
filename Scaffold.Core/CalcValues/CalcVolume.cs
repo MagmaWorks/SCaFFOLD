@@ -20,13 +20,13 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     public static CalcVolume operator +(CalcVolume x, CalcVolume y)
     {
         (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper(x, y, '+');
-        return new CalcVolume(new Volume(x.Value + y.Value, unit), name, symbol);
+        return new CalcVolume(new Volume(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
     }
 
     public static CalcVolume operator -(CalcVolume x, CalcVolume y)
     {
         (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper(x, y, '-');
-        return new CalcVolume(new Volume(x.Value - y.Value, unit), name, symbol);
+        return new CalcVolume(new Volume(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
     }
 
     public static CalcInertia operator *(CalcVolume x, CalcLength y)
@@ -38,6 +38,21 @@ public sealed class CalcVolume : CalcQuantity<Volume>
             unit.GetEquivilantInertiaUnit()), name, "");
     }
 
+    public static CalcDouble operator /(CalcVolume x, CalcVolume y)
+    {
+        (string name, string _, VolumeUnit unit) = OperatorMetadataHelper(x, y, '/');
+        return new CalcDouble(name, string.Empty, x.Quantity / y.Quantity);
+    }
+
+    public static CalcLength operator /(CalcVolume x, CalcArea y)
+    {
+        string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
+            ? string.Empty : $"{x.DisplayName}/{y.DisplayName}";
+        VolumeUnit unit = x.Quantity.Unit;
+        return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantAreaUnit()),
+            unit.GetEquivilantLengthUnit()), name, "");
+    }
+
     public static CalcArea operator /(CalcVolume x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
@@ -45,12 +60,6 @@ public sealed class CalcVolume : CalcQuantity<Volume>
         VolumeUnit unit = x.Quantity.Unit;
         return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantAreaUnit()), name, "");
-    }
-
-    public static CalcDouble operator /(CalcVolume x, CalcVolume y)
-    {
-        (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper(x, y, '/');
-        return new CalcDouble(name, symbol, x.Quantity / y.Quantity);
     }
 
     private static (string name, string symbol, VolumeUnit unit) OperatorMetadataHelper(CalcVolume x, CalcVolume y, char operation)
