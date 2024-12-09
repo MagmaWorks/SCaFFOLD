@@ -12,7 +12,7 @@ public sealed class CalcBool : CalcValue<bool>
 
     public CalcBool(bool value, string name, string symbol, string unit = "")
         : base(value, name, symbol, unit) { }
-    
+
     public static CalcBool operator &(CalcBool x, CalcBool y)
     {
         (string name, string symbol, string _) = OperatorMetadataHelper(x, y, '&');
@@ -35,5 +35,20 @@ public sealed class CalcBool : CalcValue<bool>
     {
         (string name, string symbol, string _) = OperatorMetadataHelper(x, y, '≠');
         return new CalcBool(x.Value != y.Value, name, symbol);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        throw new NotImplementedException();
     }
 }
