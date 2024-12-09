@@ -2,7 +2,7 @@
 using OasysUnits.Units;
 using Scaffold.Core.CalcValues;
 
-namespace Scaffold.Tests.UnitTests
+namespace Scaffold.Tests.UnitTests.CalcQuantities
 {
     public class CalcLengthTests
     {
