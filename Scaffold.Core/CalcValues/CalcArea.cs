@@ -19,13 +19,13 @@ public sealed class CalcArea : CalcQuantity<Area>
     public static CalcArea operator +(CalcArea x, CalcArea y)
     {
         (string name, string symbol, AreaUnit unit) = OperatorMetadataHelper(x, y, '+');
-        return new CalcArea(new Area(x.Value + y.Value, unit), name, symbol);
+        return new CalcArea(new Area(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
     }
 
     public static CalcArea operator -(CalcArea x, CalcArea y)
     {
         (string name, string symbol, AreaUnit unit) = OperatorMetadataHelper(x, y, '-');
-        return new CalcArea(new Area(x.Value - y.Value, unit), name, symbol);
+        return new CalcArea(new Area(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
     }
 
     public static CalcVolume operator *(CalcArea x, CalcLength y)
@@ -58,8 +58,8 @@ public sealed class CalcArea : CalcQuantity<Area>
 
     public static CalcDouble operator /(CalcArea x, CalcArea y)
     {
-        (string name, string symbol, AreaUnit unit) = OperatorMetadataHelper(x, y, '/');
-        return new CalcDouble(name, symbol, x.Quantity / y.Quantity);
+        (string name, string _, AreaUnit _) = OperatorMetadataHelper(x, y, '/');
+        return new CalcDouble(name, string.Empty, x.Quantity / y.Quantity);
     }
 
     private static (string name, string symbol, AreaUnit unit) OperatorMetadataHelper(CalcArea x, CalcArea y, char operation)
@@ -67,7 +67,7 @@ public sealed class CalcArea : CalcQuantity<Area>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
-        AreaUnit unit = x.Quantity.Unit == y.Quantity.Unit ? x.Quantity.Unit : AreaUnit.SquareMeter;
+        AreaUnit unit = x.Quantity.Unit;
         return (name, symbol, unit);
     }
 }
