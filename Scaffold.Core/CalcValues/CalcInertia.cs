@@ -20,13 +20,21 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
     public static CalcInertia operator +(CalcInertia x, CalcInertia y)
     {
         (string name, string symbol, AreaMomentOfInertiaUnit unit) = OperatorMetadataHelper(x, y, '+');
-        return new CalcInertia(new AreaMomentOfInertia(x.Value + y.Value, unit), name, symbol);
+        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) + y.Quantity.As(unit),
+            unit), name, symbol);
     }
 
     public static CalcInertia operator -(CalcInertia x, CalcInertia y)
     {
         (string name, string symbol, AreaMomentOfInertiaUnit unit) = OperatorMetadataHelper(x, y, '-');
-        return new CalcInertia(new AreaMomentOfInertia(x.Value - y.Value, unit), name, symbol);
+        return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) - y.Quantity.As(unit),
+            unit), name, symbol);
+    }
+
+    public static CalcDouble operator /(CalcInertia x, CalcInertia y)
+    {
+        (string name, string _, AreaMomentOfInertiaUnit unit) = OperatorMetadataHelper(x, y, '/');
+        return new CalcDouble(name, string.Empty, x.Quantity / y.Quantity);
     }
 
     public static CalcVolume operator /(CalcInertia x, CalcLength y)
@@ -54,12 +62,6 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
         AreaMomentOfInertiaUnit unit = x.Quantity.Unit;
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantVolumeUnit()),
             unit.GetEquivilantLengthUnit()), name, "");
-    }
-
-    public static CalcDouble operator /(CalcInertia x, CalcInertia y)
-    {
-        (string name, string symbol, AreaMomentOfInertiaUnit unit) = OperatorMetadataHelper(x, y, '/');
-        return new CalcDouble(name, symbol, x.Quantity / y.Quantity);
     }
 
     private static (string name, string symbol, AreaMomentOfInertiaUnit unit) OperatorMetadataHelper(CalcInertia x, CalcInertia y, char operation)
