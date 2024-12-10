@@ -13,19 +13,15 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     public CalcVolume(double value, VolumeUnit unit, string name, string symbol)
         : base(new Volume(value, unit), name, symbol) { }
 
-
-    public static implicit operator double(CalcVolume value) => value.Value;
-    public static implicit operator Volume(CalcVolume value) => value.Quantity;
-
     public static CalcVolume operator +(CalcVolume x, CalcVolume y)
     {
-        (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper(x, y, '+');
+        (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper<VolumeUnit>(x, y, '+');
         return new CalcVolume(new Volume(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
     }
 
     public static CalcVolume operator -(CalcVolume x, CalcVolume y)
     {
-        (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper(x, y, '-');
+        (string name, string symbol, VolumeUnit unit) = OperatorMetadataHelper<VolumeUnit>(x, y, '-');
         return new CalcVolume(new Volume(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
     }
 
@@ -40,8 +36,8 @@ public sealed class CalcVolume : CalcQuantity<Volume>
 
     public static CalcDouble operator /(CalcVolume x, CalcVolume y)
     {
-        (string name, string _, VolumeUnit unit) = OperatorMetadataHelper(x, y, '/');
-        return new CalcDouble(name, string.Empty, x.Quantity / y.Quantity);
+        (string name, string _, VolumeUnit unit) = OperatorMetadataHelper<VolumeUnit>(x, y, '/');
+        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
     }
 
     public static CalcLength operator /(CalcVolume x, CalcArea y)
@@ -60,14 +56,5 @@ public sealed class CalcVolume : CalcQuantity<Volume>
         VolumeUnit unit = x.Quantity.Unit;
         return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantAreaUnit()), name, "");
-    }
-
-    private static (string name, string symbol, VolumeUnit unit) OperatorMetadataHelper(CalcVolume x, CalcVolume y, char operation)
-    {
-        string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
-        string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
-        VolumeUnit unit = x.Quantity.Unit;
-        return (name, symbol, unit);
     }
 }

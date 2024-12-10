@@ -21,9 +21,9 @@ public class DuplicateDisplayNames : ICalculation
 
     public DuplicateDisplayNames()
     {
-        LeftAssignment = new CalcDouble("Value", 2);
-        RightAssignment = new CalcDouble("Value", 3);
-        Result = new CalcDouble("Result", Add());
+        LeftAssignment = new CalcDouble(2, "Value");
+        RightAssignment = new CalcDouble(3, "Value");
+        Result = new CalcDouble(Add(), "Result");
     }
 
     public void Calculate()

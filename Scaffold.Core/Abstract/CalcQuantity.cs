@@ -4,7 +4,7 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
 
-public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
+public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
     public T Quantity { get; set; }
     public string Unit => Quantity.ToString().Split(' ')[1];
@@ -21,6 +21,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
     }
 
     public static implicit operator T(CalcQuantity<T> value) => value.Quantity;
+    public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
     public bool TryParse(string strValue)
     {
@@ -33,6 +34,43 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
 
         return false;
     }
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
 
-    public string ValueAsString() => Quantity.ToString().Replace(" ", string.Empty);
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        if (obj is CalcQuantity<T> other)
+        {
+            return Equals(other);
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return DisplayName.GetHashCode() ^ Symbol.GetHashCode() ^ Status.GetHashCode()
+            ^ Value.GetHashCode() ^ Unit.GetHashCode();
+    }
+
+    public bool Equals(CalcQuantity<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
+    public string ValueAsString() => ToString();
+    public override string ToString() => Quantity.ToString().Replace(" ", string.Empty);
+
+    internal static (string name, string symbol, U unit) OperatorMetadataHelper<U>(
+        CalcQuantity<T> x, CalcQuantity<T> y, char operation) where U : Enum
+    {
+        string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
+            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+        string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
+        U unit = (U)x.Quantity.Unit;
+        return (name, symbol, unit);
+    }
 }

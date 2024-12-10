@@ -26,9 +26,9 @@ public class AdditionCalculation : ICalculation
 
     public AdditionCalculation()
     {
-        LeftAssignment = new CalcDouble("Left assignment", 2);
+        LeftAssignment = new CalcDouble(2, "Left assignment");
         RightAssignment = new CalcDouble(3);
-        Result = new CalcDouble("Result", Add());
+        Result = new CalcDouble(Add(), "Result");
     }
 
     public void Calculate()
