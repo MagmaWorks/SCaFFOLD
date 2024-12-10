@@ -2,7 +2,7 @@
 
 namespace Scaffold.Core.CalcValues;
 
-public sealed class CalcBool : CalcValue<bool>, IEquatable<CalcBool>
+public class CalcBool : CalcValue<bool>
 {
     public CalcBool(bool value = false)
         : base(value, null, string.Empty, string.Empty) { }
@@ -37,30 +37,6 @@ public sealed class CalcBool : CalcValue<bool>, IEquatable<CalcBool>
         return new CalcBool(x.Value != y.Value, name, symbol);
     }
 
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(this, obj))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(obj, null))
-        {
-            return false;
-        }
-
-        if (obj is CalcBool other)
-        {
-            other.Equals(this);
-        }
-
-        return false;
-    }
-
-    public bool Equals(CalcBool other) => throw new NotImplementedException();
-
-    public override int GetHashCode()
-    {
-        throw new NotImplementedException();
-    }
+    public override bool Equals(object obj) => base.Equals(obj);
+    public override int GetHashCode() => base.GetHashCode();
 }

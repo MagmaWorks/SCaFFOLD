@@ -4,7 +4,7 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
 
-public abstract class CalcValue<T> : ICalcValue
+public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 {
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
@@ -50,4 +50,32 @@ public abstract class CalcValue<T> : ICalcValue
     }
 
     public override string ToString() => $"{Value}{Unit}";
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        if (obj is CalcValue<T> other)
+        {
+            return Equals(other);
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return DisplayName.GetHashCode() ^ Symbol.GetHashCode() ^ Status.GetHashCode()
+            ^ Value.GetHashCode() ^ Unit.GetHashCode();
+    }
+
+    public bool Equals(CalcValue<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
 }

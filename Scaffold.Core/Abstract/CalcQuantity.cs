@@ -1,11 +1,10 @@
 ﻿using OasysUnits;
-using OasysUnits.Units;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
 
-public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
+public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
     public T Quantity { get; set; }
     public string Unit => Quantity.ToString().Split(' ')[1];
@@ -35,7 +34,33 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T> where T : IQuantity
 
         return false;
     }
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
 
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        if (obj is CalcQuantity<T> other)
+        {
+            return Equals(other);
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return DisplayName.GetHashCode() ^ Symbol.GetHashCode() ^ Status.GetHashCode()
+            ^ Value.GetHashCode() ^ Unit.GetHashCode();
+    }
+
+    public bool Equals(CalcQuantity<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
     public string ValueAsString() => ToString();
     public override string ToString() => Quantity.ToString().Replace(" ", string.Empty);
 
