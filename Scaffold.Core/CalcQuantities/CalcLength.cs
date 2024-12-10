@@ -1,9 +1,10 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
-namespace Scaffold.Core.CalcValues;
+namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcLength : CalcQuantity<Length>
 {
