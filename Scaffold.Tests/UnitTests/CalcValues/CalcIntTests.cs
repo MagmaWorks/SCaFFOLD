@@ -57,7 +57,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(9, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1+l2", result.DisplayName);
+            Assert.Equal("l1 + l2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(-1, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1-l2", result.DisplayName);
+            Assert.Equal("l1 - l2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(4 * 5, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m²", result.Unit);
-            Assert.Equal("l1·l2", result.DisplayName);
+            Assert.Equal("l1 · l2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(4 / 5, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.True(string.IsNullOrEmpty(result.Unit));
-            Assert.Equal("l1/l2", result.DisplayName);
+            Assert.Equal("l1 / l2", result.DisplayName); // note: using Thin Space \u2009
         }
     }
 }

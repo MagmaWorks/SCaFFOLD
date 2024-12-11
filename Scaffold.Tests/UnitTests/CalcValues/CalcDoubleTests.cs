@@ -20,7 +20,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         public void ImplicitOperatorTest()
         {
             // Assemble
-            var calcDouble = new CalcDouble(4.5);
+            CalcDouble calcDouble = new CalcDouble(4.5);
 
             // Act
             double result = calcDouble;
@@ -57,7 +57,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(10.0, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1+l2", result.DisplayName);
+            Assert.Equal("l1 + l2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(-1, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1-l2", result.DisplayName);
+            Assert.Equal("l1 - l2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(4.5 * 5.5, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m²", result.Unit);
-            Assert.Equal("l1·l2", result.DisplayName);
+            Assert.Equal("l1 · l2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(4.5 / 5.5, result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.True(string.IsNullOrEmpty(result.Unit));
-            Assert.Equal("l1/l2", result.DisplayName);
+            Assert.Equal("l1 / l2", result.DisplayName); // note: using Thin Space \u2009
         }
     }
 }

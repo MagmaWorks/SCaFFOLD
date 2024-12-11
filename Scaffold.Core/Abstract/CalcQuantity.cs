@@ -34,6 +34,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
 
         return false;
     }
+
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(this, obj))
@@ -62,13 +63,13 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
 
     public bool Equals(CalcQuantity<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
     public string ValueAsString() => ToString();
-    public override string ToString() => Quantity.ToString().Replace(" ", string.Empty);
+    public override string ToString() => Quantity.ToString().Replace(" ", "\u2009");
 
     internal static (string name, string symbol, U unit) OperatorMetadataHelper<U>(
         CalcQuantity<T> x, CalcQuantity<T> y, char operation) where U : Enum
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009{operation}\u2009{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         U unit = (U)x.Quantity.Unit;
         return (name, symbol, unit);

@@ -8,8 +8,8 @@ namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcArea : CalcQuantity<Area>
 {
-    public CalcArea(Area Area, string name, string symbol = "")
-        : base(Area, name, symbol) { }
+    public CalcArea(Area area, string name, string symbol = "")
+        : base(area, name, symbol) { }
 
     public CalcArea(double value, AreaUnit unit, string name, string symbol)
         : base(new Area(value, unit), name, symbol) { }
@@ -29,7 +29,7 @@ public sealed class CalcArea : CalcQuantity<Area>
     public static CalcVolume operator *(CalcArea x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         AreaUnit unit = x.Quantity.Unit;
         return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantVolumeUnit()), name, "");
@@ -38,7 +38,7 @@ public sealed class CalcArea : CalcQuantity<Area>
     public static CalcInertia operator *(CalcArea x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         AreaUnit unit = x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit),
             unit.GetEquivilantInertiaUnit()), name, "");
@@ -47,7 +47,7 @@ public sealed class CalcArea : CalcQuantity<Area>
     public static CalcLength operator /(CalcArea x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}/{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         AreaUnit unit = x.Quantity.Unit;
         LengthUnit lengthUnit = unit.GetEquivilantLengthUnit();
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(lengthUnit), lengthUnit), name, "");

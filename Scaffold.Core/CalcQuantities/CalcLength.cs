@@ -36,7 +36,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcVolume operator *(CalcLength x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
         return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantVolumeUnit()), name, "");
@@ -45,7 +45,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcInertia operator *(CalcLength x, CalcVolume y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(
             x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantVolumeUnit()),

@@ -61,7 +61,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal(10, result.Value);
             Assert.Equal("I", result.Symbol);
             Assert.Equal("cm⁴", result.Unit);
-            Assert.Equal("i1+i2", result.DisplayName);
+            Assert.Equal("i1 + i2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal(-1, result.Value);
             Assert.Equal("I", result.Symbol);
             Assert.Equal("cm⁴", result.Unit);
-            Assert.Equal("i1-i2", result.DisplayName);
+            Assert.Equal("i1 - i2", result.DisplayName); // note: using Thin Space \u2009
         }
 
 
@@ -94,7 +94,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i1/i2", result.DisplayName);
+            Assert.Equal("i1 / i2", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
@@ -111,7 +111,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i/l", result.DisplayName);
+            Assert.Equal("i / l", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm³", result.Unit);
         }
@@ -128,7 +128,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i/a", result.DisplayName);
+            Assert.Equal("i / a", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm²", result.Unit);
         }
@@ -145,7 +145,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i/v", result.DisplayName);
+            Assert.Equal("i / v", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm", result.Unit);
         }

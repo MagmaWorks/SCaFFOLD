@@ -20,7 +20,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         public void ImplicitOperatorTest()
         {
             // Assemble
-            var calcString1 = new CalcString("hello");
+            CalcString calcString1 = new CalcString("hello");
 
             // Act
             string result = calcString1;
@@ -57,7 +57,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal("hellofriend", result.Value);
             Assert.Equal("L", result.Symbol);
             Assert.Equal("m", result.Unit);
-            Assert.Equal("l1+l2", result.DisplayName);
+            Assert.Equal("l1 + l2", result.DisplayName); // note: using Thin Space \u2009
         }
     }
 }

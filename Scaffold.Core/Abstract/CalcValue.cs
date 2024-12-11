@@ -43,13 +43,13 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         CalcValue<T> x, CalcValue<T> y, char operation)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009{operation}\u2009{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         string unit = x.Unit == y.Unit ? x.Unit : string.Empty;
         return (name, symbol, unit);
     }
 
-    public override string ToString() => $"{Value}{Unit}";
+    public override string ToString() => $"{Value}\u2009{Unit}";
 
     public override bool Equals(object obj)
     {
