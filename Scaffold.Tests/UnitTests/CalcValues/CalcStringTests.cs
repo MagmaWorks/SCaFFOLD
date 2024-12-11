@@ -37,10 +37,10 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             var calcString2 = new CalcString("friend");
 
             // Act
-            CalcString result = calcString1 + calcString2;
+            calcString1 += calcString2;
 
             // Assert
-            Assert.Equal("hellofriend", result.Value);
+            Assert.Equal("hellofriend", calcString1.Value);
         }
 
         [Fact]
