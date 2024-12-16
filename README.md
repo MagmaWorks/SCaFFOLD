@@ -2,6 +2,7 @@
 *Structural Calculations Framework*
 
 ![GitHub Actions Workflow Status](https://github.com/MagmaWorks/SCaFFOLD/actions/workflows/on-merge-to-main.yml/badge.svg)
+[![codecov](https://codecov.io/gh/MagmaWorks/SCaFFOLD/graph/badge.svg)](https://codecov.io/gh/MagmaWorks/SCaFFOLD)
 
 Free, Open and Lightweight Design
 
