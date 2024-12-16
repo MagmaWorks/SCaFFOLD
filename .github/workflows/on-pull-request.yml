@@ -8,6 +8,6 @@ on:
       
 jobs:
   ci:
-    uses: magmaworks/actions/.github/workflows/on-pull-request.yml@install-dotnet
+    uses: magmaworks/actions/.github/workflows/on-pull-request.yml@main
     with:
       dotnet: '8.0.x'
