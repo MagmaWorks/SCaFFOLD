@@ -8,3 +8,5 @@ jobs:
   ci:
     uses: magmaworks/actions/.github/workflows/on-release.yml@main
     secrets: inherit
+    with:
+      dotnet: '8.0.x'
