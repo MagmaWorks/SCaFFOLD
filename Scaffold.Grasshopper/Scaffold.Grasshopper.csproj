@@ -28,9 +28,9 @@
   <PropertyGroup>
     <!-- Specifies information for Assembly and Yak -->
     <Version>1.0</Version>
-    <Title>SCaFFOLDForGrasshopper</Title>
-    <Company>SCaFFOLDForGrasshopper Authors</Company>
-    <Description>Description of SCaFFOLDForGrasshopper</Description>
+    <Title>SCaFFOLD</Title>
+    <Company>Whitby Wood</Company>
+    <Description>SCaFFOLD for Grasshopper</Description>
   </PropertyGroup>
   
   <ItemGroup>
@@ -52,6 +52,13 @@
     <Reference Include="$(PkgMicrosoft_NETFramework_ReferenceAssemblies_net48)\build\.NETFramework\v4.8\System.Windows.Forms.dll" Private="False" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.0" ExcludeAssets="runtime" />
   </ItemGroup>
+
+  <ItemGroup>
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App" IsWindowsOnly="false" />
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App.WPF" IsWindowsOnly="false" />
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App.WindowsForms" IsWindowsOnly="false" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Scaffold.Calculations\Scaffold.Calculations.csproj" />
     <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
