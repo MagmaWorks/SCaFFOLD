@@ -11,6 +11,6 @@ jobs:
     with:
       dotnet: '8.0.x'
     permissions:
-        contents: write
-        actions: write
-        attestations: write
+      contents: write
+      actions: write
+      attestations: write
