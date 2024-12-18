@@ -34,7 +34,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Grasshopper" Version="8.0.23304.9001" ExcludeAssets="runtime" />
+    <PackageReference Include="Grasshopper" Version="8.14.24345.15001" ExcludeAssets="runtime" />
   </ItemGroup>
   
   <!-- For Windows only builds -->
