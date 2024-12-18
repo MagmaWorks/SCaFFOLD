@@ -10,3 +10,7 @@ jobs:
     uses: magmaworks/actions/.github/workflows/on-merge-to-main.yml@main
     with:
       dotnet: '8.0.x'
+    permissions:
+        contents: write
+        actions: write
+        attestations: write
