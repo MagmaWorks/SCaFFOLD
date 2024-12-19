@@ -34,7 +34,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void ImplicitOperatorLengthTest()
+        public void ImplicitOperatorQuantityTest()
         {
             // Assemble
             var calcLength = new CalcLength(4.5, LengthUnit.Meter, "length", "L");

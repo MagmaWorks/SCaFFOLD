@@ -8,8 +8,8 @@ namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
 {
-    public CalcInertia(AreaMomentOfInertia AreaMomentOfInertia, string name, string symbol = "")
-        : base(AreaMomentOfInertia, name, symbol) { }
+    public CalcInertia(AreaMomentOfInertia areaMomentOfInertia, string name, string symbol = "")
+        : base(areaMomentOfInertia, name, symbol) { }
 
     public CalcInertia(double value, AreaMomentOfInertiaUnit unit, string name, string symbol)
         : base(new AreaMomentOfInertia(value, unit), name, symbol) { }

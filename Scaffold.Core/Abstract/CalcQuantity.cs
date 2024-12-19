@@ -23,6 +23,36 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
     public static implicit operator T(CalcQuantity<T> value) => value.Quantity;
     public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
+    public static bool operator ==(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
+    }
+
+    public static bool operator !=(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return !other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
+    }
+
+    public static bool operator >(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value > other.Quantity.As(value.Quantity.Unit);
+    }
+
+    public static bool operator <(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value < other.Quantity.As(value.Quantity.Unit);
+    }
+
+    public static bool operator >=(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value >= other.Quantity.As(value.Quantity.Unit);
+    }
+
+    public static bool operator <=(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value <= other.Quantity.As(value.Quantity.Unit);
+    }
+
     public bool TryParse(string strValue)
     {
         if (OasysUnits.Quantity.TryParse(

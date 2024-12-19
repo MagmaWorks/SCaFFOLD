@@ -8,8 +8,8 @@ namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcVolume : CalcQuantity<Volume>
 {
-    public CalcVolume(Volume Volume, string name, string symbol = "")
-        : base(Volume, name, symbol) { }
+    public CalcVolume(Volume volume, string name, string symbol = "")
+        : base(volume, name, symbol) { }
 
     public CalcVolume(double value, VolumeUnit unit, string name, string symbol)
         : base(new Volume(value, unit), name, symbol) { }

@@ -34,7 +34,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void ImplicitOperatorLengthTest()
+        public void ImplicitOperatorQuantityTest()
         {
             // Assemble
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicYard, "volume", "V");

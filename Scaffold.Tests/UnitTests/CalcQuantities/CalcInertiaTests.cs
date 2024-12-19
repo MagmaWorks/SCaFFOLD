@@ -34,7 +34,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void ImplicitOperatorLengthTest()
+        public void ImplicitOperatorQuantityTest()
         {
             // Assemble
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.DecimeterToTheFourth, "inertia", "I");
