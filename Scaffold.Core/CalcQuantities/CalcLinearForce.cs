@@ -38,6 +38,11 @@ public sealed class CalcLinearForce : CalcQuantity<ForcePerLength>
             unit.GetEquivilantForceUnit()), name, "");
     }
 
+    public static CalcForce operator *(CalcLength x, CalcLinearForce y)
+    {
+        return y * x;
+    }
+
     public static CalcStress operator /(CalcLinearForce x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)

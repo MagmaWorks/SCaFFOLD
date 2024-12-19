@@ -115,21 +115,38 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
 
-        //[Fact]
-        //public void DivisionLengthOperatorTest()
-        //{
-        //    // Assemble
-        //    var calcForce = new CalcForce(4.5, ForceUnit.SquareCentimeter, "f", "F");
-        //    var calcLength = new CalcLength(0.055, LengthUnit.Meter, "l", "L");
+        [Fact]
+        public void DivisionLengthOperatorTest()
+        {
+            // Assemble
+            var calcForce = new CalcForce(4.5, ForceUnit.Kilonewton, "f", "F");
+            var calcLength = new CalcLength(5.5, LengthUnit.Meter, "l", "L");
 
-        //    // Act
-        //    CalcLength result = calcForce / calcLength;
+            // Act
+            CalcLinearForce result = calcForce / calcLength;
 
-        //    // Assert
-        //    Assert.Equal(4.5 / 5.5, result.Value, 12);
-        //    Assert.Equal("a / l", result.DisplayName); // note: using Thin Space \u2009
-        //    Assert.True(string.IsNullOrEmpty(result.Symbol));
-        //    Assert.Equal("cm", result.Unit);
-        //}
+            // Assert
+            Assert.Equal(4.5 / 5.5, result.Value);
+            Assert.Equal("f / l", result.DisplayName);  // note: using Thin Space
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal("kN/m", result.Unit);
+        }
+
+        [Fact]
+        public void DivisionAreaOperatorTest()
+        {
+            // Assemble
+            var calcForce = new CalcForce(4.5, ForceUnit.Kilonewton, "f", "F");
+            var calcArea = new CalcArea(5.5, AreaUnit.SquareMeter, "A", "A");
+
+            // Act
+            CalcStress result = calcForce / calcArea;
+
+            // Assert
+            Assert.Equal(4.5 / 5.5, result.Value);
+            Assert.Equal("f / A", result.DisplayName);  // note: using Thin Space
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal("kN/m²", result.Unit);
+        }
     }
 }

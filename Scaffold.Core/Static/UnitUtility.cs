@@ -100,6 +100,19 @@ public static partial class UnitUtility
             .Split('/')[1], typeof(AreaUnit));
     public static LengthUnit GetEquivilantLengthUnit(this PressureUnit unit)
         => unit.GetEquivilantAreaUnit().GetEquivilantLengthUnit();
+
+    internal static PressureUnit GetKnownUnit(this PressureUnit unit)
+    {
+        switch (unit)
+        {
+            case PressureUnit.Kilopascal:
+                return PressureUnit.KilonewtonPerSquareMeter;
+
+            case PressureUnit.Megapascal:
+                return PressureUnit.NewtonPerSquareMillimeter;
+        }
+
+        return unit;
+    }
     #endregion
 }
-

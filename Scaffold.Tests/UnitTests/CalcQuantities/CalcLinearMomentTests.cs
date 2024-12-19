@@ -34,7 +34,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void ImplicitOperatorLengthTest()
+        public void ImplicitOperatorQuantityTest()
         {
             // Assemble
             var calcMoment = new CalcLinearMoment(4.5, "moment", "M");

@@ -30,7 +30,7 @@ public sealed class CalcStress : CalcQuantity<Pressure>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        PressureUnit unit = x.Quantity.Unit;
+        PressureUnit unit = x.Quantity.Unit.GetKnownUnit();
         return new CalcLinearForce(new ForcePerLength(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantForcePerLengthUnit()), name, "");
     }
@@ -44,7 +44,7 @@ public sealed class CalcStress : CalcQuantity<Pressure>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        PressureUnit unit = x.Quantity.Unit;
+        PressureUnit unit = x.Quantity.Unit.GetKnownUnit();
         return new CalcForce(new Force(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantForceUnit()), name, "");
     }
