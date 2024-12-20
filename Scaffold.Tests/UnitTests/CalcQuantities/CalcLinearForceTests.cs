@@ -132,4 +132,4 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
     }
-} 
+}
