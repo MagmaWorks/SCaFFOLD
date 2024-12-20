@@ -159,4 +159,4 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal("4.5 Eng", value);
         }
     }
-} 
+}
