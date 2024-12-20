@@ -36,7 +36,7 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 
     public virtual bool TryParse(string input)
     {
-        var converter = TypeDescriptor.GetConverter(typeof(T));
+        TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
         if (converter != null)
         {
             try
