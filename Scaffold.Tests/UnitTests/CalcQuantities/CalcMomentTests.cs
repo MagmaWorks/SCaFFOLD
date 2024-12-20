@@ -131,5 +131,38 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
+
+        [Fact]
+        public void MakeLinearTest()
+        {
+            // Arrange
+            var calcMoment = new CalcMoment(4.5, "m", "M");
+
+            // Act
+            CalcLinearMoment result = calcMoment.MakeLinear();
+
+            // Assert
+            Assert.Equal(4.5, result.Value, 12);
+            Assert.Equal("m", result.DisplayName);
+            Assert.Equal("kN·m/m", result.Unit);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+        }
+
+        [Fact]
+        public void MakeLinearFromLengthTest()
+        {
+            // Arrange
+            var calcMoment = new CalcMoment(4.5, "m", "M");
+            var calcLength = new CalcLength(5.5, LengthUnit.Centimeter, "l", "L");
+
+            // Act
+            CalcLinearMoment result = calcMoment.MakeLinear(calcLength);
+
+            // Assert
+            Assert.Equal(4.5 / 5.5, result.Value, 12);
+            Assert.Equal("m", result.DisplayName);
+            Assert.Equal("kN·m/cm", result.Unit);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+        }
     }
 }

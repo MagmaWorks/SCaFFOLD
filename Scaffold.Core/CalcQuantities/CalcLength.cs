@@ -14,6 +14,8 @@ public sealed class CalcLength : CalcQuantity<Length>
     public CalcLength(double value, LengthUnit unit, string name, string symbol)
         : base(new Length(value, unit), name, symbol) { }
 
+    public static CalcLength OneMeter => new CalcLength(Length.FromMeters(1), "Unit Length");
+
     public static CalcLength operator +(CalcLength x, CalcLength y)
     {
         (string name, string symbol, LengthUnit unit) = OperatorMetadataHelper<LengthUnit>(x, y, '+');

@@ -35,7 +35,7 @@ public sealed class CalcMoment : CalcQuantity<Moment>
            ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         MomentUnit unit = x.Quantity.Unit;
         return new CalcForce(new Force(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
-            unit.GetEquivilantForceUnit()), name, "");
+            unit.GetEquivilantForceUnit()), name);
     }
 
     public static CalcLength operator /(CalcMoment x, CalcForce y)
@@ -44,7 +44,7 @@ public sealed class CalcMoment : CalcQuantity<Moment>
            ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         MomentUnit unit = x.Quantity.Unit;
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantForceUnit()),
-            unit.GetEquivilantLengthUnit()), name, "");
+            unit.GetEquivilantLengthUnit()), name);
     }
 
     public static CalcDouble operator /(CalcMoment x, CalcMoment y)
@@ -52,4 +52,13 @@ public sealed class CalcMoment : CalcQuantity<Moment>
         (string name, string _, MomentUnit _) = OperatorMetadataHelper<MomentUnit>(x, y, '/');
         return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
     }
+
+    public CalcLinearMoment MakeLinear(CalcLength length)
+    {
+        MomentUnit unit = Quantity.Unit;
+        return new CalcLinearMoment(new MomentPerLength(Quantity.As(unit) / length.Quantity.Value,
+            unit.GetEquivilantMomentPerLengthUnit(length.Quantity.Unit)), DisplayName);
+    }
+
+    public CalcLinearMoment MakeLinear() => MakeLinear(CalcLength.OneMeter);
 }
