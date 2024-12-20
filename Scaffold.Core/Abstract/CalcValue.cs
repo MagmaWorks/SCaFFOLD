@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
@@ -30,25 +31,21 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 
     public static bool operator !=(CalcValue<T> value, CalcValue<T> other)
     {
-        return !value.Equals(other);
+        return !value.Equals((object)other);
     }
-    
+
     public virtual bool TryParse(string input)
     {
-        try
+        var converter = TypeDescriptor.GetConverter(typeof(T));
+        if (converter != null)
         {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (converter != null)
+            try
             {
-                try
-                {
-                    Value = (T)converter.ConvertFromString(input);
-                    return true;
-                }
-                catch (ArgumentException) { }
+                Value = (T)converter.ConvertFromString(input);
+                return true;
             }
+            catch (ArgumentException) { }
         }
-        catch (NotSupportedException) { }
 
         return false;
     }
@@ -91,5 +88,13 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcValue<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
+    public bool Equals(CalcValue<T> other) {
+
+        if (object.ReferenceEquals(other, null))
+        {
+            return false;
+        }
+
+        return Value.Equals(other.Value) && Unit == other.Unit;
+    }
 }
