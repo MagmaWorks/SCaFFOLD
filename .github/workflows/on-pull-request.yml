@@ -11,3 +11,5 @@ jobs:
     uses: magmaworks/actions/.github/workflows/on-pull-request.yml@main
     with:
       dotnet: '8.0.x'
+    permissions:
+      checks: write
