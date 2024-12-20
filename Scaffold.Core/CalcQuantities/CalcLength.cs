@@ -1,9 +1,10 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
-namespace Scaffold.Core.CalcValues;
+namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcLength : CalcQuantity<Length>
 {
@@ -12,6 +13,8 @@ public sealed class CalcLength : CalcQuantity<Length>
 
     public CalcLength(double value, LengthUnit unit, string name, string symbol)
         : base(new Length(value, unit), name, symbol) { }
+
+    public static CalcLength OneMeter => new CalcLength(Length.FromMeters(1), "Unit Length");
 
     public static CalcLength operator +(CalcLength x, CalcLength y)
     {
@@ -35,7 +38,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcVolume operator *(CalcLength x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
         return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantVolumeUnit()), name, "");
@@ -44,7 +47,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcInertia operator *(CalcLength x, CalcVolume y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         LengthUnit unit = x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(
             x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantVolumeUnit()),

@@ -1,14 +1,15 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
-namespace Scaffold.Core.CalcValues;
+namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcVolume : CalcQuantity<Volume>
 {
-    public CalcVolume(Volume Volume, string name, string symbol = "")
-        : base(Volume, name, symbol) { }
+    public CalcVolume(Volume volume, string name, string symbol = "")
+        : base(volume, name, symbol) { }
 
     public CalcVolume(double value, VolumeUnit unit, string name, string symbol)
         : base(new Volume(value, unit), name, symbol) { }
@@ -28,7 +29,7 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     public static CalcInertia operator *(CalcVolume x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}·{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         VolumeUnit unit = x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantInertiaUnit()), name, "");
@@ -43,7 +44,7 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     public static CalcLength operator /(CalcVolume x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}/{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         VolumeUnit unit = x.Quantity.Unit;
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantLengthUnit()), name, "");
@@ -52,7 +53,7 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     public static CalcArea operator /(CalcVolume x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}/{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         VolumeUnit unit = x.Quantity.Unit;
         return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantAreaUnit()), name, "");

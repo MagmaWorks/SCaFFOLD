@@ -1,5 +1,6 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
+using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
@@ -9,7 +10,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.FootToTheFourth, "inertia", "I");
 
             // Act
@@ -22,7 +23,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorDoubleTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.InchToTheFourth, "inertia", "I");
 
             // Act
@@ -33,9 +34,9 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void ImplicitOperatorLengthTest()
+        public void ImplicitOperatorQuantityTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.DecimeterToTheFourth, "inertia", "I");
 
             // Act
@@ -49,7 +50,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void AdditionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia1 = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
             var calcInertia2 = new CalcInertia(5.5e-8, AreaMomentOfInertiaUnit.MeterToTheFourth, "i2", "I");
 
@@ -60,13 +61,13 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal(10, result.Value);
             Assert.Equal("I", result.Symbol);
             Assert.Equal("cm⁴", result.Unit);
-            Assert.Equal("i1+i2", result.DisplayName);
+            Assert.Equal("i1 + i2", result.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
         public void SubtractionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia1 = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
             var calcInertia2 = new CalcInertia(5.5e-8, AreaMomentOfInertiaUnit.MeterToTheFourth, "i2", "I");
 
@@ -77,14 +78,14 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal(-1, result.Value);
             Assert.Equal("I", result.Symbol);
             Assert.Equal("cm⁴", result.Unit);
-            Assert.Equal("i1-i2", result.DisplayName);
+            Assert.Equal("i1 - i2", result.DisplayName); // note: using Thin Space \u2009
         }
 
 
         [Fact]
         public void DivisionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia1 = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
             var calcInertia2 = new CalcInertia(5.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i2", "I");
 
@@ -93,7 +94,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i1/i2", result.DisplayName);
+            Assert.Equal("i1 / i2", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
@@ -101,7 +102,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionLengthOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i", "I");
             var calcLength = new CalcLength(0.055, LengthUnit.Meter, "l", "L");
 
@@ -110,7 +111,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i/l", result.DisplayName);
+            Assert.Equal("i / l", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm³", result.Unit);
         }
@@ -118,7 +119,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionAreaOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i", "I");
             var calcArea = new CalcArea(0.00055, AreaUnit.SquareMeter, "a", "A");
 
@@ -127,7 +128,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i/a", result.DisplayName);
+            Assert.Equal("i / a", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm²", result.Unit);
         }
@@ -135,7 +136,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionVolumeOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i", "I");
             var calcVolume = new CalcVolume(5.5e-6, VolumeUnit.CubicMeter, "v", "V");
 
@@ -144,7 +145,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
-            Assert.Equal("i/v", result.DisplayName);
+            Assert.Equal("i / v", result.DisplayName); // note: using Thin Space \u2009
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm", result.Unit);
         }

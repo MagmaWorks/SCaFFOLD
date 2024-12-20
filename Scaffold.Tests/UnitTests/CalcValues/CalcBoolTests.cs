@@ -7,7 +7,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcBool = new CalcBool(false);
 
             // Act
@@ -16,10 +16,66 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.True(calcBool.Value);
         }
 
+        [Theory]
+        [InlineData(true, true, true)]
+        [InlineData(true, false, false)]
+        [InlineData(false, false, true)]
+        public void EqualOperatorTest(bool val1, bool val2, bool expected)
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(val1);
+            var calcBool2 = new CalcBool(val2);
+
+            // Act
+            bool result = calcBool1 == calcBool2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(true, true, false)]
+        [InlineData(false, true, true)]
+        [InlineData(false, false, false)]
+        public void NotEqualOperatorTest(bool val1, bool val2, bool expected)
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(val1);
+            var calcBool2 = new CalcBool(val2);
+
+            // Act
+            bool result = calcBool1 != calcBool2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsObjectTest()
+        {
+            // Arrange
+            var calcBool = new CalcBool(false, "boolio", "B");
+
+            // Act
+            // Assert
+            Assert.True(calcBool.Equals((object)calcBool));
+        }
+
+        [Fact]
+        public void EqualsNullObjectTest()
+        {
+            // Arrange
+            var calcBool = new CalcBool(true, "boolio", "B");
+
+            // Act
+            // Assert
+            Assert.False(calcBool.Equals((object)null));
+        }
+
         [Fact]
         public void ImplicitOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBool1 = new CalcBool();
 
             // Act
@@ -32,7 +88,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void AndOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue = new CalcBool(true, "truth");
             var calcBoolfalse = new CalcBool(false, "fake");
 
@@ -43,17 +99,17 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Assert
             Assert.False(expectedFalse);
-            Assert.Equal("truth&fake", expectedFalse.DisplayName);
+            Assert.Equal("truth & fake", expectedFalse.DisplayName); // note: using Thin Space \u2009
             Assert.True(expectedTrue);
-            Assert.Equal("truth&truth", expectedTrue.DisplayName);
+            Assert.Equal("truth & truth", expectedTrue.DisplayName); // note: using Thin Space \u2009
             Assert.False(expectedFalse2);
-            Assert.Equal("fake&fake", expectedFalse2.DisplayName);
+            Assert.Equal("fake & fake", expectedFalse2.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
         public void OrOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue = new CalcBool(true, "truth");
             var calcBoolfalse = new CalcBool(false, "fake");
 
@@ -64,17 +120,17 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Assert
             Assert.True(expectedTrue);
-            Assert.Equal("truth∨fake", expectedTrue.DisplayName);
+            Assert.Equal("truth ∨ fake", expectedTrue.DisplayName); // note: using Thin Space \u2009
             Assert.True(expectedTrue2);
-            Assert.Equal("truth∨truth", expectedTrue2.DisplayName);
+            Assert.Equal("truth ∨ truth", expectedTrue2.DisplayName); // note: using Thin Space \u2009
             Assert.False(expectedFalse);
-            Assert.Equal("fake∨fake", expectedFalse.DisplayName);
+            Assert.Equal("fake ∨ fake", expectedFalse.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
         public void EqualsOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue1 = new CalcBool(true, "truth1");
             var calcBooltrue2 = new CalcBool(true, "truth2");
             var calcBoolfalse1 = new CalcBool(false, "fake1");
@@ -87,17 +143,17 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Assert
             Assert.False(expectedFalse1);
-            Assert.Equal("truth1=fake1", expectedFalse1.DisplayName);
+            Assert.Equal("truth1 = fake1", expectedFalse1.DisplayName); // note: using Thin Space \u2009
             Assert.True(expectedTrue);
-            Assert.Equal("truth1=truth2", expectedTrue.DisplayName);
+            Assert.Equal("truth1 = truth2", expectedTrue.DisplayName); // note: using Thin Space \u2009
             Assert.True(expectedTrue2);
-            Assert.Equal("fake1=fake2", expectedTrue2.DisplayName);
+            Assert.Equal("fake1 = fake2", expectedTrue2.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
         public void NotEqualsOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue1 = new CalcBool(true, "truth1");
             var calcBooltrue2 = new CalcBool(true, "truth2");
             var calcBoolfalse1 = new CalcBool(false, "fake1");
@@ -110,17 +166,17 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Assert
             Assert.True(expectedTrue1);
-            Assert.Equal("truth1≠fake1", expectedTrue1.DisplayName);
+            Assert.Equal("truth1 ≠ fake1", expectedTrue1.DisplayName); // note: using Thin Space \u2009
             Assert.False(expectedFalse1);
-            Assert.Equal("truth1≠truth2", expectedFalse1.DisplayName);
+            Assert.Equal("truth1 ≠ truth2", expectedFalse1.DisplayName); // note: using Thin Space \u2009
             Assert.False(expectedFalse2);
-            Assert.Equal("fake1≠fake2", expectedFalse2.DisplayName);
+            Assert.Equal("fake1 ≠ fake2", expectedFalse2.DisplayName); // note: using Thin Space \u2009
         }
 
         [Fact]
         public void EqualsTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue = new CalcBool(true, "truth");
             var calcBoolfalse = new CalcBool(false, "fake");
 
@@ -129,6 +185,23 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.False(calcBooltrue.Equals(calcBoolfalse));
             Assert.True(calcBooltrue.Equals(calcBooltrue));
             Assert.True(calcBoolfalse.Equals(calcBoolfalse));
+        }
+
+        [Fact]
+        public void GetHashCodeTest()
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(true, "some", "S");
+            var calcBool2 = new CalcBool(true, "some", "S");
+            var calcBool3 = new CalcBool(false, "some", "S");
+
+            // Act
+            bool firstEqualsSecond = calcBool1.GetHashCode() == calcBool2.GetHashCode();
+            bool firstEqualsThird = calcBool1.GetHashCode() == calcBool3.GetHashCode();
+
+            // Assert
+            Assert.True(firstEqualsSecond);
+            Assert.False(firstEqualsThird);
         }
     }
 }

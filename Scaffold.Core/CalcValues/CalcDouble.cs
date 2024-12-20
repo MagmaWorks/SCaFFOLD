@@ -13,6 +13,26 @@ public sealed class CalcDouble : CalcValue<double>
     public CalcDouble(double value, string name, string symbol, string unit = "")
         : base(value, name, symbol, unit) { }
 
+    public static bool operator >(CalcDouble value, CalcDouble other)
+    {
+        return value.Value > other.Value;
+    }
+
+    public static bool operator <(CalcDouble value, CalcDouble other)
+    {
+        return value.Value < other.Value;
+    }
+
+    public static bool operator >=(CalcDouble value, CalcDouble other)
+    {
+        return value.Value >= other.Value;
+    }
+
+    public static bool operator <=(CalcDouble value, CalcDouble other)
+    {
+        return value.Value <= other.Value;
+    }
+
     public static CalcDouble operator +(CalcDouble x, CalcDouble y)
     {
         (string name, string symbol, string unit) = OperatorMetadataHelper(x, y, '+');

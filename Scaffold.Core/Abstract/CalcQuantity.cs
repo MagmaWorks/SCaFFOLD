@@ -23,6 +23,36 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
     public static implicit operator T(CalcQuantity<T> value) => value.Quantity;
     public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
+    public static bool operator ==(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
+    }
+
+    public static bool operator !=(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return !other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
+    }
+
+    public static bool operator >(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value > other.Quantity.As(value.Quantity.Unit);
+    }
+
+    public static bool operator <(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value < other.Quantity.As(value.Quantity.Unit);
+    }
+
+    public static bool operator >=(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value >= other.Quantity.As(value.Quantity.Unit);
+    }
+
+    public static bool operator <=(CalcQuantity<T> value, CalcQuantity<T> other)
+    {
+        return value.Value <= other.Quantity.As(value.Quantity.Unit);
+    }
+
     public bool TryParse(string strValue)
     {
         if (OasysUnits.Quantity.TryParse(
@@ -34,6 +64,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
 
         return false;
     }
+
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(this, obj))
@@ -60,15 +91,15 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcQuantity<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
+    public bool Equals(CalcQuantity<T> other) => Value.Equals(other?.Value) && Unit == other.Unit;
     public string ValueAsString() => ToString();
-    public override string ToString() => Quantity.ToString().Replace(" ", string.Empty);
+    public override string ToString() => Quantity.ToString().Replace(" ", "\u2009");
 
     internal static (string name, string symbol, U unit) OperatorMetadataHelper<U>(
         CalcQuantity<T> x, CalcQuantity<T> y, char operation) where U : Enum
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009{operation}\u2009{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         U unit = (U)x.Quantity.Unit;
         return (name, symbol, unit);

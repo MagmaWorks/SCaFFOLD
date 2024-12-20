@@ -13,3 +13,4 @@ jobs:
       dotnet: '8.0.x'
     permissions:
       checks: write
+      contents: write

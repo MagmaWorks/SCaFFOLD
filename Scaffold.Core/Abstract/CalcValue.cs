@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
@@ -23,18 +24,28 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 
     public static implicit operator T(CalcValue<T> value) => value.Value;
 
+    public static bool operator ==(CalcValue<T> value, CalcValue<T> other)
+    {
+        return value.Equals(other);
+    }
+
+    public static bool operator !=(CalcValue<T> value, CalcValue<T> other)
+    {
+        return !value.Equals((object)other);
+    }
+
     public virtual bool TryParse(string input)
     {
-        try
+        TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
+        if (converter != null)
         {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (converter != null)
+            try
             {
                 Value = (T)converter.ConvertFromString(input);
                 return true;
             }
+            catch (ArgumentException) { }
         }
-        catch (NotSupportedException) { }
 
         return false;
     }
@@ -43,13 +54,13 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         CalcValue<T> x, CalcValue<T> y, char operation)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
-            ? string.Empty : $"{x.DisplayName}{operation}{y.DisplayName}";
+            ? string.Empty : $"{x.DisplayName}\u2009{operation}\u2009{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         string unit = x.Unit == y.Unit ? x.Unit : string.Empty;
         return (name, symbol, unit);
     }
 
-    public override string ToString() => $"{Value}{Unit}";
+    public override string ToString() => $"{Value}\u2009{Unit}";
 
     public override bool Equals(object obj)
     {
@@ -77,5 +88,14 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcValue<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
+    public bool Equals(CalcValue<T> other)
+    {
+
+        if (object.ReferenceEquals(other, null))
+        {
+            return false;
+        }
+
+        return Value.Equals(other.Value) && Unit == other.Unit;
+    }
 }
