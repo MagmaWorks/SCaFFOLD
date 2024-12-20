@@ -99,6 +99,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void MultiplicationLengthOperatorTest2()
+        {
+            // Assemble
+            var calcStress = new CalcStress(4.5, PressureUnit.Megapascal, "σ", "σ");
+            var calcLength = new CalcLength(5.5, LengthUnit.Meter, "l", "L");
+
+            // Act
+            CalcLinearForce result = calcStress * calcLength;
+
+            // Assert
+            Assert.Equal(4.5 * 5.5 * 1000, result.Value, 12);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal("N/mm", result.Unit);
+            Assert.Equal("σ · l", result.DisplayName);
+        }
+
+        [Fact]
+        public void MultiplicationLengthOperatorTest3()
+        {
+            // Assemble
+            var calcStress = new CalcStress(4.5, PressureUnit.KilonewtonPerSquareCentimeter, "σ", "σ");
+            var calcLength = new CalcLength(5.5, LengthUnit.Centimeter, "l", "L");
+
+            // Act
+            CalcLinearForce result = calcStress * calcLength;
+
+            // Assert
+            Assert.Equal(4.5 * 5.5, result.Value, 12);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal("kN/cm", result.Unit);
+            Assert.Equal("σ · l", result.DisplayName);
+        }
+
+        [Fact]
         public void MultiplicationAreaOperatorTest()
         {
             // Assemble
