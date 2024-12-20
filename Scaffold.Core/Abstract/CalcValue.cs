@@ -32,7 +32,7 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
     {
         return !value.Equals(other);
     }
-    
+
     public virtual bool TryParse(string input)
     {
         try

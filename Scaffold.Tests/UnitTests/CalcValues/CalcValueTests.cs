@@ -48,4 +48,4 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(expected, result);
         }
     }
-} 
+}
