@@ -7,7 +7,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcString = new CalcString("hello");
 
             // Act
@@ -19,7 +19,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void ImplicitOperatorTest()
         {
-            // Assemble
+            // Arrange
             CalcString calcString1 = new CalcString("hello");
 
             // Act
@@ -32,7 +32,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void AdditionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcString1 = new CalcString("hello");
             var calcString2 = new CalcString("friend");
 
@@ -46,7 +46,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void AdditionSameUnitOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcString1 = new CalcString("hello", "l1", "L", "m");
             var calcString2 = new CalcString("friend", "l2", "L", "m");
 

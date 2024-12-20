@@ -8,7 +8,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
@@ -22,7 +22,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [InlineData(4.31, 4.3, false)]
         public void EqualOperatorTest(double val1, double val2, bool expected)
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "a1", "A");
             var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "a2", "A");
 
@@ -38,7 +38,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [InlineData(4.31, 4.3, true)]
         public void NotEqualOperatorTest(double val1, double val2, bool expected)
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "a1", "A");
             var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "a2", "A");
 
@@ -54,7 +54,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [InlineData(4.31, 4.3, true)]
         public void GreaterThanOperatorTest(double val1, double val2, bool expected)
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "a1", "A");
             var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "a2", "A");
 
@@ -70,7 +70,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [InlineData(4.3, 4.31, true)]
         public void LessThanOperatorTest(double val1, double val2, bool expected)
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "a1", "A");
             var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "a2", "A");
 
@@ -87,7 +87,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [InlineData(4.3, 4.31, false)]
         public void GreaterOrEqualOperatorTest(double val1, double val2, bool expected)
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "a1", "A");
             var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "a2", "A");
 
@@ -104,7 +104,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [InlineData(4.31, 4.30, false)]
         public void LessOrEqualOperatorTest(double val1, double val2, bool expected)
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "a1", "A");
             var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "a2", "A");
 
@@ -118,7 +118,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsReferenceEqualsObjectTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
@@ -129,7 +129,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsNullObjectTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
@@ -140,7 +140,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsOtherObjectTest()
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
             var calcArea2 = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
@@ -152,7 +152,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsOtherTypeTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
             var notCalcArea = new CalcLength(4.5, LengthUnit.Foot, "length", "l");
 
@@ -164,7 +164,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsReferenceEqualsTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
@@ -175,7 +175,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsNullTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
@@ -186,7 +186,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void EqualsOtherTest()
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
             var calcArea2 = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
@@ -198,7 +198,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void GetHashCodeTest()
         {
-            // Assemble
+            // Arrange
             var calcArea1 = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
             var calcArea2 = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
             var calcArea3 = new CalcArea(4.5, AreaUnit.SquareFoot, "Area", "A");
@@ -215,7 +215,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ValueAsStringTest()
         {
-            // Assemble
+            // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act

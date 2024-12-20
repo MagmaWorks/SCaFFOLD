@@ -10,7 +10,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.FootToTheFourth, "inertia", "I");
 
             // Act
@@ -23,7 +23,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorDoubleTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.InchToTheFourth, "inertia", "I");
 
             // Act
@@ -36,7 +36,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorQuantityTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.DecimeterToTheFourth, "inertia", "I");
 
             // Act
@@ -50,7 +50,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void AdditionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia1 = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
             var calcInertia2 = new CalcInertia(5.5e-8, AreaMomentOfInertiaUnit.MeterToTheFourth, "i2", "I");
 
@@ -67,7 +67,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void SubtractionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia1 = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
             var calcInertia2 = new CalcInertia(5.5e-8, AreaMomentOfInertiaUnit.MeterToTheFourth, "i2", "I");
 
@@ -85,7 +85,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia1 = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
             var calcInertia2 = new CalcInertia(5.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i2", "I");
 
@@ -102,7 +102,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionLengthOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i", "I");
             var calcLength = new CalcLength(0.055, LengthUnit.Meter, "l", "L");
 
@@ -119,7 +119,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionAreaOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i", "I");
             var calcArea = new CalcArea(0.00055, AreaUnit.SquareMeter, "a", "A");
 
@@ -136,7 +136,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionVolumeOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i", "I");
             var calcVolume = new CalcVolume(5.5e-6, VolumeUnit.CubicMeter, "v", "V");
 

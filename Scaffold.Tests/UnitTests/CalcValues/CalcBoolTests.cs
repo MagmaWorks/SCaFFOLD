@@ -7,7 +7,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcBool = new CalcBool(false);
 
             // Act
@@ -19,7 +19,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void ImplicitOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBool1 = new CalcBool();
 
             // Act
@@ -32,7 +32,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void AndOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue = new CalcBool(true, "truth");
             var calcBoolfalse = new CalcBool(false, "fake");
 
@@ -53,7 +53,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void OrOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue = new CalcBool(true, "truth");
             var calcBoolfalse = new CalcBool(false, "fake");
 
@@ -74,7 +74,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void EqualsOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue1 = new CalcBool(true, "truth1");
             var calcBooltrue2 = new CalcBool(true, "truth2");
             var calcBoolfalse1 = new CalcBool(false, "fake1");
@@ -97,7 +97,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void NotEqualsOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue1 = new CalcBool(true, "truth1");
             var calcBooltrue2 = new CalcBool(true, "truth2");
             var calcBoolfalse1 = new CalcBool(false, "fake1");
@@ -120,7 +120,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         [Fact]
         public void EqualsTest()
         {
-            // Assemble
+            // Arrange
             var calcBooltrue = new CalcBool(true, "truth");
             var calcBoolfalse = new CalcBool(false, "fake");
 

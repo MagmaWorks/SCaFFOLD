@@ -10,7 +10,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicFoot, "volume", "V");
 
             // Act
@@ -23,7 +23,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorDoubleTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicInch, "volume", "V");
 
             // Act
@@ -36,7 +36,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorQuantityTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicYard, "volume", "V");
 
             // Act
@@ -50,7 +50,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void AdditionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume1 = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "v1", "V");
             var calcVolume2 = new CalcVolume(5.5e-6, VolumeUnit.CubicMeter, "v2", "V");
 
@@ -67,7 +67,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void SubtractionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume1 = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "a1", "V");
             var calcVolume2 = new CalcVolume(5.5e-6, VolumeUnit.CubicMeter, "a2", "V");
 
@@ -85,7 +85,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void MultiplicationLengthOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "a", "V");
             var calcLength = new CalcLength(0.055, LengthUnit.Meter, "l", "L");
 
@@ -102,7 +102,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume1 = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "v1", "V");
             var calcVolume2 = new CalcVolume(5.5, VolumeUnit.CubicCentimeter, "v2", "V");
 
@@ -119,7 +119,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionLengthOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "v", "V");
             var calcLength = new CalcLength(0.055, LengthUnit.Meter, "l", "L");
 
@@ -136,7 +136,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionAreaOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "v", "V");
             var calcArea = new CalcArea(0.00055, AreaUnit.SquareMeter, "a", "A");
 

@@ -10,7 +10,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ParseFromStringTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment = new CalcMoment(4.5, MomentUnit.PoundalFoot, "moment", "M");
 
             // Act
@@ -23,7 +23,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorDoubleTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment = new CalcMoment(4.5, "moment", "M");
 
             // Act
@@ -36,7 +36,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void ImplicitOperatorQuantityTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment = new CalcMoment(4.5, "moment", "M");
 
             // Act
@@ -50,7 +50,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void AdditionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment1 = new CalcMoment(4.5, MomentUnit.NewtonMeter, "m1", "M");
             var calcMoment2 = new CalcMoment(5.5 / 1000, MomentUnit.KilonewtonMeter, "m2", "M");
 
@@ -67,7 +67,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void SubtractionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment1 = new CalcMoment(4.5, MomentUnit.NewtonMeter, "m1", "M");
             var calcMoment2 = new CalcMoment(5.5 / 1000, MomentUnit.KilonewtonMeter, "m2", "M");
 
@@ -84,7 +84,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionLengthOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment = new CalcMoment(4.5, "m", "M");
             var calcLength = new CalcLength(5.5, LengthUnit.Meter, "l", "L");
 
@@ -101,7 +101,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionForceOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment = new CalcMoment(4.5, "m", "M");
             var calcForce = new CalcForce(5.5, ForceUnit.Kilonewton, "f", "F");
 
@@ -118,7 +118,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         [Fact]
         public void DivisionOperatorTest()
         {
-            // Assemble
+            // Arrange
             var calcMoment1 = new CalcMoment(4.5, "m1", "M");
             var calcMoment2 = new CalcMoment(5.5, "m2", "M");
 
