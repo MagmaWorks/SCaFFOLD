@@ -91,7 +91,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcQuantity<T> other) => Value.Equals(other.Value) && Unit == other.Unit;
+    public bool Equals(CalcQuantity<T> other) => Value.Equals(other?.Value) && Unit == other.Unit;
     public string ValueAsString() => ToString();
     public override string ToString() => Quantity.ToString().Replace(" ", "\u2009");
 
