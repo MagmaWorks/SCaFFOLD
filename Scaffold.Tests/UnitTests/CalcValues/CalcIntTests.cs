@@ -1,4 +1,5 @@
-﻿using Scaffold.Core.CalcValues;
+﻿using OasysUnits.Units;
+using Scaffold.Core.CalcValues;
 
 namespace Scaffold.Tests.UnitTests.CalcValues
 {
@@ -116,6 +117,40 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Act
             bool result = calcInt1 < calcInt2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, true)]
+        [InlineData(5, 4, true)]
+        [InlineData(4, 5, false)]
+        public void GreaterOrEqualOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+            var calcInt2 = new CalcInt(val2);
+
+            // Act
+            bool result = calcInt1 >= calcInt2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, true)]
+        [InlineData(4, 5, true)]
+        [InlineData(5, 4, false)]
+        public void LessOrEqualOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+            var calcInt2 = new CalcInt(val2);
+
+            // Act
+            bool result = calcInt1 <= calcInt2;
 
             // Assert
             Assert.Equal(expected, result);
