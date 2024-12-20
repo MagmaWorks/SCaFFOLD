@@ -88,7 +88,8 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcValue<T> other) {
+    public bool Equals(CalcValue<T> other)
+    {
 
         if (object.ReferenceEquals(other, null))
         {
