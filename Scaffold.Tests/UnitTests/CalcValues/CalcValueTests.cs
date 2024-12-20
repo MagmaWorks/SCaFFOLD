@@ -135,7 +135,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             // Arrange
             var calcDouble1 = new CalcDouble(4.5, "some", "S");
             var calcDouble2 = new CalcDouble(4.5, "some", "S");
-            var calcDouble3 = new CalcDouble(4.5, "Some", "S");
+            var calcDouble3 = new CalcDouble(4.5, "some", "s");
 
             // Act
             bool firstEqualsSecond = calcDouble1.GetHashCode() == calcDouble2.GetHashCode();

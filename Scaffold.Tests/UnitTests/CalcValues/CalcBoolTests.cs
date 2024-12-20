@@ -16,6 +16,62 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.True(calcBool.Value);
         }
 
+        [Theory]
+        [InlineData(true, true, true)]
+        [InlineData(true, false, false)]
+        [InlineData(false, false, true)]
+        public void EqualOperatorTest(bool val1, bool val2, bool expected)
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(val1);
+            var calcBool2 = new CalcBool(val2);
+
+            // Act
+            bool result = calcBool1 == calcBool2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(true, true, false)]
+        [InlineData(false, true, true)]
+        [InlineData(false, false, false)]
+        public void NotEqualOperatorTest(bool val1, bool val2, bool expected)
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(val1);
+            var calcBool2 = new CalcBool(val2);
+
+            // Act
+            bool result = calcBool1 != calcBool2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsObjectTest()
+        {
+            // Arrange
+            var calcBool = new CalcBool(false, "boolio", "B");
+
+            // Act
+            // Assert
+            Assert.True(calcBool.Equals((object)calcBool));
+        }
+
+        [Fact]
+        public void EqualsNullObjectTest()
+        {
+            // Arrange
+            var calcBool = new CalcBool(true, "boolio", "B");
+
+            // Act
+            // Assert
+            Assert.False(calcBool.Equals((object)null));
+        }
+
         [Fact]
         public void ImplicitOperatorTest()
         {
@@ -129,6 +185,23 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.False(calcBooltrue.Equals(calcBoolfalse));
             Assert.True(calcBooltrue.Equals(calcBooltrue));
             Assert.True(calcBoolfalse.Equals(calcBoolfalse));
+        }
+
+        [Fact]
+        public void GetHashCodeTest()
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(true, "some", "S");
+            var calcBool2 = new CalcBool(true, "some", "S");
+            var calcBool3 = new CalcBool(false, "some", "S");
+
+            // Act
+            bool firstEqualsSecond = calcBool1.GetHashCode() == calcBool2.GetHashCode();
+            bool firstEqualsThird = calcBool1.GetHashCode() == calcBool3.GetHashCode();
+
+            // Assert
+            Assert.True(firstEqualsSecond);
+            Assert.False(firstEqualsThird);
         }
     }
 }
