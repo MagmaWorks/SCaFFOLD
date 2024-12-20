@@ -13,6 +13,26 @@ public sealed class CalcInt : CalcValue<int>
     public CalcInt(int value, string name, string symbol, string unit = "")
         : base(value, name, symbol, unit) { }
 
+    public static bool operator >(CalcInt value, CalcInt other)
+    {
+        return value.Value > other.Value;
+    }
+
+    public static bool operator <(CalcInt value, CalcInt other)
+    {
+        return value.Value < other.Value;
+    }
+
+    public static bool operator >=(CalcInt value, CalcInt other)
+    {
+        return value.Value >= other.Value;
+    }
+
+    public static bool operator <=(CalcInt value, CalcInt other)
+    {
+        return value.Value <= other.Value;
+    }
+
     public static CalcInt operator +(CalcInt x, CalcInt y)
     {
         (string name, string symbol, string unit) = OperatorMetadataHelper(x, y, '+');
