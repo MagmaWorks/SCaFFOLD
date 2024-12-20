@@ -23,6 +23,16 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 
     public static implicit operator T(CalcValue<T> value) => value.Value;
 
+    public static bool operator ==(CalcValue<T> value, CalcValue<T> other)
+    {
+        return value.Equals(other);
+    }
+
+    public static bool operator !=(CalcValue<T> value, CalcValue<T> other)
+    {
+        return !value.Equals(other);
+    }
+    
     public virtual bool TryParse(string input)
     {
         try
@@ -30,8 +40,12 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
             var converter = TypeDescriptor.GetConverter(typeof(T));
             if (converter != null)
             {
-                Value = (T)converter.ConvertFromString(input);
-                return true;
+                try
+                {
+                    Value = (T)converter.ConvertFromString(input);
+                    return true;
+                }
+                catch (ArgumentException) { }
             }
         }
         catch (NotSupportedException) { }
