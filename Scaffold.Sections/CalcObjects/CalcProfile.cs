@@ -7,8 +7,7 @@ namespace Scaffold.Core.CalcObjects
 {
     public class CalcProfile : ICalcValue
     {
-        IProfile Profile { get; set; }
-        public virtual string DisplayName {
+        public string DisplayName {
             get
             {
                 return ValueAsString();
@@ -19,8 +18,14 @@ namespace Scaffold.Core.CalcObjects
                 TryParse(value);
             }
         }
+        public IProfile Profile { get; set; }
         public string Symbol { get; set; }
         public CalcStatus Status { get; set; }
+
+        public CalcProfile(IProfile profile)
+        {
+            Profile = profile;
+        }
 
         public bool TryParse(string strValue)
         {
