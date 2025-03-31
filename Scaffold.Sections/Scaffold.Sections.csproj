@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <MinVerMinimumMajorMinor>0.0</MinVerMinimumMajorMinor>
+    <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <LangVersion>10.0</LangVersion>
+    <Platforms>AnyCPU</Platforms>
+    <RootNamespace>Scaffold.Core</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Scaffold Sections</Title>
+    <Company>Whitby Wood</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/MagmaWorks/Taxonomy/</RepositoryUrl>
+    <PackageIcon>MagmaWorks.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
+  </ItemGroup>
+  </Project>
