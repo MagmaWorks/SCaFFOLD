@@ -25,10 +25,6 @@ namespace Scaffold.Tests.UnitTests.CalcValues
                 Type = MaterialType.Concrete
             };
 
-            var foo = material.ValueAsString();
-
-
-
             string json = "{\r\n  \"$type\": \"Scaffold.Core.CalcObjects.CalcMaterial, Scaffold.Sections\",\r\n  \"DisplayName\": \"Foo\",\r\n  \"Symbol\": \"M\",\r\n  \"Status\": \"Fail\",\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"DisplayName\": null,\r\n    \"Symbol\": null,\r\n    \"Status\": \"None\",\r\n    \"Body\": \"EN\",\r\n    \"Title\": null\r\n  },\r\n  \"Type\": \"Concrete\"\r\n}";
 
             // Act & Assert
