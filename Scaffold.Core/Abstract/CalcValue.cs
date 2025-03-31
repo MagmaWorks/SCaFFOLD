@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
 using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
@@ -41,7 +42,7 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         {
             try
             {
-                Value = (T)converter.ConvertFromString(input);
+                Value = (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, input);
                 return true;
             }
             catch (ArgumentException) { }
@@ -60,7 +61,22 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         return (name, symbol, unit);
     }
 
-    public override string ToString() => $"{Value}\u2009{Unit}";
+    public override string ToString()
+    {
+        string number;
+        switch (Value)
+        {
+            case double d:
+                number = d.ToString(CultureInfo.InvariantCulture);
+                break;
+
+            default:
+                number = Value.ToString();
+                break;
+        }
+
+        return $"{number}\u2009{Unit}";
+    }
 
     public override bool Equals(object obj)
     {
