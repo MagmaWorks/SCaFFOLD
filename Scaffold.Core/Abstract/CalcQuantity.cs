@@ -1,4 +1,5 @@
-﻿using OasysUnits;
+﻿using System.Globalization;
+using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
@@ -55,14 +56,16 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
 
     public bool TryParse(string strValue)
     {
-        if (OasysUnits.Quantity.TryParse(
-            Quantity.QuantityInfo.ValueType, strValue, out IQuantity quantity))
+        try
         {
+            IQuantity quantity = OasysUnits.Quantity.Parse(CultureInfo.InvariantCulture, Quantity.QuantityInfo.ValueType, strValue);
             Quantity = (T)quantity;
             return true;
         }
-
-        return false;
+        catch
+        {
+            return false;
+        }
     }
 
     public override bool Equals(object obj)
@@ -93,7 +96,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
 
     public bool Equals(CalcQuantity<T> other) => Value.Equals(other?.Value) && Unit == other.Unit;
     public string ValueAsString() => ToString();
-    public override string ToString() => Quantity.ToString().Replace(" ", "\u2009");
+    public override string ToString() => Quantity.ToString(CultureInfo.InvariantCulture).Replace(" ", "\u2009");
 
     internal static (string name, string symbol, U unit) OperatorMetadataHelper<U>(
         CalcQuantity<T> x, CalcQuantity<T> y, char operation) where U : Enum
