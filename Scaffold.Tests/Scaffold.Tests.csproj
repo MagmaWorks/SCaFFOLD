@@ -20,7 +20,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Scaffold.Calculations\Scaffold.Calculations.csproj" />
     <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
+    <ProjectReference Include="..\Scaffold.Sections\Scaffold.Sections.csproj" />
   </ItemGroup>
 
 </Project>
