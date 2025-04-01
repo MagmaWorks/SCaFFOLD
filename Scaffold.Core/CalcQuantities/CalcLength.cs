@@ -54,9 +54,20 @@ public sealed class CalcLength : CalcQuantity<Length>
             unit.GetEquivilantInertiaUnit()), name, "");
     }
 
-    public static CalcDouble operator /(CalcLength x, CalcLength y)
+    public static CalcStrain operator /(CalcLength x, CalcLength y)
     {
         (string name, string _, LengthUnit unit) = OperatorMetadataHelper<LengthUnit>(x, y, '/');
-        return new CalcDouble((Length)x.Quantity / (Length)y.Quantity, name, string.Empty);
+        return new CalcStrain((Length)x.Quantity / (Length)y.Quantity, StrainUnit.Ratio, name, string.Empty);
+    }
+
+
+    public static CalcLength operator *(CalcStrain x, CalcLength y)
+    {
+        return new CalcLength(x.Quantity.As(StrainUnit.Ratio) * (Length)y.Quantity, string.Empty, string.Empty);
+    }
+
+    public static CalcLength operator *(CalcLength x, CalcStrain y)
+    {
+        return y * x;
     }
 }
