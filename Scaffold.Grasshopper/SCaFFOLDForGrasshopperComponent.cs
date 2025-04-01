@@ -22,8 +22,8 @@ namespace SCaFFOLDForGrasshopper
         /// new tabs/panels will automatically be created.
         /// </summary>
         public SCaFFOLDForGrasshopperComponent()
-          : base("SCaFFOLDForGrasshopperComponent", "ASpi",
-            "Construct an Archimedean, or arithmetic, spiral given its radii and number of turns.",
+          : base("SCaFFOLDForGrasshopperComponent","Test",
+            "Test calc in GH.",
             "Magma Works", "SCaFFOLD")
         {
             embeddedCalc = new ConcreteCreepAndShrinkage();
