@@ -14,6 +14,7 @@ namespace Scaffold.Core.CalcObjects
         public CalcProfile(string description)
         {
             Description = description;
+            DisplayName = description;
         }
 
         public bool TryParse(string description)
@@ -24,6 +25,7 @@ namespace Scaffold.Core.CalcObjects
             }
 
             Description = description;
+            DisplayName = description;
             return true;
         }
 

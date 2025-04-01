@@ -1,4 +1,5 @@
-﻿using MagmaWorks.Taxonomy.Profiles;
+﻿using MagmaWorks.Geometry;
+using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using OasysUnits;
 using Scaffold.Core.Enums;
@@ -11,14 +12,15 @@ namespace Scaffold.Core.CalcObjects
         public string DisplayName { get; set; }
         public string Symbol { get; set; }
         public CalcStatus Status { get; set; }
-        public Length Height { get; set; }
         public Length Width { get; set; }
-        public string Description => Utility.Describe(Width, Height);
+        public Length Height { get; set; }
+        public string Description { get; }
 
         public CalcRectangularProfile(Length width, Length height)
         {
             Width = width;
             Height = height;
+            Description = new Rectangle(Width, Height).Description;
         }
 
         public bool TryParse(string strValue)

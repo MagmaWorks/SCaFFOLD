@@ -52,11 +52,11 @@ public class RectangularProfileTests
             Height = { Quantity = new Length(500, LengthUnit.Millimeter) }
         };
 
-        calc.Profile.Profile.Description.Should().Be("500 × 800 mm", because: "result has not changed yet through the update method.");
+        calc.Profile.Description.Should().Be("500 × 800 mm", because: "result has not changed yet through the update method.");
 
         Reader.Update(calc);
 
-        calc.Profile.Profile.Description.Should().Be("800 × 500 mm", because: "result has not changed yet through the update method.");
+        calc.Profile.Description.Should().Be("800 × 500 mm", because: "result has not changed yet through the update method.");
 
         var formulae = Reader.GetFormulae(calc).ToList();
         formulae.Count.Should().Be(0);
