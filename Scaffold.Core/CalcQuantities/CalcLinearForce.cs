@@ -33,7 +33,7 @@ public sealed class CalcLinearForce : CalcQuantity<ForcePerLength>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        ForcePerLengthUnit unit = x.Quantity.Unit;
+        ForcePerLengthUnit unit = (ForcePerLengthUnit)x.Quantity.Unit;
         return new CalcForce(new Force(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantForceUnit()), name, "");
     }
@@ -47,7 +47,7 @@ public sealed class CalcLinearForce : CalcQuantity<ForcePerLength>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
-        ForcePerLengthUnit unit = x.Quantity.Unit;
+        ForcePerLengthUnit unit = (ForcePerLengthUnit)x.Quantity.Unit;
         return new CalcStress(new Pressure(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantPressureUnit()), name, "");
     }
@@ -55,6 +55,6 @@ public sealed class CalcLinearForce : CalcQuantity<ForcePerLength>
     public static CalcDouble operator /(CalcLinearForce x, CalcLinearForce y)
     {
         (string name, string _, ForcePerLengthUnit _) = OperatorMetadataHelper<ForcePerLengthUnit>(x, y, '/');
-        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
+        return new CalcDouble((ForcePerLength)x.Quantity / (ForcePerLength)y.Quantity, name, string.Empty);
     }
 }

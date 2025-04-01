@@ -30,7 +30,7 @@ public sealed class CalcArea : CalcQuantity<Area>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        AreaUnit unit = x.Quantity.Unit;
+        AreaUnit unit = (AreaUnit)x.Quantity.Unit;
         return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantVolumeUnit()), name, "");
     }
@@ -39,7 +39,7 @@ public sealed class CalcArea : CalcQuantity<Area>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        AreaUnit unit = x.Quantity.Unit;
+        AreaUnit unit = (AreaUnit)x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit),
             unit.GetEquivilantInertiaUnit()), name, "");
     }
@@ -48,7 +48,7 @@ public sealed class CalcArea : CalcQuantity<Area>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
-        AreaUnit unit = x.Quantity.Unit;
+        AreaUnit unit = (AreaUnit)x.Quantity.Unit;
         LengthUnit lengthUnit = unit.GetEquivilantLengthUnit();
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(lengthUnit), lengthUnit), name, "");
     }
@@ -56,6 +56,6 @@ public sealed class CalcArea : CalcQuantity<Area>
     public static CalcDouble operator /(CalcArea x, CalcArea y)
     {
         (string name, string _, AreaUnit _) = OperatorMetadataHelper<AreaUnit>(x, y, '/');
-        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
+        return new CalcDouble((Area)x.Quantity / (Area)y.Quantity, name, string.Empty);
     }
 }

@@ -33,7 +33,7 @@ public sealed class CalcLinearMoment : CalcQuantity<MomentPerLength>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        MomentPerLengthUnit unit = x.Quantity.Unit;
+        MomentPerLengthUnit unit = (MomentPerLengthUnit)x.Quantity.Unit;
         return new CalcMoment(new Moment(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantMomentUnit()), name, "");
     }
@@ -46,6 +46,6 @@ public sealed class CalcLinearMoment : CalcQuantity<MomentPerLength>
     public static CalcDouble operator /(CalcLinearMoment x, CalcLinearMoment y)
     {
         (string name, string _, MomentPerLengthUnit _) = OperatorMetadataHelper<MomentPerLengthUnit>(x, y, '/');
-        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
+        return new CalcDouble((MomentPerLength)x.Quantity / (MomentPerLength)y.Quantity, name, string.Empty);
     }
 }
