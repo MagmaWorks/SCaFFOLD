@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
+using OasysUnits;
 using Scaffold.Calculations;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLDForGrasshopper
@@ -45,11 +48,11 @@ namespace SCaFFOLDForGrasshopper
                 embeddedCalc = new ConcreteCreepAndShrinkage();
                 inputs = reader.GetInputs(embeddedCalc);
             }
-
-            if (inputs == null) { return; };
-
-
-            pManager.AddNumberParameter(inputs[0].DisplayName, inputs[0].Symbol, "SCaFFOLD calc", GH_ParamAccess.item);
+            
+            foreach (var item in inputs)
+            {
+                pManager.AddNumberParameter(inputs[0].DisplayName, inputs[0].Symbol, "SCaFFOLD calc", GH_ParamAccess.item);
+            }         
 
             // If you want to change properties of certain parameters, 
             // you can use the pManager instance to access them by index:
@@ -79,6 +82,20 @@ namespace SCaFFOLDForGrasshopper
         {
             double inputVal = 0;
             DA.GetData(0, ref inputVal);
+
+            //foreach (var item in inputs)
+            //{
+
+            //}
+
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                var item = inputs[i];
+                if (typeof(IQuantity).IsAssignableFrom(item.GetType()))
+                {
+                    //(item as IQuantity). = inputVal;
+                }
+            }
 
             inputs[0].TryParse(inputVal.ToString());
 
