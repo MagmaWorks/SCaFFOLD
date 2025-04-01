@@ -11,7 +11,7 @@ using Scaffold.Core.Models;
 
 namespace Scaffold.XUnitTests.ExampleCalcsForTests;
 
-[CalculationMetadata("Rectangular Profile")]
+[CalculationMetadata("Rectangular profile")]
 public class RectangularProfile : ICalculation
 {
     public string ReferenceName { get; set; }
