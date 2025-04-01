@@ -36,7 +36,7 @@ public class RectangularProfile : ICalculation
 
     public void Calculate()
     {
-        Profile.Profile = CreateProfile();
+        Profile.Description = CreateProfile();
     }
 
     public IList<IFormula> GetFormulae()
@@ -44,5 +44,5 @@ public class RectangularProfile : ICalculation
         return new List<IFormula>(); // to-do
     }
 
-    private Rectangle CreateProfile() => new Rectangle(Width, Height);
+    private string CreateProfile() => new Rectangle(Width, Height).Description;
 }

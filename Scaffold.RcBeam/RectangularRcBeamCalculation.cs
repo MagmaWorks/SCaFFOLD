@@ -5,7 +5,6 @@ using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects;
-using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
@@ -21,13 +20,7 @@ public class RectangularRcBeamCalculation : ICalculation
     public CalcStatus Status { get; }
 
     [InputCalcValue]
-    public CalcLength Width { get; set; }
-
-    [InputCalcValue]
-    public CalcLength Height { get; set; }
-
-    [OutputCalcValue]
-    public CalcProfile Profile { get; set; }
+    public CalcRectangularProfile Profile { get; set; }
 
     [InputCalcValue]
     public CalcDouble aggregateAdjustmentFactor { get; set; }
@@ -156,9 +149,7 @@ public class RectangularRcBeamCalculation : ICalculation
 
     public RectangularRcBeamCalculation()
     {
-        Width = new CalcLength(new Length(500, LengthUnit.Millimeter), "Width", "b");
-        Height = new CalcLength(new Length(800, LengthUnit.Millimeter), "Height", "h");
-        Profile = new CalcProfile(CreateProfile());
+        Profile = new CalcRectangularProfile(new Length(500, LengthUnit.Millimeter), new Length(800, LengthUnit.Millimeter));
 
         bendingMom = new CalcDouble(100, "Bending moment", "M", "kNm");
         aggregateAdjustmentFactor = new CalcDouble(1, "Aggregate adjustment factor", "AAF", "");
@@ -206,7 +197,10 @@ public class RectangularRcBeamCalculation : ICalculation
 
     public void Calculate()
     {
-        //Profile.Profile = CreateProfile();
+        if (Profile is not IRectangle)
+        {
+            throw new ArgumentException("Calculation only supports rectangular profiles");
+        }
 
         var expressions = new List<Formula>();
         expressions.Add(new Formula()
@@ -234,14 +228,14 @@ public class RectangularRcBeamCalculation : ICalculation
         expression = new List<string>();
 
         // Lever arm
-        effDepth.Value = Height.Value - BottomCover.Value - 10 - 16;
+        effDepth.Value = Profile.Height.Value - BottomCover.Value - 10 - 16;
 
-        redistRatio.Value = bendingMom.Value * 1000000 / (Width.Value * Math.Pow(effDepth.Value, 2) * charCompStr.Value);
+        redistRatio.Value = bendingMom.Value * 1000000 / (Profile.Width.Value * Math.Pow(effDepth.Value, 2) * charCompStr.Value);
         //redistRatio2.Value = (2 * effStrFac.Value * compStrCoeff.Value/partialFacConc.Value) * (1 - effCompZoneHtFac.Value * (1 - k1.Value)/(2*k2.Value)) * (effCompZoneHtFac.Value * (1-k1.Value)/(2*k2.Value));
         redistRatio2.Value = effStrFac.Value * compStrCoeff.Value / (partialFacConc.Value * k2.Value) * effCompZoneHtFac.Value * (delta.Value - k1.Value) * (1 - effCompZoneHtFac.Value * (delta.Value - k1.Value) / (2 * k2.Value));
 
-        expression.Add(effDepth.Symbol + @" = h - c - \phi_{link} - \phi_{bar}/2 = " + Height.Value + " - " + BottomCover.Value + " - 10 - 32/2 = " + effDepth.Value + " mm");
-        expression.Add(redistRatio.Symbol + @" = \frac{ " + bendingMom.Symbol + "}{" + Width.Symbol + effDepth.Symbol + "^2f_{ck}} = " + Math.Round(redistRatio.Value, 3));
+        expression.Add(effDepth.Symbol + @" = h - c - \phi_{link} - \phi_{bar}/2 = " + Profile.Height.Value + " - " + BottomCover.Value + " - 10 - 32/2 = " + effDepth.Value + " mm");
+        expression.Add(redistRatio.Symbol + @" = \frac{ " + bendingMom.Symbol + "}{" + Profile.Width.Unit + effDepth.Symbol + "^2f_{ck}} = " + Math.Round(redistRatio.Value, 3));
         expression.Add(redistRatio2.Symbol + @" = " + effStrFac.Symbol + @" \frac{" + compStrCoeff.Symbol + "}{" + partialFacConc.Symbol + k2.Symbol + "}" + effCompZoneHtFac.Symbol
            + @"\frac{" + delta.Symbol + "- " + k1.Symbol + "}{" + k2.Symbol + @"}\left(1 -" + effCompZoneHtFac.Symbol + @"\frac{" + delta.Symbol + " - " + k1.Symbol + "}{2" + k2.Symbol + @"}\right) = " + Math.Round(redistRatio2.Value, 3));
 
@@ -266,18 +260,18 @@ public class RectangularRcBeamCalculation : ICalculation
             leverArm.Value = Math.Min(val0, val1);
             naDepth.Value = 2 * (effDepth.Value - leverArm.Value) / effCompZoneHtFac.Value;
 
-            double Mp = Width.Value * 1e-3 * Math.Pow(effDepth.Value * 1e-3, 2) * charCompStr.Value * 1e3 * (redistRatio.Value - redistRatio2.Value);
+            double Mp = Profile.Width.Value * 1e-3 * Math.Pow(effDepth.Value * 1e-3, 2) * charCompStr.Value * 1e3 * (redistRatio.Value - redistRatio2.Value);
             double d2 = TopCover.Value + 10 + 8;
-            rebarAsReqd.Value = (redistRatio2.Value * charCompStr.Value * 1e3 * Width.Value * 1e-3 * Math.Pow(effDepth.Value * 1e-3, 2) / (rebarDesYieldStr.Value * leverArm.Value)
+            rebarAsReqd.Value = (redistRatio2.Value * charCompStr.Value * 1e3 * Profile.Width.Value * 1e-3 * Math.Pow(effDepth.Value * 1e-3, 2) / (rebarDesYieldStr.Value * leverArm.Value)
                 + Mp / (rebarDesYieldStr.Value * (leverArm.Value - d2))) * 1e6;
 
 
             expression.Add(redistRatio.Symbol + @" > " + redistRatio2.Symbol);
             expression.Add(leverArm.Symbol + @" = min\left[\frac{d}{2}\left(1+\sqrt{1-\frac{2K}{\eta\alpha_{cc}/\gamma_c}}\right),0.95d\right] = min(" + Math.Round(val0) + "," + Math.Round(val1) + ") = " + Math.Round(leverArm.Value) + " mm");
             expression.Add(naDepth.Symbol + @" = \frac{2(" + effDepth.Symbol + "-" + leverArm.Symbol + ")}{" + effCompZoneHtFac.Symbol + "} = " + Math.Round(naDepth.Value) + " mm");
-            expression.Add("M' = " + Width.Symbol + effDepth.Symbol + "^2" + charCompStr.Symbol + "(" + redistRatio.Symbol + " - " + redistRatio2.Symbol + ") = " + Math.Round(Mp, 1) + "kNm");
+            expression.Add("M' = " + Profile.Width.Unit + effDepth.Symbol + "^2" + charCompStr.Symbol + "(" + redistRatio.Symbol + " - " + redistRatio2.Symbol + ") = " + Math.Round(Mp, 1) + "kNm");
             expression.Add("d_2 = " + TopCover.Symbol + @"\phi_{link} + \phi_{bar/2} = " + d2 + "mm");
-            expression.Add(rebarAsReqd.Symbol + @"= \frac{" + redistRatio2.Symbol + charCompStr.Symbol + Width.Symbol + effDepth.Symbol + "^2}{" + rebarDesYieldStr.Symbol + leverArm.Symbol + "} +"
+            expression.Add(rebarAsReqd.Symbol + @"= \frac{" + redistRatio2.Symbol + charCompStr.Symbol + Profile.Width.Unit + effDepth.Symbol + "^2}{" + rebarDesYieldStr.Symbol + leverArm.Symbol + "} +"
                 + @"\frac{M'}{" + rebarDesYieldStr.Symbol + "(" + effDepth.Symbol + " - d2)} = " + Math.Round(rebarAsReqd.Value) + "mm^2");
         }
         Tuple<double, double> bottomBars = calcBarSizeAndDia(rebarAsReqd.Value);
@@ -298,12 +292,12 @@ public class RectangularRcBeamCalculation : ICalculation
 
         // Check As_prov exceeds As_min
         expression = new List<string>();
-        rebarMinArea.Value = Math.Max(0.26 * meanAxialTenStr.Value / rebarCharYieldStr.Value, 0.0013) * Width.Value * effDepth.Value;
+        rebarMinArea.Value = Math.Max(0.26 * meanAxialTenStr.Value / rebarCharYieldStr.Value, 0.0013) * Profile.Width.Value * effDepth.Value;
         expression.Add(string.Format(@"{0}=max(0.26\frac{{{1}}}{{{2}}}, 0.0013)\times {3}\times {4}={5}{6}",
             rebarMinArea.Symbol,
             meanAxialTenStr.Symbol,
             rebarCharYieldStr.Symbol,
-            Width.Symbol,
+            Profile.Width.Unit,
             effDepth.Symbol,
             Math.Round(rebarMinArea.Value, 0),
             rebarMinArea.Unit));
@@ -334,11 +328,11 @@ public class RectangularRcBeamCalculation : ICalculation
 
         // Check As_prov is less than As_max
         expression = new List<string>();
-        rebarMaxArea.Value = 0.04 * Width.Value * Height.Value;
+        rebarMaxArea.Value = 0.04 * Profile.Width.Value * Profile.Height.Value;
         expression.Add(string.Format(@"{0}=0.04\times {1}\times {2}={3}{4}",
             rebarMaxArea.Symbol,
-            Width.Symbol,
-            Height.Symbol,
+            Profile.Width.Unit,
+           Profile.Height.Unit,
             Math.Round(rebarMaxArea.Value, 0),
             rebarMaxArea.Unit));
         if (rebarAsProv.Value <= rebarMaxArea.Value)
@@ -372,8 +366,6 @@ public class RectangularRcBeamCalculation : ICalculation
         // todo
         return new List<IFormula>();
     }
-
-    private Rectangle CreateProfile() => new Rectangle(Width, Height);
 
     private static Tuple<double, double> calcBarSizeAndDia(double area)
     {
