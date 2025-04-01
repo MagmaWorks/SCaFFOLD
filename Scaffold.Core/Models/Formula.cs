@@ -6,7 +6,7 @@ namespace Scaffold.Core.Models;
 
 public class Formula : IFormula
 {
-    public List<string> Expression { get; set;  } = new List<string>();
+    public List<string> Expression { get; set; } = new List<string>();
     public string Reference { get; set; } = "";
     public string Narrative { get; set; } = "";
     public string Conclusion { get; set; } = "";
