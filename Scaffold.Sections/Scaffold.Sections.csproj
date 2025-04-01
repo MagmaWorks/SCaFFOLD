@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
@@ -19,13 +19,6 @@
     <RepositoryUrl>https://github.com/MagmaWorks/Taxonomy/</RepositoryUrl>
     <PackageIcon>MagmaWorks.png</PackageIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MinVer" Version="6.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
