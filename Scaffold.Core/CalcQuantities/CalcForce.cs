@@ -33,9 +33,9 @@ public sealed class CalcForce : CalcQuantity<Force>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        ForceUnit unit = x.Quantity.Unit;
+        ForceUnit unit = (ForceUnit)x.Quantity.Unit;
         return new CalcMoment(new Moment(x.Quantity.As(unit) * y.Quantity.Value,
-            unit.GetEquivilantMomentUnit(y.Quantity.Unit)), name, "");
+            unit.GetEquivilantMomentUnit((LengthUnit)y.Quantity.Unit)), name, "");
     }
 
     public static CalcMoment operator *(CalcLength x, CalcForce y)
@@ -47,23 +47,23 @@ public sealed class CalcForce : CalcQuantity<Force>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
-        ForceUnit unit = x.Quantity.Unit;
+        ForceUnit unit = (ForceUnit)x.Quantity.Unit;
         return new CalcLinearForce(new ForcePerLength(x.Quantity.As(unit) / y.Quantity.Value,
-            unit.GetEquivilantForcePerLengthUnit(y.Quantity.Unit)), name, "");
+            unit.GetEquivilantForcePerLengthUnit((LengthUnit)y.Quantity.Unit)), name, "");
     }
 
     public static CalcStress operator /(CalcForce x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
-        ForceUnit unit = x.Quantity.Unit;
+        ForceUnit unit = (ForceUnit)x.Quantity.Unit;
         return new CalcStress(new Pressure(x.Quantity.As(unit) / y.Quantity.Value,
-            unit.GetEquivilantPressureUnit(y.Quantity.Unit)), name, "");
+            unit.GetEquivilantPressureUnit((AreaUnit)y.Quantity.Unit)), name, "");
     }
 
     public static CalcDouble operator /(CalcForce x, CalcForce y)
     {
         (string name, string _, ForceUnit _) = OperatorMetadataHelper<ForceUnit>(x, y, '/');
-        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
+        return new CalcDouble((Force)x.Quantity / (Force)y.Quantity, name, string.Empty);
     }
 }
