@@ -60,6 +60,5 @@ public class RectangularProfileTests
 
         var formulae = Reader.GetFormulae(calc).ToList();
         formulae.Count.Should().Be(0);
-        formulae[0].Expression.Count.Should().Be(0);
     }
 }
