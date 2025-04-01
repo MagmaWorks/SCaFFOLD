@@ -91,9 +91,9 @@ namespace SCaFFOLDForGrasshopper
             for (int i = 0; i < inputs.Count; i++)
             {
                 var item = inputs[i];
-                if (typeof(IQuantity).IsAssignableFrom(item.GetType()))
+                if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
                 {
-                    (item as IQuantity) = inputVal;
+                    (item as ICalcQuantity).Quantity. = inputVal;
                 }
             }
 
