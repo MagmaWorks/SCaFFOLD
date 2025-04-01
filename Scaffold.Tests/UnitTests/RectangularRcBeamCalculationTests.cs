@@ -33,11 +33,9 @@ public class RectangularRcBeamCalculationTests
         metadata.Type.Should().Be(TypeName);
         metadata.Title.Should().Be(Title);
 
-        inputs.Count.Should().Be(25);
-        outputs.Count.Should().Be(19);
+        inputs.Count.Should().Be(24);
+        outputs.Count.Should().Be(18);
 
-        inputs[0].DisplayName.Should().Be("Width");
-        inputs[1].DisplayName.Should().Be("Height", because: "Fallback to property name, class did not set DisplayName");
-        //outputs[0].DisplayName.Should().Be("500 × 800 mm");
+        inputs[0].DisplayName.Should().Be("Profile");
     }
 }
