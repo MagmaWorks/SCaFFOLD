@@ -7,7 +7,8 @@ namespace Scaffold.Core.CalcObjects
 {
     public class CalcProfile : ICalcValue
     {
-        public string DisplayName {
+        public string DisplayName
+        {
             get
             {
                 return ValueAsString();
