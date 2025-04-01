@@ -22,7 +22,7 @@ namespace SCaFFOLDForGrasshopper
         /// new tabs/panels will automatically be created.
         /// </summary>
         public SCaFFOLDForGrasshopperComponent()
-          : base("SCaFFOLDForGrasshopperComponent","Test",
+          : base("SCaFFOLDForGrasshopperComponent", "Test",
             "Test calc in GH.",
             "Magma Works", "SCaFFOLD")
         {
