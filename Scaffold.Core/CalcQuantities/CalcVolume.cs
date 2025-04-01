@@ -30,7 +30,7 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        VolumeUnit unit = x.Quantity.Unit;
+        VolumeUnit unit = (VolumeUnit)x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantInertiaUnit()), name, "");
     }
@@ -38,14 +38,14 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     public static CalcDouble operator /(CalcVolume x, CalcVolume y)
     {
         (string name, string _, VolumeUnit unit) = OperatorMetadataHelper<VolumeUnit>(x, y, '/');
-        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
+        return new CalcDouble((Volume)x.Quantity / (Volume)y.Quantity, name, string.Empty);
     }
 
     public static CalcLength operator /(CalcVolume x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
-        VolumeUnit unit = x.Quantity.Unit;
+        VolumeUnit unit = (VolumeUnit)x.Quantity.Unit;
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantLengthUnit()), name, "");
     }
@@ -54,7 +54,7 @@ public sealed class CalcVolume : CalcQuantity<Volume>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
-        VolumeUnit unit = x.Quantity.Unit;
+        VolumeUnit unit = (VolumeUnit)x.Quantity.Unit;
         return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantAreaUnit()), name, "");
     }
