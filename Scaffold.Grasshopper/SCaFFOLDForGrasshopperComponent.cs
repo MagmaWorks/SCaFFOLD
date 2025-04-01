@@ -51,7 +51,7 @@ namespace SCaFFOLDForGrasshopper
 
             foreach (var item in inputs)
             {
-                pManager.AddNumberParameter(inputs[0].DisplayName, inputs[0].Symbol, "SCaFFOLD calc", GH_ParamAccess.item);
+                pManager.AddNumberParameter(item.DisplayName, item.Symbol, "SCaFFOLD calc", GH_ParamAccess.item);
             }
 
             // If you want to change properties of certain parameters, 
@@ -80,24 +80,19 @@ namespace SCaFFOLDForGrasshopper
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            double inputVal = 0;
-            DA.GetData(0, ref inputVal);
+            // COME BACK TO THIS - GETTING VALUE AS DOUBLE THEN CONVERTING TO STRING!!
 
-            //foreach (var item in inputs)
-            //{
-
-            //}
 
             for (int i = 0; i < inputs.Count; i++)
             {
+                double inputVal = 0;
+                DA.GetData(i, ref inputVal);
                 var item = inputs[i];
                 if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
                 {
-                    (item as ICalcQuantity).Quantity. = inputVal;
+                    (item as ICalcQuantity).TryParse(inputVal.ToString());
                 }
             }
-
-            inputs[0].TryParse(inputVal.ToString());
 
             embeddedCalc.Calculate();
 
