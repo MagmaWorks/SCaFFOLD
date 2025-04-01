@@ -43,6 +43,10 @@
     </None>
   </ItemGroup>
 
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="OasysUnits" Version="1.2.1" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
