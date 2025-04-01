@@ -9,15 +9,15 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
 {
     public virtual IQuantity Quantity
     {
-        get { return quantity; }
+        get { return _quantity; }
         set
         {
-            if (quantity != null && !value.Dimensions.Equals(quantity.Dimensions))
+            if (_quantity != null && !value.Dimensions.Equals(_quantity.Dimensions))
             {
                 throw new ArgumentException("Use the same unit dude");
             }
 
-            quantity = value;
+            _quantity = value;
         }
     }
     public string Unit => Quantity.ToString().Split(' ')[1];
@@ -25,7 +25,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
     public double Value => (double)Quantity.Value;
-    private IQuantity quantity;
+    private IQuantity _quantity;
 
     public CalcQuantity(T quantity, string name, string symbol)
     {
@@ -69,30 +69,19 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
 
     public bool TryParse(string strValue)
     {
-        try
+        if (OasysUnits.Quantity.TryParse(Quantity.QuantityInfo.ValueType, strValue, out IQuantity temp))
         {
-            IQuantity quantity = OasysUnits.Quantity.Parse(CultureInfo.InvariantCulture, Quantity.QuantityInfo.ValueType, strValue);
-            Quantity = (T)quantity;
+            _quantity = temp;
             return true;
         }
-        catch
+
+        if (double.TryParse(strValue, out double val))
         {
-            try
-            {
-                double val;
-                if (double.TryParse(strValue, out val))
-                {
-                    var unit = quantity.Unit;
-                    quantity = OasysUnits.Quantity.FromQuantityInfo(quantity.QuantityInfo, val);
-                    return true;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-            return false;
+            _quantity = OasysUnits.Quantity.From(val, _quantity.Unit);
+            return true;
         }
+
+        return false;
     }
 
     public override bool Equals(object obj)
