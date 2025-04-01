@@ -7,16 +7,17 @@ namespace Scaffold.Core.Abstract;
 
 public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
-    public virtual IQuantity Quantity {
-        get { return Quantity; }
+    public virtual IQuantity Quantity
+    {
+        get { return quantity; }
         set
         {
-            if (!value.Dimensions.Equals(Quantity.Dimensions))
+            if (quantity != null && !value.Dimensions.Equals(quantity.Dimensions))
             {
                 throw new ArgumentException("Use the same unit dude");
             }
 
-            Quantity = value;
+            quantity = value;
         }
     }
     public string Unit => Quantity.ToString().Split(' ')[1];
@@ -24,6 +25,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
     public double Value => (double)Quantity.Value;
+    private IQuantity quantity;
 
     public CalcQuantity(T quantity, string name, string symbol)
     {
