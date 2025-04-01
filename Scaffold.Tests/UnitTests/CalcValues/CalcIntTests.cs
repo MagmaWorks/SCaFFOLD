@@ -1,5 +1,4 @@
-﻿using OasysUnits.Units;
-using Scaffold.Core.CalcValues;
+﻿using Scaffold.Core.CalcValues;
 
 namespace Scaffold.Tests.UnitTests.CalcValues
 {
@@ -89,9 +88,9 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(5, 2, true)]   // 5 > 2
-        [InlineData(2, 5, false)]  // 2 > 5
-        [InlineData(5, 5, false)]  // 5 > 5
+        [InlineData(5, 2, true)] // 5 > 2
+        [InlineData(2, 5, false)] // 2 > 5
+        [InlineData(5, 5, false)] // 5 > 5
         public void GreaterThanOperatorTest(int val1, int val2, bool expected)
         {
             // Arrange
@@ -106,9 +105,9 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(5, 2, false)]  // 5 < 2
-        [InlineData(2, 5, true)]   // 2 < 5
-        [InlineData(5, 5, false)]  // 5 < 5
+        [InlineData(5, 2, false)] // 5 < 2
+        [InlineData(2, 5, true)] // 2 < 5
+        [InlineData(5, 5, false)] // 5 < 5
         public void LessThanOperatorTest(int val1, int val2, bool expected)
         {
             // Arrange

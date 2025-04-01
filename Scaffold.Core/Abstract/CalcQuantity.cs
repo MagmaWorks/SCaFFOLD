@@ -69,13 +69,15 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
 
     public bool TryParse(string strValue)
     {
-        if (OasysUnits.Quantity.TryParse(Quantity.QuantityInfo.ValueType, strValue, out IQuantity temp))
+        try
         {
-            _quantity = temp;
+            IQuantity quantity = OasysUnits.Quantity.Parse(CultureInfo.InvariantCulture, Quantity.QuantityInfo.ValueType, strValue);
+            _quantity = (T)quantity;
             return true;
         }
+        catch { }
 
-        if (double.TryParse(strValue, out double val))
+        if (double.TryParse(strValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
         {
             _quantity = OasysUnits.Quantity.From(val, _quantity.Unit);
             return true;

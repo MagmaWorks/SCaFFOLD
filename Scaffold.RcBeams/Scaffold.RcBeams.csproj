@@ -1,9 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <MinVerMinimumMajorMinor>0.12</MinVerMinimumMajorMinor>
+    <MinVerMinimumMajorMinor>0.2</MinVerMinimumMajorMinor>
     <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
-    <Version>0.12</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -14,9 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Title>Scaffold Core</Title>
+    <Title>Scaffold RC Beam</Title>
     <Company>Whitby Wood</Company>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/MagmaWorks/Taxonomy/</RepositoryUrl>
     <PackageIcon>MagmaWorks.png</PackageIcon>
@@ -27,6 +25,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MagmaWorks.Taxonomy.Sections" Version="0.0.27" />
+    <PackageReference Include="MagmaWorks.Taxonomy.IMaterials" Version="0.0.27" />
+    <PackageReference Include="MagmaWorks.Taxonomy.Serialization" Version="0.0.27" />
     <PackageReference Include="MinVer" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,27 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\MagmaWorks.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+    <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
+    <ProjectReference Include="..\Scaffold.Sections\Scaffold.Sections.csproj" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="OasysUnits" Version="1.2.1" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
-  </ItemGroup>
-
 </Project>

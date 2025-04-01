@@ -6,14 +6,14 @@ namespace Scaffold.Core.Models;
 
 public class Formula : IFormula
 {
-    public List<string> Expression { get; } = new List<string>();
+    public List<string> Expression { get; set; } = new List<string>();
     public string Reference { get; set; } = "";
     public string Narrative { get; set; } = "";
     public string Conclusion { get; set; } = "";
     public CalcStatus Status { get; set; } = CalcStatus.None;
     public ICalcImage Image { get; set; }
 
-    private Formula() { }
+    public Formula() { }
 
     public Formula(string reference, string narrative, string conclusion, string expression,
         CalcStatus status = CalcStatus.None)
