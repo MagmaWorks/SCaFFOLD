@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using OasysUnits;
 using OasysUnits.Units;
+using Scaffold.Core;
 using Scaffold.Core.Abstract;
-using Scaffold.Sections;
 
-namespace Scaffold.XUnitTests.UnitTests;
+namespace Scaffold.Tests.UnitTests;
 
 public class RectangularProfileTests
 {
@@ -39,7 +39,8 @@ public class RectangularProfileTests
         outputs.Count.Should().Be(1);
 
         inputs[0].DisplayName.Should().Be("Width");
-        inputs[1].DisplayName.Should().Be("Height", because: "Fallback to property name, class did not set DisplayName");
+        inputs[1].DisplayName.Should()
+            .Be("Height", because: "Fallback to property name, class did not set DisplayName");
         outputs[0].DisplayName.Should().Be("500 × 800 mm");
     }
 
@@ -52,11 +53,13 @@ public class RectangularProfileTests
             Height = { Quantity = new Length(500, LengthUnit.Millimeter) }
         };
 
-        calc.Profile.Description.Should().Be("500 × 800 mm", because: "result has not changed yet through the update method.");
+        calc.Profile.Description.Should()
+            .Be("500 × 800 mm", because: "result has not changed yet through the update method.");
 
         Reader.Update(calc);
 
-        calc.Profile.Description.Should().Be("800 × 500 mm", because: "result has not changed yet through the update method.");
+        calc.Profile.Description.Should()
+            .Be("800 × 500 mm", because: "result has not changed yet through the update method.");
 
         var formulae = Reader.GetFormulae(calc).ToList();
         formulae.Count.Should().Be(0);

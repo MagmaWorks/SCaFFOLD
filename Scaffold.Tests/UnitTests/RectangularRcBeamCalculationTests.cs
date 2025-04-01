@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
+using Scaffold.Core;
 using Scaffold.Core.Abstract;
-using Scaffold.RcBeams;
 
-namespace Scaffold.XUnitTests.UnitTests;
+namespace Scaffold.Tests.UnitTests;
 
 public class RectangularRcBeamCalculationTests
 {

@@ -75,7 +75,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(4.5, 2.0, true)]  // 4.5 > 2.0
+        [InlineData(4.5, 2.0, true)] // 4.5 > 2.0
         [InlineData(2.0, 4.5, false)] // 2.0 > 4.5
         [InlineData(4.5, 4.5, false)] // 4.5 > 4.5
         public void GreaterThanOperatorTest(double val1, double val2, bool expected)
@@ -93,7 +93,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
         [Theory]
         [InlineData(4.5, 2.0, false)] // 4.5 < 2.0
-        [InlineData(2.0, 4.5, true)]  // 2.0 < 4.5
+        [InlineData(2.0, 4.5, true)] // 2.0 < 4.5
         [InlineData(4.5, 4.5, false)] // 4.5 < 4.5
         public void LessThanOperatorTest(double val1, double val2, bool expected)
         {
@@ -109,9 +109,9 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(4.5, 2.0, true)]  // 4.5 >= 2.0
+        [InlineData(4.5, 2.0, true)] // 4.5 >= 2.0
         [InlineData(2.0, 4.5, false)] // 2.0 >= 4.5
-        [InlineData(4.5, 4.5, true)]  // 4.5 >= 4.5
+        [InlineData(4.5, 4.5, true)] // 4.5 >= 4.5
         public void GreaterThanOrEqualOperatorTest(double val1, double val2, bool expected)
         {
             // Arrange
@@ -127,8 +127,8 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
         [Theory]
         [InlineData(4.5, 2.0, false)] // 4.5 <= 2.0
-        [InlineData(2.0, 4.5, true)]  // 2.0 <= 4.5
-        [InlineData(4.5, 4.5, true)]  // 4.5 <= 4.5
+        [InlineData(2.0, 4.5, true)] // 2.0 <= 4.5
+        [InlineData(4.5, 4.5, true)] // 4.5 <= 4.5
         public void LessThanOrEqualOperatorTest(double val1, double val2, bool expected)
         {
             // Arrange

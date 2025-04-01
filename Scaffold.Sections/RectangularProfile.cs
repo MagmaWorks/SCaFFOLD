@@ -7,9 +7,8 @@ using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
-using Scaffold.Core.Models;
 
-namespace Scaffold.Sections;
+namespace Scaffold.Core;
 
 [CalculationMetadata("Rectangular profile")]
 public class RectangularProfile : ICalculation
@@ -18,14 +17,11 @@ public class RectangularProfile : ICalculation
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
-    [InputCalcValue]
-    public CalcLength Width { get; set; }
+    [InputCalcValue] public CalcLength Width { get; set; }
 
-    [InputCalcValue]
-    public CalcLength Height { get; set; }
+    [InputCalcValue] public CalcLength Height { get; set; }
 
-    [OutputCalcValue]
-    public CalcProfile Profile { get; set; }
+    [OutputCalcValue] public CalcProfile Profile { get; set; }
 
     public RectangularProfile()
     {

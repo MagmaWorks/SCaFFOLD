@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Scaffold.Core.Images.Models;
-using Scaffold.XUnitTests.ExampleCalcsForTests;
+using Scaffold.Tests.ExampleCalcsForTests;
 
 namespace Scaffold.XUnitTests.Core;
 

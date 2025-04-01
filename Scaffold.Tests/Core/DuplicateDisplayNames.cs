@@ -4,7 +4,7 @@ using Scaffold.Core.Enums;
 using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
-using Scaffold.XUnitTests.ExampleCalcsForTests;
+using Scaffold.Tests.ExampleCalcsForTests;
 using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;

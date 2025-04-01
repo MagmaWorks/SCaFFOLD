@@ -10,7 +10,7 @@ using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
-namespace Scaffold.RcBeams;
+namespace Scaffold.Core;
 
 [CalculationMetadata("Rectangular RC beam calculation")]
 public class RectangularRcBeamCalculation : ICalculation
@@ -164,11 +164,13 @@ public class RectangularRcBeamCalculation : ICalculation
             throw new ArgumentException("Calculation only supports rectangular profiles");
         }
 
-        Expressions = new List<Formula>();
-        Expressions.Add(new Formula()
+        Expressions = new List<Formula>
         {
-            Narrative = "Beam calculations to BS EN 1992-1-1 2004. Currently in beta so check thoroughly!",
-        });
+            new()
+            {
+                Narrative = "Beam calculations to BS EN 1992-1-1 2004. Currently in beta so check thoroughly!",
+            }
+        };
         List<string> expression = new();
 
         charCompStr.Value = getConcreteStrength(Grade.Value);
@@ -365,7 +367,7 @@ public class RectangularRcBeamCalculation : ICalculation
     private static Tuple<double, double> calcBarSizeAndDia(double area)
     {
         int maxBars = 5;
-        List<int> barSizes = new List<int>
+        List<int> barSizes = new()
         {
             10,
             12,
@@ -375,7 +377,7 @@ public class RectangularRcBeamCalculation : ICalculation
             32,
             40
         };
-        foreach (var item in barSizes)
+        foreach (int item in barSizes)
         {
             for (int i = 2; i < maxBars; i++)
             {

@@ -3,9 +3,10 @@ using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
-namespace Scaffold.XUnitTests.ExampleCalcsForTests;
+namespace Scaffold.Tests.ExampleCalcsForTests;
 
-public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitives>
+public class AdditionCalculationFluentPrimitives : ICalculation,
+    ICalculationConfiguration<AdditionCalculationFluentPrimitives>
 {
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
@@ -48,7 +49,8 @@ public class AdditionCalculationFluentPrimitives : ICalculation, ICalculationCon
 /// <summary>
 /// An unlikely configuration, since you're going to want to add names to primitives individually. Still should be supported behaviour though.
 /// </summary>
-public class AdditionCalculationFluentPrimitivesJoined : ICalculation, ICalculationConfiguration<AdditionCalculationFluentPrimitivesJoined>
+public class AdditionCalculationFluentPrimitivesJoined : ICalculation,
+    ICalculationConfiguration<AdditionCalculationFluentPrimitivesJoined>
 {
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
@@ -87,14 +89,11 @@ public class AdditionCalculationAttributePrimitives : ICalculation
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
-    [InputCalcValue("L")]
-    public double LeftAssignment { get; set; }
+    [InputCalcValue("L")] public double LeftAssignment { get; set; }
 
-    [InputCalcValue("R")]
-    public double RightAssignment { get; set; }
+    [InputCalcValue("R")] public double RightAssignment { get; set; }
 
-    [OutputCalcValue("=")]
-    public double Result { get; set; }
+    [OutputCalcValue("=")] public double Result { get; set; }
 
     public AdditionCalculationAttributePrimitives()
     {

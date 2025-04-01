@@ -6,7 +6,7 @@ using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using SkiaSharp;
 
-namespace Scaffold.XUnitTests.ExampleCalcsForTests;
+namespace Scaffold.Tests.ExampleCalcsForTests;
 
 [CalculationMetadata("Add values", "Core library tester")]
 public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration<AdditionCalculationFluent>
@@ -57,14 +57,11 @@ public class AdditionCalculationFluent : ICalculation, ICalculationConfiguration
                 .WithReference("Some ref here")
                 .AddExpression("x &=& a + b")
                 .SetImage(new ImageFromEmbeddedResource<AdditionCalculation>("ImageAsEmbeddedResource.png")),
-
-
             Formula.New("2. Narrative to appear above the expression")
                 .WithConclusion("2. Some text here")
                 .WithReference("2. Some ref here")
                 .AddExpression("x &=& a + b")
                 .SetImage(new ImageFromSkBitmap(keyImage)),
-
             Formula.New("Final narrative")
                 .WithReference("3.a")
                 .SetImage(new ImageFromRelativePath("ImageAsRelativePath.png"))

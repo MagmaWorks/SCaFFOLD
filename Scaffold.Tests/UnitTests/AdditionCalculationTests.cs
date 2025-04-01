@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
+using Scaffold.Tests.ExampleCalcsForTests;
 using Scaffold.XUnitTests.Core;
-using Scaffold.XUnitTests.ExampleCalcsForTests;
 
-namespace Scaffold.XUnitTests.UnitTests;
+namespace Scaffold.Tests.UnitTests;
 
 public class AdditionCalculationTests
 {
@@ -39,7 +39,8 @@ public class AdditionCalculationTests
         outputs.Count.Should().Be(1);
 
         inputs[0].DisplayName.Should().Be("Left assignment");
-        inputs[1].DisplayName.Should().Be("Right Assignment", because: "Fallback to property name, class did not set DisplayName");
+        inputs[1].DisplayName.Should().Be("Right Assignment",
+            because: "Fallback to property name, class did not set DisplayName");
         outputs[0].DisplayName.Should().Be("Result");
     }
 
@@ -59,7 +60,8 @@ public class AdditionCalculationTests
         outputs.Count.Should().Be(1);
 
         inputs[0].DisplayName.Should().Be("Left assignment");
-        inputs[1].DisplayName.Should().Be("Right Assignment", because: "Fallback to property name, class did not set DisplayName");
+        inputs[1].DisplayName.Should().Be("Right Assignment",
+            because: "Fallback to property name, class did not set DisplayName");
         outputs[0].DisplayName.Should().Be("Result");
     }
 
@@ -210,11 +212,7 @@ public class AdditionCalculationTests
     [Fact]
     public void Updated_FromUI_Ok()
     {
-        var calc = new AdditionCalculation
-        {
-            LeftAssignment = { Value = 5 },
-            RightAssignment = { Value = 4 }
-        };
+        var calc = new AdditionCalculation { LeftAssignment = { Value = 5 }, RightAssignment = { Value = 4 } };
 
         calc.Result.Value.Should().Be(5, because: "result has not changed yet through the update method.");
 

@@ -5,7 +5,7 @@ using Scaffold.Core.CalcObjects;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Sections.CalcObjects
+namespace Scaffold.Core.CalcObjects
 {
     public class CalcMaterial : ICalcValue, IStandardMaterial<CalcStandard>
     {

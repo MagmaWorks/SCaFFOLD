@@ -1,11 +1,10 @@
 ﻿using Scaffold.Calculations;
 using Scaffold.Core.Abstract;
 
-namespace Scaffold.XUnitTests.UnitTests
+namespace Scaffold.Tests.UnitTests
 {
     public class CreepAndShrinkageTests
     {
-
         [Fact]
         public void CreepAndShrinkageTest1()
         {
@@ -25,4 +24,3 @@ namespace Scaffold.XUnitTests.UnitTests
         }
     }
 }
-

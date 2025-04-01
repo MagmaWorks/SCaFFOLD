@@ -1,4 +1,3 @@
-using OasysUnits.Units;
 using Scaffold.Core.CalcValues;
 
 namespace Scaffold.Tests.UnitTests.CalcValues
