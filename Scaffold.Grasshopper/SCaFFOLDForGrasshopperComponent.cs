@@ -48,11 +48,11 @@ namespace SCaFFOLDForGrasshopper
                 embeddedCalc = new ConcreteCreepAndShrinkage();
                 inputs = reader.GetInputs(embeddedCalc);
             }
-            
+
             foreach (var item in inputs)
             {
                 pManager.AddNumberParameter(inputs[0].DisplayName, inputs[0].Symbol, "SCaFFOLD calc", GH_ParamAccess.item);
-            }         
+            }
 
             // If you want to change properties of certain parameters, 
             // you can use the pManager instance to access them by index:
