@@ -8,7 +8,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
     public class CalcForceTests
     {
         [Fact]
-        public void ParseFromStringTest()
+        public void ParseFromStringWithUnitTest()
         {
             // Assemble
             var calcForce = new CalcForce(4.5, ForceUnit.PoundForce, "force", "F");
@@ -16,6 +16,19 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             // Act
             // Assert
             Assert.True(calcForce.TryParse("5.5 kN"));
+            Assert.Equal(5.5, calcForce.Value);
+            Assert.Equal("kN", calcForce.Unit);
+        }
+
+        [Fact]
+        public void ParseFromStringWithoutUnitTest()
+        {
+            // Assemble
+            var calcForce = new CalcForce(4.5, ForceUnit.Kilonewton, "force", "F");
+
+            // Act
+            // Assert
+            Assert.True(calcForce.TryParse("5.5"));
             Assert.Equal(5.5, calcForce.Value);
             Assert.Equal("kN", calcForce.Unit);
         }
