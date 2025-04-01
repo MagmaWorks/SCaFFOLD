@@ -2,6 +2,7 @@
 using MagmaWorks.Taxonomy.Standards;
 using Scaffold.Core.CalcObjects;
 using Scaffold.Core.Enums;
+using Scaffold.Sections.CalcObjects;
 
 namespace Scaffold.Tests.UnitTests.CalcValues
 {

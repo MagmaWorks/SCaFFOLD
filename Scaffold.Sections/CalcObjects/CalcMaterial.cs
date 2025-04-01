@@ -1,10 +1,11 @@
 ﻿using MagmaWorks.Taxonomy.Materials;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials;
 using MagmaWorks.Taxonomy.Serialization;
+using Scaffold.Core.CalcObjects;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Core.CalcObjects
+namespace Scaffold.Sections.CalcObjects
 {
     public class CalcMaterial : ICalcValue, IStandardMaterial<CalcStandard>
     {

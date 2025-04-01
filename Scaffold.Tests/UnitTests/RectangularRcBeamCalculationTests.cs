@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Scaffold.Core.Abstract;
-using Scaffold.RcBeam;
+using Scaffold.RcBeams;
 
 namespace Scaffold.XUnitTests.UnitTests;
 
