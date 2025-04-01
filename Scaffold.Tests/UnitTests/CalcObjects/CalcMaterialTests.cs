@@ -36,5 +36,32 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(StandardBody.EN, material.Standard.Body);
             Assert.Equal(MaterialType.Concrete, material.Type);
         }
+
+        [Fact]
+        public void ParseFromMinimalStringTest()
+        {
+            // Arrange
+            var standard = new CalcStandard()
+            {
+                Body = StandardBody.EN
+            };
+
+            var material = new CalcMaterial()
+            {
+                DisplayName = "Foo",
+                Symbol = "M",
+                Status = CalcStatus.Fail,
+                Standard = standard,
+                Type = MaterialType.Concrete
+            };
+
+            string json = "{\r\n  \"$type\": \"Scaffold.Core.CalcObjects.CalcMaterial, Scaffold.Sections\",\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"Body\": \"EN\"  },\r\n  \"Type\": \"Concrete\"\r\n}";
+
+            // Act & Assert
+            Assert.False(material.TryParse("invalid"));
+            Assert.True(material.TryParse(json));
+            Assert.Equal(StandardBody.EN, material.Standard.Body);
+            Assert.Equal(MaterialType.Concrete, material.Type);
+        }
     }
 }
