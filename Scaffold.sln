@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Grasshopper", "Sca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Sections", "Scaffold.Sections\Scaffold.Sections.csproj", "{6358EA48-A5D2-4883-BD9E-E327F3029270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.RcBeam", "Scaffold.RcBeam\Scaffold.RcBeam.csproj", "{9743DC99-5719-46E7-AB93-2B1022EE294F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.RcBeams", "Scaffold.RcBeams\Scaffold.RcBeams.csproj", "{9743DC99-5719-46E7-AB93-2B1022EE294F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

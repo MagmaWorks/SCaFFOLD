@@ -209,7 +209,7 @@ public class RectangularRcBeamCalculation : ICalculation
         });
         List<string> expression = new();
 
-        charCompStr.Value = getConcreteStrength(Grade.ValueAsString());
+        charCompStr.Value = getConcreteStrength(Grade.Value);
         meanCompStr.Value = charCompStr.Value + 8;
         expression.Add(string.Format("{0}={1}+8={2}{3}", meanCompStr.Symbol, charCompStr.Symbol, meanCompStr.Value, meanCompStr.Unit));
 

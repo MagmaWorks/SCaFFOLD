@@ -37,5 +37,7 @@ public class RectangularRcBeamCalculationTests
         outputs.Count.Should().Be(18);
 
         inputs[0].DisplayName.Should().Be("Profile");
+
+        calc.Calculate();
     }
 }
