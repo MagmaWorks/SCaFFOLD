@@ -77,6 +77,20 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
         }
         catch
         {
+            try
+            {
+                double val;
+                if (double.TryParse(strValue, out val))
+                {
+                    var unit = quantity.Unit;
+                    quantity = OasysUnits.Quantity.FromQuantityInfo(quantity.QuantityInfo, val);
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
             return false;
         }
     }
