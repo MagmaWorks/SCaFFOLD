@@ -93,7 +93,7 @@ namespace SCaFFOLDForGrasshopper
                 var item = inputs[i];
                 if (typeof(IQuantity).IsAssignableFrom(item.GetType()))
                 {
-                    //(item as IQuantity). = inputVal;
+                    (item as IQuantity) = inputVal;
                 }
             }
 
