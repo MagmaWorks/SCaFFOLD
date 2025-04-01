@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 using Scaffold.Core.Attributes;
+using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
@@ -15,6 +16,9 @@ namespace Scaffold.Calculations
         [InputCalcValue(@"\varphi(t,t_0)", "Notional Creep Coefficient")]
         public double NotionalCreepCoefficient { get; set; } = 0;
 
+        [InputCalcValue("OAI", "Oasys unit input")]
+        public CalcForce Force { get; set; } = new CalcForce(10, "Force", "F");
+
         [OutputCalcValue("R", "Result")]
         public double Result { get; private set; } = 0;
 
@@ -25,7 +29,7 @@ namespace Scaffold.Calculations
 
         public void Calculate()
         {
-            Result = NotionalCreepCoefficient * 2;
+            Result = Force.Value * 2;
         }
     }
 }
