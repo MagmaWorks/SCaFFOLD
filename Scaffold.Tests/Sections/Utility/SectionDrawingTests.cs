@@ -1,7 +1,6 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using MagmaWorks.Taxonomy.Profiles;
-using SkiaSharp;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities

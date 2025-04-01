@@ -19,23 +19,13 @@ namespace Scaffold.Core.Utility
             LengthUnit unit = perimeter.OuterEdge.Points.FirstOrDefault().Y.Unit;
             ILocalDomain2d extends = GetExtends(perimeter.OuterEdge);
             (int x, int y) = ImageExtends(extends, unit);
-            //var keyImage = new SKBitmap(x, y);
-            SKPaint strokePaint = new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                Color = SKColors.Black,
-                StrokeWidth = 10,
-                IsAntialias = true,
-            };
-
             var path = new SKPath();
             path.AddPoly(ConvertPoints(perimeter.OuterEdge));
             string svg = path.ToSvgPathData();
 
             StringBuilder sb = new StringBuilder();
-            double f = 1.01;
             sb.AppendLine(@"<?xml version=""1.0"" encoding=""utf-8""?>");
-            sb.AppendLine($"<svg width=\"{x * f}px\" height=\"{y * 1.05}px\" viewBox=\"- -16 16 16\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">");
+            sb.AppendLine($"<svg width=\"{x}px\" height=\"{y}px\" viewBox=\"{-x / 2 - 2} {-y / 2 - 2} {x + 4} {y + 4}\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">");
             sb.AppendLine($"<path d=\"{svg}\" fill=\"#DDDDDC\" stroke=\"black\"/>");
 
             sb.AppendLine("</svg>");
