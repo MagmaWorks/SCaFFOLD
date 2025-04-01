@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="MagmaWorks.Taxonomy.Sections" Version="0.0.27" />
+    <PackageReference Include="MagmaWorks.Taxonomy.IMaterials" Version="0.0.27" />
     <PackageReference Include="MagmaWorks.Taxonomy.Serialization" Version="0.0.27" />
     <PackageReference Include="MinVer" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
