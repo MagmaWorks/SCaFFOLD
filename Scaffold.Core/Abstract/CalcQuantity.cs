@@ -5,14 +5,27 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
 
-public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantity<T>> where T : IQuantity
+public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
-    public T Quantity { get; set; }
+    public virtual IQuantity Quantity
+    {
+        get { return quantity; }
+        set
+        {
+            if (quantity != null && !value.Dimensions.Equals(quantity.Dimensions))
+            {
+                throw new ArgumentException("Use the same unit dude");
+            }
+
+            quantity = value;
+        }
+    }
     public string Unit => Quantity.ToString().Split(' ')[1];
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
     public double Value => (double)Quantity.Value;
+    private IQuantity quantity;
 
     public CalcQuantity(T quantity, string name, string symbol)
     {
@@ -21,7 +34,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantit
         Symbol = symbol;
     }
 
-    public static implicit operator T(CalcQuantity<T> value) => value.Quantity;
+    public static implicit operator T(CalcQuantity<T> value) => (T)value.Quantity;
     public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
     public static bool operator ==(CalcQuantity<T> value, CalcQuantity<T> other)

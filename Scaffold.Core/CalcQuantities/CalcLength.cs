@@ -39,7 +39,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        LengthUnit unit = x.Quantity.Unit;
+        LengthUnit unit = (LengthUnit)x.Quantity.Unit;
         return new CalcVolume(new Volume(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantVolumeUnit()), name, "");
     }
@@ -48,15 +48,26 @@ public sealed class CalcLength : CalcQuantity<Length>
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        LengthUnit unit = x.Quantity.Unit;
+        LengthUnit unit = (LengthUnit)x.Quantity.Unit;
         return new CalcInertia(new AreaMomentOfInertia(
             x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantVolumeUnit()),
             unit.GetEquivilantInertiaUnit()), name, "");
     }
 
-    public static CalcDouble operator /(CalcLength x, CalcLength y)
+    public static CalcStrain operator /(CalcLength x, CalcLength y)
     {
         (string name, string _, LengthUnit unit) = OperatorMetadataHelper<LengthUnit>(x, y, '/');
-        return new CalcDouble(x.Quantity / y.Quantity, name, string.Empty);
+        return new CalcStrain((Length)x.Quantity / (Length)y.Quantity, StrainUnit.Ratio, name, string.Empty);
+    }
+
+
+    public static CalcLength operator *(CalcStrain x, CalcLength y)
+    {
+        return new CalcLength(x.Quantity.As(StrainUnit.Ratio) * (Length)y.Quantity, string.Empty, string.Empty);
+    }
+
+    public static CalcLength operator *(CalcLength x, CalcStrain y)
+    {
+        return y * x;
     }
 }
