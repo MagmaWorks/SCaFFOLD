@@ -2,7 +2,7 @@
 using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
-using Scaffold.XUnitTests.ExampleCalcsForTests;
+using Scaffold.Sections;
 
 namespace Scaffold.XUnitTests.UnitTests;
 

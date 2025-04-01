@@ -9,7 +9,7 @@ using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 
-namespace Scaffold.XUnitTests.ExampleCalcsForTests;
+namespace Scaffold.Sections;
 
 [CalculationMetadata("Rectangular profile")]
 public class RectangularProfile : ICalculation

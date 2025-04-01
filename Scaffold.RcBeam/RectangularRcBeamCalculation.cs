@@ -4,6 +4,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Attributes;
+using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
@@ -12,7 +13,7 @@ using Scaffold.Core.Models;
 
 namespace Scaffold.RcBeam;
 
-[CalculationMetadata("Rectangular RC Beam Calculation")]
+[CalculationMetadata("Rectangular RC beam calculation")]
 public class RectangularRcBeamCalculation : ICalculation
 {
     public string ReferenceName { get; set; }
@@ -20,145 +21,148 @@ public class RectangularRcBeamCalculation : ICalculation
     public CalcStatus Status { get; }
 
     [InputCalcValue]
-    CalcLength Width { get; set; }
+    public CalcLength Width { get; set; }
 
     [InputCalcValue]
-    CalcLength Height { get; set; }
-
-    [InputCalcValue]
-    CalcDouble aggregateAdjustmentFactor { get; set; }
-
-    [InputCalcValue]
-    CalcSelectionList concGrade { get; set; }
-
-    [InputCalcValue]
-    CalcDouble ultStrain { get; set; }
-
-    [InputCalcValue]
-    CalcDouble shortStrain { get; set; }
-
-    [InputCalcValue]
-    CalcDouble effCompZoneHtFac { get; set; }
-
-    [InputCalcValue]
-    CalcDouble effStrFac { get; set; }
-
-    [InputCalcValue]
-    CalcDouble k1 { get; set; }
-
-    [InputCalcValue]
-    CalcDouble k3 { get; set; }
-
-    [InputCalcValue]
-    CalcDouble delta { get; set; }
-
-    [InputCalcValue]
-    CalcDouble partialFacConc { get; set; }
-
-    [InputCalcValue]
-    CalcDouble compStrCoeff { get; set; }
-
-    [InputCalcValue]
-    CalcDouble compStrCoeffw { get; set; }
-
-    [InputCalcValue]
-    CalcDouble hAgg { get; set; }
-
-    [InputCalcValue]
-    CalcDouble monolithicSimpleSupportFactor { get; set; }
-
-    [InputCalcValue]
-    CalcDouble rebarCharYieldStr { get; set; }
-
-    [InputCalcValue]
-    CalcDouble rebarPartialFactor { get; set; }
-
-    [InputCalcValue]
-    CalcDouble coverTop { get; set; }
-
-    [InputCalcValue]
-    CalcDouble coverBtm { get; set; }
-
-    [InputCalcValue]
-    CalcDouble coverSides { get; set; }
-
-    [InputCalcValue]
-    CalcDouble firePeriod { get; set; }
-
-    [InputCalcValue]
-    CalcDouble sidesExposed { get; set; }
-
-    [InputCalcValue]
-    CalcDouble minWidth { get; set; }
-
-
-
-    [InputCalcValue]
-    CalcDouble bendingMom { get; set; }
+    public CalcLength Height { get; set; }
 
     [OutputCalcValue]
-    CalcDouble charCompStr { get; set; }
+    public CalcProfile Profile { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble aggregateAdjustmentFactor { get; set; }
+
+    [InputCalcValue]
+    public CalcSelectionList Grade { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble ultStrain { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble shortStrain { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble effCompZoneHtFac { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble effStrFac { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble k1 { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble k3 { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble delta { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble partialFacConc { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble compStrCoeff { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble compStrCoeffw { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble hAgg { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble monolithicSimpleSupportFactor { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble rebarCharYieldStr { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble rebarPartialFactor { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble TopCover { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble BottomCover { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble SideCover { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble FireResistance { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble sidesExposed { get; set; }
+
+    [InputCalcValue]
+    public CalcDouble minWidth { get; set; }
+
+
+
+    [InputCalcValue]
+    public CalcDouble bendingMom { get; set; }
 
     [OutputCalcValue]
-    CalcDouble meanCompStr { get; set; }
+    public CalcDouble charCompStr { get; set; }
 
     [OutputCalcValue]
-    CalcDouble meanAxialTenStr { get; set; }
+    public CalcDouble meanCompStr { get; set; }
 
     [OutputCalcValue]
-    CalcDouble secModElasticicity { get; set; }
+    public CalcDouble meanAxialTenStr { get; set; }
 
     [OutputCalcValue]
-    CalcDouble k2 { get; set; }
+    public CalcDouble secModElasticicity { get; set; }
 
     [OutputCalcValue]
-    CalcDouble k4 { get; set; }
+    public CalcDouble k2 { get; set; }
 
     [OutputCalcValue]
-    CalcDouble desCompStrConc { get; set; }
+    public CalcDouble k4 { get; set; }
 
     [OutputCalcValue]
-    CalcDouble desCompStrConcw { get; set; }
+    public CalcDouble desCompStrConc { get; set; }
 
     [OutputCalcValue]
-    CalcDouble rebarDesYieldStr { get; set; }
+    public CalcDouble desCompStrConcw { get; set; }
 
     [OutputCalcValue]
-    CalcDouble effDepth { get; set; }
+    public CalcDouble rebarDesYieldStr { get; set; }
 
     [OutputCalcValue]
-    CalcDouble redistRatio { get; set; }
+    public CalcDouble effDepth { get; set; }
 
     [OutputCalcValue]
-    CalcDouble redistRatio2 { get; set; }
+    public CalcDouble redistRatio { get; set; }
 
     [OutputCalcValue]
-    CalcDouble leverArm { get; set; }
+    public CalcDouble redistRatio2 { get; set; }
 
     [OutputCalcValue]
-    CalcDouble naDepth { get; set; }
+    public CalcDouble leverArm { get; set; }
 
     [OutputCalcValue]
-    CalcDouble rebarAsReqd { get; set; }
+    public CalcDouble naDepth { get; set; }
 
     [OutputCalcValue]
-    CalcDouble rebarAsProv { get; set; }
+    public CalcDouble rebarAsReqd { get; set; }
 
     [OutputCalcValue]
-    CalcDouble rebarMinArea { get; set; }
+    public CalcDouble rebarAsProv { get; set; }
 
     [OutputCalcValue]
-    CalcDouble rebarMaxArea { get; set; }
+    public CalcDouble rebarMinArea { get; set; }
+
+    [OutputCalcValue]
+    public CalcDouble rebarMaxArea { get; set; }
 
     public RectangularRcBeamCalculation()
     {
         Width = new CalcLength(new Length(500, LengthUnit.Millimeter), "Width", "b");
         Height = new CalcLength(new Length(800, LengthUnit.Millimeter), "Height", "h");
-        //Profile = new CalcProfile(CreateProfile());
+        Profile = new CalcProfile(CreateProfile());
 
         bendingMom = new CalcDouble(100, "Bending moment", "M", "kNm");
         aggregateAdjustmentFactor = new CalcDouble(1, "Aggregate adjustment factor", "AAF", "");
-        concGrade = new CalcSelectionList("Concrete grade", "C40/50", new List<string>() { @"C30/40", @"C35/42", @"C40/50" });
+        Grade = new CalcSelectionList("Concrete grade", "C40/50", new List<string>() { @"C30/40", @"C35/42", @"C40/50" });
         ultStrain = new CalcDouble(0.0035, "Ultimate strain", @"\epsilon_{cu2}", "");
         shortStrain = new CalcDouble(0.0035, "Shortening strain", @"\epsilon_{cu3}", "");
         effCompZoneHtFac = new CalcDouble(0.8, "Effective compression zone height factor", @"\lambda", "");
@@ -173,10 +177,10 @@ public class RectangularRcBeamCalculation : ICalculation
         monolithicSimpleSupportFactor = new CalcDouble(0.25, "Monolithic simple support moment factor", @"\beta_1", "");
         rebarCharYieldStr = new CalcDouble(500, "Characteristic yield strength for reinforcing steel", "f_yk", "N/mm^2");
         rebarPartialFactor = new CalcDouble(1.15, "Partial factor for reinforcing steel", @"\gamma_s", "");
-        coverTop = new CalcDouble(35, "Top cover", "c_{top}", "mm");
-        coverBtm = new CalcDouble(35, "Bottom cover", "c_{btm}", "mm");
-        coverSides = new CalcDouble(35, "Side cover", "c_{sides}", "mm");
-        firePeriod = new CalcDouble(60, "Fire period", "R", "mins");
+        TopCover = new CalcDouble(35, "Top cover", "c_{top}", "mm");
+        BottomCover = new CalcDouble(35, "Bottom cover", "c_{btm}", "mm");
+        SideCover = new CalcDouble(35, "Side cover", "c_{sides}", "mm");
+        FireResistance = new CalcDouble(60, "Fire resistance", "R", "mins");
         sidesExposed = new CalcDouble(3, "Sides exposed", "", "No.");
         minWidth = new CalcDouble(120, "Minimum width", "b_{min}", "mm");
 
@@ -211,7 +215,7 @@ public class RectangularRcBeamCalculation : ICalculation
         });
         List<string> expression = new();
 
-        charCompStr.Value = getConcreteStrength(concGrade.ValueAsString());
+        charCompStr.Value = getConcreteStrength(Grade.ValueAsString());
         meanCompStr.Value = charCompStr.Value + 8;
         expression.Add(string.Format("{0}={1}+8={2}{3}", meanCompStr.Symbol, charCompStr.Symbol, meanCompStr.Value, meanCompStr.Unit));
 
@@ -230,13 +234,13 @@ public class RectangularRcBeamCalculation : ICalculation
         expression = new List<string>();
 
         // Lever arm
-        effDepth.Value = Height.Value - coverBtm.Value - 10 - 16;
+        effDepth.Value = Height.Value - BottomCover.Value - 10 - 16;
 
         redistRatio.Value = bendingMom.Value * 1000000 / (Width.Value * Math.Pow(effDepth.Value, 2) * charCompStr.Value);
         //redistRatio2.Value = (2 * effStrFac.Value * compStrCoeff.Value/partialFacConc.Value) * (1 - effCompZoneHtFac.Value * (1 - k1.Value)/(2*k2.Value)) * (effCompZoneHtFac.Value * (1-k1.Value)/(2*k2.Value));
         redistRatio2.Value = effStrFac.Value * compStrCoeff.Value / (partialFacConc.Value * k2.Value) * effCompZoneHtFac.Value * (delta.Value - k1.Value) * (1 - effCompZoneHtFac.Value * (delta.Value - k1.Value) / (2 * k2.Value));
 
-        expression.Add(effDepth.Symbol + @" = h - c - \phi_{link} - \phi_{bar}/2 = " + Height.Value + " - " + coverBtm.Value + " - 10 - 32/2 = " + effDepth.Value + " mm");
+        expression.Add(effDepth.Symbol + @" = h - c - \phi_{link} - \phi_{bar}/2 = " + Height.Value + " - " + BottomCover.Value + " - 10 - 32/2 = " + effDepth.Value + " mm");
         expression.Add(redistRatio.Symbol + @" = \frac{ " + bendingMom.Symbol + "}{" + Width.Symbol + effDepth.Symbol + "^2f_{ck}} = " + Math.Round(redistRatio.Value, 3));
         expression.Add(redistRatio2.Symbol + @" = " + effStrFac.Symbol + @" \frac{" + compStrCoeff.Symbol + "}{" + partialFacConc.Symbol + k2.Symbol + "}" + effCompZoneHtFac.Symbol
            + @"\frac{" + delta.Symbol + "- " + k1.Symbol + "}{" + k2.Symbol + @"}\left(1 -" + effCompZoneHtFac.Symbol + @"\frac{" + delta.Symbol + " - " + k1.Symbol + "}{2" + k2.Symbol + @"}\right) = " + Math.Round(redistRatio2.Value, 3));
@@ -263,7 +267,7 @@ public class RectangularRcBeamCalculation : ICalculation
             naDepth.Value = 2 * (effDepth.Value - leverArm.Value) / effCompZoneHtFac.Value;
 
             double Mp = Width.Value * 1e-3 * Math.Pow(effDepth.Value * 1e-3, 2) * charCompStr.Value * 1e3 * (redistRatio.Value - redistRatio2.Value);
-            double d2 = coverTop.Value + 10 + 8;
+            double d2 = TopCover.Value + 10 + 8;
             rebarAsReqd.Value = (redistRatio2.Value * charCompStr.Value * 1e3 * Width.Value * 1e-3 * Math.Pow(effDepth.Value * 1e-3, 2) / (rebarDesYieldStr.Value * leverArm.Value)
                 + Mp / (rebarDesYieldStr.Value * (leverArm.Value - d2))) * 1e6;
 
@@ -272,7 +276,7 @@ public class RectangularRcBeamCalculation : ICalculation
             expression.Add(leverArm.Symbol + @" = min\left[\frac{d}{2}\left(1+\sqrt{1-\frac{2K}{\eta\alpha_{cc}/\gamma_c}}\right),0.95d\right] = min(" + Math.Round(val0) + "," + Math.Round(val1) + ") = " + Math.Round(leverArm.Value) + " mm");
             expression.Add(naDepth.Symbol + @" = \frac{2(" + effDepth.Symbol + "-" + leverArm.Symbol + ")}{" + effCompZoneHtFac.Symbol + "} = " + Math.Round(naDepth.Value) + " mm");
             expression.Add("M' = " + Width.Symbol + effDepth.Symbol + "^2" + charCompStr.Symbol + "(" + redistRatio.Symbol + " - " + redistRatio2.Symbol + ") = " + Math.Round(Mp, 1) + "kNm");
-            expression.Add("d_2 = " + coverTop.Symbol + @"\phi_{link} + \phi_{bar/2} = " + d2 + "mm");
+            expression.Add("d_2 = " + TopCover.Symbol + @"\phi_{link} + \phi_{bar/2} = " + d2 + "mm");
             expression.Add(rebarAsReqd.Symbol + @"= \frac{" + redistRatio2.Symbol + charCompStr.Symbol + Width.Symbol + effDepth.Symbol + "^2}{" + rebarDesYieldStr.Symbol + leverArm.Symbol + "} +"
                 + @"\frac{M'}{" + rebarDesYieldStr.Symbol + "(" + effDepth.Symbol + " - d2)} = " + Math.Round(rebarAsReqd.Value) + "mm^2");
         }
@@ -365,7 +369,8 @@ public class RectangularRcBeamCalculation : ICalculation
 
     public IList<IFormula> GetFormulae()
     {
-        return new List<IFormula>(); // to-do
+        // todo
+        return new List<IFormula>();
     }
 
     private Rectangle CreateProfile() => new Rectangle(Width, Height);
