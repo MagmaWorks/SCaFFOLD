@@ -1,6 +1,9 @@
 ﻿using FluentAssertions;
+using OasysUnits;
+using OasysUnits.Units;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcObjects;
 
 namespace Scaffold.Tests.UnitTests;
 
@@ -36,8 +39,38 @@ public class RectangularRcBeamCalculationTests
         inputs.Count.Should().Be(24);
         outputs.Count.Should().Be(18);
 
-        inputs[0].DisplayName.Should().Be("Profile");
+        inputs[0].DisplayName.Should().Be("500 × 800 mm");
 
         calc.Calculate();
+
+        calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0);
+    }
+
+    public class Foo
+    {
+        public decimal Value1 { get; set; }
+        public decimal Value2 { get; set; }
+    }
+
+
+
+    [Fact]
+    public void Updated_FromUI_Ok()
+    {
+        var calc = new RectangularRcBeamCalculation();
+        calc.Calculate();
+
+        var profile = new CalcRectangularProfile();
+        profile.TryParse("800mm x 500mm");
+        calc.Profile = profile;
+
+        calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0, because: "result has not changed yet through the update method.");
+
+        Reader.Update(calc);
+
+        calc.rebarAsReqd.Value.Should().BeApproximately(551.5, 1.0, because: "result has not changed yet through the update method.");
+
+        var formulae = Reader.GetFormulae(calc).ToList();
+        formulae.Count.Should().Be(5);
     }
 }
