@@ -14,10 +14,11 @@ public class ImageFromSkSvg : ICalcImage
         byte[] bytes = Encoding.UTF8.GetBytes(svgText);
         MemoryStream stream = new MemoryStream(bytes);
         Svg.Load(stream);
-    } 
+    }
     public SKBitmap Bitmap => GetImage();
     public SKSvg Svg { get; } = new SKSvg();
-    public SKBitmap GetImage() {
+    public SKBitmap GetImage()
+    {
         var image = SKImage.FromPicture(Svg.Picture,
             new SKSizeI((int)Svg.CanvasSize.Width, (int)Svg.CanvasSize.Height));
         return SKBitmap.FromImage(image);
