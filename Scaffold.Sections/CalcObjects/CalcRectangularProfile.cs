@@ -3,29 +3,28 @@ using System.Linq;
 using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using OasysUnits;
+using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.CalcObjects
 {
-    public class CalcRectangularProfile : ICalcValue, IRectangle
+    public class CalcRectangularProfile : Rectangle, ICalcValue
     {
         public string DisplayName { get; set; }
         public string Symbol { get; set; }
         public CalcStatus Status { get; set; }
-        public Length Width { get; set; }
-        public Length Height { get; set; }
-        public string Description { get; }
 
-        public CalcRectangularProfile()
+        public CalcRectangularProfile() : base(Length.Zero, Length.Zero) { }
+
+        public CalcRectangularProfile(Length width, Length height) : base(width, height)
         {
+            DisplayName = Description;
         }
 
-        public CalcRectangularProfile(Length width, Length height)
+        public CalcRectangularProfile(CalcLength width, CalcLength height) : base(width, height)
         {
-            Width = width;
-            Height = height;
-            Description = new Rectangle(Width, Height).Description;
+            DisplayName = Description;
         }
 
         public bool TryParse(string strValue)
@@ -35,7 +34,6 @@ namespace Scaffold.Core.CalcObjects
                 IRectangle profile = strValue.FromJson<IRectangle>();
                 Height = profile.Height;
                 Width = profile.Width;
-            Description = new Rectangle(Width, Height).Description;
                 return true;
             }
             catch { }
