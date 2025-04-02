@@ -11,7 +11,7 @@ using Scaffold.Core.Interfaces;
 namespace Scaffold.Core;
 
 [CalculationMetadata("Rectangular profile")]
-public class RectangularProfile : ICalculation
+public class RectangularProfileCalculation : ICalculation
 {
     public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
@@ -23,7 +23,7 @@ public class RectangularProfile : ICalculation
 
     [OutputCalcValue] public CalcProfile Profile { get; set; }
 
-    public RectangularProfile()
+    public RectangularProfileCalculation()
     {
         Width = new CalcLength(new Length(500, LengthUnit.Millimeter), "Width");
         Height = new CalcLength(new Length(800, LengthUnit.Millimeter), "Height");
