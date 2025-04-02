@@ -79,6 +79,7 @@ public class ConcreteSectionCalculation : ICalculation
     {
         Calculate();
         (StringBuilder sb, LengthUnit unit) = DrawSection.BeginSvg(Section);
+        sb = DrawSection.AddRoundedRectangle(sb, Section, unit);
         sb = DrawSection.AddCircles(sb, Section.Rebars, unit);
         return DrawSection.EndSvg(sb);
     }

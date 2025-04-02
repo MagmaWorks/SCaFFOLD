@@ -74,6 +74,23 @@ namespace Scaffold.Core.Utility
             return svg;
         }
 
+        internal static StringBuilder AddRoundedRectangle(StringBuilder svg, ConcreteSection concreteSection,
+            LengthUnit unit, string stroke = "#9EA2AC")
+        {
+            if (concreteSection.Profile is not Rectangle profile)
+            {
+                return svg;
+            }
+
+            double x = profile.Width.As(unit) / 2 * -1 + concreteSection.Cover.As(unit) - concreteSection.Link.Diameter.As(unit) / 2;
+            double y = profile.Height.As(unit) / 2 * -1 + concreteSection.Cover.As(unit) - concreteSection.Link.Diameter.As(unit) / 2;
+            double r = concreteSection.Link.Diameter.As(unit) * 2;
+            double link = concreteSection.Link.Diameter.As(unit);
+            svg.AppendLine($"<rect x=\"{x}\" y=\"{y}\" width=\"{x * -2}\" height=\"{y * -2}\" rx=\"{r}\" ");
+            svg.AppendLine($"fill=\"none\" stroke=\"{stroke}\" stroke-width=\"{link}\" />");
+            return svg;
+        }
+
         private static SKPoint[] ConvertPoints(ILocalPolyline2d polyline)
         {
             var pts = new SKPoint[polyline.Points.Count];

@@ -38,5 +38,6 @@ public class ConcreteSectionCalculationTests
         outputs.Count.Should().Be(1);
 
         calc.Calculate();
+        calc.GetFormulae();
     }
 }
