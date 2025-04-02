@@ -104,7 +104,7 @@ public class RectangularRcBeamCalculation : ICalculation
 
     [OutputCalcValue] public CalcDouble rebarMaxArea { get; }
 
-    List<Formula> Expressions { get; set; }
+    List<IFormula> Expressions { get; set; }
 
     public RectangularRcBeamCalculation()
     {
@@ -164,9 +164,9 @@ public class RectangularRcBeamCalculation : ICalculation
             throw new ArgumentException("Calculation only supports rectangular profiles");
         }
 
-        Expressions = new List<Formula>
+        Expressions = new List<IFormula>
         {
-            new()
+            new Formula()
             {
                 Narrative = "Beam calculations to BS EN 1992-1-1 2004. Currently in beta so check thoroughly!",
             }
@@ -360,8 +360,7 @@ public class RectangularRcBeamCalculation : ICalculation
 
     public IList<IFormula> GetFormulae()
     {
-        // todo
-        return new List<IFormula>();
+        return Expressions;
     }
 
     private static Tuple<double, double> calcBarSizeAndDia(double area)
