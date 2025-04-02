@@ -47,6 +47,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Scaffold.Core" Version="0.12.0-preview.221" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
   </ItemGroup>
   </Project>
