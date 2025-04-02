@@ -7,13 +7,15 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.CalcObjects
 {
-    public class CalcSection : ICalcValue, ISection
+    public class CalcSection : Section, ICalcValue
     {
         public string DisplayName { get; set; }
         public string Symbol { get; set; }
         public CalcStatus Status { get; set; }
-        public IMaterial Material => throw new System.NotImplementedException();
-        public IProfile Profile => throw new System.NotImplementedException();
+
+        public CalcSection(IProfile profile, IMaterial material) : base(profile, material)
+        {
+        }
 
         public bool TryParse(string strValue)
         {
@@ -23,7 +25,7 @@ namespace Scaffold.Core.CalcObjects
                 DisplayName = calcStandard.DisplayName;
                 Symbol = calcStandard.Symbol;
                 Status = calcStandard.Status;
-         
+
                 return true;
             }
             catch

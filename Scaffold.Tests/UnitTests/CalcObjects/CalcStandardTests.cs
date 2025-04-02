@@ -12,7 +12,7 @@ namespace Scaffold.Tests.UnitTests.CalcObjects
             // Arrange
             var standard = new CalcStandard();
             string json =
-                "{\r\n  \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n  \"DisplayName\": \"A\",\r\n  \"Symbol\": \"A\",\r\n  \"Status\": \"None\",\r\n  \"Body\": \"EN\",\r\n  \"Title\": \"My favorite standard\"\r\n}";
+                "{\r\n  \"DisplayName\": \"A\",\r\n  \"Symbol\": \"A\",\r\n  \"Status\": \"None\",\r\n  \"Body\": \"EN\",\r\n  \"Title\": \"My favorite standard\"\r\n}";
 
             // Act & Assert
             Assert.False(standard.TryParse("invalid"));

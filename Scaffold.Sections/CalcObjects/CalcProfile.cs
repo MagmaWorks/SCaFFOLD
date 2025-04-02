@@ -6,7 +6,7 @@ namespace Scaffold.Core.CalcObjects
 {
     public class CalcProfile : ICalcValue, IProfile
     {
-        public string DisplayName { get; set; }
+        public string DisplayName { get => Description; set => Description = value; }
         public string Symbol { get; set; }
         public CalcStatus Status { get; set; }
         public string Description { get; set; }
@@ -14,7 +14,6 @@ namespace Scaffold.Core.CalcObjects
         public CalcProfile(string description)
         {
             Description = description;
-            DisplayName = description;
         }
 
         public bool TryParse(string description)
@@ -25,7 +24,6 @@ namespace Scaffold.Core.CalcObjects
             }
 
             Description = description;
-            DisplayName = description;
             return true;
         }
 

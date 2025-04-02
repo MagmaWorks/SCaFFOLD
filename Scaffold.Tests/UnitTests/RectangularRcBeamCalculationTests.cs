@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using OasysUnits.Units;
 using OasysUnits;
+using OasysUnits.Units;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcObjects;
@@ -39,7 +39,7 @@ public class RectangularRcBeamCalculationTests
         inputs.Count.Should().Be(24);
         outputs.Count.Should().Be(18);
 
-        inputs[0].DisplayName.Should().Be("Profile");
+        inputs[0].DisplayName.Should().Be("500 × 800 mm");
 
         calc.Calculate();
     }
