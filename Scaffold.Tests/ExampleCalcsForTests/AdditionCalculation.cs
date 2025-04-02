@@ -38,8 +38,20 @@ public class AdditionCalculation : ICalculation
         var keyImage = new SKBitmap(400, 400);
         using (var canvas = new SKCanvas(keyImage))
         {
-            var paintText = new SKPaint { TextSize = 25, TextAlign = SKTextAlign.Left, Color = SKColors.Black };
-            canvas.DrawText("Drawn from SKBitmap", 25, 25, paintText);
+            //var paintText = new SKPaint { TextSize = 25, TextAlign = SKTextAlign.Left, Color = SKColors.Black };
+            //canvas.DrawText("Drawn from SKBitmap", 25, 25, paintText);
+
+            var font = new SKFont()
+            {
+                Size = 25
+            };
+
+            var paint = new SKPaint()
+            {
+                Color = SKColors.Black
+            };
+
+            canvas.DrawText("Drawn from SKBitmap", 25, 25, SKTextAlign.Left, font, paint);
         }
 
         var list = new List<IFormula>
