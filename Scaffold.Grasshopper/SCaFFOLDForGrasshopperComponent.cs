@@ -29,7 +29,7 @@ namespace SCaFFOLDForGrasshopper
             "Test calc in GH.",
             "Magma Works", "SCaFFOLD")
         {
-            embeddedCalc = new ConcreteCreepAndShrinkage();
+            embeddedCalc = new TestCalculation();
             inputs = reader.GetInputs(embeddedCalc);
             outputs = reader.GetOutputs(embeddedCalc);
         }
@@ -45,13 +45,19 @@ namespace SCaFFOLDForGrasshopper
             // to import lists or trees of values, modify the ParamAccess flag.
             if (embeddedCalc == null)
             {
-                embeddedCalc = new ConcreteCreepAndShrinkage();
+                embeddedCalc = new TestCalculation();
                 inputs = reader.GetInputs(embeddedCalc);
             }
 
             foreach (var item in inputs)
             {
-                pManager.AddNumberParameter(item.DisplayName, item.Symbol, "SCaFFOLD calc", GH_ParamAccess.item);
+                string unit = "";
+                if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
+                {
+                    unit = ((ICalcQuantity)item).Quantity.Unit.ToString();
+                }
+
+                pManager.AddNumberParameter(item.DisplayName + " " + unit, item.Symbol + " " + unit, "SCaFFOLD calc", GH_ParamAccess.item);
             }
 
             // If you want to change properties of certain parameters, 
@@ -91,6 +97,10 @@ namespace SCaFFOLDForGrasshopper
                 if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
                 {
                     (item as ICalcQuantity).TryParse(inputVal.ToString());
+                }
+                else
+                {
+                    (item as ICalcValue).TryParse(inputVal.ToString());
                 }
             }
 
