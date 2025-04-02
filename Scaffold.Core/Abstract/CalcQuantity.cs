@@ -71,7 +71,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     {
         try
         {
-            IQuantity quantity = OasysUnits.Quantity.Parse(CultureInfo.InvariantCulture, Quantity.QuantityInfo.ValueType, strValue);
+            IQuantity quantity = OasysUnits.Quantity.Parse(CultureInfo.InvariantCulture, _quantity.QuantityInfo.ValueType, strValue);
             _quantity = (T)quantity;
             return true;
         }

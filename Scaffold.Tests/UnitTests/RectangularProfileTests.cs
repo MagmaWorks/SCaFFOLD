@@ -10,12 +10,12 @@ public class RectangularProfileTests
 {
     private CalculationReader Reader { get; } = new();
     private const string TypeName = "Rectangular profile";
-    private const string Title = "Rectangular Profile";
+    private const string Title = "Rectangular Profile Calculation";
 
     [Fact]
     public void UnreadCalculation_Ok()
     {
-        var calc = new RectangularProfile();
+        var calc = new RectangularProfileCalculation();
         calc.CalculationName.Should().BeNull();
         calc.ReferenceName.Should().BeNull();
     }
@@ -23,7 +23,7 @@ public class RectangularProfileTests
     [Fact]
     public void Default_Read_Ok()
     {
-        var calc = new RectangularProfile();
+        var calc = new RectangularProfileCalculation();
 
         var metadata = Reader.GetMetadata(calc);
         var inputs = Reader.GetInputs(calc);
@@ -47,7 +47,7 @@ public class RectangularProfileTests
     [Fact]
     public void Updated_FromUI_Ok()
     {
-        var calc = new RectangularProfile
+        var calc = new RectangularProfileCalculation
         {
             Width = { Quantity = new Length(800, LengthUnit.Millimeter) },
             Height = { Quantity = new Length(500, LengthUnit.Millimeter) }

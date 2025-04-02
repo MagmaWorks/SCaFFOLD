@@ -1,6 +1,9 @@
 ﻿using FluentAssertions;
+using OasysUnits.Units;
+using OasysUnits;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcObjects;
 
 namespace Scaffold.Tests.UnitTests;
 
@@ -39,5 +42,28 @@ public class RectangularRcBeamCalculationTests
         inputs[0].DisplayName.Should().Be("Profile");
 
         calc.Calculate();
+    }
+
+    [Fact]
+    public void Updated_FromUI_Ok()
+    {
+        var profile = new CalcRectangularProfile();
+        profile.TryParse("500mm x 800mm");
+
+        var calc = new RectangularRcBeamCalculation
+        {
+            Profile = profile
+        };
+
+        //calc.bendingMom.Should()
+        //    .Be("500 × 800 mm", because: "result has not changed yet through the update method.");
+
+        //Reader.Update(calc);
+
+        //calc.bendingMom.Should()
+        //    .Be("800 × 500 mm", because: "result has not changed yet through the update method.");
+
+        //var formulae = Reader.GetFormulae(calc).ToList();
+        //formulae.Count.Should().Be(0);
     }
 }
