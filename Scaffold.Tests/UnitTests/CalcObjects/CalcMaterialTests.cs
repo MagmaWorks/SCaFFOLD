@@ -23,7 +23,7 @@ namespace Scaffold.Tests.UnitTests.CalcObjects
             };
 
             const string json =
-                "{\r\n  \"$type\": \"Scaffold.Core.CalcObjects.CalcMaterial, Scaffold.Sections\",\r\n  \"DisplayName\": \"Foo\",\r\n  \"Symbol\": \"M\",\r\n  \"Status\": \"Fail\",\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"DisplayName\": null,\r\n    \"Symbol\": null,\r\n    \"Status\": \"None\",\r\n    \"Body\": \"EN\",\r\n    \"Title\": null\r\n  },\r\n  \"Type\": \"Concrete\"\r\n}";
+                "{\r\n  \"DisplayName\": \"Foo\",\r\n  \"Symbol\": \"M\",\r\n  \"Status\": \"Fail\",\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"DisplayName\": null,\r\n    \"Symbol\": null,\r\n    \"Status\": \"None\",\r\n    \"Body\": \"EN\",\r\n    \"Title\": null\r\n  },\r\n  \"Type\": \"Concrete\"\r\n}";
 
             // Act & Assert
             Assert.False(material.TryParse("invalid"));
@@ -51,7 +51,7 @@ namespace Scaffold.Tests.UnitTests.CalcObjects
             };
 
             const string json =
-                "{\r\n  \"$type\": \"Scaffold.Core.CalcObjects.CalcMaterial, Scaffold.Sections\",\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"Body\": \"EN\"  },\r\n  \"Type\": \"Concrete\"\r\n}";
+                "{\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"Body\": \"EN\"  },\r\n  \"Type\": \"Concrete\"\r\n}";
 
             // Act & Assert
             Assert.False(material.TryParse("invalid"));
