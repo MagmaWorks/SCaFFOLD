@@ -128,7 +128,7 @@ public class RectangularRcBeamCalculation : ICalculation
         hAgg = new CalcDouble(20, "Maximum aggregate size", "h_{agg}", "mm");
         monolithicSimpleSupportFactor = new CalcDouble(0.25, "Monolithic simple support moment factor", @"\beta_1", "");
         rebarCharYieldStr =
-            new CalcDouble(500, "Characteristic yield strength for reinforcing steel", "f_yk", "N/mm^2");
+            new CalcDouble(500, "Characteristic yield strength for reinforcing steel", "f_yk", "N/mm²");
         rebarPartialFactor = new CalcDouble(1.15, "Partial factor for reinforcing steel", @"\gamma_s", "");
         TopCover = new CalcDouble(35, "Top cover", "c_{top}", "mm");
         BottomCover = new CalcDouble(35, "Bottom cover", "c_{btm}", "mm");
@@ -137,24 +137,24 @@ public class RectangularRcBeamCalculation : ICalculation
         sidesExposed = new CalcDouble(3, "Sides exposed", "", "No.");
         minWidth = new CalcDouble(120, "Minimum width", "b_{min}", "mm");
 
-        charCompStr = new CalcDouble(35, "Characteristic compressive cylinder strength", "f_{ck}", "N/mm^2");
-        meanCompStr = new CalcDouble(0, "Mean compressive strength", "f_{cm}", "N/mm^2");
-        meanAxialTenStr = new CalcDouble(0.3, "Mean axial tensile strength", "f_{ctm}", "N/mm^2");
-        secModElasticicity = new CalcDouble(22, "Secant modulus of elasticity of concrete", "E_{cm}", "kN/mm^2");
+        charCompStr = new CalcDouble(35, "Characteristic compressive cylinder strength", "f_{ck}", "N/mm²");
+        meanCompStr = new CalcDouble(0, "Mean compressive strength", "f_{cm}", "N/mm²");
+        meanAxialTenStr = new CalcDouble(0.3, "Mean axial tensile strength", "f_{ctm}", "N/mm²");
+        secModElasticicity = new CalcDouble(22, "Secant modulus of elasticity of concrete", "E_{cm}", "kN/mm²");
         k2 = new CalcDouble(0, "Coefficient k2", "k_2", "");
         k4 = new CalcDouble(0, "Coefficient k4", "k_4", "");
-        desCompStrConc = new CalcDouble(0, "Design compressive strength", "f_{cd}", "N/mm^2");
-        desCompStrConcw = new CalcDouble(0, "Strength of concrete cracked in shear", "f_{cwd}", "N/mm^2");
-        rebarDesYieldStr = new CalcDouble(0, "Design yield strength for reinforcing steel", "f_{yd}", "N/mm^2");
+        desCompStrConc = new CalcDouble(0, "Design compressive strength", "f_{cd}", "N/mm²");
+        desCompStrConcw = new CalcDouble(0, "Strength of concrete cracked in shear", "f_{cwd}", "N/mm²");
+        rebarDesYieldStr = new CalcDouble(0, "Design yield strength for reinforcing steel", "f_{yd}", "N/mm²");
         effDepth = new CalcDouble(0, "Effective depth", "d", "mm");
         redistRatio = new CalcDouble(0, "Redistribution ratio", "K", "");
         redistRatio2 = new CalcDouble(0, "Redistribution ratio limit", "K'", "");
         leverArm = new CalcDouble(0, "Lever arm", "z", "mm");
         naDepth = new CalcDouble(0, "Neutral axis depth", "x", "mm");
-        rebarAsReqd = new CalcDouble(0, "Tension reinforcement required", "A_{s,reqd}", "mm^2");
-        rebarAsProv = new CalcDouble(0, "Tension reinforcement provided", "A_{s,prov}", "mm^2");
-        rebarMinArea = new CalcDouble(0, "Minimum tension reinforcement", "A_{s,min}", "mm^2");
-        rebarMaxArea = new CalcDouble(0, "Maximum tension reinforcement", "A_{s,max}", "mm^2");
+        rebarAsReqd = new CalcDouble(0, "Tension reinforcement required", "A_{s,reqd}", "mm²");
+        rebarAsProv = new CalcDouble(0, "Tension reinforcement provided", "A_{s,prov}", "mm²");
+        rebarMinArea = new CalcDouble(0, "Minimum tension reinforcement", "A_{s,min}", "mm²");
+        rebarMaxArea = new CalcDouble(0, "Maximum tension reinforcement", "A_{s,max}", "mm²");
     }
 
     public void Calculate()
@@ -208,7 +208,7 @@ public class RectangularRcBeamCalculation : ICalculation
         expression.Add(effDepth.Symbol + @" = h - c - \phi_{link} - \phi_{bar}/2 = " + Profile.Height.Value + " - " +
                        BottomCover.Value + " - 10 - 32/2 = " + effDepth.Value + " mm");
         expression.Add(redistRatio.Symbol + @" = \frac{ " + bendingMom.Symbol + "}{" + Profile.Width.Unit +
-                       effDepth.Symbol + "^2f_{ck}} = " + Math.Round(redistRatio.Value, 3));
+                       effDepth.Symbol + "²f_{ck}} = " + Math.Round(redistRatio.Value, 3));
         expression.Add(redistRatio2.Symbol + @" = " + effStrFac.Symbol + @" \frac{" + compStrCoeff.Symbol + "}{" +
                        partialFacConc.Symbol + k2.Symbol + "}" + effCompZoneHtFac.Symbol
                        + @"\frac{" + delta.Symbol + "- " + k1.Symbol + "}{" + k2.Symbol + @"}\left(1 -" +
@@ -259,14 +259,14 @@ public class RectangularRcBeamCalculation : ICalculation
                            Math.Round(val0) + "," + Math.Round(val1) + ") = " + Math.Round(leverArm.Value) + " mm");
             expression.Add(naDepth.Symbol + @" = \frac{2(" + effDepth.Symbol + "-" + leverArm.Symbol + ")}{" +
                            effCompZoneHtFac.Symbol + "} = " + Math.Round(naDepth.Value) + " mm");
-            expression.Add("M' = " + Profile.Width.Unit + effDepth.Symbol + "^2" + charCompStr.Symbol + "(" +
+            expression.Add("M' = " + Profile.Width.Unit + effDepth.Symbol + "²" + charCompStr.Symbol + "(" +
                            redistRatio.Symbol + " - " + redistRatio2.Symbol + ") = " + Math.Round(Mp, 1) + "kNm");
             expression.Add("d_2 = " + TopCover.Symbol + @"\phi_{link} + \phi_{bar/2} = " + d2 + "mm");
             expression.Add(rebarAsReqd.Symbol + @"= \frac{" + redistRatio2.Symbol + charCompStr.Symbol +
-                           Profile.Width.Unit + effDepth.Symbol + "^2}{" + rebarDesYieldStr.Symbol + leverArm.Symbol +
+                           Profile.Width.Unit + effDepth.Symbol + "²}{" + rebarDesYieldStr.Symbol + leverArm.Symbol +
                            "} +"
                            + @"\frac{M'}{" + rebarDesYieldStr.Symbol + "(" + effDepth.Symbol + " - d2)} = " +
-                           Math.Round(rebarAsReqd.Value) + "mm^2");
+                           Math.Round(rebarAsReqd.Value) + "mm²");
         }
 
         Tuple<double, double> bottomBars = calcBarSizeAndDia(rebarAsReqd.Value);
