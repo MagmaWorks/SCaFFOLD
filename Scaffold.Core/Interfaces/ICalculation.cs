@@ -1,5 +1,3 @@
-using Scaffold.Core.Models;
-
 namespace Scaffold.Core.Interfaces;
 
 public interface ICalculation : ICalculationStatus

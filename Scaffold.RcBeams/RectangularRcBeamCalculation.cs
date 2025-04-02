@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MagmaWorks.Taxonomy.Profiles;
 using OasysUnits;
 using OasysUnits.Units;
@@ -168,7 +169,7 @@ public class RectangularRcBeamCalculation : ICalculation
         {
             new Formula()
             {
-                Narrative = "Beam calculations to BS EN 1992-1-1 2004. Currently in beta so check thoroughly!",
+                Markdown = "Beam calculations to BS EN 1992-1-1 2004. Currently in beta so check thoroughly!",
             }
         };
         List<string> expression = new();
@@ -192,7 +193,10 @@ public class RectangularRcBeamCalculation : ICalculation
         desCompStrConcw.Value = compStrCoeffw.Value * charCompStr.Value / partialFacConc.Value;
         rebarDesYieldStr.Value = rebarCharYieldStr.Value / rebarPartialFactor.Value;
 
-        Expressions.Add(new Formula() { Expression = expression, Reference = "Property calcs", Narrative = "" });
+        Expressions.Add(new Formula()
+        {
+            Markdown = "Property calcs"
+        });
         expression = new List<string>();
 
         // Lever arm
@@ -277,12 +281,14 @@ public class RectangularRcBeamCalculation : ICalculation
             rebarAsProv.Status = CalcStatus.None;
         expression.Add(string.Format("{0}={1}{2}", rebarAsProv.Symbol, Math.Round(rebarAsProv.Value, 0),
             rebarAsProv.Unit));
+
+        var markdown = String.Join(", ", expression.ToArray());
+        markdown += "cl. 6.1";
+        markdown += "Calculates the tension reinforcement required to resist bending.";
+        markdown = string.Format("{0}No. H{1} bars provided", bottomBars.Item1, bottomBars.Item2);
         Expressions.Add(new Formula()
         {
-            Expression = expression,
-            Reference = "cl. 6.1",
-            Narrative = "Calculates the tension reinforcement required to resist bending.",
-            Conclusion = string.Format("{0}No. H{1} bars provided", bottomBars.Item1, bottomBars.Item2),
+            Markdown = markdown,
             Status = rebarAsProv.Status
         });
 
@@ -301,24 +307,26 @@ public class RectangularRcBeamCalculation : ICalculation
         if (rebarAsProv.Value >= rebarMinArea.Value)
         {
             expression.Add(string.Format(@"{0}>={1}", rebarAsProv.Symbol, rebarMinArea.Symbol));
+            markdown = String.Join(", ", expression.ToArray());
+            markdown += "equ. 9.1N";
+            markdown += "Check that provided reinforcement exceeds minimum";
+            markdown = "OK";
             Expressions.Add(new Formula()
             {
-                Expression = expression,
-                Reference = "equ. 9.1N",
-                Narrative = "Check that provided reinforcement exceeds minimum",
-                Conclusion = "OK",
+                Markdown = markdown,
                 Status = CalcStatus.Pass
             });
         }
         else
         {
             expression.Add(string.Format(@"{0}<{1}", rebarAsProv.Symbol, rebarMinArea.Symbol));
+            markdown = String.Join(", ", expression.ToArray());
+            markdown += "equ. 9.1N";
+            markdown += "Check that provided reinforcement exceeds minimum";
+            markdown = "Too little reinforcing steel";
             Expressions.Add(new Formula()
             {
-                Expression = expression,
-                Reference = "equ. 9.1N",
-                Narrative = "Check that provided reinforcement exceeds minimum",
-                Conclusion = "Too little reinforcing steel",
+                Markdown = markdown,
                 Status = CalcStatus.Fail
             });
         }
@@ -335,24 +343,26 @@ public class RectangularRcBeamCalculation : ICalculation
         if (rebarAsProv.Value <= rebarMaxArea.Value)
         {
             expression.Add(string.Format(@"{0}<={1}", rebarAsProv.Symbol, rebarMaxArea.Symbol));
+            markdown = String.Join(", ", expression.ToArray());
+            markdown += "cl. 9.2.1(3)";
+            markdown += "Check that provided reinforcement is less than maximum";
+            markdown = "OK";
             Expressions.Add(new Formula()
             {
-                Expression = expression,
-                Reference = "cl. 9.2.1(3)",
-                Narrative = "Check that provided reinforcement is less than maximum",
-                Conclusion = "OK",
+                Markdown = markdown,
                 Status = CalcStatus.Pass
             });
         }
         else
         {
             expression.Add(string.Format(@"{0}>{1}", rebarAsProv.Symbol, rebarMaxArea.Symbol));
+            markdown = String.Join(", ", expression.ToArray());
+            markdown += "cl. 9.2.1.1(3)";
+            markdown += "Check that provided reinforcement is less than maximum";
+            markdown = "Too much reinforcing steel";
             Expressions.Add(new Formula()
             {
-                Expression = expression,
-                Reference = "cl. 9.2.1.1(3)",
-                Narrative = "Check that provided reinforcement is less than maximum",
-                Conclusion = "Too much reinforcing steel",
+                Markdown = markdown,
                 Status = CalcStatus.Fail
             });
         }
