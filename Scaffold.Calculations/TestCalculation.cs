@@ -7,19 +7,19 @@ using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Calculations
 {
-    public class ConcreteCreepAndShrinkage : ICalculation
+    public class TestCalculation : ICalculation
     {
         public string ReferenceName { get; set; } = "";
-        public string CalculationName { get; set; } = "Concrete Creep and Shrinkage";
+        public string CalculationName { get; set; } = "Test Calculation";
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
-        [InputCalcValue(@"\varphi(t,t_0)", "Notional Creep Coefficient")]
-        public double NotionalCreepCoefficient { get; set; } = 0;
+        [InputCalcValue(@"D", "Multiplier")]
+        public double Multiplier { get; set; } = 0;
 
-        [InputCalcValue("OAI", "Oasys unit input")]
+        [InputCalcValue(@"F", "Force")]
         public CalcForce Force { get; set; } = new CalcForce(10, "Force", "F");
 
-        [OutputCalcValue("R", "Result")]
+        [OutputCalcValue(@"R", "Result")]
         public double Result { get; private set; } = 0;
 
         public IList<IFormula> GetFormulae()
@@ -29,7 +29,7 @@ namespace Scaffold.Calculations
 
         public void Calculate()
         {
-            Result = Force.Value * 2;
+            Result = Force.Value * Multiplier;
         }
     }
 }

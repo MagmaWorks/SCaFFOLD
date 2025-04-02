@@ -9,7 +9,7 @@ namespace Scaffold.Tests.UnitTests
         public void CreepAndShrinkageTest1()
         {
             var reader = new CalculationReader();
-            var calculation = new ConcreteCreepAndShrinkage();
+            var calculation = new TestCalculation();
             // Do stuff here
             calculation.Calculate();
 
