@@ -23,7 +23,7 @@ namespace Scaffold.Core.CalcObjects
                 DisplayName = calcStandard.DisplayName;
                 Symbol = calcStandard.Symbol;
                 Status = calcStandard.Status;
-         
+
                 return true;
             }
             catch

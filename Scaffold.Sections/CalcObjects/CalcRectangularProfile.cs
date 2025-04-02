@@ -35,7 +35,7 @@ namespace Scaffold.Core.CalcObjects
                 IRectangle profile = strValue.FromJson<IRectangle>();
                 Height = profile.Height;
                 Width = profile.Width;
-            Description = new Rectangle(Width, Height).Description;
+                Description = new Rectangle(Width, Height).Description;
                 return true;
             }
             catch { }
