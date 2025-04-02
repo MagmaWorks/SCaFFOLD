@@ -42,28 +42,35 @@ public class RectangularRcBeamCalculationTests
         inputs[0].DisplayName.Should().Be("500 × 800 mm");
 
         calc.Calculate();
+
+        calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0);
     }
+
+    public class Foo
+    {
+        public decimal Value1 { get; set; }
+        public decimal Value2 { get; set; }
+    }
+
+
 
     [Fact]
     public void Updated_FromUI_Ok()
     {
+        var calc = new RectangularRcBeamCalculation();
+        calc.Calculate();
+
         var profile = new CalcRectangularProfile();
-        profile.TryParse("500mm x 800mm");
+        profile.TryParse("800mm x 500mm");
+        calc.Profile = profile;
 
-        var calc = new RectangularRcBeamCalculation
-        {
-            Profile = profile
-        };
+        calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0, because: "result has not changed yet through the update method.");
 
-        //calc.bendingMom.Should()
-        //    .Be("500 × 800 mm", because: "result has not changed yet through the update method.");
+        Reader.Update(calc);
 
-        //Reader.Update(calc);
+        calc.rebarAsReqd.Value.Should().BeApproximately(551.5, 1.0, because: "result has not changed yet through the update method.");
 
-        //calc.bendingMom.Should()
-        //    .Be("800 × 500 mm", because: "result has not changed yet through the update method.");
-
-        //var formulae = Reader.GetFormulae(calc).ToList();
-        //formulae.Count.Should().Be(0);
+        var formulae = Reader.GetFormulae(calc).ToList();
+        formulae.Count.Should().Be(5);
     }
 }
