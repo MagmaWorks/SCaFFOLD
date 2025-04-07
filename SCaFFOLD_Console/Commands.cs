@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Scaffold.Core.Interfaces;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLD_Console
 {
@@ -53,7 +53,7 @@ namespace SCaFFOLD_Console
                 calc.Calculate();
                 DisplayResults(calc, "");
             }
-            
+
         }
 
 
@@ -68,8 +68,8 @@ namespace SCaFFOLD_Console
             else
             {
                 commands = new Dictionary<string, Action<ICalculation, string>>();
-                commands.Add("inputs", (c,s) => DisplayInputs(c,s));
-                commands.Add("results", (c,s) => DisplayResults(c,s));
+                commands.Add("inputs", (c, s) => DisplayInputs(c, s));
+                commands.Add("results", (c, s) => DisplayResults(c, s));
                 commands.Add("change", (c, s) => ChangeInput(c, s));
                 return commands;
             }

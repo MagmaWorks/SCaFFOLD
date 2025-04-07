@@ -38,7 +38,7 @@ while (true)
     catch
     {
         Console.WriteLine("Command not recognised");
-    }    
+    }
 }
 
 
