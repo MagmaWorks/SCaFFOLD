@@ -10,9 +10,9 @@ using OasysUnits;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
+using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
-using Scaffold.Core.Enums;
 
 namespace Scaffold.Calculations
 {
@@ -116,7 +116,7 @@ namespace Scaffold.Calculations
             var concProps = ConcProperties.ByGrade(concGrade.ValueAsString());
 
             charCompStr.Quantity = new Pressure(concProps.fck, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter);
-            meanCompStr.Quantity = new Pressure(concProps.fcm, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter); 
+            meanCompStr.Quantity = new Pressure(concProps.fcm, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter);
 
             _Ac = W * L;
             var tempW = W + W; var tempL = L + L;
