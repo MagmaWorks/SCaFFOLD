@@ -50,16 +50,6 @@ namespace Scaffold.Core.Utility
             return svg.ToString();
         }
 
-        internal static StringBuilder AddPath(StringBuilder svg, ILocalPolyline2d polyline,
-            string fill = "#DDDDDC", string stroke = "black")
-        {
-            var path = new SKPath();
-            path.AddPoly(ConvertPoints(polyline));
-            string svgPath = path.ToSvgPathData();
-            svg.AppendLine($"<path d=\"{svg}\" fill=\"{fill}\" stroke=\"{stroke}\"/>");
-            return svg;
-        }
-
         internal static StringBuilder AddCircles(StringBuilder svg, IList<ILongitudinalReinforcement> rebars,
             LengthUnit unit, string fill = "#464D5F")
         {
