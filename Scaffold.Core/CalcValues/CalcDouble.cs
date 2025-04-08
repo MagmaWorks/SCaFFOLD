@@ -15,26 +15,31 @@ public sealed class CalcDouble : CalcValue<double>
 
     public static bool operator >(CalcDouble value, CalcDouble other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value > other.Value;
     }
 
     public static bool operator <(CalcDouble value, CalcDouble other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value < other.Value;
     }
 
     public static bool operator >=(CalcDouble value, CalcDouble other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value >= other.Value;
     }
 
     public static bool operator <=(CalcDouble value, CalcDouble other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value <= other.Value;
     }
 
     public static bool operator >(CalcDouble value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value > other.Value;
     }
 
@@ -45,6 +50,7 @@ public sealed class CalcDouble : CalcValue<double>
 
     public static bool operator <(CalcDouble value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value < other.Value;
     }
 
@@ -55,6 +61,7 @@ public sealed class CalcDouble : CalcValue<double>
 
     public static bool operator >=(CalcDouble value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value >= other.Value;
     }
 
@@ -65,6 +72,7 @@ public sealed class CalcDouble : CalcValue<double>
 
     public static bool operator <=(CalcDouble value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value <= other.Value;
     }
 

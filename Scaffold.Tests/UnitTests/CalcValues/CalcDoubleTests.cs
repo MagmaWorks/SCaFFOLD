@@ -1,4 +1,5 @@
 ﻿using Scaffold.Core.CalcValues;
+using Scaffold.Core.Exceptions;
 
 namespace Scaffold.Tests.UnitTests.CalcValues
 {
@@ -240,6 +241,17 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Assert
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void UnitsAreNotTheSameExceptionTest()
+        {
+            // Arrange
+            var calcDouble1 = new CalcDouble(4.5, "l1", "L", "m");
+            var calcDouble2 = new CalcDouble(4.5, "l2", "L", "mm");
+
+            // Act & Assert
+            Assert.Throws<UnitsNotSameException>(() => calcDouble1 == calcDouble2); 
         }
 
         [Fact]
