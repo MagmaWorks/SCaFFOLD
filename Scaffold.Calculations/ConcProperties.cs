@@ -1,11 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Scaffold.Calculations
 {
@@ -54,7 +47,6 @@ namespace Scaffold.Calculations
         public double Epsilonc3 { get; private set; }
 
         public double Epsiloncu3 { get; private set; }
-
 
         private ConcProperties(
             double fck,
@@ -192,7 +184,5 @@ namespace Scaffold.Calculations
 
             return new ConcProperties(fck, fckcube, fcm, fctm, fctk005, fctk095, Ecm, Epsilonc1, Epsiloncu1, Epsilonc2, Epsiloncu2, n, Epsilonc3, Epsiloncu3);
         }
-
-
     }
 }

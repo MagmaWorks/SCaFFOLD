@@ -1,18 +1,11 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OasysUnits;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
-using Scaffold.Core.Models;
 
 namespace Scaffold.Calculations
 {
