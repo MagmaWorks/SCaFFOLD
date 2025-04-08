@@ -125,9 +125,9 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(4.5, 2, true)] 
-        [InlineData(2.0, 4, false)] 
-        [InlineData(4.0, 4, false)] 
+        [InlineData(4.5, 2, true)]
+        [InlineData(2.0, 4, false)]
+        [InlineData(4.0, 4, false)]
         public void GreaterThanCalcIntOperatorTest(double val1, int val2, bool expected)
         {
             // Arrange
@@ -159,9 +159,9 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(4.5, 2, false)] 
-        [InlineData(2.0, 4, true)] 
-        [InlineData(4, 4, false)] 
+        [InlineData(4.5, 2, false)]
+        [InlineData(2.0, 4, true)]
+        [InlineData(4, 4, false)]
         public void LessThanCalcIntOperatorTest(double val1, int val2, bool expected)
         {
             // Arrange
@@ -193,9 +193,9 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
-        [InlineData(4.5, 2, true)] 
-        [InlineData(2.0, 4, false)] 
-        [InlineData(4.0, 4, true)] 
+        [InlineData(4.5, 2, true)]
+        [InlineData(2.0, 4, false)]
+        [InlineData(4.0, 4, true)]
         public void GreaterThanOrEqualCalcIntOperatorTest(double val1, int val2, bool expected)
         {
             // Arrange
@@ -251,7 +251,7 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             var calcDouble2 = new CalcDouble(4.5, "l2", "L", "mm");
 
             // Act & Assert
-            Assert.Throws<UnitsNotSameException>(() => calcDouble1 == calcDouble2); 
+            Assert.Throws<UnitsNotSameException>(() => calcDouble1 == calcDouble2);
         }
 
         [Fact]
