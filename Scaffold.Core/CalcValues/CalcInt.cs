@@ -15,6 +15,7 @@ public sealed class CalcInt : CalcValue<int>
 
     public static bool operator >(CalcInt value, CalcInt other)
     {
+        value.Unit = other.Unit;
         return value.Value > other.Value;
     }
 
@@ -23,14 +24,64 @@ public sealed class CalcInt : CalcValue<int>
         return value.Value < other.Value;
     }
 
+    public static bool operator >(CalcInt value, CalcDouble other)
+    {
+        return value.Value > other.Value;
+    }
+
+    public static bool operator >(CalcInt value, double other)
+    {
+        return value.Value > other;
+    }
+
+    public static bool operator <(CalcInt value, CalcDouble other)
+    {
+        return value.Value < other.Value;
+    }
+
+    public static bool operator <(CalcInt value, double other)
+    {
+        return value.Value < other;
+    }
+
     public static bool operator >=(CalcInt value, CalcInt other)
     {
         return value.Value >= other.Value;
     }
 
+    public static bool operator >=(CalcInt value, int other)
+    {
+        return value.Value >= other;
+    }
+
     public static bool operator <=(CalcInt value, CalcInt other)
     {
         return value.Value <= other.Value;
+    }
+
+    public static bool operator <=(CalcInt value, int other)
+    {
+        return value.Value <= other;
+    }
+
+    public static bool operator >=(CalcInt value, CalcDouble other)
+    {
+        return value.Value >= other.Value;
+    }
+
+    public static bool operator >=(CalcInt value, double other)
+    {
+        return value.Value >= other;
+    }
+
+    public static bool operator <=(CalcInt value, CalcDouble other)
+    {
+        return value.Value <= other.Value;
+    }
+
+    public static bool operator <=(CalcInt value, double other)
+    {
+        return value.Value <= other;
     }
 
     public static CalcInt operator +(CalcInt x, CalcInt y)
@@ -60,5 +111,15 @@ public sealed class CalcInt : CalcValue<int>
     {
         (string name, string symbol, string _) = OperatorMetadataHelper(x, y, '/');
         return new CalcInt(x.Value / y.Value, name, symbol);
+    }
+
+    public static CalcInt operator *(CalcInt x, int y)
+    {
+        return new CalcInt(x.Value * y, x.DisplayName, x.Symbol, x.Unit);
+    }
+
+    public static CalcDouble operator /(CalcInt x, int y)
+    {
+        return new CalcDouble(x.Value / y, x.DisplayName, x.Symbol, x.Unit);
     }
 }
