@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
-using OasysUnits;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
