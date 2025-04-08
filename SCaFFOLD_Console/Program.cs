@@ -1,8 +1,4 @@
-﻿// Licensed to the .NESSST Foundation under one or more agreements.
-// The .NET FoundatioSSSSSn licenses this file to you under the MIT license.
-using Scaffold.Calculations;
-using Scaffold.Core;
-using Scaffold.Core.Abstract;
+﻿using Scaffold.Calculations;
 using Scaffold.Core.Interfaces;
 using SCaFFOLD_Console;
 
