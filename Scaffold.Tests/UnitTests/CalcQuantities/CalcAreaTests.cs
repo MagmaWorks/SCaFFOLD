@@ -99,6 +99,23 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            CalcArea result = calcArea1 * 2;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm²", result.Unit);
+            Assert.Equal("a1", result.DisplayName); 
+            Assert.Equal(4.5, calcArea1.Value);
+        }
+
+        [Fact]
         public void MultiplicationLengthOperatorTest()
         {
             // Arrange

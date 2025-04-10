@@ -23,14 +23,6 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         Unit = unit?.Trim();
     }
 
-    protected CalcValue(CalcValue<T> other)
-    {
-        Value = other.Value;
-        DisplayName = other.DisplayName;
-        Symbol = other.Symbol;
-        Unit = other.Unit;
-    }
-
     public static implicit operator T(CalcValue<T> value) => value.Value;
 
     public static bool operator ==(CalcValue<T> value, CalcValue<T> other)
