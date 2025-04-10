@@ -111,7 +111,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal(4.5 * 2, result.Value);
             Assert.Equal("A", result.Symbol);
             Assert.Equal("cm²", result.Unit);
-            Assert.Equal("a1", result.DisplayName); 
+            Assert.Equal("a1", result.DisplayName);
             Assert.Equal(4.5, calcArea.Value);
         }
 
