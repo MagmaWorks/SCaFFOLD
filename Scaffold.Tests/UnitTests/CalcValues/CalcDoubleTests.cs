@@ -526,6 +526,19 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Fact]
+        public void IntDivisionOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(4.5);
+
+            // Act
+            CalcDouble result = 2 / calcDouble;
+
+            // Assert
+            Assert.Equal(2 / 4.5, result.Value);
+        }
+
+        [Fact]
         public void DivisionSameUnitOperatorTest()
         {
             // Arrange
