@@ -58,4 +58,34 @@ public sealed class CalcArea : CalcQuantity<Area>
         (string name, string _, AreaUnit _) = OperatorMetadataHelper<AreaUnit>(x, y, '/');
         return new CalcDouble((Area)x.Quantity / (Area)y.Quantity, name, string.Empty);
     }
+
+    public static CalcArea operator +(CalcArea x, double y)
+    {
+        return new CalcArea(x.Value + y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcArea operator +(double x, CalcArea y)
+    {
+        return y + x;
+    }
+
+    public static CalcArea operator -(CalcArea x, double y)
+    {
+        return new CalcArea(x.Value - y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcArea operator *(CalcArea x, double y)
+    {
+        return new CalcArea(x.Value * y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcArea operator *(double x, CalcArea y)
+    {
+        return y * x;
+    }
+
+    public static CalcArea operator /(CalcArea x, double y)
+    {
+        return new CalcArea(x.Value / y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

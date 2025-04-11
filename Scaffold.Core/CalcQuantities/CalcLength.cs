@@ -69,4 +69,34 @@ public sealed class CalcLength : CalcQuantity<Length>
     {
         return y * x;
     }
+
+    public static CalcLength operator +(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value + y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLength operator +(double x, CalcLength y)
+    {
+        return y + x;
+    }
+
+    public static CalcLength operator -(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value - y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLength operator *(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value * y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLength operator *(double x, CalcLength y)
+    {
+        return y * x;
+    }
+
+    public static CalcLength operator /(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value / y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

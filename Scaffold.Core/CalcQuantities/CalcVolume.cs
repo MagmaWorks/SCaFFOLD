@@ -58,4 +58,34 @@ public sealed class CalcVolume : CalcQuantity<Volume>
         return new CalcArea(new Area(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantAreaUnit()), name, "");
     }
+
+    public static CalcVolume operator +(CalcVolume x, double y)
+    {
+        return new CalcVolume(x.Value + y, (VolumeUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcVolume operator +(double x, CalcVolume y)
+    {
+        return y + x;
+    }
+
+    public static CalcVolume operator -(CalcVolume x, double y)
+    {
+        return new CalcVolume(x.Value - y, (VolumeUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcVolume operator *(CalcVolume x, double y)
+    {
+        return new CalcVolume(x.Value * y, (VolumeUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcVolume operator *(double x, CalcVolume y)
+    {
+        return y * x;
+    }
+
+    public static CalcVolume operator /(CalcVolume x, double y)
+    {
+        return new CalcVolume(x.Value / y, (VolumeUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

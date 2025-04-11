@@ -57,4 +57,34 @@ public sealed class CalcLinearForce : CalcQuantity<ForcePerLength>
         (string name, string _, ForcePerLengthUnit _) = OperatorMetadataHelper<ForcePerLengthUnit>(x, y, '/');
         return new CalcDouble((ForcePerLength)x.Quantity / (ForcePerLength)y.Quantity, name, string.Empty);
     }
+
+    public static CalcLinearForce operator +(CalcLinearForce x, double y)
+    {
+        return new CalcLinearForce(x.Value + y, (ForcePerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLinearForce operator +(double x, CalcLinearForce y)
+    {
+        return y + x;
+    }
+
+    public static CalcLinearForce operator -(CalcLinearForce x, double y)
+    {
+        return new CalcLinearForce(x.Value - y, (ForcePerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLinearForce operator *(CalcLinearForce x, double y)
+    {
+        return new CalcLinearForce(x.Value * y, (ForcePerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLinearForce operator *(double x, CalcLinearForce y)
+    {
+        return y * x;
+    }
+
+    public static CalcLinearForce operator /(CalcLinearForce x, double y)
+    {
+        return new CalcLinearForce(x.Value / y, (ForcePerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

@@ -149,5 +149,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm", result.Unit);
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "a1", "A");
+
+            // Act
+            CalcVolume result = 2.0 + calcVolume;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm³", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcVolume.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "a1", "A");
+
+            // Act
+            CalcVolume result = calcVolume - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm³", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcVolume.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "a1", "A");
+
+            // Act
+            CalcVolume result = 2.0 * calcVolume;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm³", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcVolume.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcVolume = new CalcVolume(4.5, VolumeUnit.CubicCentimeter, "a1", "A");
+
+            // Act
+            CalcVolume result = calcVolume / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm³", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcVolume.Value);
+        }
     }
 }
