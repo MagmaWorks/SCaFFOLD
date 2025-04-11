@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using OasysUnits;
 using Scaffold.Core.Enums;
+using Scaffold.Core.Exceptions;
 using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
@@ -14,7 +15,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
         {
             if (_quantity != null && !value.Dimensions.Equals(_quantity.Dimensions))
             {
-                throw new ArgumentException("Use the same unit dude");
+                throw new UnitsNotSameException(_quantity, value);
             }
 
             _quantity = value;
