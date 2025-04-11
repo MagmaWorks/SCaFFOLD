@@ -343,6 +343,19 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Fact]
+        public void DoubleSubtractionOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(4.5);
+
+            // Act
+            CalcDouble result = calcDouble - 5.5;
+
+            // Assert
+            Assert.Equal(-1.0, result.Value);
+        }
+
+        [Fact]
         public void SubtractionSameUnitOperatorTest()
         {
             // Arrange
@@ -404,6 +417,19 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Fact]
+        public void MultiplicationIntOperatorTest()
+        {
+            // Arrange
+            var calcDouble2 = new CalcDouble(5.5);
+
+            // Act
+            CalcDouble result = 4 * calcDouble2;
+
+            // Assert
+            Assert.Equal(4 * 5.5, result.Value);
+        }
+
+        [Fact]
         public void MultiplicationSameUnitOperatorTest()
         {
             // Arrange
@@ -461,16 +487,42 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Fact]
-        public void DivisionDoubleOperatorTest()
+        public void DoubleDivisionOperatorTest()
         {
             // Arrange
-            var calcDouble2 = new CalcDouble(5.5);
+            var calcDouble = new CalcDouble(4.5);
 
             // Act
-            CalcDouble result = 4.5 / calcDouble2;
+            CalcDouble result = calcDouble / 5.5;
 
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(5.5);
+
+            // Act
+            CalcDouble result = 4.5 / calcDouble;
+
+            // Assert
+            Assert.Equal(4.5 / 5.5, result.Value);
+        }
+
+        [Fact]
+        public void DivisionIntOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(4.5);
+
+            // Act
+            CalcDouble result = calcDouble / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
         }
 
         [Fact]
@@ -514,6 +566,54 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal("L", result.Symbol);
             Assert.True(string.IsNullOrEmpty(result.Unit));
             Assert.Equal("l2 / l1", result.DisplayName); // note: using Thin Space \u2009
+        }
+
+        [Fact]
+        public void LargerThanIntOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(4.5, "l1", "L", "m");
+
+            // Act
+            // Assert
+            Assert.True(calcDouble > 4);
+            Assert.False(calcDouble > 5);
+        }
+
+        [Fact]
+        public void LargerOrEqualThanIntOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(4.0, "l1", "L", "m");
+
+            // Act
+            // Assert
+            Assert.True(calcDouble >= 4);
+            Assert.False(calcDouble >= 5);
+        }
+
+        [Fact]
+        public void SmallerThanIntOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(4.5, "l1", "L", "m");
+
+            // Act
+            // Assert
+            Assert.False(calcDouble < 4);
+            Assert.True(calcDouble < 5);
+        }
+
+        [Fact]
+        public void SmallerOrEqualThanIntOperatorTest()
+        {
+            // Arrange
+            var calcDouble = new CalcDouble(5.0, "l1", "L", "m");
+
+            // Act
+            // Assert
+            Assert.False(calcDouble <= 4);
+            Assert.True(calcDouble <= 5);
         }
     }
 }
