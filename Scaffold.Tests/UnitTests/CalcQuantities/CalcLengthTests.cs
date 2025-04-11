@@ -147,5 +147,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("ε", result.Unit);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "a1", "A");
+
+            // Act
+            CalcLength result = 2.0 + calcLength;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLength.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "a1", "A");
+
+            // Act
+            CalcLength result = calcLength - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLength.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "a1", "A");
+
+            // Act
+            CalcLength result = 2.0 * calcLength;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLength.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "a1", "A");
+
+            // Act
+            CalcLength result = calcLength / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLength.Value);
+        }
     }
 }

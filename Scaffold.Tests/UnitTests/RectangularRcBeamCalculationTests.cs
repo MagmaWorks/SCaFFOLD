@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using OasysUnits;
-using OasysUnits.Units;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcObjects;

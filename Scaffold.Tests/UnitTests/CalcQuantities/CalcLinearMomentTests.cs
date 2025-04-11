@@ -114,5 +114,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearMoment = new CalcLinearMoment(4.5, MomentPerLengthUnit.KilonewtonMeterPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearMoment result = 2.0 + calcLinearMoment;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearMoment.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearMoment = new CalcLinearMoment(4.5, MomentPerLengthUnit.KilonewtonMeterPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearMoment result = calcLinearMoment - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearMoment.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearMoment = new CalcLinearMoment(4.5, MomentPerLengthUnit.KilonewtonMeterPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearMoment result = 2.0 * calcLinearMoment;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearMoment.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearMoment = new CalcLinearMoment(4.5, MomentPerLengthUnit.KilonewtonMeterPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearMoment result = calcLinearMoment / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearMoment.Value);
+        }
     }
 }

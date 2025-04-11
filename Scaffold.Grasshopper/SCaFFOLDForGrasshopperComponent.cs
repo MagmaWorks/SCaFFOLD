@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
-using OasysUnits;
 using Scaffold.Calculations;
 using Scaffold.Core.Abstract;
-using Scaffold.Core.CalcQuantities;
-using Scaffold.Core.CalcValues;
 using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLDForGrasshopper

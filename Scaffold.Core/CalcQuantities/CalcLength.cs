@@ -1,7 +1,6 @@
 ﻿using OasysUnits;
 using OasysUnits.Units;
 using Scaffold.Core.Abstract;
-using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcQuantities;
@@ -69,5 +68,35 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcLength operator *(CalcLength x, CalcStrain y)
     {
         return y * x;
+    }
+
+    public static CalcLength operator +(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value + y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLength operator +(double x, CalcLength y)
+    {
+        return y + x;
+    }
+
+    public static CalcLength operator -(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value - y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLength operator *(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value * y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLength operator *(double x, CalcLength y)
+    {
+        return y * x;
+    }
+
+    public static CalcLength operator /(CalcLength x, double y)
+    {
+        return new CalcLength(x.Value / y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
 }

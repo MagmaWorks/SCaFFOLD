@@ -15,22 +15,80 @@ public sealed class CalcInt : CalcValue<int>
 
     public static bool operator >(CalcInt value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value > other.Value;
     }
 
     public static bool operator <(CalcInt value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value < other.Value;
+    }
+
+    public static bool operator >(CalcInt value, CalcDouble other)
+    {
+        CheckUnitsAreTheSame(value, other);
+        return value.Value > other.Value;
+    }
+
+    public static bool operator >(CalcInt value, double other)
+    {
+        return value.Value > other;
+    }
+
+    public static bool operator <(CalcInt value, CalcDouble other)
+    {
+        CheckUnitsAreTheSame(value, other);
+        return value.Value < other.Value;
+    }
+
+    public static bool operator <(CalcInt value, double other)
+    {
+        return value.Value < other;
     }
 
     public static bool operator >=(CalcInt value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value >= other.Value;
+    }
+
+    public static bool operator >=(CalcInt value, int other)
+    {
+        return value.Value >= other;
     }
 
     public static bool operator <=(CalcInt value, CalcInt other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Value <= other.Value;
+    }
+
+    public static bool operator <=(CalcInt value, int other)
+    {
+        return value.Value <= other;
+    }
+
+    public static bool operator >=(CalcInt value, CalcDouble other)
+    {
+        CheckUnitsAreTheSame(value, other);
+        return value.Value >= other.Value;
+    }
+
+    public static bool operator >=(CalcInt value, double other)
+    {
+        return value.Value >= other;
+    }
+
+    public static bool operator <=(CalcInt value, CalcDouble other)
+    {
+        CheckUnitsAreTheSame(value, other);
+        return value.Value <= other.Value;
+    }
+
+    public static bool operator <=(CalcInt value, double other)
+    {
+        return value.Value <= other;
     }
 
     public static CalcInt operator +(CalcInt x, CalcInt y)
@@ -60,5 +118,20 @@ public sealed class CalcInt : CalcValue<int>
     {
         (string name, string symbol, string _) = OperatorMetadataHelper(x, y, '/');
         return new CalcInt(x.Value / y.Value, name, symbol);
+    }
+
+    public static CalcInt operator *(CalcInt x, int y)
+    {
+        return new CalcInt(x.Value * y, x.DisplayName, x.Symbol, x.Unit);
+    }
+
+    public static CalcInt operator *(int x, CalcInt y)
+    {
+        return y * x;
+    }
+
+    public static CalcInt operator /(CalcInt x, int y)
+    {
+        return new CalcInt(x.Value / y, x.DisplayName, x.Symbol, x.Unit);
     }
 }
