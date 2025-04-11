@@ -72,6 +72,52 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
+        [InlineData(4, 4, true)]
+        [InlineData(4, 5, false)]
+        public void EqualIntOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt1 == val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4.0, true)]
+        [InlineData(4, 4.5, false)]
+        public void EqualCalcDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt == calcDouble;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4.0, true)]
+        [InlineData(4, 4.5, false)]
+        public void EqualDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt == val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
         [InlineData(4, 4, false)]
         [InlineData(4, 5, true)]
         public void NotEqualOperatorTest(int val1, int val2, bool expected)
@@ -82,6 +128,53 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Act
             bool result = calcInt1 != calcInt2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, false)]
+        [InlineData(4, 5, true)]
+        public void NotEqualIntOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+            var calcInt2 = new CalcInt(val2);
+
+            // Act
+            bool result = calcInt1 != calcInt2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4.0, false)]
+        [InlineData(4, 4.5, true)]
+        public void NotEqualCalcDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt1 != calcDouble;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4.0, false)]
+        [InlineData(4, 4.5, true)]
+        public void NotEqualDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt1 != val2;
 
             // Assert
             Assert.Equal(expected, result);
@@ -105,6 +198,56 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Theory]
+        [InlineData(5, 2, true)] // 5 > 2
+        [InlineData(2, 5, false)] // 2 > 5
+        [InlineData(5, 5, false)] // 5 > 5
+        public void GreaterThanIntOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt1 > val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(5, 2.0, true)] // 5 > 2
+        [InlineData(2, 5.0, false)] // 2 > 5
+        [InlineData(5, 5.0, false)] // 5 > 5
+        public void GreaterThanCalcDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt > calcDouble;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(5, 2.0, true)] // 5 > 2
+        [InlineData(2, 5.0, false)] // 2 > 5
+        [InlineData(5, 5.0, false)] // 5 > 5
+        public void GreaterThanDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt > val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
         [InlineData(5, 2, false)] // 5 < 2
         [InlineData(2, 5, true)] // 2 < 5
         [InlineData(5, 5, false)] // 5 < 5
@@ -116,6 +259,55 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Act
             bool result = calcInt1 < calcInt2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(5, 2, false)] // 5 < 2
+        [InlineData(2, 5, true)] // 2 < 5
+        [InlineData(5, 5, false)] // 5 < 5
+        public void LessThanIntOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt1 < val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(5, 2, false)] // 5 < 2
+        [InlineData(2, 5, true)] // 2 < 5
+        [InlineData(5, 5, false)] // 5 < 5
+        public void LessThanCalcDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt < calcDouble;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(5, 2.0, false)] // 5 < 2
+        [InlineData(2, 5.0, true)] // 2 < 5
+        [InlineData(5, 5.0, false)] // 5 < 5
+        public void LessThanDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt < val2;
 
             // Assert
             Assert.Equal(expected, result);
@@ -140,6 +332,55 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
         [Theory]
         [InlineData(4, 4, true)]
+        [InlineData(5, 4, true)]
+        [InlineData(4, 5, false)]
+        public void GreaterOrEqualIntOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt1 >= val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4.0, true)]
+        [InlineData(5, 4.0, true)]
+        [InlineData(4, 5.0, false)]
+        public void GreaterOrEqualCalcDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt >= calcDouble;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4.0, true)]
+        [InlineData(5, 4.0, true)]
+        [InlineData(4, 5.0, false)]
+        public void GreaterOrEqualDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt >= val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, true)]
         [InlineData(4, 5, true)]
         [InlineData(5, 4, false)]
         public void LessOrEqualOperatorTest(int val1, int val2, bool expected)
@@ -150,6 +391,55 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Act
             bool result = calcInt1 <= calcInt2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, true)]
+        [InlineData(4, 5, true)]
+        [InlineData(5, 4, false)]
+        public void LessOrEqualIntOperatorTest(int val1, int val2, bool expected)
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt1 <= val2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, true)]
+        [InlineData(4, 5, true)]
+        [InlineData(5, 4, false)]
+        public void LessOrEqualCalcDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+            var calcDouble = new CalcDouble(val2);
+
+            // Act
+            bool result = calcInt <= calcDouble;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4, 4, true)]
+        [InlineData(4, 5, true)]
+        [InlineData(5, 4, false)]
+        public void LessOrEqualDoubleOperatorTest(int val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcInt = new CalcInt(val1);
+
+            // Act
+            bool result = calcInt <= val2;
 
             // Assert
             Assert.Equal(expected, result);
@@ -232,6 +522,19 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Fact]
+        public void MultiplicationIntOperatorTest()
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(4);
+
+            // Act
+            CalcInt result = 5 * calcInt1;
+
+            // Assert
+            Assert.Equal(4 * 5, result.Value);
+        }
+
+        [Fact]
         public void MultiplicationSameUnitOperatorTest()
         {
             // Arrange
@@ -257,6 +560,20 @@ namespace Scaffold.Tests.UnitTests.CalcValues
 
             // Act
             CalcInt result = calcInt1 / calcInt2;
+
+            // Assert
+            Assert.Equal(4 / 5, result.Value);
+        }
+
+        [Fact]
+        public void DivisionIntOperatorTest()
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(4);
+            var calcInt2 = new CalcInt(5);
+
+            // Act
+            CalcInt result = calcInt1 / 5;
 
             // Assert
             Assert.Equal(4 / 5, result.Value);

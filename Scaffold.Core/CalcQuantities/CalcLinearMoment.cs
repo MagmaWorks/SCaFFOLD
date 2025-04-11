@@ -48,4 +48,34 @@ public sealed class CalcLinearMoment : CalcQuantity<MomentPerLength>
         (string name, string _, MomentPerLengthUnit _) = OperatorMetadataHelper<MomentPerLengthUnit>(x, y, '/');
         return new CalcDouble((MomentPerLength)x.Quantity / (MomentPerLength)y.Quantity, name, string.Empty);
     }
+
+    public static CalcLinearMoment operator +(CalcLinearMoment x, double y)
+    {
+        return new CalcLinearMoment(x.Value + y, (MomentPerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLinearMoment operator +(double x, CalcLinearMoment y)
+    {
+        return y + x;
+    }
+
+    public static CalcLinearMoment operator -(CalcLinearMoment x, double y)
+    {
+        return new CalcLinearMoment(x.Value - y, (MomentPerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLinearMoment operator *(CalcLinearMoment x, double y)
+    {
+        return new CalcLinearMoment(x.Value * y, (MomentPerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcLinearMoment operator *(double x, CalcLinearMoment y)
+    {
+        return y * x;
+    }
+
+    public static CalcLinearMoment operator /(CalcLinearMoment x, double y)
+    {
+        return new CalcLinearMoment(x.Value / y, (MomentPerLengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

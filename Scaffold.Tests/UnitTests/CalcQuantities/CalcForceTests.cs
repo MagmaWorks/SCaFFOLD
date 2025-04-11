@@ -161,5 +161,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("kN/m²", result.Unit);
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+
+            // Act
+            CalcForce result = 2.0 + calcForce;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("N", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcForce.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+
+            // Act
+            CalcForce result = calcForce - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("N", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcForce.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+
+            // Act
+            CalcForce result = 2.0 * calcForce;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("N", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcForce.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+
+            // Act
+            CalcForce result = calcForce / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("N", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcForce.Value);
+        }
     }
 }

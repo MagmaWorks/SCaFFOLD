@@ -165,5 +165,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.Megapascal, "a1", "A");
+
+            // Act
+            CalcStress result = 2.0 + calcStress;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("MPa", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStress.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.Megapascal, "a1", "A");
+
+            // Act
+            CalcStress result = calcStress - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("MPa", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStress.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.Megapascal, "a1", "A");
+
+            // Act
+            CalcStress result = 2.0 * calcStress;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("MPa", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStress.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.Megapascal, "a1", "A");
+
+            // Act
+            CalcStress result = calcStress / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("MPa", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStress.Value);
+        }
     }
 }

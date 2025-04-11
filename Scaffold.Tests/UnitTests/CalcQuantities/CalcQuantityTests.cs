@@ -1,5 +1,7 @@
-﻿using OasysUnits.Units;
+﻿using OasysUnits;
+using OasysUnits.Units;
 using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.Exceptions;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
 {
@@ -223,6 +225,18 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal("4.5 ft²", value);
+        }
+
+        [Fact]
+        public void WrongUnitExceptionTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
+            Length length = new Length(6, LengthUnit.Centimeter);
+
+            // Act
+            // Assert
+            Assert.Throws<UnitsNotSameException>(() => calcArea.Quantity = length);
         }
     }
 }

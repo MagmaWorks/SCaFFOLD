@@ -53,6 +53,36 @@ public sealed class CalcMoment : CalcQuantity<Moment>
         return new CalcDouble((Moment)x.Quantity / (Moment)y.Quantity, name, string.Empty);
     }
 
+    public static CalcMoment operator +(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value + y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcMoment operator +(double x, CalcMoment y)
+    {
+        return y + x;
+    }
+
+    public static CalcMoment operator -(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value - y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcMoment operator *(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value * y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcMoment operator *(double x, CalcMoment y)
+    {
+        return y * x;
+    }
+
+    public static CalcMoment operator /(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value / y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
     public CalcLinearMoment MakeLinear(CalcLength length)
     {
         MomentUnit unit = (MomentUnit)Quantity.Unit;
