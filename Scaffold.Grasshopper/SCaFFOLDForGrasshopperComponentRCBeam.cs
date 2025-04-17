@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
+using OasysUnits;
 using Scaffold.Calculations;
+using Scaffold.Core;
 using Scaffold.Core.Abstract;
+using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLDForGrasshopper
 {
-    public class SCaFFOLDForGrasshopperComponent : GH_Component
+    public class SCaFFOLDForGrasshopperComponentRCBeam : GH_Component
     {
         ICalculation embeddedCalc;
         private CalculationReader reader = new();
@@ -21,12 +25,12 @@ namespace SCaFFOLDForGrasshopper
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public SCaFFOLDForGrasshopperComponent()
+        public SCaFFOLDForGrasshopperComponentRCBeam()
           : base("SCaFFOLDForGrasshopperComponent", "Test",
             "Test calc in GH.",
             "Magma Works", "SCaFFOLD")
         {
-            embeddedCalc = new TestCalculation();
+            embeddedCalc = new RectangularRcBeamCalculation();
             inputs = reader.GetInputs(embeddedCalc);
             outputs = reader.GetOutputs(embeddedCalc);
         }
@@ -42,7 +46,7 @@ namespace SCaFFOLDForGrasshopper
             // to import lists or trees of values, modify the ParamAccess flag.
             if (embeddedCalc == null)
             {
-                embeddedCalc = new TestCalculation();
+                embeddedCalc = new RectangularRcBeamCalculation();
                 inputs = reader.GetInputs(embeddedCalc);
             }
 
@@ -54,7 +58,7 @@ namespace SCaFFOLDForGrasshopper
                     unit = ((ICalcQuantity)item).Quantity.Unit.ToString();
                 }
 
-                pManager.AddNumberParameter(item.DisplayName + " " + unit, item.Symbol + " " + unit, "SCaFFOLD calc", GH_ParamAccess.item);
+                pManager.AddTextParameter(item.DisplayName + " " + unit, item.Symbol + " " + unit, "SCaFFOLD calc", GH_ParamAccess.item, item.ValueAsString());
             }
 
             // If you want to change properties of certain parameters, 
@@ -69,7 +73,19 @@ namespace SCaFFOLDForGrasshopper
         {
             // Use the pManager object to register your output parameters.
             // Output parameters do not have default values, but they too must have the correct access type.
-            pManager.AddTextParameter("Result", "R", "Output of the test calc", GH_ParamAccess.item);
+
+            outputs = reader.GetOutputs(embeddedCalc);
+
+            foreach (var item in outputs)
+            {
+                string unit = "";
+                if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
+                {
+                    unit = ((ICalcQuantity)item).Quantity.Unit.ToString();
+                }
+
+                pManager.AddTextParameter(item.DisplayName + " " + unit, item.Symbol + " " + unit, "SCaFFOLD calc", GH_ParamAccess.item);
+            }
 
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
@@ -83,8 +99,6 @@ namespace SCaFFOLDForGrasshopper
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            // COME BACK TO THIS - GETTING VALUE AS DOUBLE THEN CONVERTING TO STRING!!
-
             for (int i = 0; i < inputs.Count; i++)
             {
                 string inputVal = "";
@@ -103,7 +117,11 @@ namespace SCaFFOLDForGrasshopper
             embeddedCalc.Calculate();
 
             // Finally assign the spiral to the output parameter.
-            DA.SetData(0, outputs[0].ValueAsString());
+            for (int i = 0; i < outputs.Count; i++)
+            {
+                DA.SetData(i, outputs[i].ValueAsString());
+
+            }
         }
 
         /// <summary>
@@ -119,6 +137,6 @@ namespace SCaFFOLDForGrasshopper
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("dc1c1cb1-484e-46c7-8288-1ddb3c613572");
+        public override Guid ComponentGuid => new Guid("58b06a88-8a78-4379-8135-76a24b0386ac");
     }
 }
