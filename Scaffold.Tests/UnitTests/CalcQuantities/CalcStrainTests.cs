@@ -1,6 +1,4 @@
-﻿using OasysUnits;
-using OasysUnits.Units;
-using Scaffold.Core.CalcQuantities;
+﻿using Scaffold.Core.CalcQuantities;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
 {

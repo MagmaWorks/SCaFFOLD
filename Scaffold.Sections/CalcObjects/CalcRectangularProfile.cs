@@ -2,7 +2,7 @@
 using System.Linq;
 using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
-using OasysUnits;
+using UnitsNet;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;

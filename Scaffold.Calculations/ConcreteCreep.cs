@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using OasysUnits;
+using UnitsNet;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
@@ -20,9 +20,9 @@ namespace Scaffold.Calculations
         [InputCalcValue("Concrete grade", "")]
         CalcSelectionList concGrade = new CalcSelectionList("Concrete grade", "35", new List<string> { "30", "35", "40", "45", "50", "60", "70", "80", "90" });
         [InputCalcValue]
-        CalcStress charCompStr = new CalcStress(43, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter, "Concrete characteristic Compressive strength", "f_{ck}");
+        CalcStress charCompStr = new CalcStress(43, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter, "Concrete characteristic Compressive strength", "f_{ck}");
         [InputCalcValue]
-        CalcStress meanCompStr = new CalcStress(43, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter, "Concrete mean compressive strength", "f_{cm}");
+        CalcStress meanCompStr = new CalcStress(43, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter, "Concrete mean compressive strength", "f_{cm}");
         [InputCalcValue]
         CalcDouble relativeHumidity = new CalcDouble(70, "Relative humidity", "RH");
         [InputCalcValue]
@@ -30,13 +30,13 @@ namespace Scaffold.Calculations
         [InputCalcValue]
         CalcDouble time = new CalcDouble(10000000, "Time", "t");
         [InputCalcValue]
-        CalcLength L = new CalcLength(500, OasysUnits.Units.LengthUnit.Millimeter, "Length", "L");
+        CalcLength L = new CalcLength(500, UnitsNet.Units.LengthUnit.Millimeter, "Length", "L");
         [InputCalcValue]
-        CalcLength W = new CalcLength(500, OasysUnits.Units.LengthUnit.Millimeter, "Width", "W");
+        CalcLength W = new CalcLength(500, UnitsNet.Units.LengthUnit.Millimeter, "Width", "W");
         [OutputCalcValue]
-        CalcArea _Ac = new CalcArea(250000, OasysUnits.Units.AreaUnit.SquareMillimeter, "Cross section area", "A_c");
+        CalcArea _Ac = new CalcArea(250000, UnitsNet.Units.AreaUnit.SquareMillimeter, "Cross section area", "A_c");
         [OutputCalcValue]
-        CalcLength u = new CalcLength(2000, OasysUnits.Units.LengthUnit.Millimeter, "Section perimeter", "u");
+        CalcLength u = new CalcLength(2000, UnitsNet.Units.LengthUnit.Millimeter, "Section perimeter", "u");
         [OutputCalcValue]
         CalcDouble creepTimeCoeff = new CalcDouble(0, "Coefficient for creep with time", @"\beta(t,t_0)");
         [OutputCalcValue]
@@ -81,8 +81,8 @@ namespace Scaffold.Calculations
             relativeHumidity.Value = rh;
             time.Value = t;
             time0.Value = t_loadApplied;
-            L.Quantity = new Length(l, OasysUnits.Units.LengthUnit.Millimeter);
-            W.Quantity = new Length(w, OasysUnits.Units.LengthUnit.Millimeter);
+            L.Quantity = new Length(l, UnitsNet.Units.LengthUnit.Millimeter);
+            W.Quantity = new Length(w, UnitsNet.Units.LengthUnit.Millimeter);
             Calculate();
         }
 
@@ -108,8 +108,8 @@ namespace Scaffold.Calculations
             expressions = new List<IFormula>();
             var concProps = ConcProperties.ByGrade(concGrade.ValueAsString());
 
-            charCompStr.Quantity = new Pressure(concProps.fck, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter);
-            meanCompStr.Quantity = new Pressure(concProps.fcm, OasysUnits.Units.PressureUnit.NewtonPerSquareMillimeter);
+            charCompStr.Quantity = new Pressure(concProps.fck, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter);
+            meanCompStr.Quantity = new Pressure(concProps.fcm, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter);
 
             _Ac = W * L;
             var tempW = W + W; var tempL = L + L;

@@ -1,10 +1,4 @@
-﻿using System.Globalization;
-using OasysUnits;
-using Scaffold.Core.Enums;
-using Scaffold.Core.Exceptions;
-using Scaffold.Core.Interfaces;
-
-namespace Scaffold.Core.Abstract;
+﻿namespace Scaffold.Core.Abstract;
 
 public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
@@ -72,7 +66,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     {
         try
         {
-            IQuantity quantity = OasysUnits.Quantity.Parse(CultureInfo.InvariantCulture, _quantity.QuantityInfo.ValueType, strValue);
+            IQuantity quantity = UnitsNet.Quantity.Parse(CultureInfo.InvariantCulture, _quantity.QuantityInfo.ValueType, strValue);
             _quantity = (T)quantity;
             return true;
         }
@@ -80,7 +74,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
 
         if (double.TryParse(strValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
         {
-            _quantity = OasysUnits.Quantity.From(val, _quantity.Unit);
+            _quantity = UnitsNet.Quantity.From(val, _quantity.Unit);
             return true;
         }
 

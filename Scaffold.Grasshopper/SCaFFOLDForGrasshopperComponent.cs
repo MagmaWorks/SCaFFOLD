@@ -85,18 +85,19 @@ namespace SCaFFOLDForGrasshopper
         {
             // COME BACK TO THIS - GETTING VALUE AS DOUBLE THEN CONVERTING TO STRING!!
 
+
             for (int i = 0; i < inputs.Count; i++)
             {
-                string inputVal = "";
+                double inputVal = 0;
                 DA.GetData(i, ref inputVal);
                 var item = inputs[i];
                 if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
                 {
-                    (item as ICalcQuantity).TryParse(inputVal);
+                    (item as ICalcQuantity).TryParse(inputVal.ToString());
                 }
                 else
                 {
-                    (item as ICalcValue).TryParse(inputVal);
+                    (item as ICalcValue).TryParse(inputVal.ToString());
                 }
             }
 

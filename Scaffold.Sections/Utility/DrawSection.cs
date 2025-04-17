@@ -5,8 +5,8 @@ using System.Text;
 using MagmaWorks.Geometry;
 using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Sections;
-using OasysUnits;
-using OasysUnits.Units;
+using UnitsNet;
+using UnitsNet.Units;
 using SkiaSharp;
 
 namespace Scaffold.Core.Utility

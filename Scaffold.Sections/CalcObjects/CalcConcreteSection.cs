@@ -3,7 +3,7 @@ using MagmaWorks.Taxonomy.Materials;
 using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Sections;
 using MagmaWorks.Taxonomy.Serialization;
-using OasysUnits;
+using UnitsNet;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 

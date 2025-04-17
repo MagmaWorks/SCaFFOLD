@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using OasysUnits;
-using OasysUnits.Units;
+using UnitsNet;
+using UnitsNet.Units;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
 

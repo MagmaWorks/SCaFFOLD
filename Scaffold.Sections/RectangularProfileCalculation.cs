@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using OasysUnits;
-using OasysUnits.Units;
+using UnitsNet;
+using UnitsNet.Units;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcQuantities;

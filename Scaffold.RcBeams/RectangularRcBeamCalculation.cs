@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using MagmaWorks.Taxonomy.Profiles;
-using OasysUnits;
-using OasysUnits.Units;
+using UnitsNet;
+using UnitsNet.Units;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcValues;
