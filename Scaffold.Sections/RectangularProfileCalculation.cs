@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using UnitsNet;
-using UnitsNet.Units;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Scaffold.Core;
 

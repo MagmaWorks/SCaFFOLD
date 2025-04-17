@@ -1,6 +1,6 @@
-﻿using UnitsNet;
+﻿using Scaffold.Core.CalcQuantities;
+using UnitsNet;
 using UnitsNet.Units;
-using Scaffold.Core.CalcQuantities;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
 {

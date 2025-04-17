@@ -5,8 +5,6 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Sections;
 using MagmaWorks.Taxonomy.Sections.Reinforcement;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
-using UnitsNet;
-using UnitsNet.Units;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcQuantities;
@@ -16,6 +14,8 @@ using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using Scaffold.Core.Utility;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Scaffold.Core;
 
