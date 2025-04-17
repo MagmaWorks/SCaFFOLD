@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
-using OasysUnits;
 using Scaffold.Core.Enums;
+using Scaffold.Core.Exceptions;
 using Scaffold.Core.Interfaces;
 
 namespace Scaffold.Core.Abstract;
@@ -27,6 +27,7 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 
     public static bool operator ==(CalcValue<T> value, CalcValue<T> other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Equals(other);
     }
 
@@ -51,14 +52,22 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         return false;
     }
 
-    internal static (string name, string symbol, string unit) OperatorMetadataHelper(
-        CalcValue<T> x, CalcValue<T> y, char operation)
+    internal static (string name, string symbol, string unit) OperatorMetadataHelper<U1, U2>(
+        CalcValue<U1> x, CalcValue<U2> y, char operation)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009{operation}\u2009{y.DisplayName}";
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         string unit = x.Unit == y.Unit ? x.Unit : string.Empty;
         return (name, symbol, unit);
+    }
+
+    internal static void CheckUnitsAreTheSame<U1, U2>(CalcValue<U1> x, CalcValue<U2> y)
+    {
+        if (x.Unit != y.Unit)
+        {
+            throw new UnitsNotSameException(x.DisplayName, y.DisplayName, x.Unit, y.Unit);
+        }
     }
 
     public override string ToString()

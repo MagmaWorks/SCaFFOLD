@@ -59,4 +59,34 @@ public sealed class CalcStress : CalcQuantity<Pressure>
         (string name, string _, PressureUnit _) = OperatorMetadataHelper<PressureUnit>(x, y, '/');
         return new CalcDouble((Pressure)x.Quantity / (Pressure)y.Quantity, name, string.Empty);
     }
+
+    public static CalcStress operator +(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value + y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator +(double x, CalcStress y)
+    {
+        return y + x;
+    }
+
+    public static CalcStress operator -(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value - y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator *(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value * y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator *(double x, CalcStress y)
+    {
+        return y * x;
+    }
+
+    public static CalcStress operator /(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value / y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

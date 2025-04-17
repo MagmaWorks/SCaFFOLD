@@ -2,7 +2,6 @@
 using MagmaWorks.Taxonomy.Materials.StandardMaterials;
 using MagmaWorks.Taxonomy.Serialization;
 using MagmaWorks.Taxonomy.Standards;
-using Scaffold.Core.CalcObjects;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 

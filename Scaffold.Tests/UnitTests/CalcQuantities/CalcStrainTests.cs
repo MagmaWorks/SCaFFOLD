@@ -79,5 +79,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("%", result.Unit);
             Assert.Equal("r1 - r2", result.DisplayName); // note: using Thin Space \u2009
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStrain = new CalcStrain(4.5, StrainUnit.Percent, "a1", "A");
+
+            // Act
+            CalcStrain result = 2.0 + calcStrain;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("%", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStrain.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStrain = new CalcStrain(4.5, StrainUnit.Percent, "a1", "A");
+
+            // Act
+            CalcStrain result = calcStrain - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("%", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStrain.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStrain = new CalcStrain(4.5, StrainUnit.Percent, "a1", "A");
+
+            // Act
+            CalcStrain result = 2.0 * calcStrain;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("%", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStrain.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcStrain = new CalcStrain(4.5, StrainUnit.Percent, "a1", "A");
+
+            // Act
+            CalcStrain result = calcStrain / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("%", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcStrain.Value);
+        }
     }
 }

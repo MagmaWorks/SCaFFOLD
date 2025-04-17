@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Dynamic;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
@@ -13,13 +12,13 @@ namespace Scaffold.Calculations
         public string CalculationName { get; set; } = "Test Calculation";
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
-        [InputCalcValue(@"D", "Multiplier")]
+        [InputCalcValue("Multiplier", @"D")]
         public double Multiplier { get; set; } = 0;
 
-        [InputCalcValue(@"F", "Force")]
-        public CalcForce Force { get; set; } = new CalcForce(10, "Force", "F");
+        [InputCalcValue("Force", @"F1")]
+        public CalcForce Force { get; set; } = new CalcForce(10, "Force", "F2");
 
-        [OutputCalcValue(@"R", "Result")]
+        [OutputCalcValue("Result", @"R")]
         public double Result { get; private set; } = 0;
 
         public IList<IFormula> GetFormulae()

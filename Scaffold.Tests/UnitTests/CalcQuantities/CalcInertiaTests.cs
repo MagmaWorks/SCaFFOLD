@@ -149,5 +149,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal("cm", result.Unit);
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "a1", "I");
+
+            // Act
+            CalcInertia result = 2.0 + calcInertia;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("I", result.Symbol);
+            Assert.Equal("cm⁴", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcInertia.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "a1", "I");
+
+            // Act
+            CalcInertia result = calcInertia - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("I", result.Symbol);
+            Assert.Equal("cm⁴", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcInertia.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "a1", "I");
+
+            // Act
+            CalcInertia result = 2.0 * calcInertia;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("I", result.Symbol);
+            Assert.Equal("cm⁴", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcInertia.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "a1", "I");
+
+            // Act
+            CalcInertia result = calcInertia / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("I", result.Symbol);
+            Assert.Equal("cm⁴", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcInertia.Value);
+        }
     }
 }

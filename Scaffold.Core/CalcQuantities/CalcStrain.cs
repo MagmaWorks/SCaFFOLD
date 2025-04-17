@@ -30,4 +30,34 @@ public sealed class CalcStrain : CalcQuantity<Strain>
         (string name, string _, StrainUnit unit) = OperatorMetadataHelper<StrainUnit>(x, y, '/');
         return new CalcDouble((Strain)x.Quantity / (Strain)y.Quantity, name, string.Empty);
     }
+
+    public static CalcStrain operator +(CalcStrain x, double y)
+    {
+        return new CalcStrain(x.Value + y, (StrainUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStrain operator +(double x, CalcStrain y)
+    {
+        return y + x;
+    }
+
+    public static CalcStrain operator -(CalcStrain x, double y)
+    {
+        return new CalcStrain(x.Value - y, (StrainUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStrain operator *(CalcStrain x, double y)
+    {
+        return new CalcStrain(x.Value * y, (StrainUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStrain operator *(double x, CalcStrain y)
+    {
+        return y * x;
+    }
+
+    public static CalcStrain operator /(CalcStrain x, double y)
+    {
+        return new CalcStrain(x.Value / y, (StrainUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

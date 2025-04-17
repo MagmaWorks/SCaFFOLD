@@ -131,5 +131,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.True(string.IsNullOrEmpty(result.Unit));
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearForce = new CalcLinearForce(4.5, ForcePerLengthUnit.KilonewtonPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearForce result = 2.0 + calcLinearForce;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearForce.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearForce = new CalcLinearForce(4.5, ForcePerLengthUnit.KilonewtonPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearForce result = calcLinearForce - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearForce.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearForce = new CalcLinearForce(4.5, ForcePerLengthUnit.KilonewtonPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearForce result = 2.0 * calcLinearForce;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearForce.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcLinearForce = new CalcLinearForce(4.5, ForcePerLengthUnit.KilonewtonPerMeter, "a1", "A");
+
+            // Act
+            CalcLinearForce result = calcLinearForce / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN/m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcLinearForce.Value);
+        }
     }
 }

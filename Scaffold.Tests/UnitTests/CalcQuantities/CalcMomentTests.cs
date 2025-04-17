@@ -164,5 +164,73 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("kN·m/cm", result.Unit);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
         }
+
+        [Fact]
+        public void AdditionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcMoment = new CalcMoment(4.5, MomentUnit.KilonewtonMeter, "a1", "A");
+
+            // Act
+            CalcMoment result = 2.0 + calcMoment;
+
+            // Assert
+            Assert.Equal(4.5 + 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcMoment.Value);
+        }
+
+        [Fact]
+        public void SubtractionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcMoment = new CalcMoment(4.5, MomentUnit.KilonewtonMeter, "a1", "A");
+
+            // Act
+            CalcMoment result = calcMoment - 2;
+
+            // Assert
+            Assert.Equal(4.5 - 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcMoment.Value);
+        }
+
+        [Fact]
+        public void MultiplicationDoubleOperatorTest()
+        {
+            // Arrange
+            var calcMoment = new CalcMoment(4.5, MomentUnit.KilonewtonMeter, "a1", "A");
+
+            // Act
+            CalcMoment result = 2.0 * calcMoment;
+
+            // Assert
+            Assert.Equal(4.5 * 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcMoment.Value);
+        }
+
+        [Fact]
+        public void DivisionDoubleOperatorTest()
+        {
+            // Arrange
+            var calcMoment = new CalcMoment(4.5, MomentUnit.KilonewtonMeter, "a1", "A");
+
+            // Act
+            CalcMoment result = calcMoment / 2;
+
+            // Assert
+            Assert.Equal(4.5 / 2, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("kN·m", result.Unit);
+            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal(4.5, calcMoment.Value);
+        }
     }
 }

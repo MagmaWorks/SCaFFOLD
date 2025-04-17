@@ -66,4 +66,34 @@ public sealed class CalcForce : CalcQuantity<Force>
         (string name, string _, ForceUnit _) = OperatorMetadataHelper<ForceUnit>(x, y, '/');
         return new CalcDouble((Force)x.Quantity / (Force)y.Quantity, name, string.Empty);
     }
+
+    public static CalcForce operator +(CalcForce x, double y)
+    {
+        return new CalcForce(x.Value + y, (ForceUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcForce operator +(double x, CalcForce y)
+    {
+        return y + x;
+    }
+
+    public static CalcForce operator -(CalcForce x, double y)
+    {
+        return new CalcForce(x.Value - y, (ForceUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcForce operator *(CalcForce x, double y)
+    {
+        return new CalcForce(x.Value * y, (ForceUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcForce operator *(double x, CalcForce y)
+    {
+        return y * x;
+    }
+
+    public static CalcForce operator /(CalcForce x, double y)
+    {
+        return new CalcForce(x.Value / y, (ForceUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }

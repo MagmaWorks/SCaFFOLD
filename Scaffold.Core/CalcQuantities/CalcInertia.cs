@@ -62,4 +62,34 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(unit.GetEquivilantVolumeUnit()),
             unit.GetEquivilantLengthUnit()), name, "");
     }
+
+    public static CalcInertia operator +(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value + y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcInertia operator +(double x, CalcInertia y)
+    {
+        return y + x;
+    }
+
+    public static CalcInertia operator -(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value - y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcInertia operator *(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value * y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcInertia operator *(double x, CalcInertia y)
+    {
+        return y * x;
+    }
+
+    public static CalcInertia operator /(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value / y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
 }
