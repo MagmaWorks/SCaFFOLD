@@ -23,6 +23,7 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
 
     public static bool operator ==(CalcValue<T> value, CalcValue<T> other)
     {
+        CheckUnitsAreTheSame(value, other);
         return value.Equals(other);
     }
 
