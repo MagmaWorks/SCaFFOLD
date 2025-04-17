@@ -57,6 +57,14 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         return (name, symbol, unit);
     }
 
+    internal static void CheckUnitsAreTheSame<U1, U2>(CalcValue<U1> x, CalcValue<U2> y)
+    {
+        if (x.Unit != y.Unit)
+        {
+            throw new UnitsNotSameException(x.DisplayName, y.DisplayName, x.Unit, y.Unit);
+        }
+    }
+
     public override string ToString()
     {
         string number;
