@@ -47,8 +47,8 @@ public abstract class CalcValue<T> : ICalcValue, IEquatable<CalcValue<T>>
         return false;
     }
 
-    internal static (string name, string symbol, string unit) OperatorMetadataHelper(
-        CalcValue<T> x, CalcValue<T> y, char operation)
+    internal static (string name, string symbol, string unit) OperatorMetadataHelper<U1, U2>(
+        CalcValue<U1> x, CalcValue<U2> y, char operation)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009{operation}\u2009{y.DisplayName}";

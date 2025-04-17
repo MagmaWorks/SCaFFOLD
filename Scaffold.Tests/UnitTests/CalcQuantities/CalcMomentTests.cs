@@ -151,8 +151,8 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void MakeLinearFromLengthTest()
         {
             // Arrange
-            var calcMoment = new CalcMoment(4.5, "m", "M");
-            var calcLength = new CalcLength(5.5, LengthUnit.Centimeter, "l", "L");
+            var calcMoment = new CalcMoment(4.5, MomentUnit.NewtonCentimeter, "m", "M");
+            var calcLength = new CalcLength(5.5, LengthUnit.Meter, "l", "L");
 
             // Act
             CalcLinearMoment result = calcMoment.MakeLinear(calcLength);
@@ -160,7 +160,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
             Assert.Equal("m", result.DisplayName);
-            Assert.Equal("kN·m/cm", result.Unit);
+            Assert.Equal("N·cm/m", result.Unit);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
         }
 

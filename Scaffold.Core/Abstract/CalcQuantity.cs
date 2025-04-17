@@ -15,7 +15,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
             _quantity = value;
         }
     }
-    public string Unit => Quantity.ToString().Split(' ')[1];
+    public string Unit => GetUnit();
     public string DisplayName { get; set; }
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
@@ -119,5 +119,19 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
         string symbol = x.Symbol == y.Symbol ? x.Symbol : string.Empty;
         U unit = (U)x.Quantity.Unit;
         return (name, symbol, unit);
+    }
+
+    private string GetUnit()
+    {
+        if (Quantity != null)
+        {
+            string[] quantity = Quantity.ToString().Split(' ');
+            if (quantity.Count() > 1)
+            {
+                return quantity[1];
+            }
+        }
+
+        return "-";
     }
 }

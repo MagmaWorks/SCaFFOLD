@@ -144,7 +144,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             // Assert
             Assert.Equal(4.5 / 5.5, result.Value, 12);
             Assert.Equal("l1 / l2", result.DisplayName); // note: using Thin Space \u2009
-            Assert.Equal("ε", result.Unit);
+            Assert.Equal("-", result.Unit);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
         }
 
