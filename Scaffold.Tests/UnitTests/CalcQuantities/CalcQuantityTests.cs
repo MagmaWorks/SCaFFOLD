@@ -1,7 +1,7 @@
-﻿using OasysUnits;
-using OasysUnits.Units;
-using Scaffold.Core.CalcQuantities;
+﻿using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Exceptions;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
 {

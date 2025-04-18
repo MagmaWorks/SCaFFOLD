@@ -12,13 +12,13 @@ namespace Scaffold.Calculations
         public string CalculationName { get; set; } = "Test Calculation";
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
-        [InputCalcValue("Multiplier", @"D")]
+        [InputCalcValue(@"D", "Multiplier")]
         public double Multiplier { get; set; } = 0;
 
-        [InputCalcValue("Force", @"F1")]
-        public CalcForce Force { get; set; } = new CalcForce(10, "Force", "F2");
+        [InputCalcValue(@"F", "Force")]
+        public CalcForce Force { get; set; } = new CalcForce(10, "Force", "F");
 
-        [OutputCalcValue("Result", @"R")]
+        [OutputCalcValue(@"R", "Result")]
         public double Result { get; private set; } = 0;
 
         public IList<IFormula> GetFormulae()

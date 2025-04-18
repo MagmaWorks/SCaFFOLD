@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Enums;
-using Scaffold.Core.Images.Interfaces;
-using Scaffold.Core.Interfaces;
+﻿using Scaffold.Core.Images.Interfaces;
 
 namespace Scaffold.Core.Models;
 

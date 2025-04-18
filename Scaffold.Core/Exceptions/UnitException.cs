@@ -1,6 +1,4 @@
-﻿using OasysUnits;
-
-namespace Scaffold.Core.Exceptions;
+﻿namespace Scaffold.Core.Exceptions;
 public class UnitsNotSameException : Exception
 {
     public UnitsNotSameException(string displayName1, string displayName2, string unit1, string unit2) :

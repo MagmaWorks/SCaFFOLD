@@ -1,6 +1,4 @@
-﻿using OasysUnits;
-
-namespace Scaffold.Core.Interfaces;
+﻿namespace Scaffold.Core.Interfaces;
 
 public interface ICalcQuantity : ICalcValue
 {

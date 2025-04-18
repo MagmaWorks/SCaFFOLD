@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using MagmaWorks.Taxonomy.Profiles;
-using OasysUnits;
-using OasysUnits.Units;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Scaffold.Core;
 

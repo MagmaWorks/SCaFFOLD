@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using OasysUnits;
-using OasysUnits.Units;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Scaffold.Tests.UnitTests;
 

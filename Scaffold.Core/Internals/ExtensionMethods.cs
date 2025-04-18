@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Interfaces;
-
-namespace Scaffold.Core.Internals;
+﻿namespace Scaffold.Core.Internals;
 
 internal static class InternalExtensionMethods
 {

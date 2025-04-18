@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
-using Scaffold.Core.Images.Interfaces;
 
 namespace Scaffold.Tests.UnitTests;
 
