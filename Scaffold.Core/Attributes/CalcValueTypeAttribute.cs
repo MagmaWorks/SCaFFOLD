@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Enums;
-
-namespace Scaffold.Core.Attributes;
+﻿namespace Scaffold.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class CalcValueTypeAttribute : Attribute

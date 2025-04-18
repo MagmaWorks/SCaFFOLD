@@ -1,6 +1,4 @@
-﻿using OasysUnits;
-using OasysUnits.Units;
-using Scaffold.Core.Abstract;
+﻿using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
@@ -34,7 +32,7 @@ public sealed class CalcForce : CalcQuantity<Force>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
         ForceUnit unit = (ForceUnit)x.Quantity.Unit;
-        return new CalcMoment(new Moment(x.Quantity.As(unit) * y.Quantity.Value,
+        return new CalcMoment(new Moment(x.Quantity.As(unit) * y.Value,
             unit.GetEquivilantMomentUnit((LengthUnit)y.Quantity.Unit)), name, "");
     }
 
@@ -48,7 +46,7 @@ public sealed class CalcForce : CalcQuantity<Force>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         ForceUnit unit = (ForceUnit)x.Quantity.Unit;
-        return new CalcLinearForce(new ForcePerLength(x.Quantity.As(unit) / y.Quantity.Value,
+        return new CalcLinearForce(new ForcePerLength(x.Quantity.As(unit) / y.Value,
             unit.GetEquivilantForcePerLengthUnit((LengthUnit)y.Quantity.Unit)), name, "");
     }
 
@@ -57,7 +55,7 @@ public sealed class CalcForce : CalcQuantity<Force>
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
             ? string.Empty : $"{x.DisplayName}\u2009/\u2009{y.DisplayName}";
         ForceUnit unit = (ForceUnit)x.Quantity.Unit;
-        return new CalcStress(new Pressure(x.Quantity.As(unit) / y.Quantity.Value,
+        return new CalcStress(new Pressure(x.Quantity.As(unit) / y.Value,
             unit.GetEquivilantPressureUnit((AreaUnit)y.Quantity.Unit)), name, "");
     }
 

@@ -1,7 +1,6 @@
-﻿using OasysUnits;
-using OasysUnits.Units;
-using Scaffold.Core.CalcQuantities;
+﻿using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
+using UnitsNet.Units;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
 {
@@ -15,9 +14,9 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Act
             // Assert
-            Assert.True(calcMoment.TryParse("5.5 kN·m/cm"));
+            Assert.True(calcMoment.TryParse("5.5 N·cm/m"));
             Assert.Equal(5.5, calcMoment.Value);
-            Assert.Equal("kN·m/cm", calcMoment.Unit);
+            Assert.Equal("N·cm/m", calcMoment.Unit);
         }
 
         [Fact]

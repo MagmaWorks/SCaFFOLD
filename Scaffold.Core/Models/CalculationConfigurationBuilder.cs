@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Scaffold.Core.Interfaces;
 using Scaffold.Core.Internals;
 using Scaffold.Core.Static;
 

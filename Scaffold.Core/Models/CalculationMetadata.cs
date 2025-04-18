@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Interfaces;
-
-namespace Scaffold.Core.Models;
+﻿namespace Scaffold.Core.Models;
 
 public class CalculationMetadata : ICalculationMetadata
 {

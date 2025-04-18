@@ -1,6 +1,4 @@
-﻿using OasysUnits;
-using OasysUnits.Units;
-using Scaffold.Core.CalcQuantities;
+﻿using Scaffold.Core.CalcQuantities;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
 {
@@ -10,7 +8,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void ParseFromStringTest()
         {
             // Arrange
-            var calcStrain = new CalcStrain(4.5, StrainUnit.Ratio, "ratio", "r");
+            var calcStrain = new CalcStrain(4.5, StrainUnit.DecimalFraction, "ratio", "r");
 
             // Act
             // Assert
@@ -23,7 +21,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void ImplicitOperatorDoubleTest()
         {
             // Arrange
-            var calcStrain = new CalcStrain(4.5, StrainUnit.Ratio, "ratio", "r");
+            var calcStrain = new CalcStrain(4.5, StrainUnit.DecimalFraction, "ratio", "r");
 
             // Act
             double value = calcStrain;
@@ -36,14 +34,14 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void ImplicitOperatorQuantityTest()
         {
             // Arrange
-            var calcStrain = new CalcStrain(4.5, StrainUnit.Ratio, "ratio", "r");
+            var calcStrain = new CalcStrain(4.5, StrainUnit.DecimalFraction, "ratio", "r");
 
             // Act
             Strain value = calcStrain;
 
             // Assert
-            Assert.Equal(4.5, value.Ratio);
-            Assert.Equal(StrainUnit.Ratio, value.Unit);
+            Assert.Equal(4.5, value.DecimalFractions);
+            Assert.Equal(StrainUnit.DecimalFraction, value.Unit);
         }
 
         [Fact]
@@ -51,7 +49,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         {
             // Arrange
             var calcStrain1 = new CalcStrain(4.5, StrainUnit.Percent, "r1", "R");
-            var calcStrain2 = new CalcStrain(0.055, StrainUnit.Ratio, "r2", "R");
+            var calcStrain2 = new CalcStrain(0.055, StrainUnit.DecimalFraction, "r2", "R");
 
             // Act
             CalcStrain result = calcStrain1 + calcStrain2;
@@ -68,7 +66,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         {
             // Arrange
             var calcStrain1 = new CalcStrain(4.5, StrainUnit.Percent, "r1", "R");
-            var calcStrain2 = new CalcStrain(0.055, StrainUnit.Ratio, "r2", "R");
+            var calcStrain2 = new CalcStrain(0.055, StrainUnit.DecimalFraction, "r2", "R");
 
             // Act
             CalcStrain result = calcStrain1 - calcStrain2;

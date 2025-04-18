@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Enums;
-
-namespace Scaffold.Core.Interfaces;
+﻿namespace Scaffold.Core.Interfaces;
 
 public interface ICalculationStatus
 {

@@ -1,6 +1,4 @@
-﻿using OasysUnits;
-using OasysUnits.Units;
-using Scaffold.Core.Abstract;
+﻿using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
@@ -86,7 +84,7 @@ public sealed class CalcMoment : CalcQuantity<Moment>
     public CalcLinearMoment MakeLinear(CalcLength length)
     {
         MomentUnit unit = (MomentUnit)Quantity.Unit;
-        return new CalcLinearMoment(new MomentPerLength(Quantity.As(unit) / length.Quantity.Value,
+        return new CalcLinearMoment(new MomentPerLength(Quantity.As(unit) / length.Value,
             unit.GetEquivilantMomentPerLengthUnit((LengthUnit)length.Quantity.Unit)), DisplayName);
     }
 
