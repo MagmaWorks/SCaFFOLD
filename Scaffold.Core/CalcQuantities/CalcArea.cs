@@ -1,10 +1,27 @@
-﻿using Scaffold.Core.Abstract;
+﻿#if NET7_0_OR_GREATER
+using System.Numerics;
+#endif
+using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcArea : CalcQuantity<Area>
+#if NET7_0_OR_GREATER
+    , IParsable<CalcArea>
+    , IAdditionOperators<CalcArea, CalcArea, CalcArea>
+    , IAdditionOperators<CalcArea, double, CalcArea>
+    , IAdditiveIdentity<CalcArea, CalcArea>
+    , ISubtractionOperators<CalcArea, CalcArea, CalcArea>
+    , IMultiplyOperators<CalcArea, CalcLength, CalcVolume>
+    , IMultiplyOperators<CalcArea, CalcArea, CalcInertia>
+    , IMultiplyOperators<CalcArea, double, CalcArea>
+    , IDivisionOperators<CalcArea, CalcLength, CalcLength>
+    , IDivisionOperators<CalcArea, CalcArea, CalcDouble>
+    , IDivisionOperators<CalcArea, double, CalcArea>
+    , IUnaryNegationOperators<CalcArea, CalcArea>
+#endif
 {
     public CalcArea(Area area, string name, string symbol = "")
         : base(area, name, symbol) { }
@@ -16,6 +33,11 @@ public sealed class CalcArea : CalcQuantity<Area>
     {
         (string name, string symbol, AreaUnit unit) = OperatorMetadataHelper<AreaUnit>(x, y, '+');
         return new CalcArea(new Area(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
+    }
+
+    public static CalcArea operator -(CalcArea x)
+    {
+        return new CalcArea(-(Area)x.Quantity, x.DisplayName, x.Symbol);
     }
 
     public static CalcArea operator -(CalcArea x, CalcArea y)
@@ -86,4 +108,25 @@ public sealed class CalcArea : CalcQuantity<Area>
     {
         return new CalcArea(x.Value / y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
+
+    public static bool TryParse(string str, IFormatProvider provider, out CalcArea result)
+    {
+        if (Area.TryParse(str, provider, out Area quantity))
+        {
+            result = new CalcArea(quantity, string.Empty);
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+    public static CalcArea Parse(string str, IFormatProvider provider)
+    {
+        return new CalcArea(Area.Parse(str, provider), string.Empty);
+    }
+
+    public static CalcArea Zero => new CalcArea(Area.Zero, string.Empty);
+
+    public static CalcArea AdditiveIdentity => Zero;
 }

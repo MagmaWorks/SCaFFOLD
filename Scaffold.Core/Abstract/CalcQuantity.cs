@@ -1,6 +1,14 @@
-﻿namespace Scaffold.Core.Abstract;
+﻿#if NET7_0_OR_GREATER
+using System.Numerics;
+#endif
 
-public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>> where T : IQuantity
+namespace Scaffold.Core.Abstract;
+
+public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>>
+#if NET7_0_OR_GREATER
+        , IComparisonOperators<CalcQuantity<T>, CalcQuantity<T>, bool>
+#endif
+    where T : IQuantity
 {
     public virtual IQuantity Quantity
     {
