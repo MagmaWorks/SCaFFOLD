@@ -15,7 +15,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Act
             // Assert
-            Assert.True(calcArea.TryParse("5.5 cm²"));
+            Assert.True(CalcArea.TryParse("5.5 cm²", null, out calcArea));
             Assert.Equal(5.5, calcArea.Value);
             Assert.Equal("cm²", calcArea.Unit);
         }
