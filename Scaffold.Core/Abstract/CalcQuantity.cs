@@ -1,14 +1,6 @@
-﻿#if NET7_0_OR_GREATER
-using System.Numerics;
-#endif
+﻿namespace Scaffold.Core.Abstract;
 
-namespace Scaffold.Core.Abstract;
-
-public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>>
-#if NET7_0_OR_GREATER
-        , IComparisonOperators<CalcQuantity<T>, CalcQuantity<T>, bool>
-#endif
-    where T : IQuantity
+public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
     public virtual IQuantity Quantity
     {
@@ -40,32 +32,22 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     public static implicit operator T(CalcQuantity<T> value) => (T)value.Quantity;
     public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
-    public static bool operator ==(CalcQuantity<T> value, CalcQuantity<T> other)
-    {
-        return other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
-    }
-
-    public static bool operator !=(CalcQuantity<T> value, CalcQuantity<T> other)
-    {
-        return !other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
-    }
-
-    public static bool operator >(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool GreaterThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value > other.Quantity.As(value.Quantity.Unit);
     }
 
-    public static bool operator <(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool LessThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value < other.Quantity.As(value.Quantity.Unit);
     }
 
-    public static bool operator >=(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool GreaterOrEqualThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value >= other.Quantity.As(value.Quantity.Unit);
     }
 
-    public static bool operator <=(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool LessOrEqualThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value <= other.Quantity.As(value.Quantity.Unit);
     }
