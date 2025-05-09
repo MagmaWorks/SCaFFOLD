@@ -216,5 +216,56 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("a1", result.DisplayName);
             Assert.Equal(4.5, calcArea.Value);
         }
+
+        [Fact]
+        public void PowerOperatorTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            CalcInertia result = (CalcInertia)(calcArea ^ 2);
+
+            // Assert
+            Assert.Equal(Math.Pow(4.5, 2), result.Value);
+            Assert.Equal("cm⁴", result.Unit);
+            Assert.Equal("a1²", result.DisplayName);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal(4.5, calcArea.Value);
+        }
+
+        [Fact]
+        public void PowerAsSqrtOperatorTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            CalcLength result = (CalcLength)(calcArea ^ 0.5);
+
+            // Assert
+            Assert.Equal(Math.Pow(4.5, 0.5), result.Value);
+            Assert.Equal("cm", result.Unit);
+            Assert.Equal("√a1", result.DisplayName);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal(4.5, calcArea.Value);
+        }
+
+        [Fact]
+        public void RootTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a", "A");
+
+            // Act
+            CalcLength result = calcArea.Sqrt();
+
+            // Assert
+            Assert.Equal(Math.Sqrt(4.5), result.Value);
+            Assert.Equal("cm", result.Unit);
+            Assert.Equal("√a", result.DisplayName);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal(4.5, calcArea.Value);
+        }
     }
 }
