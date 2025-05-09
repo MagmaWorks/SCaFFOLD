@@ -124,7 +124,8 @@ public sealed class CalcArea : CalcQuantity<Area>
         if (y == 2)
         {
             return x ^ 2;
-        } else if (y == 0.5)
+        }
+        else if (y == 0.5)
         {
             return x.Sqrt();
         }
