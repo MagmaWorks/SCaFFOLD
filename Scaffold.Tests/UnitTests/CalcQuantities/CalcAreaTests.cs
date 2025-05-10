@@ -1,4 +1,5 @@
-﻿using Scaffold.Core.CalcQuantities;
+﻿using Scaffold.Core;
+using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 using UnitsNet;
 using UnitsNet.Units;
@@ -266,6 +267,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("√a", result.DisplayName);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal(4.5, calcArea.Value);
+        }
+
+        [Fact]
+        public void SumTest()
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(1, AreaUnit.SquareCentimeter, "a", "A");
+            var calcArea2 = new CalcArea(2, AreaUnit.SquareCentimeter, "a", "A");
+            var calcArea3 = new CalcArea(3, AreaUnit.SquareCentimeter, "a", "A");
+            var areas = new List<CalcArea>() { calcArea1,  calcArea2, calcArea3 };
+
+            // Act
+            CalcArea sum = areas.Sum();
+
+            // Assert
+            Assert.Equal(6, sum.Value);
+            Assert.Equal("cm²", sum.Unit);
+        }
+
+        [Fact]
+        public void AverageTest()
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(1, AreaUnit.SquareCentimeter, "a", "A");
+            var calcArea2 = new CalcArea(2, AreaUnit.SquareCentimeter, "a", "A");
+            var calcArea3 = new CalcArea(3, AreaUnit.SquareCentimeter, "a", "A");
+            var areas = new List<CalcArea>() { calcArea1, calcArea2, calcArea3 };
+
+            // Act
+            CalcArea sum = areas.Average();
+
+            // Assert
+            Assert.Equal(2, sum.Value);
+            Assert.Equal("cm²", sum.Unit);
         }
     }
 }
