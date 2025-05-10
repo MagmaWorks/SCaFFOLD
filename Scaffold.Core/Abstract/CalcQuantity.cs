@@ -97,7 +97,16 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcQuantity<T> other) => Value.Equals(other?.Value) && Unit == other.Unit;
+    public bool Equals(CalcQuantity<T> other)
+    {
+        if (Value == other?.Quantity.As(Quantity.Unit))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public string ValueAsString() => ToString();
     public override string ToString() => Quantity.ToString(CultureInfo.InvariantCulture).Replace(" ", "\u2009");
 

@@ -136,8 +136,8 @@ public sealed class CalcArea : CalcQuantity<Area>
     public static bool operator >=(CalcArea left, CalcArea right) => GreaterOrEqualThan(left, right);
     public static bool operator <(CalcArea left, CalcArea right) => LessThan(left, right);
     public static bool operator <=(CalcArea left, CalcArea right) => LessOrEqualThan(left, right);
-    public static bool operator ==(CalcArea left, CalcArea right) => Equals(left, right);
-    public static bool operator !=(CalcArea left, CalcArea right) => !Equals(left, right);
+    public static bool operator ==(CalcArea left, CalcArea right) => left.Equals(right);
+    public static bool operator !=(CalcArea left, CalcArea right) => !left.Equals(right);
 
     public static bool TryParse(string str, IFormatProvider provider, out CalcArea result)
     {
