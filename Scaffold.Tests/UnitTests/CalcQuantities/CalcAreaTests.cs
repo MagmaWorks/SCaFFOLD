@@ -276,7 +276,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             var calcArea1 = new CalcArea(1, AreaUnit.SquareCentimeter, "a", "A");
             var calcArea2 = new CalcArea(2, AreaUnit.SquareCentimeter, "a", "A");
             var calcArea3 = new CalcArea(3, AreaUnit.SquareCentimeter, "a", "A");
-            var areas = new List<CalcArea>() { calcArea1,  calcArea2, calcArea3 };
+            var areas = new List<CalcArea>() { calcArea1, calcArea2, calcArea3 };
 
             // Act
             CalcArea sum = areas.Sum();
