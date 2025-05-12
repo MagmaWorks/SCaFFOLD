@@ -1,7 +1,7 @@
 ﻿#if NET7_0_OR_GREATER
 using System.Numerics;
 
-namespace Scaffold.Core;
+namespace Scaffold.Core.CalcQuantities;
 public static class CalcQuantityExtensions
 {
     public static T Sum<T>(this IEnumerable<T> source)
