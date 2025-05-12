@@ -42,10 +42,7 @@ public sealed class CalcArea : CalcQuantity<Area>
         return new CalcArea(x.Value + y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
 
-    public static CalcArea operator +(double x, CalcArea y)
-    {
-        return y + x;
-    }
+    public static CalcArea operator +(double x, CalcArea y) => y + x;
     #endregion
 
     #region SubtractionOperators
