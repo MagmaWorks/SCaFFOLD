@@ -1,6 +1,7 @@
 ﻿using Scaffold.Core;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
+using Scaffold.Core.Exceptions;
 using UnitsNet;
 using UnitsNet.Units;
 
@@ -19,6 +20,18 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.True(CalcArea.TryParse("5.5 cm²", null, out calcArea));
             Assert.Equal(5.5, calcArea.Value);
             Assert.Equal("cm²", calcArea.Unit);
+        }
+
+        [Fact]
+        public void TryParseTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
+
+            // Act
+            // Assert
+            Assert.False(CalcArea.TryParse("two hundred horses", null, out calcArea));
+            Assert.Null(calcArea);
         }
 
         [Fact]
@@ -219,7 +232,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void PowerOperatorTest()
+        public void PowerOperatorIntTest()
         {
             // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
@@ -236,7 +249,24 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void PowerAsSqrtOperatorTest()
+        public void PowerOperatorDoubleTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            CalcInertia result = (CalcInertia)(calcArea ^ 2.0);
+
+            // Assert
+            Assert.Equal(Math.Pow(4.5, 2), result.Value);
+            Assert.Equal("cm⁴", result.Unit);
+            Assert.Equal("a1²", result.DisplayName);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal(4.5, calcArea.Value);
+        }
+
+        [Fact]
+        public void PowerOperatorAsSqrtTest()
         {
             // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
@@ -250,6 +280,17 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("√a1", result.DisplayName);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal(4.5, calcArea.Value);
+        }
+
+        [Fact]
+        public void PowerOperatorExceptionTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            // Assert
+            Assert.Throws<MathException>(() => calcArea ^ 0.4);
         }
 
         [Fact]
