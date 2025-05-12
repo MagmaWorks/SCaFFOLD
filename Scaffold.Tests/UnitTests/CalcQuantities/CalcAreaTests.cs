@@ -10,7 +10,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
     public class CalcAreaTests
     {
         [Fact]
-        public void ParseFromStringTest()
+        public void TryParseFromStringTest()
         {
             // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
@@ -18,6 +18,18 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             // Act
             // Assert
             Assert.True(CalcArea.TryParse("5.5 cm²", null, out calcArea));
+            Assert.Equal(5.5, calcArea.Value);
+            Assert.Equal("cm²", calcArea.Unit);
+        }
+
+        [Fact]
+        public void ParseFromStringTest()
+        {
+            // Arrange
+            // Act
+            var calcArea = CalcArea.Parse("5.5 cm²", null);
+
+            // Assert
             Assert.Equal(5.5, calcArea.Value);
             Assert.Equal("cm²", calcArea.Unit);
         }
