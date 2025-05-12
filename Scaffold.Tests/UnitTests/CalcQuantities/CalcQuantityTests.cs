@@ -15,7 +15,33 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Act
             // Assert
+            Assert.True(calcArea.TryParse("5.5 cm²"));
+            Assert.Equal(5.5, calcArea.Value);
+            Assert.Equal("cm²", calcArea.Unit);
+        }
+
+        [Fact]
+        public void TryParseFromStringWithWrongUnitTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
+
+            // Act
+            // Assert
             Assert.False(calcArea.TryParse("5.5 cm"));
+        }
+
+        [Fact]
+        public void TryParseFromStringWithoutUnitTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
+
+            // Act
+            // Assert
+            Assert.True(calcArea.TryParse("5.5"));
+            Assert.Equal(5.5, calcArea.Value);
+            Assert.Equal("ft²", calcArea.Unit);
         }
 
         [Fact]

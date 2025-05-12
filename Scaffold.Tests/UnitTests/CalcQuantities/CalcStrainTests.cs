@@ -1,4 +1,5 @@
 ﻿using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.CalcValues;
 using UnitsNet.Units;
 
 namespace Scaffold.Tests.UnitTests.CalcQuantities
@@ -186,6 +187,23 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("%", result.Unit);
             Assert.Equal("a1", result.DisplayName);
             Assert.Equal(4.5, calcStrain.Value);
+        }
+
+        [Fact]
+        public void DivisionOperatorTest()
+        {
+            // Arrange
+            var calcStrain1 = new CalcStrain(4.5, StrainUnit.Percent, "a1", "A");
+            var calcStrain2 = new CalcStrain(5.5, StrainUnit.Percent, "a2", "A");
+
+            // Act
+            CalcDouble result = calcStrain1 / calcStrain2;
+
+            // Assert
+            Assert.Equal(4.5 / 5.5, result.Value, 12);
+            Assert.Equal("a1 / a2", result.DisplayName); // note: using Thin Space \u2009
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.True(string.IsNullOrEmpty(result.Unit));
         }
 
         [Fact]
