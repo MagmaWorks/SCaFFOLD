@@ -1,10 +1,27 @@
-﻿using Scaffold.Core.Abstract;
+﻿#if NET7_0_OR_GREATER
+using System.Numerics;
+#endif
+using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
+#if NET7_0_OR_GREATER
+    , IParsable<CalcInertia>
+    , IAdditionOperators<CalcInertia, CalcInertia, CalcInertia>
+    , IAdditionOperators<CalcInertia, double, CalcInertia>
+    , IAdditiveIdentity<CalcInertia, CalcInertia>
+    , ISubtractionOperators<CalcInertia, CalcInertia, CalcInertia>
+    , IMultiplyOperators<CalcInertia, double, CalcInertia>
+    , IDivisionOperators<CalcInertia, CalcLength, CalcVolume>
+    , IDivisionOperators<CalcInertia, CalcArea, CalcArea>
+    , IDivisionOperators<CalcInertia, CalcVolume, CalcLength>
+    , IDivisionOperators<CalcInertia, double, CalcInertia>
+    , IUnaryNegationOperators<CalcInertia, CalcInertia>
+    , IComparisonOperators<CalcInertia, CalcInertia, bool>
+#endif
 {
     public CalcInertia(AreaMomentOfInertia areaMomentOfInertia, string name, string symbol = "")
         : base(areaMomentOfInertia, name, symbol) { }
@@ -12,12 +29,27 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
     public CalcInertia(double value, AreaMomentOfInertiaUnit unit, string name, string symbol)
         : base(new AreaMomentOfInertia(value, unit), name, symbol) { }
 
+    #region AdditionOperators
     public static CalcInertia operator +(CalcInertia x, CalcInertia y)
     {
         (string name, string symbol, AreaMomentOfInertiaUnit unit)
             = OperatorMetadataHelper<AreaMomentOfInertiaUnit>(x, y, '+');
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) + y.Quantity.As(unit),
             unit), name, symbol);
+    }
+
+    public static CalcInertia operator +(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value + y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcInertia operator +(double x, CalcInertia y) => y + x;
+    #endregion
+
+    #region SubtractionOperators
+    public static CalcInertia operator -(CalcInertia x)
+    {
+        return new CalcInertia(-(AreaMomentOfInertia)x.Quantity, $"-{x.DisplayName}", x.Symbol);
     }
 
     public static CalcInertia operator -(CalcInertia x, CalcInertia y)
@@ -27,7 +59,22 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) - y.Quantity.As(unit),
             unit), name, symbol);
     }
+    public static CalcInertia operator -(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value - y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+    #endregion
 
+    #region MultiplicationOperators
+    public static CalcInertia operator *(CalcInertia x, double y)
+    {
+        return new CalcInertia(x.Value * y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcInertia operator *(double x, CalcInertia y) => y * x;
+    #endregion
+
+    #region DivisionOperators
     public static CalcDouble operator /(CalcInertia x, CalcInertia y)
     {
         (string name, _, AreaMomentOfInertiaUnit _) = OperatorMetadataHelper<AreaMomentOfInertiaUnit>(x, y, '/');
@@ -61,33 +108,58 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
             unit.GetEquivilantLengthUnit()), name, "");
     }
 
-    public static CalcInertia operator +(CalcInertia x, double y)
-    {
-        return new CalcInertia(x.Value + y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcInertia operator +(double x, CalcInertia y)
-    {
-        return y + x;
-    }
-
-    public static CalcInertia operator -(CalcInertia x, double y)
-    {
-        return new CalcInertia(x.Value - y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcInertia operator *(CalcInertia x, double y)
-    {
-        return new CalcInertia(x.Value * y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcInertia operator *(double x, CalcInertia y)
-    {
-        return y * x;
-    }
-
     public static CalcInertia operator /(CalcInertia x, double y)
     {
         return new CalcInertia(x.Value / y, (AreaMomentOfInertiaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+    #endregion
+
+    #region PowerOperators
+    public static ICalcQuantity operator ^(CalcInertia x, double y)
+    {
+        if (y == 0.5)
+        {
+            return x.Sqrt();
+        }
+
+        throw new MathException("CalcInertia can only be raised by the power of 0.5");
+    }
+    #endregion
+
+    #region ComparisonOperators
+    public static bool operator >(CalcInertia left, CalcInertia right) => GreaterThan(left, right);
+    public static bool operator >=(CalcInertia left, CalcInertia right) => GreaterOrEqualThan(left, right);
+    public static bool operator <(CalcInertia left, CalcInertia right) => LessThan(left, right);
+    public static bool operator <=(CalcInertia left, CalcInertia right) => LessOrEqualThan(left, right);
+    public static bool operator ==(CalcInertia left, CalcInertia right) => left.Equals(right);
+    public static bool operator !=(CalcInertia left, CalcInertia right) => !left.Equals(right);
+    #endregion
+
+    public static bool TryParse(string str, IFormatProvider provider, out CalcInertia result)
+    {
+        if (AreaMomentOfInertia.TryParse(str, provider, out AreaMomentOfInertia quantity))
+        {
+            result = new CalcInertia(quantity, string.Empty);
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+    public static CalcInertia Parse(string str, IFormatProvider provider)
+    {
+        return new CalcInertia(AreaMomentOfInertia.Parse(str, provider), string.Empty);
+    }
+
+    public static CalcInertia Zero => new CalcInertia(AreaMomentOfInertia.Zero, string.Empty);
+    public static CalcInertia AdditiveIdentity => Zero;
+    public override bool Equals(object obj) => base.Equals(obj);
+    public override int GetHashCode() => base.GetHashCode();
+    public CalcArea Sqrt()
+    {
+        AreaMomentOfInertiaUnit unit = (AreaMomentOfInertiaUnit)Quantity.Unit;
+        string name = string.IsNullOrEmpty(DisplayName) ? string.Empty : $"√{DisplayName}";
+        return new CalcArea(Math.Sqrt(Value), unit.GetEquivilantAreaUnit(), name, "");
     }
 }
