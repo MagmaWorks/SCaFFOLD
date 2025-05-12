@@ -16,7 +16,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Act
             // Assert
-            Assert.True(calcInertia.TryParse("5.5 cm⁴"));
+            Assert.True(CalcInertia.TryParse("5.5 cm⁴", null, out calcInertia));
             Assert.Equal(5.5, calcInertia.Value);
             Assert.Equal("cm⁴", calcInertia.Unit);
         }
