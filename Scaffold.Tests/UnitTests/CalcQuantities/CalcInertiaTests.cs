@@ -1,5 +1,6 @@
 ﻿using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
+using Scaffold.Core.Exceptions;
 using UnitsNet;
 using UnitsNet.Units;
 
@@ -273,6 +274,17 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("√i1", result.DisplayName);
             Assert.True(string.IsNullOrEmpty(result.Symbol));
             Assert.Equal(4.5, calcInertia.Value);
+        }
+
+        [Fact]
+        public void PowerOperatorDoubleExceptionTest()
+        {
+            // Arrange
+            var calcInertia = new CalcInertia(4.5, AreaMomentOfInertiaUnit.CentimeterToTheFourth, "i1", "I");
+
+            // Act
+            // Assert
+            Assert.Throws<MathException>(() => calcInertia ^ 2);
         }
 
         [Fact]
