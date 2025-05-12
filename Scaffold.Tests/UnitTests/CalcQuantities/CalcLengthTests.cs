@@ -173,6 +173,23 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void MultiplicationStrainOperatorTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "l", "L");
+            var calcStrain = new CalcStrain(0.05, StrainUnit.DecimalFraction, "v", "V");
+
+            // Act
+            CalcLength result = calcStrain * calcLength;
+
+            // Assert
+            Assert.Equal(4.5 * 0.05, result.Value);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.True(string.IsNullOrEmpty(result.DisplayName));
+            Assert.Equal("cm", result.Unit);
+        }
+
+        [Fact]
         public void DivisionOperatorTest()
         {
             // Arrange
