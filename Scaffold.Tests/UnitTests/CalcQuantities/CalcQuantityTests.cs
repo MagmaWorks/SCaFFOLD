@@ -8,6 +8,17 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
     public class CalcQuantityTests
     {
         [Fact]
+        public void TryParseFromStringTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
+
+            // Act
+            // Assert
+            Assert.False(calcArea.TryParse("5.5 cm"));
+        }
+
+        [Fact]
         public void WrongUnitExceptionTest()
         {
             // Arrange
