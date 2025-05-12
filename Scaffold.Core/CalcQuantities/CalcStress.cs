@@ -1,90 +1,140 @@
-﻿using Scaffold.Core.Abstract;
+﻿#if NET7_0_OR_GREATER
+using System.Numerics;
+#endif
+using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcQuantities;
 
-public sealed class CalcStress : CalcQuantity<Pressure>
+public sealed class CalcStress : CalcQuantity<Stress>
+#if NET7_0_OR_GREATER
+    , IParsable<CalcStress>
+    , IAdditionOperators<CalcStress, CalcStress, CalcStress>
+    , IAdditionOperators<CalcStress, double, CalcStress>
+    , IAdditiveIdentity<CalcStress, CalcStress>
+    , ISubtractionOperators<CalcStress, CalcStress, CalcStress>
+    , ISubtractionOperators<CalcStress, double, CalcStress>
+    , IMultiplyOperators<CalcStress, CalcLength, CalcLinearForce>
+    , IMultiplyOperators<CalcStress, CalcArea, CalcForce>
+    , IMultiplyOperators<CalcStress, double, CalcStress>
+    , IDivisionOperators<CalcStress, double, CalcStress>
+    , IDivisionOperators<CalcStress, CalcStress, CalcDouble>
+    , IUnaryNegationOperators<CalcStress, CalcStress>
+    , IComparisonOperators<CalcStress, CalcStress, bool>
+#endif
 {
-    public CalcStress(Pressure linearForce, string name, string symbol = "")
+    public CalcStress(Stress linearForce, string name, string symbol = "")
         : base(linearForce, name, symbol) { }
 
-    public CalcStress(double value, PressureUnit unit, string name, string symbol)
-        : base(new Pressure(value, unit), name, symbol) { }
+    public CalcStress(double value, StressUnit unit, string name, string symbol)
+        : base(new Stress(value, unit), name, symbol) { }
 
+    #region AdditionOperators
     public static CalcStress operator +(CalcStress x, CalcStress y)
     {
-        (string name, string symbol, PressureUnit unit) = OperatorMetadataHelper<PressureUnit>(x, y, '+');
-        return new CalcStress(new Pressure(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
+        (string name, string symbol, StressUnit unit) = OperatorMetadataHelper<StressUnit>(x, y, '+');
+        return new CalcStress(new Stress(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
+    }
+
+    public static CalcStress operator +(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value + y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator +(double x, CalcStress y) => y + x;
+    #endregion
+
+    #region SubtractionOperators
+    public static CalcStress operator -(CalcStress x)
+    {
+        return new CalcStress(-(Stress)x.Quantity, $"-{x.DisplayName}", x.Symbol);
     }
 
     public static CalcStress operator -(CalcStress x, CalcStress y)
     {
-        (string name, string symbol, PressureUnit unit) = OperatorMetadataHelper<PressureUnit>(x, y, '-');
-        return new CalcStress(new Pressure(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
+        (string name, string symbol, StressUnit unit) = OperatorMetadataHelper<StressUnit>(x, y, '-');
+        return new CalcStress(new Stress(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
     }
 
+    public static CalcStress operator -(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value - y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+    #endregion
+
+    #region MultiplicationOperators
     public static CalcLinearForce operator *(CalcStress x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        PressureUnit unit = ((PressureUnit)x.Quantity.Unit).GetKnownUnit();
+        StressUnit unit = ((StressUnit)x.Quantity.Unit).GetKnownUnit();
         return new CalcLinearForce(new ForcePerLength(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantLengthUnit()),
             unit.GetEquivilantForcePerLengthUnit()), name, "");
     }
 
-    public static CalcLinearForce operator *(CalcLength x, CalcStress y)
-    {
-        return y * x;
-    }
+    public static CalcLinearForce operator *(CalcLength x, CalcStress y) => y * x;
 
     public static CalcForce operator *(CalcStress x, CalcArea y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
            ? string.Empty : $"{x.DisplayName}\u2009·\u2009{y.DisplayName}";
-        PressureUnit unit = ((PressureUnit)x.Quantity.Unit).GetKnownUnit();
+        StressUnit unit = ((StressUnit)x.Quantity.Unit).GetKnownUnit();
         return new CalcForce(new Force(x.Quantity.As(unit) * y.Quantity.As(unit.GetEquivilantAreaUnit()),
             unit.GetEquivilantForceUnit()), name, "");
     }
 
-    public static CalcForce operator *(CalcArea x, CalcStress y)
-    {
-        return y * x;
-    }
-
-    public static CalcDouble operator /(CalcStress x, CalcStress y)
-    {
-        (string name, string _, PressureUnit _) = OperatorMetadataHelper<PressureUnit>(x, y, '/');
-        return new CalcDouble((Pressure)x.Quantity / (Pressure)y.Quantity, name, string.Empty);
-    }
-
-    public static CalcStress operator +(CalcStress x, double y)
-    {
-        return new CalcStress(x.Value + y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcStress operator +(double x, CalcStress y)
-    {
-        return y + x;
-    }
-
-    public static CalcStress operator -(CalcStress x, double y)
-    {
-        return new CalcStress(x.Value - y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
+    public static CalcForce operator *(CalcArea x, CalcStress y) => y * x;
 
     public static CalcStress operator *(CalcStress x, double y)
     {
-        return new CalcStress(x.Value * y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+        return new CalcStress(x.Value * y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
 
-    public static CalcStress operator *(double x, CalcStress y)
+    public static CalcStress operator *(double x, CalcStress y) => y * x;
+    #endregion
+
+    #region DivisionOperators
+    public static CalcDouble operator /(CalcStress x, CalcStress y)
     {
-        return y * x;
+        (string name, string _, StressUnit _) = OperatorMetadataHelper<StressUnit>(x, y, '/');
+        return new CalcDouble((Stress)x.Quantity / (Stress)y.Quantity, name, string.Empty);
     }
 
     public static CalcStress operator /(CalcStress x, double y)
     {
-        return new CalcStress(x.Value / y, (PressureUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+        return new CalcStress(x.Value / y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
+    #endregion
+
+    #region ComparisonOperators
+    public static bool operator >(CalcStress left, CalcStress right) => GreaterThan(left, right);
+    public static bool operator >=(CalcStress left, CalcStress right) => GreaterOrEqualThan(left, right);
+    public static bool operator <(CalcStress left, CalcStress right) => LessThan(left, right);
+    public static bool operator <=(CalcStress left, CalcStress right) => LessOrEqualThan(left, right);
+    public static bool operator ==(CalcStress left, CalcStress right) => left.Equals(right);
+    public static bool operator !=(CalcStress left, CalcStress right) => !left.Equals(right);
+    #endregion
+
+    public static bool TryParse(string str, IFormatProvider provider, out CalcStress result)
+    {
+        if (Stress.TryParse(str, provider, out Stress quantity))
+        {
+            result = new CalcStress(quantity, string.Empty);
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+    public static CalcStress Parse(string str, IFormatProvider provider)
+    {
+        return new CalcStress(Stress.Parse(str, provider), string.Empty);
+    }
+
+    public static CalcStress Zero => new CalcStress(Stress.Zero, string.Empty);
+    public static CalcStress AdditiveIdentity => Zero;
+    public override bool Equals(object obj) => base.Equals(obj);
+    public override int GetHashCode() => base.GetHashCode();
 }
