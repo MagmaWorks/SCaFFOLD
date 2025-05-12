@@ -30,16 +30,11 @@ public sealed class CalcArea : CalcQuantity<Area>
     public CalcArea(double value, AreaUnit unit, string name, string symbol)
         : base(new Area(value, unit), name, symbol) { }
 
+    #region AdditionOperators
     public static CalcArea operator +(CalcArea x, CalcArea y)
     {
         (string name, string symbol, AreaUnit unit) = OperatorMetadataHelper<AreaUnit>(x, y, '+');
         return new CalcArea(new Area(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
-    }
-
-    public static CalcDouble operator /(CalcArea x, CalcArea y)
-    {
-        (string name, string _, AreaUnit _) = OperatorMetadataHelper<AreaUnit>(x, y, '/');
-        return new CalcDouble((Area)x.Quantity / (Area)y.Quantity, name, string.Empty);
     }
 
     public static CalcArea operator +(CalcArea x, double y)
@@ -51,7 +46,9 @@ public sealed class CalcArea : CalcQuantity<Area>
     {
         return y + x;
     }
+    #endregion
 
+    #region SubtractionOperators
     public static CalcArea operator -(CalcArea x)
     {
         return new CalcArea(-(Area)x.Quantity, $"-{x.DisplayName}", x.Symbol);
@@ -67,7 +64,9 @@ public sealed class CalcArea : CalcQuantity<Area>
         (string name, string symbol, AreaUnit unit) = OperatorMetadataHelper<AreaUnit>(x, y, '-');
         return new CalcArea(new Area(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
     }
+    #endregion
 
+    #region MultiplicationOperators
     public static CalcArea operator *(CalcArea x, double y)
     {
         return new CalcArea(x.Value * y, (AreaUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
@@ -92,6 +91,14 @@ public sealed class CalcArea : CalcQuantity<Area>
         return new CalcInertia(new AreaMomentOfInertia(x.Quantity.As(unit) * y.Quantity.As(unit),
             unit.GetEquivilantInertiaUnit()), name, "");
     }
+    #endregion
+
+    #region DivisionOperators
+    public static CalcDouble operator /(CalcArea x, CalcArea y)
+    {
+        (string name, string _, AreaUnit _) = OperatorMetadataHelper<AreaUnit>(x, y, '/');
+        return new CalcDouble((Area)x.Quantity / (Area)y.Quantity, name, string.Empty);
+    }
 
     public static CalcArea operator /(CalcArea x, double y)
     {
@@ -106,7 +113,9 @@ public sealed class CalcArea : CalcQuantity<Area>
         LengthUnit lengthUnit = unit.GetEquivilantLengthUnit();
         return new CalcLength(new Length(x.Quantity.As(unit) / y.Quantity.As(lengthUnit), lengthUnit), name, "");
     }
+    #endregion
 
+    #region PowerOperators
     public static ICalcQuantity operator ^(CalcArea x, int y)
     {
         if (y == 2)
@@ -132,13 +141,16 @@ public sealed class CalcArea : CalcQuantity<Area>
 
         throw new MathException("CalcArea can only be raised by the power of 2 or 0.5");
     }
+    #endregion
 
+    #region ComparisonOperators
     public static bool operator >(CalcArea left, CalcArea right) => GreaterThan(left, right);
     public static bool operator >=(CalcArea left, CalcArea right) => GreaterOrEqualThan(left, right);
     public static bool operator <(CalcArea left, CalcArea right) => LessThan(left, right);
     public static bool operator <=(CalcArea left, CalcArea right) => LessOrEqualThan(left, right);
     public static bool operator ==(CalcArea left, CalcArea right) => left.Equals(right);
     public static bool operator !=(CalcArea left, CalcArea right) => !left.Equals(right);
+    #endregion
 
     public static bool TryParse(string str, IFormatProvider provider, out CalcArea result)
     {
