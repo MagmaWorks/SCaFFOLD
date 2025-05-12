@@ -8,29 +8,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
     public class CalcForceTests
     {
         [Fact]
-        public void ParseFromStringWithUnitTest()
+        public void TryParseFromStringTest()
         {
             // Assemble
             var calcForce = new CalcForce(4.5, ForceUnit.PoundForce, "force", "F");
 
             // Act
             // Assert
-            Assert.True(calcForce.TryParse("5.5 kN"));
+            Assert.True(CalcForce.TryParse("5.5 kN", null, out calcForce));
             Assert.Equal(5.5, calcForce.Value);
             Assert.Equal("kN", calcForce.Unit);
         }
 
         [Fact]
-        public void ParseFromStringWithoutUnitTest()
+        public void ParseFromStringTest()
         {
-            // Assemble
-            var calcForce = new CalcForce(4.5, ForceUnit.Kilonewton, "force", "F");
+            // Arrange
+            // Act
+            var calcForce = CalcForce.Parse("5.5 kN", null);
+
+            // Assert
+            Assert.Equal(5.5, calcForce.Value);
+            Assert.Equal("kN", calcForce.Unit);
+        }
+
+        [Fact]
+        public void TryParseFailureTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
             // Assert
-            Assert.True(calcForce.TryParse("5.5"));
-            Assert.Equal(5.5, calcForce.Value);
-            Assert.Equal("kN", calcForce.Unit);
+            Assert.False(CalcArea.TryParse("two hundred horses", null, out calcArea));
+            Assert.Null(calcArea);
         }
 
         [Fact]
@@ -228,6 +239,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("N", result.Unit);
             Assert.Equal("a1", result.DisplayName);
             Assert.Equal(4.5, calcForce.Value);
+        }
+
+        [Fact]
+        public void SumTest()
+        {
+            // Arrange
+            var calcForce1 = new CalcForce(1, ForceUnit.Kilonewton, "a", "A");
+            var calcForce2 = new CalcForce(2, ForceUnit.Kilonewton, "a", "A");
+            var calcForce3 = new CalcForce(3, ForceUnit.Kilonewton, "a", "A");
+            var forces = new List<CalcForce>() { calcForce1, calcForce2, calcForce3 };
+
+            // Act
+            CalcForce sum = forces.Sum();
+
+            // Assert
+            Assert.Equal(6, sum.Value);
+            Assert.Equal("kN", sum.Unit);
+        }
+
+        [Fact]
+        public void AverageTest()
+        {
+            // Arrange
+            var calcForce1 = new CalcForce(1, ForceUnit.Kilonewton, "a", "A");
+            var calcForce2 = new CalcForce(2, ForceUnit.Kilonewton, "a", "A");
+            var calcForce3 = new CalcForce(3, ForceUnit.Kilonewton, "a", "A");
+            var forces = new List<CalcForce>() { calcForce1, calcForce2, calcForce3 };
+
+            // Act
+            CalcForce sum = forces.Average();
+
+            // Assert
+            Assert.Equal(2, sum.Value);
+            Assert.Equal("kN", sum.Unit);
         }
     }
 }
