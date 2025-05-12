@@ -96,6 +96,22 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void UnaryNegationOperatorTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            CalcArea result = -calcArea;
+
+            // Assert
+            Assert.Equal(-4.5, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm²", result.Unit);
+            Assert.Equal("-a1", result.DisplayName);
+        }
+
+        [Fact]
         public void MultiplicationOperatorTest()
         {
             // Arrange
@@ -283,7 +299,18 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void PowerOperatorExceptionTest()
+        public void PowerOperatorIntExceptionTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");
+
+            // Act
+            // Assert
+            Assert.Throws<MathException>(() => calcArea ^ 5);
+        }
+
+        [Fact]
+        public void PowerOperatorDoubleExceptionTest()
         {
             // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareCentimeter, "a1", "A");

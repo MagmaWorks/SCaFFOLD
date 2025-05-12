@@ -54,7 +54,7 @@ public sealed class CalcArea : CalcQuantity<Area>
 
     public static CalcArea operator -(CalcArea x)
     {
-        return new CalcArea(-(Area)x.Quantity, x.DisplayName, x.Symbol);
+        return new CalcArea(-(Area)x.Quantity, $"-{x.DisplayName}", x.Symbol);
     }
 
     public static CalcArea operator -(CalcArea x, double y)
