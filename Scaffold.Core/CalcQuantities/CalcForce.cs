@@ -14,11 +14,13 @@ public sealed class CalcForce : CalcQuantity<Force>
     , IAdditionOperators<CalcForce, double, CalcForce>
     , IAdditiveIdentity<CalcForce, CalcForce>
     , ISubtractionOperators<CalcForce, CalcForce, CalcForce>
+    , ISubtractionOperators<CalcForce, double, CalcForce>
     , IMultiplyOperators<CalcForce, CalcLength, CalcMoment>
     , IMultiplyOperators<CalcForce, double, CalcForce>
     , IDivisionOperators<CalcForce, CalcLength, CalcLinearForce>
     , IDivisionOperators<CalcForce, CalcArea, CalcStress>
     , IDivisionOperators<CalcForce, double, CalcForce>
+    , IDivisionOperators<CalcForce, CalcForce, CalcDouble>
     , IUnaryNegationOperators<CalcForce, CalcForce>
     , IComparisonOperators<CalcForce, CalcForce, bool>
 #endif

@@ -14,12 +14,13 @@ public sealed class CalcArea : CalcQuantity<Area>
     , IAdditionOperators<CalcArea, double, CalcArea>
     , IAdditiveIdentity<CalcArea, CalcArea>
     , ISubtractionOperators<CalcArea, CalcArea, CalcArea>
+    , ISubtractionOperators<CalcArea, double, CalcArea>
     , IMultiplyOperators<CalcArea, CalcLength, CalcVolume>
     , IMultiplyOperators<CalcArea, CalcArea, CalcInertia>
     , IMultiplyOperators<CalcArea, double, CalcArea>
     , IDivisionOperators<CalcArea, CalcLength, CalcLength>
-    , IDivisionOperators<CalcArea, CalcArea, CalcDouble>
     , IDivisionOperators<CalcArea, double, CalcArea>
+    , IDivisionOperators<CalcArea, CalcArea, CalcDouble>
     , IUnaryNegationOperators<CalcArea, CalcArea>
     , IComparisonOperators<CalcArea, CalcArea, bool>
 #endif

@@ -13,6 +13,7 @@ public sealed class CalcLength : CalcQuantity<Length>
     , IAdditionOperators<CalcLength, double, CalcLength>
     , IAdditiveIdentity<CalcLength, CalcLength>
     , ISubtractionOperators<CalcLength, CalcLength, CalcLength>
+    , ISubtractionOperators<CalcLength, double, CalcLength>
     , IMultiplyOperators<CalcLength, CalcLength, CalcArea>
     , IMultiplyOperators<CalcLength, double, CalcLength>
     , IMultiplyOperators<CalcLength, CalcArea, CalcVolume>

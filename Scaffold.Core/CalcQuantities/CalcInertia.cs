@@ -14,11 +14,13 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
     , IAdditionOperators<CalcInertia, double, CalcInertia>
     , IAdditiveIdentity<CalcInertia, CalcInertia>
     , ISubtractionOperators<CalcInertia, CalcInertia, CalcInertia>
+    , ISubtractionOperators<CalcInertia, double, CalcInertia>
     , IMultiplyOperators<CalcInertia, double, CalcInertia>
     , IDivisionOperators<CalcInertia, CalcLength, CalcVolume>
     , IDivisionOperators<CalcInertia, CalcArea, CalcArea>
     , IDivisionOperators<CalcInertia, CalcVolume, CalcLength>
     , IDivisionOperators<CalcInertia, double, CalcInertia>
+    , IDivisionOperators<CalcInertia, CalcInertia, CalcDouble>
     , IUnaryNegationOperators<CalcInertia, CalcInertia>
     , IComparisonOperators<CalcInertia, CalcInertia, bool>
 #endif
