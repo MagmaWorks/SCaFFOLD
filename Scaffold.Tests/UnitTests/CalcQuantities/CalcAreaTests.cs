@@ -1,5 +1,4 @@
-﻿using Scaffold.Core;
-using Scaffold.Core.CalcQuantities;
+﻿using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Exceptions;
 using UnitsNet;
@@ -35,7 +34,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
-        public void TryParseTest()
+        public void TryParseFailureTest()
         {
             // Arrange
             var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
