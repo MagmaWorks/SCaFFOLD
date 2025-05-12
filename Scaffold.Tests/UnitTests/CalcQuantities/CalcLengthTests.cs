@@ -180,7 +180,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             var calcStrain = new CalcStrain(0.05, StrainUnit.DecimalFraction, "v", "V");
 
             // Act
-            CalcLength result = calcStrain * calcLength;
+            CalcLength result = calcLength * calcStrain;
 
             // Assert
             Assert.Equal(4.5 * 0.05, result.Value);
