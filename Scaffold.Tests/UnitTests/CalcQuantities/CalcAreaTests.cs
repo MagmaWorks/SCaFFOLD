@@ -37,12 +37,12 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void TryParseFailureTest()
         {
             // Arrange
-            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
+            var calcQuantity = new CalcArea(4.5, AreaUnit.SquareFoot, "area", "A");
 
             // Act
             // Assert
-            Assert.False(CalcArea.TryParse("two hundred horses", null, out calcArea));
-            Assert.Null(calcArea);
+            Assert.False(CalcArea.TryParse("two hundred horses", null, out calcQuantity));
+            Assert.Null(calcQuantity);
         }
 
         [Fact]
@@ -380,6 +380,214 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             // Assert
             Assert.Equal(2, sum.Value);
             Assert.Equal("cm²", sum.Unit);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.31, 4.3, false)]
+        public void EqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "q2", "Q");
+            var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcArea1 == calcArea2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.31, 4.3, true)]
+        public void NotEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "q2", "Q");
+            var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcArea1 != calcArea2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.31, 4.3, true)]
+        public void GreaterThanOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "q2", "Q");
+            var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcArea1 > calcArea2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.3, 4.31, true)]
+        public void LessThanOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "q2", "Q");
+            var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcArea1 < calcArea2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.31, 4.3, true)]
+        [InlineData(4.3, 4.31, false)]
+        public void GreaterOrEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "q2", "Q");
+            var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcArea1 >= calcArea2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.3, 4.31, true)]
+        [InlineData(4.31, 4.30, false)]
+        public void LessOrEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(val1, AreaUnit.SquareMeter, "q2", "Q");
+            var calcArea2 = new CalcArea(val2 * 10000, AreaUnit.SquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcArea1 <= calcArea2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsObjectTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcArea.Equals((object)calcArea));
+        }
+
+        [Fact]
+        public void EqualsNullObjectTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.False(calcArea.Equals((object)null));
+        }
+
+        [Fact]
+        public void EqualsOtherObjectTest()
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+            var calcArea2 = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcArea1.Equals((object)calcArea2));
+        }
+
+        [Fact]
+        public void EqualsOtherTypeTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+            var notCalcArea = new CalcLength(4.5, LengthUnit.Foot, "length", "l");
+
+            // Act
+            // Assert
+            Assert.False(calcArea.Equals(notCalcArea));
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcArea.Equals(calcArea));
+        }
+
+        [Fact]
+        public void EqualsNullTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.False(calcArea.Equals(null));
+        }
+
+        [Fact]
+        public void EqualsOtherTest()
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+            var calcArea2 = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcArea1.Equals(calcArea2));
+        }
+
+        [Fact]
+        public void GetHashCodeTest()
+        {
+            // Arrange
+            var calcArea1 = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+            var calcArea2 = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+            var calcArea3 = new CalcArea(4.5, AreaUnit.SquareFoot, "MyQuantity", "Q");
+
+            // Act
+            bool firstEqualsSecond = calcArea1.GetHashCode() == calcArea2.GetHashCode();
+            bool firstEqualsThird = calcArea1.GetHashCode() == calcArea3.GetHashCode();
+
+            // Assert
+            Assert.True(firstEqualsSecond);
+            Assert.False(firstEqualsThird);
+        }
+
+        [Fact]
+        public void ValueAsStringTest()
+        {
+            // Arrange
+            var calcArea = new CalcArea(4.5, AreaUnit.SquareFoot, "myQuantity", "Q");
+
+            // Act
+            string value = calcArea.ValueAsString();
+
+            // Assert
+            Assert.Equal("4.5 ft²", value);
         }
     }
 }
