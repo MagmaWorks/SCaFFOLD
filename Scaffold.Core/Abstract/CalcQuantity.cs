@@ -32,32 +32,22 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     public static implicit operator T(CalcQuantity<T> value) => (T)value.Quantity;
     public static implicit operator double(CalcQuantity<T> value) => value.Value;
 
-    public static bool operator ==(CalcQuantity<T> value, CalcQuantity<T> other)
-    {
-        return other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
-    }
-
-    public static bool operator !=(CalcQuantity<T> value, CalcQuantity<T> other)
-    {
-        return !other.Quantity.As(value.Quantity.Unit).Equals(value.Value);
-    }
-
-    public static bool operator >(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool GreaterThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value > other.Quantity.As(value.Quantity.Unit);
     }
 
-    public static bool operator <(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool LessThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value < other.Quantity.As(value.Quantity.Unit);
     }
 
-    public static bool operator >=(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool GreaterOrEqualThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value >= other.Quantity.As(value.Quantity.Unit);
     }
 
-    public static bool operator <=(CalcQuantity<T> value, CalcQuantity<T> other)
+    public static bool LessOrEqualThan(CalcQuantity<T> value, CalcQuantity<T> other)
     {
         return value.Value <= other.Quantity.As(value.Quantity.Unit);
     }
@@ -107,7 +97,16 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
             ^ Value.GetHashCode() ^ Unit.GetHashCode();
     }
 
-    public bool Equals(CalcQuantity<T> other) => Value.Equals(other?.Value) && Unit == other.Unit;
+    public bool Equals(CalcQuantity<T> other)
+    {
+        if (Value == other?.Quantity.As(Quantity.Unit))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public string ValueAsString() => ToString();
     public override string ToString() => Quantity.ToString(CultureInfo.InvariantCulture).Replace(" ", "\u2009");
 

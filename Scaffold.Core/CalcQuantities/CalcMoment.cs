@@ -1,10 +1,28 @@
-﻿using Scaffold.Core.Abstract;
+﻿#if NET7_0_OR_GREATER
+using System.Numerics;
+#endif
+using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Static;
 
 namespace Scaffold.Core.CalcQuantities;
 
 public sealed class CalcMoment : CalcQuantity<Moment>
+#if NET7_0_OR_GREATER
+    , IParsable<CalcMoment>
+    , IAdditionOperators<CalcMoment, CalcMoment, CalcMoment>
+    , IAdditionOperators<CalcMoment, double, CalcMoment>
+    , IAdditiveIdentity<CalcMoment, CalcMoment>
+    , ISubtractionOperators<CalcMoment, CalcMoment, CalcMoment>
+    , ISubtractionOperators<CalcMoment, double, CalcMoment>
+    , IMultiplyOperators<CalcMoment, double, CalcMoment>
+    , IDivisionOperators<CalcMoment, CalcLength, CalcForce>
+    , IDivisionOperators<CalcMoment, CalcForce, CalcLength>
+    , IDivisionOperators<CalcMoment, double, CalcMoment>
+    , IDivisionOperators<CalcMoment, CalcMoment, CalcDouble>
+    , IUnaryNegationOperators<CalcMoment, CalcMoment>
+    , IComparisonOperators<CalcMoment, CalcMoment, bool>
+#endif
 {
     public CalcMoment(Moment moment, string name, string symbol = "")
         : base(moment, name, symbol) { }
@@ -15,10 +33,25 @@ public sealed class CalcMoment : CalcQuantity<Moment>
     public CalcMoment(double value, string name, string symbol)
         : base(new Moment(value, MomentUnit.KilonewtonMeter), name, symbol) { }
 
+    #region AdditionOperators
     public static CalcMoment operator +(CalcMoment x, CalcMoment y)
     {
         (string name, string symbol, MomentUnit unit) = OperatorMetadataHelper<MomentUnit>(x, y, '+');
         return new CalcMoment(new Moment(x.Quantity.As(unit) + y.Quantity.As(unit), unit), name, symbol);
+    }
+
+    public static CalcMoment operator +(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value + y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcMoment operator +(double x, CalcMoment y) => y + x;
+    #endregion
+
+    #region SubtractionOperators
+    public static CalcMoment operator -(CalcMoment x)
+    {
+        return new CalcMoment(-(Moment)x.Quantity, $"-{x.DisplayName}", x.Symbol);
     }
 
     public static CalcMoment operator -(CalcMoment x, CalcMoment y)
@@ -27,6 +60,22 @@ public sealed class CalcMoment : CalcQuantity<Moment>
         return new CalcMoment(new Moment(x.Quantity.As(unit) - y.Quantity.As(unit), unit), name, symbol);
     }
 
+    public static CalcMoment operator -(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value - y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+    #endregion
+
+    #region MultiplicationOperators
+    public static CalcMoment operator *(CalcMoment x, double y)
+    {
+        return new CalcMoment(x.Value * y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcMoment operator *(double x, CalcMoment y) => y * x;
+    #endregion
+
+    #region DivisionOperators
     public static CalcForce operator /(CalcMoment x, CalcLength y)
     {
         string name = string.IsNullOrEmpty(x.DisplayName) || string.IsNullOrEmpty(y.DisplayName)
@@ -51,35 +100,42 @@ public sealed class CalcMoment : CalcQuantity<Moment>
         return new CalcDouble((Moment)x.Quantity / (Moment)y.Quantity, name, string.Empty);
     }
 
-    public static CalcMoment operator +(CalcMoment x, double y)
-    {
-        return new CalcMoment(x.Value + y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcMoment operator +(double x, CalcMoment y)
-    {
-        return y + x;
-    }
-
-    public static CalcMoment operator -(CalcMoment x, double y)
-    {
-        return new CalcMoment(x.Value - y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcMoment operator *(CalcMoment x, double y)
-    {
-        return new CalcMoment(x.Value * y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
-    }
-
-    public static CalcMoment operator *(double x, CalcMoment y)
-    {
-        return y * x;
-    }
-
     public static CalcMoment operator /(CalcMoment x, double y)
     {
         return new CalcMoment(x.Value / y, (MomentUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
+    #endregion
+
+    #region ComparisonOperators
+    public static bool operator >(CalcMoment left, CalcMoment right) => GreaterThan(left, right);
+    public static bool operator >=(CalcMoment left, CalcMoment right) => GreaterOrEqualThan(left, right);
+    public static bool operator <(CalcMoment left, CalcMoment right) => LessThan(left, right);
+    public static bool operator <=(CalcMoment left, CalcMoment right) => LessOrEqualThan(left, right);
+    public static bool operator ==(CalcMoment left, CalcMoment right) => left.Equals(right);
+    public static bool operator !=(CalcMoment left, CalcMoment right) => !left.Equals(right);
+    #endregion
+
+    public static bool TryParse(string str, IFormatProvider provider, out CalcMoment result)
+    {
+        if (Moment.TryParse(str, provider, out Moment quantity))
+        {
+            result = new CalcMoment(quantity, string.Empty);
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+    public static CalcMoment Parse(string str, IFormatProvider provider)
+    {
+        return new CalcMoment(Moment.Parse(str, provider), string.Empty);
+    }
+
+    public static CalcMoment Zero => new CalcMoment(Moment.Zero, string.Empty);
+    public static CalcMoment AdditiveIdentity => Zero;
+    public override bool Equals(object obj) => base.Equals(obj);
+    public override int GetHashCode() => base.GetHashCode();
 
     public CalcLinearMoment MakeLinear(CalcLength length)
     {

@@ -8,29 +8,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
     public class CalcForceTests
     {
         [Fact]
-        public void ParseFromStringWithUnitTest()
+        public void TryParseFromStringTest()
         {
             // Assemble
             var calcForce = new CalcForce(4.5, ForceUnit.PoundForce, "force", "F");
 
             // Act
             // Assert
-            Assert.True(calcForce.TryParse("5.5 kN"));
+            Assert.True(CalcForce.TryParse("5.5 kN", null, out calcForce));
             Assert.Equal(5.5, calcForce.Value);
             Assert.Equal("kN", calcForce.Unit);
         }
 
         [Fact]
-        public void ParseFromStringWithoutUnitTest()
+        public void ParseFromStringTest()
         {
-            // Assemble
-            var calcForce = new CalcForce(4.5, ForceUnit.Kilonewton, "force", "F");
+            // Arrange
+            // Act
+            var calcForce = CalcForce.Parse("5.5 kN", null);
+
+            // Assert
+            Assert.Equal(5.5, calcForce.Value);
+            Assert.Equal("kN", calcForce.Unit);
+        }
+
+        [Fact]
+        public void TryParseFailureTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
 
             // Act
             // Assert
-            Assert.True(calcForce.TryParse("5.5"));
-            Assert.Equal(5.5, calcForce.Value);
-            Assert.Equal("kN", calcForce.Unit);
+            Assert.False(CalcForce.TryParse("two hundred horses", null, out calcQuantity));
+            Assert.Null(calcQuantity);
         }
 
         [Fact]
@@ -95,6 +106,22 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void UnaryNegationOperatorTest()
+        {
+            // Arrange
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "f1", "F");
+
+            // Act
+            CalcForce result = -calcForce;
+
+            // Assert
+            Assert.Equal(-4.5, result.Value);
+            Assert.Equal("F", result.Symbol);
+            Assert.Equal("N", result.Unit);
+            Assert.Equal("-f1", result.DisplayName);
+        }
+
+        [Fact]
         public void MultiplicationOperatorTest()
         {
             // Assemble
@@ -102,7 +129,7 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             var calcLength = new CalcLength(5.5, LengthUnit.Meter, "l", "L");
 
             // Act
-            CalcMoment result = calcForce * calcLength;
+            CalcMoment result = calcLength * calcForce;
 
             // Assert
             Assert.Equal(4.5 * 5.5, result.Value);
@@ -166,16 +193,16 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void AdditionDoubleOperatorTest()
         {
             // Arrange
-            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "myForce", "F");
 
             // Act
             CalcForce result = 2.0 + calcForce;
 
             // Assert
             Assert.Equal(4.5 + 2, result.Value);
-            Assert.Equal("A", result.Symbol);
+            Assert.Equal("F", result.Symbol);
             Assert.Equal("N", result.Unit);
-            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal("myForce", result.DisplayName);
             Assert.Equal(4.5, calcForce.Value);
         }
 
@@ -183,16 +210,16 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void SubtractionDoubleOperatorTest()
         {
             // Arrange
-            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "myForce", "F");
 
             // Act
             CalcForce result = calcForce - 2;
 
             // Assert
             Assert.Equal(4.5 - 2, result.Value);
-            Assert.Equal("A", result.Symbol);
+            Assert.Equal("F", result.Symbol);
             Assert.Equal("N", result.Unit);
-            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal("myForce", result.DisplayName);
             Assert.Equal(4.5, calcForce.Value);
         }
 
@@ -200,16 +227,16 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void MultiplicationDoubleOperatorTest()
         {
             // Arrange
-            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "myForce", "F");
 
             // Act
             CalcForce result = 2.0 * calcForce;
 
             // Assert
             Assert.Equal(4.5 * 2, result.Value);
-            Assert.Equal("A", result.Symbol);
+            Assert.Equal("F", result.Symbol);
             Assert.Equal("N", result.Unit);
-            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal("myForce", result.DisplayName);
             Assert.Equal(4.5, calcForce.Value);
         }
 
@@ -217,17 +244,259 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         public void DivisionDoubleOperatorTest()
         {
             // Arrange
-            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "a1", "A");
+            var calcForce = new CalcForce(4.5, ForceUnit.Newton, "myForce", "F");
 
             // Act
             CalcForce result = calcForce / 2;
 
             // Assert
             Assert.Equal(4.5 / 2, result.Value);
-            Assert.Equal("A", result.Symbol);
+            Assert.Equal("F", result.Symbol);
             Assert.Equal("N", result.Unit);
-            Assert.Equal("a1", result.DisplayName);
+            Assert.Equal("myForce", result.DisplayName);
             Assert.Equal(4.5, calcForce.Value);
+        }
+
+        [Fact]
+        public void SumTest()
+        {
+            // Arrange
+            var calcForce1 = new CalcForce(1, ForceUnit.Kilonewton, "f1", "F");
+            var calcForce2 = new CalcForce(2, ForceUnit.Kilonewton, "f2", "F");
+            var calcForce3 = new CalcForce(3, ForceUnit.Kilonewton, "f3", "F");
+            var forces = new List<CalcForce>() { calcForce1, calcForce2, calcForce3 };
+
+            // Act
+            CalcForce sum = forces.Sum();
+
+            // Assert
+            Assert.Equal(6, sum.Value);
+            Assert.Equal("kN", sum.Unit);
+        }
+
+        [Fact]
+        public void AverageTest()
+        {
+            // Arrange
+            var calcForce1 = new CalcForce(1, ForceUnit.Kilonewton, "f1", "F");
+            var calcForce2 = new CalcForce(2, ForceUnit.Kilonewton, "f2", "F");
+            var calcForce3 = new CalcForce(3, ForceUnit.Kilonewton, "f3", "F");
+            var forces = new List<CalcForce>() { calcForce1, calcForce2, calcForce3 };
+
+            // Act
+            CalcForce sum = forces.Average();
+
+            // Assert
+            Assert.Equal(2, sum.Value);
+            Assert.Equal("kN", sum.Unit);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.31, 4.3, false)]
+        public void EqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(val1, ForceUnit.Kilonewton, "q1", "Q");
+            var calcQuantity2 = new CalcForce(val2 * 1000, ForceUnit.Newton, "q2", "Q");
+
+            // Act
+            bool result = calcQuantity1 == calcQuantity2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.31, 4.3, true)]
+        public void NotEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(val1, ForceUnit.Kilonewton, "q1", "Q");
+            var calcQuantity2 = new CalcForce(val2 * 1000, ForceUnit.Newton, "q2", "Q");
+
+            // Act
+            bool result = calcQuantity1 != calcQuantity2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.31, 4.3, true)]
+        public void GreaterThanOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(val1, ForceUnit.Kilonewton, "q1", "Q");
+            var calcQuantity2 = new CalcForce(val2 * 1000, ForceUnit.Newton, "q2", "Q");
+
+            // Act
+            bool result = calcQuantity1 > calcQuantity2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.3, 4.31, true)]
+        public void LessThanOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(val1, ForceUnit.Kilonewton, "q1", "Q");
+            var calcQuantity2 = new CalcForce(val2 * 1000, ForceUnit.Newton, "q2", "Q");
+
+            // Act
+            bool result = calcQuantity1 < calcQuantity2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.31, 4.3, true)]
+        [InlineData(4.3, 4.31, false)]
+        public void GreaterOrEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(val1, ForceUnit.Kilonewton, "q1", "Q");
+            var calcQuantity2 = new CalcForce(val2 * 1000, ForceUnit.Newton, "q2", "Q");
+
+            // Act
+            bool result = calcQuantity1 >= calcQuantity2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.3, 4.31, true)]
+        [InlineData(4.31, 4.30, false)]
+        public void LessOrEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(val1, ForceUnit.Kilonewton, "q1", "Q");
+            var calcQuantity2 = new CalcForce(val2 * 1000, ForceUnit.Newton, "q2", "Q");
+
+            // Act
+            bool result = calcQuantity1 <= calcQuantity2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsObjectTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcQuantity.Equals((object)calcQuantity));
+        }
+
+        [Fact]
+        public void EqualsNullObjectTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.False(calcQuantity.Equals((object)null));
+        }
+
+        [Fact]
+        public void EqualsOtherObjectTest()
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+            var calcQuantity2 = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcQuantity1.Equals((object)calcQuantity2));
+        }
+
+        [Fact]
+        public void EqualsOtherTypeTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+            var notCalcForce = new CalcLength(4.5, LengthUnit.Foot, "length", "l");
+
+            // Act
+            // Assert
+            Assert.False(calcQuantity.Equals(notCalcForce));
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcQuantity.Equals(calcQuantity));
+        }
+
+        [Fact]
+        public void EqualsNullTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.False(calcQuantity.Equals(null));
+        }
+
+        [Fact]
+        public void EqualsOtherTest()
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+            var calcQuantity2 = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcQuantity1.Equals(calcQuantity2));
+        }
+
+        [Fact]
+        public void GetHashCodeTest()
+        {
+            // Arrange
+            var calcQuantity1 = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+            var calcQuantity2 = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+            var calcQuantity3 = new CalcForce(4.5, ForceUnit.PoundForce, "MyQuantity", "Q");
+
+            // Act
+            bool firstEqualsSecond = calcQuantity1.GetHashCode() == calcQuantity2.GetHashCode();
+            bool firstEqualsThird = calcQuantity1.GetHashCode() == calcQuantity3.GetHashCode();
+
+            // Assert
+            Assert.True(firstEqualsSecond);
+            Assert.False(firstEqualsThird);
+        }
+
+        [Fact]
+        public void ValueAsStringTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcForce(4.5, ForceUnit.PoundForce, "myQuantity", "Q");
+
+            // Act
+            string value = calcQuantity.ValueAsString();
+
+            // Assert
+            Assert.Equal("4.5 lbf", value); // note: using Thin Space \u2009
         }
     }
 }
