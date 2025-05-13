@@ -3,6 +3,14 @@
 public static partial class UnitUtility
 {
     #region Geometry / Length conversions
+    internal static ReciprocalLengthUnit GetEquivilantReciprocalLengthUnit(this LengthUnit unit)
+        => (ReciprocalLengthUnit)UnitsNetSetup.Default.UnitParser.Parse(Length.GetAbbreviation(unit)
+            + "⁻¹", typeof(ReciprocalLengthUnit));
+
+    internal static LengthUnit GetEquivilantLengthUnit(this ReciprocalLengthUnit unit)
+        => (LengthUnit)UnitsNetSetup.Default.UnitParser.Parse(ReciprocalLength.GetAbbreviation(unit)
+            .Replace("⁻¹", string.Empty), typeof(LengthUnit));
+
     internal static LengthUnit GetEquivilantLengthUnit(this AreaUnit unit)
         => (LengthUnit)UnitsNetSetup.Default.UnitParser.Parse(Area.GetAbbreviation(unit)
             .Replace("²", string.Empty), typeof(LengthUnit));
