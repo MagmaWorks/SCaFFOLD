@@ -115,6 +115,12 @@ public sealed class CalcLength : CalcQuantity<Length>
     {
         return new CalcLength(x.Value / y, (LengthUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
+
+    public static CalcCurvature operator /(int one, CalcLength x)
+    {
+        return new CalcCurvature(one / x.Value, ((LengthUnit)x.Quantity.Unit).GetEquivilantReciprocalLengthUnit(),
+            $"{one}/{x.DisplayName}", x.Symbol);
+    }
     #endregion
 
     #region PowerOperators
@@ -124,6 +130,10 @@ public sealed class CalcLength : CalcQuantity<Length>
         string name;
         switch (y)
         {
+            case -1:
+                name = string.IsNullOrEmpty(x.DisplayName) ? string.Empty : $"1/{x.DisplayName}";
+                return new CalcCurvature(Math.Pow(x.Value, y), unit.GetEquivilantReciprocalLengthUnit(), name, "");
+
             case 2:
                 name = string.IsNullOrEmpty(x.DisplayName) ? string.Empty : $"{x.DisplayName}²";
                 return new CalcArea(Math.Pow(x.Value, y), unit.GetEquivilantAreaUnit(), name, "");
@@ -137,7 +147,7 @@ public sealed class CalcLength : CalcQuantity<Length>
                 return new CalcInertia(Math.Pow(x.Value, y), unit.GetEquivilantInertiaUnit(), name, "");
         }
 
-        throw new MathException("CalcLength can only be raised by the power of 2, 3 or 4");
+        throw new MathException("CalcLength can only be raised by the power of -1, 2, 3 or 4");
     }
     #endregion
 
@@ -172,4 +182,10 @@ public sealed class CalcLength : CalcQuantity<Length>
     public static CalcLength AdditiveIdentity => Zero;
     public override bool Equals(object obj) => base.Equals(obj);
     public override int GetHashCode() => base.GetHashCode();
+
+    public CalcCurvature Inverse()
+    {
+        return new CalcCurvature(1 / Value, ((LengthUnit)Quantity.Unit).GetEquivilantReciprocalLengthUnit(),
+            $"1/{DisplayName}", "");
+    }
 }

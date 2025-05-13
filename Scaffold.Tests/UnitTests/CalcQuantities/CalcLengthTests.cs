@@ -275,6 +275,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void DivisionInverseOperatorTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "a1", "A");
+
+            // Act
+            CalcCurvature result = 1 / calcLength;
+
+            // Assert
+            Assert.Equal(1 / 4.5, result.Value);
+            Assert.Equal("A", result.Symbol);
+            Assert.Equal("cm⁻¹", result.Unit);
+            Assert.Equal("1/a1", result.DisplayName);
+            Assert.Equal(4.5, calcLength.Value);
+        }
+
+        [Fact]
+        public void PowerOperatorMinus1Test()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Centimeter, "a1", "A");
+
+            // Act
+            CalcCurvature result = (CalcCurvature)(calcLength ^ -1);
+
+            // Assert
+            Assert.Equal(Math.Pow(4.5, -1), result.Value);
+            Assert.Equal("cm⁻¹", result.Unit);
+            Assert.Equal("1/a1", result.DisplayName);
+            Assert.True(string.IsNullOrEmpty(result.Symbol));
+            Assert.Equal(4.5, calcLength.Value);
+        }
+
+        [Fact]
         public void PowerOperator2Test()
         {
             // Arrange
@@ -576,6 +610,20 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
 
             // Assert
             Assert.Equal("4.5 ft", value);
+        }
+
+        [Fact]
+        public void InverseTest()
+        {
+            // Arrange
+            var calcLength = new CalcLength(4.5, LengthUnit.Foot, "myQuantity", "Q");
+
+            // Act
+            CalcCurvature value = calcLength.Inverse();
+
+            // Assert
+            Assert.Equal(1 / 4.5, value);
+            Assert.Equal("ft⁻¹", value.Unit);
         }
     }
 }
