@@ -4,58 +4,21 @@ namespace Scaffold.Core.Models;
 
 public class Formula : IFormula
 {
-    public List<string> Expression { get; set; } = new List<string>();
-    public string Reference { get; set; } = "";
-    public string Narrative { get; set; } = "";
-    public string Conclusion { get; set; } = "";
+    public string Markdown { get; set; } = "";
     public CalcStatus Status { get; set; } = CalcStatus.None;
     public ICalcImage Image { get; set; }
 
     public Formula() { }
 
-    public Formula(string reference, string narrative, string conclusion, string expression,
-        CalcStatus status = CalcStatus.None)
+    public Formula(string markdown, CalcStatus status = CalcStatus.None)
     {
-        Reference = reference;
-        Narrative = narrative;
-        Conclusion = conclusion;
-        Expression.Add(expression);
+        Markdown = markdown;
         Status = status;
     }
 
-    public static Formula New(string narrative)
+    public static Formula New(string markdown)
     {
-        return new Formula { Narrative = narrative };
-    }
-
-    public Formula WithConclusion(string conclusion)
-    {
-        Conclusion = conclusion;
-        return this;
-    }
-
-    public Formula WithStatus(CalcStatus status)
-    {
-        Status = status;
-        return this;
-    }
-
-    public Formula WithReference(string reference)
-    {
-        Reference = reference;
-        return this;
-    }
-
-    public Formula AddExpression(string expression)
-    {
-        Expression.Add(expression);
-        return this;
-    }
-
-    public Formula AddExpressions(IEnumerable<string> expressions)
-    {
-        Expression.AddRange(expressions);
-        return this;
+        return new Formula { Markdown = markdown };
     }
 
     public Formula SetImage(ICalcImage image)
