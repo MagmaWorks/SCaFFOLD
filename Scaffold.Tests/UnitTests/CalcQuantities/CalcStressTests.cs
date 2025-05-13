@@ -8,16 +8,40 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
     public class CalcStressTests
     {
         [Fact]
-        public void ParseFromStringTest()
+        public void TryParseFromStringTest()
         {
             // Assemble
             var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "stress", "σ");
 
             // Act
             // Assert
-            Assert.True(calcStress.TryParse("5.5 kPa"));
+            Assert.True(CalcStress.TryParse("5.5 kPa", null, out calcStress));
             Assert.Equal(5.5, calcStress.Value);
             Assert.Equal("kPa", calcStress.Unit);
+        }
+
+        [Fact]
+        public void ParseFromStringTest()
+        {
+            // Arrange
+            // Act
+            var calcStress = CalcStress.Parse("5.5 kPa", null);
+
+            // Assert
+            Assert.Equal(5.5, calcStress.Value);
+            Assert.Equal("kPa", calcStress.Unit);
+        }
+
+        [Fact]
+        public void TryParseFailureTest()
+        {
+            // Arrange
+            var calcQuantity = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "stress", "σ");
+
+            // Act
+            // Assert
+            Assert.False(CalcStress.TryParse("two hundred horses", null, out calcQuantity));
+            Assert.Null(calcQuantity);
         }
 
         [Fact]
@@ -62,6 +86,22 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("σ", result.Symbol);
             Assert.Equal("Pa", result.Unit);
             Assert.Equal("σ1 + σ2", result.DisplayName);
+        }
+
+        [Fact]
+        public void UnaryNegationOperatorTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.Pascal, "σ1", "σ");
+
+            // Act
+            CalcStress result = -calcStress;
+
+            // Assert
+            Assert.Equal(-4.5, result.Value);
+            Assert.Equal("σ", result.Symbol);
+            Assert.Equal("Pa", result.Unit);
+            Assert.Equal("-σ1", result.DisplayName);
         }
 
         [Fact]
@@ -232,6 +272,249 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             Assert.Equal("MPa", result.Unit);
             Assert.Equal("a1", result.DisplayName);
             Assert.Equal(4.5, calcStress.Value);
+        }
+
+
+        [Fact]
+        public void SumTest()
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(1, PressureUnit.NewtonPerSquareCentimeter, "a", "A");
+            var calcStress2 = new CalcStress(2, PressureUnit.NewtonPerSquareCentimeter, "a", "A");
+            var calcStress3 = new CalcStress(3, PressureUnit.NewtonPerSquareCentimeter, "a", "A");
+            var areas = new List<CalcStress>() { calcStress1, calcStress2, calcStress3 };
+
+            // Act
+            CalcStress sum = areas.Sum();
+
+            // Assert
+            Assert.Equal(6, sum.Value);
+            Assert.Equal("N/cm²", sum.Unit);
+        }
+
+        [Fact]
+        public void AverageTest()
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(1, PressureUnit.NewtonPerSquareCentimeter, "a", "A");
+            var calcStress2 = new CalcStress(2, PressureUnit.NewtonPerSquareCentimeter, "a", "A");
+            var calcStress3 = new CalcStress(3, PressureUnit.NewtonPerSquareCentimeter, "a", "A");
+            var areas = new List<CalcStress>() { calcStress1, calcStress2, calcStress3 };
+
+            // Act
+            CalcStress sum = areas.Average();
+
+            // Assert
+            Assert.Equal(2, sum.Value);
+            Assert.Equal("N/cm²", sum.Unit);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.31, 4.3, false)]
+        public void EqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(val1, PressureUnit.NewtonPerSquareMeter, "q2", "Q");
+            var calcStress2 = new CalcStress(val2 / 10000, PressureUnit.NewtonPerSquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcStress1 == calcStress2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.31, 4.3, true)]
+        public void NotEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(val1, PressureUnit.NewtonPerSquareMeter, "q2", "Q");
+            var calcStress2 = new CalcStress(val2 / 10000, PressureUnit.NewtonPerSquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcStress1 != calcStress2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.31, 4.3, true)]
+        public void GreaterThanOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(val1, PressureUnit.NewtonPerSquareMeter, "q2", "Q");
+            var calcStress2 = new CalcStress(val2 / 10000, PressureUnit.NewtonPerSquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcStress1 > calcStress2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, false)]
+        [InlineData(4.3, 4.31, true)]
+        public void LessThanOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(val1, PressureUnit.NewtonPerSquareMeter, "q2", "Q");
+            var calcStress2 = new CalcStress(val2 / 10000, PressureUnit.NewtonPerSquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcStress1 < calcStress2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.31, 4.3, true)]
+        [InlineData(4.3, 4.31, false)]
+        public void GreaterOrEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(val1, PressureUnit.NewtonPerSquareMeter, "q2", "Q");
+            var calcStress2 = new CalcStress(val2 / 10000, PressureUnit.NewtonPerSquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcStress1 >= calcStress2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(4.3, 4.3, true)]
+        [InlineData(4.3, 4.31, true)]
+        [InlineData(4.31, 4.30, false)]
+        public void LessOrEqualOperatorTest(double val1, double val2, bool expected)
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(val1, PressureUnit.NewtonPerSquareMeter, "q2", "Q");
+            var calcStress2 = new CalcStress(val2 / 10000, PressureUnit.NewtonPerSquareCentimeter, "q2", "Q");
+
+            // Act
+            bool result = calcStress1 <= calcStress2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsObjectTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcStress.Equals((object)calcStress));
+        }
+
+        [Fact]
+        public void EqualsNullObjectTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.False(calcStress.Equals((object)null));
+        }
+
+        [Fact]
+        public void EqualsOtherObjectTest()
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+            var calcStress2 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcStress1.Equals((object)calcStress2));
+        }
+
+        [Fact]
+        public void EqualsOtherTypeTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+            var notCalcStress = new CalcLength(4.5, LengthUnit.Foot, "length", "l");
+
+            // Act
+            // Assert
+            Assert.False(calcStress.Equals(notCalcStress));
+        }
+
+        [Fact]
+        public void EqualsReferenceEqualsTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcStress.Equals(calcStress));
+        }
+
+        [Fact]
+        public void EqualsNullTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.False(calcStress.Equals(null));
+        }
+
+        [Fact]
+        public void EqualsOtherTest()
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+            var calcStress2 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            // Assert
+            Assert.True(calcStress1.Equals(calcStress2));
+        }
+
+        [Fact]
+        public void GetHashCodeTest()
+        {
+            // Arrange
+            var calcStress1 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+            var calcStress2 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+            var calcStress3 = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "MyQuantity", "Q");
+
+            // Act
+            bool firstEqualsSecond = calcStress1.GetHashCode() == calcStress2.GetHashCode();
+            bool firstEqualsThird = calcStress1.GetHashCode() == calcStress3.GetHashCode();
+
+            // Assert
+            Assert.True(firstEqualsSecond);
+            Assert.False(firstEqualsThird);
+        }
+
+        [Fact]
+        public void ValueAsStringTest()
+        {
+            // Arrange
+            var calcStress = new CalcStress(4.5, PressureUnit.PoundForcePerSquareInch, "myQuantity", "Q");
+
+            // Act
+            string value = calcStress.ValueAsString();
+
+            // Assert
+            Assert.Equal("4.5 psi", value);
         }
     }
 }
