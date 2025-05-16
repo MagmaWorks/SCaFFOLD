@@ -70,33 +70,33 @@ namespace Scaffold.Calculations.Eurocode.En1992_1_1
         /// <summary>
         /// Compressive strain in the concrete at the peak stress fc
         /// </summary>
-        public double Epsilonc1 => new CalcStrain(Math.Max(2.8, 0.7 * Math.Pow(fcm, 0.31)),
+        public CalcStrain Epsilonc1 => new CalcStrain(Math.Max(2.8, 0.7 * Math.Pow(fcm, 0.31)),
             RatioUnit.PartPerThousand, "Nominal peak strain", "ε_1");
 
-        public double Epsiloncu1 => new CalcStrain(Math.Max(2.8, 0.7 * Math.Pow(fcm, 0.31)),
+        public CalcStrain Epsiloncu1 => new CalcStrain(Math.Max(2.8, 0.7 * Math.Pow(fcm, 0.31)),
             RatioUnit.PartPerThousand, "Nominal ultimate strain", "ε_cu1");
 
-        public double Epsilonc2 => new CalcStrain(fck >= 50
+        public CalcStrain Epsilonc2 => new CalcStrain(fck >= 50
                     ? 2.0 + 0.085 * Math.Pow(fck - 50, 0.53)
                     : 2.0,
             RatioUnit.PartPerThousand, "Simplified parabola-rectangle peak strain", "ε_c2");
 
-        public double Epsiloncu2 => new CalcStrain(fck >= 50
+        public CalcStrain Epsiloncu2 => new CalcStrain(fck >= 50
                     ? 2.6 + 35.0 * Math.Pow((90 - fck) / 100, 4)
                     : 3.5,
             RatioUnit.PartPerThousand, "Simplified ultimate strain", "ε_cu2");
 
-        public double n => new CalcDouble(fck >= 50
+        public CalcDouble n => new CalcDouble(fck >= 50
                     ? 1.4 + 23.4 * Math.Pow((90 - fck) / 100, 4)
                     : 2.0,
              "Exponent", "n");
 
-        public double Epsilonc3 => new CalcStrain(fck >= 50
+        public CalcStrain Epsilonc3 => new CalcStrain(fck >= 50
                     ? 1.75 + 0.55 * ((fck - 50) / 40)
                     : 1.75,
             RatioUnit.PartPerThousand, "Simplified bi-linear peak strain", "ε_c3");
 
-        public double Epsiloncu3 => new CalcStrain(fck >= 50
+        public CalcStrain Epsiloncu3 => new CalcStrain(fck >= 50
                     ? 2.6 + 35.0 * Math.Pow((90 - fck) / 100, 4)
                     : 3.5,
             RatioUnit.PartPerThousand, "Simplified ultimate strain", "ε_cu3");
