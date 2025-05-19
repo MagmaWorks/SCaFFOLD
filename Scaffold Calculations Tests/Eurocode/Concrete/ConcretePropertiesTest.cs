@@ -18,7 +18,7 @@ public class ConcretePropertiesTests
         // Assert
         Assert.Equal("", calc.ReferenceName);
         Assert.Equal("Concrete Material Properties", calc.CalculationName);
-        Assert.Equal(1, inputs.Count);
+        Assert.Single(inputs);
         Assert.Equal(14, outputs.Count);
     }
 
