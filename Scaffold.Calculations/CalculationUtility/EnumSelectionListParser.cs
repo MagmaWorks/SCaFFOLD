@@ -18,7 +18,7 @@ namespace Scaffold.Calculations.CalculationUtility
         internal static readonly List<string> RebarGrades = Enum.GetValues(typeof(EnRebarGrade)).Cast<EnRebarGrade>()
             .Select(v => v.ToString()).ToList();
         internal static readonly List<string> NationalAnnexes = Enum.GetValues(typeof(NationalAnnex)).Cast<NationalAnnex>()
-            .Select(v => BreakCamelCase(v.ToString())).ToList();
+            .Select(v => SplitCamelCase(v.ToString())).ToList();
 
         internal static T GetEnum<T>(this CalcSelectionList list,
             string replaceOld = "", string replaceNew = "",
@@ -27,10 +27,10 @@ namespace Scaffold.Calculations.CalculationUtility
             string value = string.IsNullOrEmpty(replaceOld)
                 ? list.Value
                 : list.Value.Replace(replaceOld, replaceNew);
-            return (T)Enum.Parse(typeof(T), UnbreakCamelCase(prefix + value + suffix), true);
+            return (T)Enum.Parse(typeof(T), StringWithoutSpaces(prefix + value + suffix), true);
         }
 
-        private static string BreakCamelCase(string str)
+        private static string SplitCamelCase(string str)
         {
             if (string.IsNullOrEmpty(str))
                 return str;
@@ -38,7 +38,7 @@ namespace Scaffold.Calculations.CalculationUtility
             return Regex.Replace(str, @"(\p{Lu})", " $1");
         }
 
-        private static string UnbreakCamelCase(string str)
+        private static string StringWithoutSpaces(string str)
         {
             if (string.IsNullOrEmpty(str))
                 return str;

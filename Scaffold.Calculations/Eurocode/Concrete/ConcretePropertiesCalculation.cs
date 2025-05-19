@@ -20,9 +20,6 @@ namespace Scaffold.Calculations.Eurocode.Concrete
         [InputCalcValue("Grd", "Grade")]
         public CalcSelectionList ConcreteGrade { get; set; }
             = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.ConcreteGrades);
-        [InputCalcValue("Grd", "Grade")]
-        public CalcSelectionList NationalAnnex { get; set; }
-            = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.NationalAnnexes);
 
         [OutputCalcValue(@"CP", "Concrete Properties")]
         public ConcreteProperties ConcreteProperties { get; private set; }
@@ -62,6 +59,7 @@ namespace Scaffold.Calculations.Eurocode.Concrete
 
         [OutputCalcValue(@"n", "Exponent")]
         public CalcDouble n => ConcreteProperties.n;
+
         [OutputCalcValue(@"εc3", "Simplified bi-linear peak strain")]
         public CalcStrain Epsilonc3 => ConcreteProperties.Epsilonc3;
 
@@ -81,7 +79,7 @@ namespace Scaffold.Calculations.Eurocode.Concrete
         public void Calculate()
         {
             ConcreteProperties = new ConcreteProperties(
-                ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_"), NationalAnnex.GetEnum<NationalAnnex>());
+                ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_"));
         }
     }
 }

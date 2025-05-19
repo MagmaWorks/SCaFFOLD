@@ -64,16 +64,18 @@ namespace Scaffold.Calculations.Eurocode.Concrete.Utility
         /// <summary>
         /// Secant modulus of elasticity 
         /// </summary>
-        public CalcStress Ecm => new CalcStress(22 * Math.Pow(fctm / 10, 0.3),
-            PressureUnit.Megapascal, "Secant modulus of elasticity", "E_cm");
+        public CalcStress Ecm => new CalcStress(22 * Math.Pow(fcm / 10, 0.3),
+            PressureUnit.Gigapascal, "Secant modulus of elasticity", "E_cm");
 
         /// <summary>
         /// Compressive strain in the concrete at the peak stress fc
         /// </summary>
-        public CalcStrain Epsilonc1 => new CalcStrain(Math.Max(2.8, 0.7 * Math.Pow(fcm, 0.31)),
+        public CalcStrain Epsilonc1 => new CalcStrain(Math.Min(2.8, 0.7 * Math.Pow(fcm, 0.31)),
             RatioUnit.PartPerThousand, "Nominal peak strain", "ε_1");
 
-        public CalcStrain Epsiloncu1 => new CalcStrain(Math.Max(2.8, 0.7 * Math.Pow(fcm, 0.31)),
+        public CalcStrain Epsiloncu1 => new CalcStrain(fck >= 50
+                    ? 2.8 + 27.0 * Math.Pow((98 - fcm) / 100, 4)
+                    : 3.5,
             RatioUnit.PartPerThousand, "Nominal ultimate strain", "ε_cu1");
 
         public CalcStrain Epsilonc2 => new CalcStrain(fck >= 50
