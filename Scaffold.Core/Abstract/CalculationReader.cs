@@ -28,19 +28,22 @@ public class CalculationReader
 
     private static void ReadMetadata(Type type, ICalculation calculation)
     {
-        string fallbackValue = type.Name.SplitPascalCaseToString();
+        if (calculation.CalculationName != null && calculation.ReferenceName != null)
+        {
+            return;
+        }
 
+        string fallbackValue = type.Name.SplitPascalCaseToString();
         CalculationMetadataAttribute metadata = type.GetCustomAttribute<CalculationMetadataAttribute>();
-        if (metadata == null)
-        {
-            calculation.ReferenceName = fallbackValue;
-            calculation.CalculationName = fallbackValue;
-        }
-        else
-        {
-            calculation.ReferenceName = metadata.ReferenceName ?? fallbackValue;
-            calculation.CalculationName = metadata.CalculationName ?? fallbackValue;
-        }
+
+
+        calculation.CalculationName ??= metadata == null
+                ? fallbackValue
+                : metadata.CalculationName;
+
+        calculation.ReferenceName ??= metadata == null
+                ? fallbackValue
+                : metadata.ReferenceName;
     }
 
     private static ICalcValue GetCalcValue(PropertyInfo property, CacheItem cacheItem)
