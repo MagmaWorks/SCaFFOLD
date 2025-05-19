@@ -16,7 +16,7 @@ public static class ExtensionMethods
                  (?<=[^A-Z])(?=[A-Z]) |
                  (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace);
 
-        var modelWithSpaces = r.Replace(pascalCaseStr, " ");
+        string modelWithSpaces = r.Replace(pascalCaseStr, " ");
         return modelWithSpaces;
     }
 }

@@ -23,9 +23,9 @@ public class ConcreteSectionCalculationTests
     {
         var calc = new ConcreteSectionCalculation();
 
-        var metadata = Reader.GetMetadata(calc);
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        Core.Models.CalculationMetadata metadata = Reader.GetMetadata(calc);
+        IReadOnlyList<Core.Interfaces.ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<Core.Interfaces.ICalcValue> outputs = Reader.GetOutputs(calc);
 
         calc.CalculationName.Should().Be(TypeName);
         calc.ReferenceName.Should().Be(Title);

@@ -43,7 +43,7 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         if (type.IsAcceptedPrimitive())
             return;
 
-        var isCalcValue = type.GetInterface(nameof(ICalcValue)) != null;
+        bool isCalcValue = type.GetInterface(nameof(ICalcValue)) != null;
         if (isCalcValue == false)
             throw new ArgumentException("Only properties and fields based on ICalcValue can be defined with calculation configuration.");
     }
@@ -53,11 +53,11 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         if (expression.Members == null)
             return;
 
-        foreach (var arg in expression.Arguments)
+        foreach (Expression arg in expression.Arguments)
         {
             ThrowIfNotCalcValueCapable(arg.Type);
 
-            var memberName = expression.Members[expression.Arguments.IndexOf(arg)].Name;
+            string memberName = expression.Members[expression.Arguments.IndexOf(arg)].Name;
             Members.Add(new ContextMember(memberName, arg.Type));
         }
     }
@@ -89,9 +89,9 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
 
     private void AddToCalcValueCollection(List<ICalcValue> collection)
     {
-        foreach (var member in Members)
+        foreach (ContextMember member in Members)
         {
-            var calcValue = GetCalcValue(member);
+            ICalcValue calcValue = GetCalcValue(member);
             calcValue.DisplayName ??= member.Name.SplitPascalCaseToString();
 
             collection.InsertCalcValue(calcValue);
@@ -124,12 +124,12 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
 
     public CalculationConfigurationBuilder<T> WithDisplayName(string name)
     {
-        var i = 1;
-        var useIndex = Members.Count > 1;
+        int i = 1;
+        bool useIndex = Members.Count > 1;
 
-        foreach (var member in Members)
+        foreach (ContextMember member in Members)
         {
-            var calcValue = GetCalcValue(member);
+            ICalcValue calcValue = GetCalcValue(member);
             calcValue.DisplayName = useIndex ? $"{name} ({i})" : name;
             i++;
         }
@@ -139,9 +139,9 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
 
     public CalculationConfigurationBuilder<T> WithSymbol(string symbol)
     {
-        foreach (var member in Members)
+        foreach (ContextMember member in Members)
         {
-            var calcValue = GetCalcValue(member);
+            ICalcValue calcValue = GetCalcValue(member);
             calcValue.Symbol = symbol;
         }
 

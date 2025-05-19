@@ -12,7 +12,7 @@ public class ImageTests
         const string embeddedResourceName = "ImageAsEmbeddedResource.png";
 
         var image = new ImageFromEmbeddedResource<AdditionCalculation>(embeddedResourceName);
-        var result = image.GetImage();
+        SkiaSharp.SKBitmap result = image.GetImage();
 
         Assert.NotNull(result);
     }
@@ -22,14 +22,14 @@ public class ImageTests
     {
         const string relativePathName = "ImageAsRelativePath.png";
         var executingAssembly = Assembly.GetExecutingAssembly();
-        var workingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+        string workingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
 
         var image = new ImageFromRelativePath(relativePathName)
         {
             ImageReader = new AssemblyImageReader(relativePathName, workingDirectory)
         };
 
-        var result = image.GetImage();
+        SkiaSharp.SKBitmap result = image.GetImage();
 
         Assert.NotNull(result);
     }
@@ -38,7 +38,7 @@ public class ImageTests
     public void FromSkBitmap_Ok()
     {
         var image = new ImageFromSkBitmap(new SkiaSharp.SKBitmap(1000, 200));
-        var result = image.GetImage();
+        SkiaSharp.SKBitmap result = image.GetImage();
         Assert.NotNull(result);
     }
 }

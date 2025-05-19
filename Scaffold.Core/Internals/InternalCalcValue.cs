@@ -26,7 +26,7 @@ internal sealed class InternalCalcValue : ICalcValue
     {
         get
         {
-            var member = Calculation.GetType().GetProperty(MemberName);
+            PropertyInfo member = Calculation.GetType().GetProperty(MemberName);
             return member?.GetValue(Calculation);
         }
     }
@@ -35,7 +35,7 @@ internal sealed class InternalCalcValue : ICalcValue
 
     private object Convert(string input)
     {
-        var converter = TypeDescriptor.GetConverter(ValueType);
+        TypeConverter converter = TypeDescriptor.GetConverter(ValueType);
         return converter.ConvertFromString(input);
     }
 

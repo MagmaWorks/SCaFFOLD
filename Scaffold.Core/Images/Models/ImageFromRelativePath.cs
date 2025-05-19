@@ -18,7 +18,7 @@ public class ImageFromRelativePath : ICalcImage
 
     public SKBitmap GetImage()
     {
-        var assemblyImage = ImageReader.Images.FirstOrDefault(x => x.Path.Contains(RelativePathName));
+        AssemblyImage assemblyImage = ImageReader.Images.FirstOrDefault(x => x.Path.Contains(RelativePathName));
         if (assemblyImage == null)
             throw new Exception($"File from relative path '{RelativePathName}' not found.");
 

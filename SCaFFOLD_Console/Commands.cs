@@ -7,12 +7,12 @@ namespace SCaFFOLD_Console
     {
         internal static void DisplayInputs(ICalculation calc, string s)
         {
-            var values = reader.GetInputs(calc);
+            IReadOnlyList<ICalcValue> values = reader.GetInputs(calc);
             Console.WriteLine("INPUTS");
             Console.WriteLine("Idx Name           Value");
             for (int i = 0; i < values.Count; i++)
             {
-                var input = values[i];
+                ICalcValue input = values[i];
                 Console.Write(i.ToString().PadRight(4));
                 Console.Write(input.Symbol.PadRight(15));
                 Console.WriteLine(input.ValueAsString());
@@ -21,12 +21,12 @@ namespace SCaFFOLD_Console
         internal static void DisplayResults(ICalculation calc, string s)
         {
             calc.Calculate();
-            var values = reader.GetOutputs(calc);
+            IReadOnlyList<ICalcValue> values = reader.GetOutputs(calc);
             Console.WriteLine("CALCULATED VALUES");
             Console.WriteLine("Idx Name           Value");
             for (int i = 0; i < values.Count; i++)
             {
-                var input = values[i];
+                ICalcValue input = values[i];
                 Console.Write(i.ToString().PadRight(4));
                 Console.Write(input.Symbol.PadRight(15));
                 Console.WriteLine(input.ValueAsString());
@@ -35,8 +35,8 @@ namespace SCaFFOLD_Console
 
         internal static void ChangeInput(ICalculation calc, string s)
         {
-            var words = s.Split(' ');
-            var values = reader.GetInputs(calc);
+            string[] words = s.Split(' ');
+            IReadOnlyList<ICalcValue> values = reader.GetInputs(calc);
             int idx = -1;
             int.TryParse(words[0], out idx);
             if (idx >= 0)

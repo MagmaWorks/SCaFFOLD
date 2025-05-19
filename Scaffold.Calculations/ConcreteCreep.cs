@@ -112,7 +112,7 @@ namespace Scaffold.Calculations
             meanCompStr.Quantity = new Pressure(concProps.fcm, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter);
 
             _Ac = W * L;
-            var tempW = W + W; var tempL = L + L;
+            CalcLength tempW = W + W; CalcLength tempL = L + L;
             u = tempW + tempL;
 
             double factorRH = 0;

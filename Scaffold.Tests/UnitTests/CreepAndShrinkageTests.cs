@@ -13,10 +13,10 @@ namespace Scaffold.Tests.UnitTests
             // Do stuff here
             calculation.Calculate();
 
-            var metadata = reader.GetMetadata(calculation);
-            var inputs = reader.GetInputs(calculation);
-            var outputs = reader.GetOutputs(calculation);
-            var formulae = reader.GetFormulae(calculation);
+            Core.Models.CalculationMetadata metadata = reader.GetMetadata(calculation);
+            IReadOnlyList<Core.Interfaces.ICalcValue> inputs = reader.GetInputs(calculation);
+            IReadOnlyList<Core.Interfaces.ICalcValue> outputs = reader.GetOutputs(calculation);
+            IList<Core.Interfaces.IFormula> formulae = reader.GetFormulae(calculation);
 
             Console.WriteLine(inputs[0]);
 

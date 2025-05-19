@@ -53,7 +53,7 @@ namespace Scaffold.Core.Utility
         internal static StringBuilder AddCircles(StringBuilder svg, IList<ILongitudinalReinforcement> rebars,
             LengthUnit unit, string fill = "#464D5F")
         {
-            foreach (var rebar in rebars)
+            foreach (ILongitudinalReinforcement rebar in rebars)
             {
                 svg.AppendLine($"<circle r=\"{rebar.Rebar.Diameter.As(unit) / 2}\" " +
                     $"cx=\"{rebar.Position.Y.As(unit)}\" " +
