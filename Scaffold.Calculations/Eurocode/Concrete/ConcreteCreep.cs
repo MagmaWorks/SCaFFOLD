@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
+using Scaffold.Calculations.CalculationUtility;
+using Scaffold.Calculations.Eurocode.Concrete.Utility;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
@@ -16,13 +19,12 @@ namespace Scaffold.Calculations
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
         [InputCalcValue("Notional Creep Coefficient", @"\varphi(t,t_0)")]
-        CalcDouble notionalcreepcoeff;
-        [InputCalcValue("Concrete grade", "")]
-        CalcSelectionList concGrade = new CalcSelectionList("Concrete grade", "35", new List<string> { "30", "35", "40", "45", "50", "60", "70", "80", "90" });
-        [InputCalcValue]
-        CalcStress charCompStr = new CalcStress(43, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter, "Concrete characteristic Compressive strength", "f_{ck}");
-        [InputCalcValue]
-        CalcStress meanCompStr = new CalcStress(43, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter, "Concrete mean compressive strength", "f_{cm}");
+        CalcDouble NotionalCreepCoefficient;
+
+        [InputCalcValue("Grd", "Grade")]
+        public CalcSelectionList ConcreteGrade { get; set; }
+            = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.ConcreteGrades);
+
         [InputCalcValue]
         CalcDouble relativeHumidity = new CalcDouble(70, "Relative humidity", "RH");
         [InputCalcValue]
@@ -77,7 +79,7 @@ namespace Scaffold.Calculations
         public ConcCreep(string grade, double rh, double t, double t_loadApplied, double l, double w)
         {
             //initialise();
-            concGrade.TryParse(grade);
+            ConcreteGrade.TryParse(grade);
             relativeHumidity.Value = rh;
             time.Value = t;
             time0.Value = t_loadApplied;
@@ -106,10 +108,7 @@ namespace Scaffold.Calculations
         public void Calculate()
         {
             expressions = new List<IFormula>();
-            var concProps = ConcProperties.ByGrade(concGrade.ValueAsString());
-
-            charCompStr.Quantity = new Pressure(concProps.fck, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter);
-            meanCompStr.Quantity = new Pressure(concProps.fcm, UnitsNet.Units.PressureUnit.NewtonPerSquareMillimeter);
+            CalcStress fcm = new ConcreteProperties(ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_")).fcm;
 
             _Ac = W * L;
             CalcLength tempW = W + W; CalcLength tempL = L + L;
@@ -120,9 +119,9 @@ namespace Scaffold.Calculations
             double betat0 = 0;
             double betaH = 0;
             double h0 = 2 * _Ac.Value / u.Value;
-            double alpha1 = Math.Pow((35 / meanCompStr.Value), 0.7);
-            double alpha2 = Math.Pow((35 / meanCompStr.Value), 0.2);
-            double alpha3 = Math.Pow((35 / meanCompStr.Value), 0.5);
+            double alpha1 = Math.Pow(35 / fcm.Value, 0.7);
+            double alpha2 = Math.Pow(35 / fcm.Value, 0.2);
+            double alpha3 = Math.Pow(35 / fcm.Value, 0.5);
             //expressions.Add(
             //    Formula.FormulaWithNarrative("Calculate alpha values")
             //    .AddExpression(@"\alpha_1=\left[ \frac{35}{f_{cm}} \right]^{0.7}" + Math.Round(alpha1, 2))
@@ -131,7 +130,7 @@ namespace Scaffold.Calculations
             //    .AddRef("B.8c")
             //    );
 
-            if (meanCompStr.Value <= 35)
+            if (fcm.Value <= 35)
             {
                 factorRH = 1 + (1 - relativeHumidity.Value / 100) / (0.1 * Math.Pow(h0, (double)(1d / 3d)));
                 //expressions.Add(
@@ -152,7 +151,7 @@ namespace Scaffold.Calculations
                 //    );
             }
 
-            betafcm = 16.8 / Math.Sqrt(meanCompStr.Value);
+            betafcm = 16.8 / Math.Sqrt(fcm.Value);
             //expressions.Add(
             //    Formula.FormulaWithNarrative("")
             //    .AddExpression(@"\beta(f_{cm})=\frac{16.8}{\sqrt{f_{cm}}}=" + Math.Round(betafcm, 2))
@@ -166,7 +165,7 @@ namespace Scaffold.Calculations
             //    .AddExpression(@"\beta(f_{cm})")
             //    );
 
-            if (meanCompStr.Value <= 35)
+            if (fcm.Value <= 35)
             {
                 betaH = Math.Min(1.5 * (1 + Math.Pow((0.012 * relativeHumidity.Value), 18)) * h0 + 250, 1500);
                 //expressions.Add(
@@ -187,11 +186,11 @@ namespace Scaffold.Calculations
                 //    );
             }
 
-            notionalcreepcoeff.Value = factorRH * betafcm * betat0;
+            NotionalCreepCoefficient.Value = factorRH * betafcm * betat0;
 
             creepTimeCoeff.Value = Math.Pow((time.Value - time0.Value) / (betaH + time.Value - time0.Value), 0.3);
 
-            creepCoeff.Value = notionalcreepcoeff.Value * creepTimeCoeff.Value;
+            creepCoeff.Value = NotionalCreepCoefficient.Value * creepTimeCoeff.Value;
         }
 
         public IList<IFormula> GetFormulae()
