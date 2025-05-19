@@ -7,7 +7,7 @@ using Scaffold.Core.CalcValues;
 using UnitsNet;
 using UnitsNet.Units;
 
-namespace Scaffold.Calculations.Eurocode.En1992_1_1
+namespace Scaffold.Calculations.Eurocode.Concrete.Utility
 {
     public class ConcreteProperties
     {
@@ -46,7 +46,7 @@ namespace Scaffold.Calculations.Eurocode.En1992_1_1
         /// </summary>
         public CalcStress fctm => new CalcStress(fck <= 50
                     ? 0.3 * Math.Pow(fck, 2d / 3d)
-                    : 2.12 * Math.Log(1 + (fcm / 10)),
+                    : 2.12 * Math.Log(1 + fcm / 10),
             PressureUnit.Megapascal, "Mean tensile strength", "f_ctm");
 
         /// <summary>

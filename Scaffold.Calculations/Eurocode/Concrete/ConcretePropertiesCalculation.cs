@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
-using Scaffold.Calculations.Eurocode.En1992_1_1;
-using Scaffold.Calculations.Utility;
+using Scaffold.Calculations.CalculationUtility;
+using Scaffold.Calculations.Eurocode.Concrete.Utility;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 
-namespace Scaffold.Calculations
+namespace Scaffold.Calculations.Eurocode.Concrete
 {
     public class ConcretePropertiesCalculation : ICalculation
     {
@@ -19,10 +19,10 @@ namespace Scaffold.Calculations
 
         [InputCalcValue("Grd", "Grade")]
         public CalcSelectionList ConcreteGrade { get; set; }
-            = new CalcSelectionList("Concrete Grade", "C30/37", EnumToFromSelectionList.ConcreteGrades);
+            = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.ConcreteGrades);
         [InputCalcValue("Grd", "Grade")]
         public CalcSelectionList NationalAnnex { get; set; }
-            = new CalcSelectionList("Concrete Grade", "C30/37", EnumToFromSelectionList.NationalAnnexes);
+            = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.NationalAnnexes);
 
         [OutputCalcValue(@"CP", "Concrete Properties")]
         public ConcreteProperties ConcreteProperties { get; private set; }

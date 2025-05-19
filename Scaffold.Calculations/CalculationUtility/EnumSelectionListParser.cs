@@ -7,9 +7,9 @@ using MagmaWorks.Taxonomy.Sections.Reinforcement;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Core.CalcValues;
 
-namespace Scaffold.Calculations.Utility
+namespace Scaffold.Calculations.CalculationUtility
 {
-    internal static class EnumToFromSelectionList
+    internal static class EnumSelectionListParser
     {
         internal static readonly List<string> BarDiameters = Enum.GetValues(typeof(BarDiameter)).Cast<BarDiameter>()
         .Select(v => v.ToString().Replace("D", string.Empty)).ToList();
