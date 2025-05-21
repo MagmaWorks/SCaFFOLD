@@ -14,6 +14,7 @@ public sealed class CalcInt : CalcValue<int>
         : base(value, name, symbol, unit) { }
 
     public static implicit operator CalcInt(int value) => new CalcInt(value, string.Empty);
+
     public static bool operator >(CalcInt value, CalcInt other)
     {
         CheckUnitsAreTheSame(value, other);
@@ -35,6 +36,16 @@ public sealed class CalcInt : CalcValue<int>
     public static bool operator >(CalcInt value, double other)
     {
         return value.Value > other;
+    }
+
+    public static bool operator >(CalcInt value, int other)
+    {
+        return value.Value > other;
+    }
+
+    public static bool operator <(CalcInt value, int other)
+    {
+        return value.Value < other;
     }
 
     public static bool operator <(CalcInt value, CalcDouble other)
