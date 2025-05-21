@@ -1,5 +1,4 @@
 ﻿using Scaffold.Core.CalcQuantities;
-using Scaffold.Core.CalcValues;
 using UnitsNet;
 using UnitsNet.Units;
 
