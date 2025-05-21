@@ -25,36 +25,37 @@ public class Creep : ICalculation
         = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.ConcreteGrades);
 
     [InputCalcValue]
-    public CalcQuantityWrapper<RelativeHumidity> RelativeHumidity = new CalcQuantityWrapper<RelativeHumidity>(
+    public CalcQuantityWrapper<RelativeHumidity> RelativeHumidity { get; set; } = new CalcQuantityWrapper<RelativeHumidity>(
         new RelativeHumidity(70, RelativeHumidityUnit.Percent), "Relative humidity", "RH");
 
     [InputCalcValue]
-    public CalcQuantityWrapper<Duration> time0 = new CalcQuantityWrapper<Duration>(
+    public CalcQuantityWrapper<Duration> Time0 { get; set; } = new CalcQuantityWrapper<Duration>(
         new Duration(28, DurationUnit.Day), @"Time load applied", @"t_0\");
+
     [InputCalcValue]
-    public CalcQuantityWrapper<Duration> time = new CalcQuantityWrapper<Duration>(
+    public CalcQuantityWrapper<Duration> Time { get; set; } = new CalcQuantityWrapper<Duration>(
         new Duration(10000000, DurationUnit.Day), "Time", "t");
 
     [InputCalcValue]
-    public CalcLength Length = new CalcLength(500, LengthUnit.Millimeter, "Length", "L");
+    public CalcLength Length { get; set; } = new CalcLength(500, LengthUnit.Millimeter, "Length", "L");
 
     [InputCalcValue]
-    public CalcLength Width = new CalcLength(500, LengthUnit.Millimeter, "Width", "W");
+    public CalcLength Width { get; set; } = new CalcLength(500, LengthUnit.Millimeter, "Width", "W");
 
     [OutputCalcValue("Cross section area", "A_c")]
-    public CalcArea Area;
+    public CalcArea Area { get; private set; }
 
     [OutputCalcValue("Section perimeter", "u")]
-    public CalcLength Perimeter = new CalcLength(UnitsNet.Length.Zero, "Section perimeter", "u");
+    public CalcLength Perimeter { get; private set; }
 
     [OutputCalcValue("Notional Creep Coefficient", @"\varphi(t,t_0)")]
-    CalcDouble NotionalCreepCoefficient;
+    public CalcDouble NotionalCreepCoefficient { get; private set; }
 
     [OutputCalcValue("Coefficient for creep with time", @"\beta(t,t_0)")]
-    public CalcDouble CreepTimeCoefficient;
+    public CalcDouble CreepTimeCoefficient { get; private set; }
 
     [OutputCalcValue("Creep coefficient", @"\varphi_0")]
-    public CalcDouble CreepCoefficient;
+    public CalcDouble CreepCoefficient { get; private set; }
 
     public List<IFormula> Expressions = new List<IFormula>();
     public IList<IFormula> GetFormulae() => Expressions;
@@ -70,8 +71,8 @@ public class Creep : ICalculation
         CalcStress fcm = new ConcreteMaterialProperties(ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_")).fcm;
         IProfile profile = new Rectangle(Width, Length);
         var sectionProperties = new SectionProperties(profile);
-        Area = new CalcArea(sectionProperties.Area, string.Empty);
-        Perimeter = new CalcLength(sectionProperties.Perimeter, string.Empty);
+        Area = new CalcArea(sectionProperties.Area.ToUnit(AreaUnit.SquareMillimeter), string.Empty);
+        Perimeter = new CalcLength(sectionProperties.Perimeter.ToUnit(LengthUnit.Millimeter), string.Empty);
         CalcLength h0 = 2 * Area / Perimeter;
 
         double factorRH = 0;
@@ -101,7 +102,7 @@ public class Creep : ICalculation
         }
         else
         {
-            factorRH = (1 + ((1 - RelativeHumidity.Value / 100) / (0.1 * Math.Pow(h0, (double)(1d / 3d)))) * alpha1) * alpha2;
+            factorRH = (1 + (1 - RelativeHumidity.Value / 100) / (0.1 * Math.Pow(h0, (double)(1d / 3d))) * alpha1) * alpha2;
             //expressions.Add(
             //    Formula.FormulaWithNarrative("Calculate factor to allow for effect of relative humidity")
             //    .AddRef("B.3b")
@@ -110,14 +111,14 @@ public class Creep : ICalculation
             //    );
         }
 
-        betafcm = 16.8 / Math.Sqrt(fcm.Value);
+        betafcm = 16.8 / Math.Sqrt(fcm);
         //expressions.Add(
         //    Formula.FormulaWithNarrative("")
         //    .AddExpression(@"\beta(f_{cm})=\frac{16.8}{\sqrt{f_{cm}}}=" + Math.Round(betafcm, 2))
         //    .AddRef("B.4")
         //    );
 
-        betat0 = 1 / (0.1 + Math.Pow(time0.Value, 0.20));
+        betat0 = 1 / (0.1 + Math.Pow(Time0, 0.20));
         //expressions.Add(
         //    Formula.FormulaWithNarrative("Factor to allow for effect of concrete" +
         //    "strength on the notional creep coefficient")
@@ -126,7 +127,7 @@ public class Creep : ICalculation
 
         if (fcm <= 35)
         {
-            betaH = Math.Min(1.5 * (1 + Math.Pow((0.012 * RelativeHumidity.Value), 18)) * h0 + 250, 1500);
+            betaH = Math.Min(1.5 * (1 + Math.Pow(0.012 * RelativeHumidity, 18)) * h0 + 250, 1500);
             //expressions.Add(
             //    Formula.FormulaWithNarrative("Calculate coefficient depending on relative humidity and notional member size.")
             //    .AddExpression(meanCompStr.Symbol + @"\leq 35 \Rightarrow")
@@ -136,7 +137,7 @@ public class Creep : ICalculation
         }
         else
         {
-            betaH = Math.Min(1.5 * (1 + Math.Pow((0.012 * RelativeHumidity.Value), 18)) * h0 + 250 * alpha3, 1500 * alpha3);
+            betaH = Math.Min(1.5 * (1 + Math.Pow(0.012 * RelativeHumidity, 18)) * h0 + 250 * alpha3, 1500 * alpha3);
             //expressions.Add(
             //    Formula.FormulaWithNarrative("Calculate coefficient depending on relative humidity and notional member size.")
             //    .AddExpression(meanCompStr.Symbol + @"> 35 \Rightarrow")
@@ -147,7 +148,7 @@ public class Creep : ICalculation
 
         NotionalCreepCoefficient = factorRH * betafcm * betat0;
 
-        CreepTimeCoefficient = Math.Pow((time - time0) / (betaH + time - time0), 0.3);
+        CreepTimeCoefficient = Math.Pow((Time - Time0) / (betaH + Time - Time0), 0.3);
 
         CreepCoefficient = NotionalCreepCoefficient * CreepTimeCoefficient;
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Scaffold.Calculations.Eurocode.Concrete;
+using Scaffold.Core.Attributes;
 
 namespace Scaffold.Calculations.Tests
 {
@@ -19,7 +20,8 @@ namespace Scaffold.Calculations.Tests
             ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
             object instance = constructor.Invoke(null);
             Assert.NotNull(instance);
-            TestObjectsPropertiesAreNotNull(instance);
+            TestObjectsPropertiesAreInputOutputAttributesAndNotNull(instance);
+            TestObjectsFieldsAreNotInputOutputAttributes(instance);
         }
 
         public class TestDataGenerator : IEnumerable<object[]>
@@ -52,13 +54,37 @@ namespace Scaffold.Calculations.Tests
             }
         }
 
-        private void TestObjectsPropertiesAreNotNull(object obj)
+        private void TestObjectsPropertiesAreInputOutputAttributesAndNotNull(object obj)
         {
             PropertyInfo[] propertyInfo = obj.GetType().GetProperties(
                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
             foreach (PropertyInfo property in propertyInfo)
             {
-                Assert.NotNull(property.GetValue(obj));
+                Assert.False(property.GetValue(obj) == null,
+                    $"The calculation '{obj}'\ncontains a property '{property.Name}' that is null.");
+                if (property.Name == "ReferenceName" || property.Name == "CalculationName"
+                    || property.Name == "Status")
+                {
+                    continue;
+                }
+                CalcValueTypeAttribute baseAttribute = property.GetCustomAttribute<CalcValueTypeAttribute>();
+                Assert.False(baseAttribute == null,
+                    $"The calculation '{obj}' \ncontains a public property '{property.Name}'\n" +
+                    $"that has not been decorated with input/output attributes.");
+            }
+        }
+
+        private void TestObjectsFieldsAreNotInputOutputAttributes(object obj)
+        {
+            FieldInfo[] fieldInfo = obj.GetType().GetFields(
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+            foreach (FieldInfo field in fieldInfo)
+            {
+                CalcValueTypeAttribute baseAttribute = field.GetCustomAttribute<CalcValueTypeAttribute>();
+                Assert.True(baseAttribute == null,
+                    $"The calculation '{obj}' \ncontains a public field '{field.Name}'\n" +
+                    $"that has been decorated with input/output attributes. \n" +
+                    $"Convert this field to a property by adding get/set.");
             }
         }
     }
