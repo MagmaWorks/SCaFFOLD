@@ -182,7 +182,7 @@ public class ConcretePropertiesTests
         Assert.Equal(expEpscu1, calc.Epsiloncu1, expEpscu1.Precision());
         Assert.Equal(expEpsc2, calc.Epsilonc2, expEpsc2.Precision());
         Assert.Equal(expEpscu2, calc.Epsiloncu2, expEpscu2.Precision());
-        Assert.Equal(expN, calc.n, expN));
+        Assert.Equal(expN, calc.n, expN.Precision());
         Assert.Equal(expEpsc3, calc.Epsilonc3, expEpsc3.Precision());
         Assert.Equal(expEpscu3, calc.Epsiloncu3, expEpscu3.Precision());
     }
