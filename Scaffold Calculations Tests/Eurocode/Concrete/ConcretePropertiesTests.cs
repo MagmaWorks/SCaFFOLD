@@ -1,3 +1,5 @@
+using Scaffold.Calculations.Tests;
+
 namespace Scaffold.Calculations.Eurocode.Concrete;
 
 public class ConcretePropertiesTests
@@ -114,9 +116,9 @@ public class ConcretePropertiesTests
         calc.Calculate();
 
         // Assert
-        Assert.Equal(expFctm, calc.fctm, Precision(expFctm));
-        Assert.Equal(expfctk005, calc.fctk005, Precision(expfctk005));
-        Assert.Equal(expfctk095, calc.fctk095, Precision(expfctk095));
+        Assert.Equal(expFctm, calc.fctm, expFctm.Precision());
+        Assert.Equal(expfctk005, calc.fctk005, expfctk005.Precision());
+        Assert.Equal(expfctk095, calc.fctk095, expfctk095.Precision());
     }
 
     [Theory]
@@ -176,17 +178,12 @@ public class ConcretePropertiesTests
         calc.Calculate();
 
         // Assert
-        Assert.Equal(expEpsc1, calc.Epsilonc1, Precision(expEpsc1));
-        Assert.Equal(expEpscu1, calc.Epsiloncu1, Precision(expEpscu1));
-        Assert.Equal(expEpsc2, calc.Epsilonc2, Precision(expEpsc2));
-        Assert.Equal(expEpscu2, calc.Epsiloncu2, Precision(expEpscu2));
-        Assert.Equal(expN, calc.n, Precision(expN));
-        Assert.Equal(expEpsc3, calc.Epsilonc3, Precision(expEpsc3));
-        Assert.Equal(expEpscu3, calc.Epsiloncu3, Precision(expEpscu3));
-    }
-
-    private int Precision(double d)
-    {
-        return d.ToString().Replace(",", ".").Split('.').LastOrDefault().Length;
+        Assert.Equal(expEpsc1, calc.Epsilonc1, expEpsc1.Precision());
+        Assert.Equal(expEpscu1, calc.Epsiloncu1, expEpscu1.Precision());
+        Assert.Equal(expEpsc2, calc.Epsilonc2, expEpsc2.Precision());
+        Assert.Equal(expEpscu2, calc.Epsiloncu2, expEpscu2.Precision());
+        Assert.Equal(expN, calc.n, expN));
+        Assert.Equal(expEpsc3, calc.Epsilonc3, expEpsc3.Precision());
+        Assert.Equal(expEpscu3, calc.Epsiloncu3, expEpscu3.Precision());
     }
 }
