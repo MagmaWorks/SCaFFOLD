@@ -9,7 +9,7 @@ using UnitsNet.Units;
 
 namespace Scaffold.Calculations.Eurocode.Concrete.Utility
 {
-    public class ConcreteProperties
+    public class ConcreteMaterialProperties
     {
         public EnConcreteMaterial Material { get; }
             = new EnConcreteMaterial(EnConcreteGrade.C30_37, NationalAnnex.UnitedKingdom);
@@ -103,7 +103,7 @@ namespace Scaffold.Calculations.Eurocode.Concrete.Utility
                     : 3.5,
             RatioUnit.PartPerThousand, "Simplified ultimate strain", "ε_{cu3}");
 
-        public ConcreteProperties(EnConcreteGrade grade, NationalAnnex nationalAnnex = NationalAnnex.UnitedKingdom)
+        public ConcreteMaterialProperties(EnConcreteGrade grade, NationalAnnex nationalAnnex = NationalAnnex.UnitedKingdom)
         {
             Material = new EnConcreteMaterial(grade, nationalAnnex);
         }
