@@ -16,6 +16,21 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.True(calcBool.Value);
         }
 
+        [Fact]
+        public void ImplicitFromWrappedTypeTest()
+        {
+            // Arrange
+            var calcBool1 = new CalcBool(false);
+
+            // Act
+            calcBool1 = true;
+            CalcBool calcBool2 = false;
+
+            // Assert
+            Assert.True(calcBool1.Value);
+            Assert.False(calcBool2.Value);
+        }
+
         [Theory]
         [InlineData(true, true, true)]
         [InlineData(true, false, false)]
