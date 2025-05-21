@@ -33,7 +33,7 @@ namespace Scaffold.Calculations.Tests
             private static List<object[]> GetAllClassesOf<T>()
             {
                 var data = new List<object[]>();
-                Type[] typelist = Assembly.GetAssembly(typeof(ConcretePropertiesCalculation)).GetTypes()
+                Type[] typelist = Assembly.GetAssembly(typeof(ConcreteProperties)).GetTypes()
                     .Where(p => typeof(T).IsAssignableFrom(p)).ToArray();
                 foreach (Type type in typelist)
                 {
