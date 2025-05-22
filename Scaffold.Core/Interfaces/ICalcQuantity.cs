@@ -1,8 +1,8 @@
 ﻿namespace Scaffold.Core.Interfaces;
 
-public interface ICalcQuantity : ICalcValue
+public interface ICalcQuantity<T> : ICalcValue where T : IQuantity
 {
     string Unit { get; }
     double Value { get; }
-    public IQuantity Quantity { get; set; }
+    public T Quantity { get; set; }
 }

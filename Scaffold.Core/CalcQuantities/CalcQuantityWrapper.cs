@@ -2,7 +2,7 @@
 
 namespace Scaffold.Core.CalcQuantities;
 
-public sealed class CalcQuantityWrapper<T> : ICalcQuantity, IEquatable<CalcQuantityWrapper<T>>
+public sealed class CalcQuantityWrapper<T> : ICalcQuantity<T>, IEquatable<CalcQuantityWrapper<T>>
 #if NET7_0_OR_GREATER
     , IParsable<CalcQuantityWrapper<T>>
     , IAdditionOperators<CalcQuantityWrapper<T>, CalcQuantityWrapper<T>, CalcQuantityWrapper<T>>
@@ -17,7 +17,7 @@ public sealed class CalcQuantityWrapper<T> : ICalcQuantity, IEquatable<CalcQuant
 #endif
     where T : IQuantity
 {
-    public IQuantity Quantity
+    public T Quantity
     {
         get { return _quantity; }
         set
@@ -35,7 +35,7 @@ public sealed class CalcQuantityWrapper<T> : ICalcQuantity, IEquatable<CalcQuant
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
     public double Value => (double)Quantity.Value;
-    private IQuantity _quantity;
+    private T _quantity;
 
     public CalcQuantityWrapper(T quantity, string name, string symbol)
     {

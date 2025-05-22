@@ -1,8 +1,8 @@
 ﻿namespace Scaffold.Core.Abstract;
 
-public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T>> where T : IQuantity
+public abstract class CalcQuantity<T> : ICalcQuantity<T>, IEquatable<CalcQuantity<T>> where T : IQuantity
 {
-    public virtual IQuantity Quantity
+    public virtual T Quantity
     {
         get { return _quantity; }
         set
@@ -20,7 +20,7 @@ public abstract class CalcQuantity<T> : ICalcQuantity, IEquatable<CalcQuantity<T
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; }
     public double Value => (double)Quantity.Value;
-    private IQuantity _quantity;
+    private T _quantity;
 
     public CalcQuantity(T quantity, string name, string symbol)
     {
