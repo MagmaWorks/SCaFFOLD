@@ -76,7 +76,7 @@ public class ConcreteCreepTests
 
         // Assert
         Assert.Equal(expArea, calc.Area, 0);
-        Assert.Equal("mm²", calc.Area.Unit);
+        Assert.Equal("mmï¿½", calc.Area.Unit);
     }
 
     [Theory]
@@ -108,7 +108,7 @@ public class ConcreteCreepTests
         var calc = new Creep();
 
         // Act
-        calc.RelativeHumidity.Quantity = 
+        calc.RelativeHumidity.Quantity =
             new RelativeHumidity(humidity, RelativeHumidityUnit.Percent);
         calc.Time0.Quantity = new Duration(time0, DurationUnit.Day);
         calc.Time.Quantity = new Duration(time, DurationUnit.Day);

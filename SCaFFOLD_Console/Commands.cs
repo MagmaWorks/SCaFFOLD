@@ -45,7 +45,6 @@ namespace SCaFFOLD_Console
                 calc.Calculate();
                 DisplayResults(calc, "");
             }
-
         }
 
 
