@@ -13,6 +13,7 @@ public sealed class CalcDouble : CalcValue<double>
     public CalcDouble(double value, string name, string symbol, string unit = "")
         : base(value, name, symbol, unit) { }
 
+    public static implicit operator CalcDouble(double value) => new CalcDouble(value, string.Empty);
     public static bool operator >(CalcDouble value, CalcDouble other)
     {
         CheckUnitsAreTheSame(value, other);

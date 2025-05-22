@@ -16,8 +16,8 @@ while (true)
 {
     Console.WriteLine("");
     Console.Write("> ");
-    var inputCommand = Console.ReadLine();
-    var commands = Commands.getCommands();
+    string? inputCommand = Console.ReadLine();
+    Dictionary<string, Action<ICalculation, string>> commands = Commands.getCommands();
     try
     {
         bool hasCommandParams = false;

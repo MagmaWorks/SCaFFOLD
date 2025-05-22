@@ -43,6 +43,21 @@ namespace Scaffold.Tests.UnitTests.CalcValues
             Assert.Equal(5.5, calcDouble.Value);
         }
 
+        [Fact]
+        public void ImplicitFromWrappedTypeTest()
+        {
+            // Arrange
+            var calcDouble1 = new CalcDouble(4.5);
+
+            // Act
+            calcDouble1 = 5.5;
+            CalcDouble calcDouble2 = 2.2;
+
+            // Assert
+            Assert.Equal(5.5, calcDouble1.Value);
+            Assert.Equal(2.2, calcDouble2.Value);
+        }
+
         [Theory]
         [InlineData(4.3, 4.3, true)]
         [InlineData(4.31, 4.3, false)]

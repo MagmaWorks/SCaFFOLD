@@ -22,13 +22,13 @@ public class ImageFromEmbeddedResource<T> : ICalcImage
         if (embeddedResourceAssembly == null)
             throw new Exception("Assembly not found.");
 
-        var manifestResources = embeddedResourceAssembly.GetManifestResourceNames();
-        var existing = manifestResources.FirstOrDefault(x => x.EndsWith(EmbeddedResourceName));
+        string[] manifestResources = embeddedResourceAssembly.GetManifestResourceNames();
+        string existing = manifestResources.FirstOrDefault(x => x.EndsWith(EmbeddedResourceName));
 
         if (existing == null)
             throw new Exception($"Embedded resource '{EmbeddedResourceName}' not found.");
 
-        using var stream = embeddedResourceAssembly.GetManifestResourceStream(existing);
+        using System.IO.Stream stream = embeddedResourceAssembly.GetManifestResourceStream(existing);
         return SKBitmap.Decode(stream);
     }
 }

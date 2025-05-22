@@ -17,6 +17,21 @@ namespace Scaffold.Tests.UnitTests.CalcValues
         }
 
         [Fact]
+        public void ImplicitFromWrappedTypeTest()
+        {
+            // Arrange
+            var calcInt1 = new CalcInt(4);
+
+            // Act
+            calcInt1 = 5;
+            CalcInt calcInt2 = 2;
+
+            // Assert
+            Assert.Equal(5, calcInt1.Value);
+            Assert.Equal(2, calcInt2.Value);
+        }
+
+        [Fact]
         public void ImplicitOperatorTest()
         {
             // Arrange

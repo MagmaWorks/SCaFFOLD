@@ -30,7 +30,7 @@ public class Line : GeometryBase
         }
         else
         {
-            var vector = End - Start;
+            Vector2 vector = End - Start;
             return new List<GeometryBase>
             {
                 new Line(Start, Start + vector * (float)parameter),
@@ -47,13 +47,13 @@ public class Line : GeometryBase
 
     public override Vector2 PointAtParameter(double parameter)
     {
-        var vector = End - Start;
+        Vector2 vector = End - Start;
         return (float)parameter * vector + Start;
     }
 
     public override Vector2 PerpAtParameter(double parameter)
     {
-        var v = End - Start;
+        Vector2 v = End - Start;
         var returnVector = new Vector2((
                 float)(v.X * Math.Cos(Math.PI / 2) - v.Y * Math.Sin(Math.PI / 2)),
             (float)(v.X * Math.Sin(Math.PI / 2) + v.Y * Math.Cos(Math.PI / 2)));
@@ -62,18 +62,18 @@ public class Line : GeometryBase
 
     public override List<IntersectionResult> intersection(Line line)
     {
-        var p1 = _start;
-        var p1_2 = _end;
-        var p2 = line.Start;
-        var p2_2 = line.End;
+        Vector2 p1 = _start;
+        Vector2 p1_2 = _end;
+        Vector2 p2 = line.Start;
+        Vector2 p2_2 = line.End;
 
         double A1 = p1_2.Y - p1.Y;
         double B1 = p1.X - p1_2.X;
-        var C1 = A1 * p1.X + B1 * p1.Y;
+        double C1 = A1 * p1.X + B1 * p1.Y;
         double A2 = p2_2.Y - p2.Y;
         double B2 = p2.X - p2_2.X;
-        var C2 = A2 * p2.X + B2 * p2.Y;
-        var det = A1 * B2 - A2 * B1;
+        double C2 = A2 * p2.X + B2 * p2.Y;
+        double det = A1 * B2 - A2 * B1;
         double endX = 0; double endY = 0;
         if (det == 0)
         {
@@ -83,7 +83,7 @@ public class Line : GeometryBase
         }
         endX = (B2 * C1 - B1 * C2) / det;
         endY = (A1 * C2 - A2 * C1) / det;
-        var tol = 0.00000000001;
+        double tol = 0.00000000001;
         if (
             endX + tol >= Math.Min(p1.X, p1_2.X)
             &&
@@ -104,7 +104,7 @@ public class Line : GeometryBase
         {
             //return new IntersectionResult(IntersectionType.WITHIN, new Point(endX, endY));
             var inter = new Vector2((float)endX, (float)endY);
-            var param = (inter - Start).Length() / Length;
+            double param = (inter - Start).Length() / Length;
             return new List<IntersectionResult> { new IntersectionResult(param, inter, IntersectionType.WITHIN) };
             //return new List<Vector2> { new Vector2((float)endX, (float)endY) };
         }
@@ -112,7 +112,7 @@ public class Line : GeometryBase
         {
             //return new IntersectionResult(IntersectionType.PROJECTED, new Point(endX, endY));
             var inter = new Vector2((float)endX, (float)endY);
-            var param = (inter - Start).Length() / Length;
+            double param = (inter - Start).Length() / Length;
             return new List<IntersectionResult> { new IntersectionResult(double.NaN, inter, IntersectionType.PROJECTED) };
             //return new List<Vector2>();
 

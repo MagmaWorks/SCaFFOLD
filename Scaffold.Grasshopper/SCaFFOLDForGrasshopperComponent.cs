@@ -46,7 +46,7 @@ namespace SCaFFOLDForGrasshopper
                 inputs = reader.GetInputs(embeddedCalc);
             }
 
-            foreach (var item in inputs)
+            foreach (ICalcValue item in inputs)
             {
                 string unit = "";
                 if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
@@ -90,7 +90,7 @@ namespace SCaFFOLDForGrasshopper
             {
                 double inputVal = 0;
                 DA.GetData(i, ref inputVal);
-                var item = inputs[i];
+                ICalcValue item = inputs[i];
                 if (typeof(ICalcQuantity).IsAssignableFrom(item.GetType()))
                 {
                     (item as ICalcQuantity).TryParse(inputVal.ToString());

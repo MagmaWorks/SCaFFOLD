@@ -4,8 +4,8 @@ internal static class InternalExtensionMethods
 {
     private static string UniqueDisplayName(List<ICalcValue> collection, string displayName)
     {
-        var rootName = displayName;
-        var i = 0;
+        string rootName = displayName;
+        int i = 0;
 
         while (collection.FirstOrDefault(x => x.DisplayName == displayName) != null)
         {

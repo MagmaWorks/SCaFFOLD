@@ -39,7 +39,7 @@ public class PolyLine
         get
         {
             double returnLength = 0;
-            foreach (var item in _segments)
+            foreach (GeometryBase item in _segments)
             {
                 returnLength += item.Length;
             }
@@ -79,13 +79,13 @@ public class PolyLine
 
     public List<IntersectionResult> intersection(Line line) // need to add full support for NONE and PROJECTED 
     {
-        var totalLength = Length;
+        double totalLength = Length;
         double lengthToSegment = 0;
         var returnList = new List<IntersectionResult>();
-        foreach (var segment in _segments)
+        foreach (GeometryBase segment in _segments)
         {
-            var intersections = segment.intersection(line);
-            foreach (var intersection in intersections)
+            List<IntersectionResult> intersections = segment.intersection(line);
+            foreach (IntersectionResult intersection in intersections)
             {
                 if (intersection.TypeOfIntersection == IntersectionType.WITHIN)
                 {
@@ -103,11 +103,11 @@ public class PolyLine
 
     public override string ToString()
     {
-        var returnString = "";
+        string returnString = "";
         returnString = "Start " + _segments[0].Start.ToString();
         returnString += Environment.NewLine;
 
-        foreach (var item in _segments)
+        foreach (GeometryBase item in _segments)
         {
             if (item.GetType() == typeof(Arc))
             {
@@ -128,19 +128,19 @@ public class PolyLine
 
     public Vector2 PointAtParameter(double parameter)
     {
-        var totalLength = Length;
+        double totalLength = Length;
         double lengthToSegmentStart = 0;
         double lengthToSegmentEnd = 0;
-        for (var i = 0; i < _segments.Count; i++)
+        for (int i = 0; i < _segments.Count; i++)
         {
-            var segment = _segments[i];
+            GeometryBase segment = _segments[i];
             lengthToSegmentStart = lengthToSegmentEnd;
             lengthToSegmentEnd += segment.Length;
-            var parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-            var parameterToSegmentStart = lengthToSegmentStart / totalLength;
+            double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
+            double parameterToSegmentStart = lengthToSegmentStart / totalLength;
             if (parameter >= parameterToSegmentStart && parameter <= parameterToSegmentEnd)
             {
-                var segmentParameter = (parameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
+                double segmentParameter = (parameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
                 if (double.IsNaN(segmentParameter))
                     segmentParameter = 0;
                 return segment.PointAtParameter(segmentParameter);
@@ -151,19 +151,19 @@ public class PolyLine
 
     public Vector2 PerpAtParameter(double parameter)
     {
-        var totalLength = Length;
+        double totalLength = Length;
         double lengthToSegmentStart = 0;
         double lengthToSegmentEnd = 0;
-        for (var i = 0; i < _segments.Count; i++)
+        for (int i = 0; i < _segments.Count; i++)
         {
-            var segment = _segments[i];
+            GeometryBase segment = _segments[i];
             lengthToSegmentStart = lengthToSegmentEnd;
             lengthToSegmentEnd += segment.Length;
-            var parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-            var parameterToSegmentStart = lengthToSegmentStart / totalLength;
+            double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
+            double parameterToSegmentStart = lengthToSegmentStart / totalLength;
             if (parameter >= parameterToSegmentStart && parameter <= parameterToSegmentEnd)
             {
-                var segmentParameter = (parameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
+                double segmentParameter = (parameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
                 if (double.IsNaN(segmentParameter))
                     segmentParameter = 0;
                 return segment.PerpAtParameter(segmentParameter);
@@ -174,19 +174,19 @@ public class PolyLine
 
     public PolyLine Cut(double startParameter, double endParameter)
     {
-        var totalLength = Length;
+        double totalLength = Length;
         double lengthToSegmentStart = 0;
         double lengthToSegmentEnd = 0;
-        var started = false;
-        var finished = false;
+        bool started = false;
+        bool finished = false;
         var segments = new List<GeometryBase>();
-        for (var i = 0; i < _segments.Count; i++)
+        for (int i = 0; i < _segments.Count; i++)
         {
-            var segment = _segments[i];
+            GeometryBase segment = _segments[i];
             lengthToSegmentStart = lengthToSegmentEnd;
             lengthToSegmentEnd += segment.Length;
-            var parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-            var parameterToSegmentStart = lengthToSegmentStart / totalLength;
+            double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
+            double parameterToSegmentStart = lengthToSegmentStart / totalLength;
             if ((endParameter > parameterToSegmentEnd && started) || (endParameter <= startParameter && started))
             {
                 segments.Add(segment);
@@ -199,18 +199,18 @@ public class PolyLine
                 }
                 if (endParameter <= parameterToSegmentEnd && endParameter >= startParameter)
                 {
-                    var segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
+                    double segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
                     if (double.IsNaN(segmentParameter))
                         segmentParameter = 0;
-                    var partialCut = segment.Cut(segmentParameter)[0];
-                    var secondSegmentParameter = (startParameter - parameterToSegmentStart) / (endParameter - parameterToSegmentStart);
+                    GeometryBase partialCut = segment.Cut(segmentParameter)[0];
+                    double secondSegmentParameter = (startParameter - parameterToSegmentStart) / (endParameter - parameterToSegmentStart);
                     segments.Add(partialCut.Cut(secondSegmentParameter)[1]);
                     started = true;
                     finished = true;
                 }
                 else
                 {
-                    var segmentParameter = (startParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
+                    double segmentParameter = (startParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
                     if (double.IsNaN(segmentParameter))
                         segmentParameter = 0;
                     segments.Add(segment.Cut(segmentParameter)[1]);
@@ -219,7 +219,7 @@ public class PolyLine
             }
             else if (endParameter <= parameterToSegmentEnd && endParameter >= startParameter && started && !finished)
             {
-                var segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
+                double segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
                 if (double.IsNaN(segmentParameter))
                     segmentParameter = 0;
                 segments.Add(segment.Cut(segmentParameter)[0]);
@@ -233,13 +233,13 @@ public class PolyLine
         }
         lengthToSegmentEnd = 0;
         lengthToSegmentStart = 0;
-        for (var i = 0; i < _segments.Count; i++)
+        for (int i = 0; i < _segments.Count; i++)
         {
-            var segment = _segments[i];
+            GeometryBase segment = _segments[i];
             lengthToSegmentStart = lengthToSegmentEnd;
             lengthToSegmentEnd += segment.Length;
-            var parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
-            var parameterToSegmentStart = lengthToSegmentStart / totalLength;
+            double parameterToSegmentEnd = lengthToSegmentEnd / totalLength;
+            double parameterToSegmentStart = lengthToSegmentStart / totalLength;
             if (endParameter > parameterToSegmentEnd)
             {
                 segments.Add(segment);
@@ -252,7 +252,7 @@ public class PolyLine
             //}
             else if (endParameter <= parameterToSegmentEnd)
             {
-                var segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
+                double segmentParameter = (endParameter - parameterToSegmentStart) / (parameterToSegmentEnd - parameterToSegmentStart);
                 if (double.IsNaN(segmentParameter))
                     segmentParameter = 0;
                 segments.Add(segment.Cut(segmentParameter)[0]);

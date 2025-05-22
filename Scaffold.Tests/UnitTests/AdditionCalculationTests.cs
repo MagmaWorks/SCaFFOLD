@@ -25,9 +25,9 @@ public class AdditionCalculationTests
     {
         var calc = new AdditionCalculation();
 
-        var metadata = Reader.GetMetadata(calc);
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        Core.Models.CalculationMetadata metadata = Reader.GetMetadata(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         calc.CalculationName.Should().Be(TypeName);
         calc.ReferenceName.Should().Be(Title);
@@ -49,9 +49,9 @@ public class AdditionCalculationTests
     {
         var calc = new AdditionCalculationFluent();
 
-        var metadata = Reader.GetMetadata(calc);
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        Core.Models.CalculationMetadata metadata = Reader.GetMetadata(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         metadata.Type.Should().Be(TypeName);
         metadata.Title.Should().Be(Title);
@@ -69,7 +69,7 @@ public class AdditionCalculationTests
     public void Fluent_DisplayNameSingle_Ok()
     {
         var calc = new FluentDisplayNameSingle();
-        var outputs = Reader.GetOutputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         outputs[0].DisplayName.Should().Be("Result");
     }
@@ -78,7 +78,7 @@ public class AdditionCalculationTests
     public void Fluent_DisplayNameMultiple_Ok()
     {
         var calc = new FluentDisplayNameMultiple();
-        var outputs = Reader.GetOutputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         outputs[0].DisplayName.Should().Be("Result (1)");
         outputs[1].DisplayName.Should().Be("Result (2)");
@@ -90,8 +90,8 @@ public class AdditionCalculationTests
     [Fact]
     public void Fluent_InvokedByActivator_Ok()
     {
-        var activated = Activator.CreateInstance(typeof(FluentDisplayNameMultiple));
-        var outputs = Reader.GetOutputs((ICalculation)activated);
+        object activated = Activator.CreateInstance(typeof(FluentDisplayNameMultiple));
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs((ICalculation)activated);
 
         outputs[0].DisplayName.Should().Be("Result (1)");
         outputs[1].DisplayName.Should().Be("Result (2)");
@@ -143,8 +143,8 @@ public class AdditionCalculationTests
         //
         // Initial values
         //
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         inputs.Count.Should().Be(2);
         outputs.Count.Should().Be(1);
@@ -178,8 +178,8 @@ public class AdditionCalculationTests
         //
         // Initial values
         //
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         inputs.Count.Should().Be(2);
         outputs.Count.Should().Be(1);
@@ -230,7 +230,7 @@ public class AdditionCalculationTests
     public void DuplicateDisplayNames_Ok()
     {
         var calc = new DuplicateDisplayNames();
-        var inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
         inputs[0].DisplayName.Should().Be("Value");
         inputs[1].DisplayName.Should().Be("Value (1)");
     }
@@ -239,7 +239,7 @@ public class AdditionCalculationTests
     public void DuplicateDisplayNames_Fluent_Ok()
     {
         var calc = new DuplicateDisplayNamesFluent();
-        var inputs = Reader.GetInputs(calc);
+        IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
         inputs[0].DisplayName.Should().Be("Value");
         inputs[1].DisplayName.Should().Be("Value (1)");
     }

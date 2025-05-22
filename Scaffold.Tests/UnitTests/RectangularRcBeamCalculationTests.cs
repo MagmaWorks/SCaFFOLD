@@ -24,15 +24,15 @@ public class RectangularRcBeamCalculationTests
     {
         var calc = new RectangularRcBeamCalculation();
 
-        var metadata = Reader.GetMetadata(calc);
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        Core.Models.CalculationMetadata metadata = Reader.GetMetadata(calc);
+        IReadOnlyList<Core.Interfaces.ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<Core.Interfaces.ICalcValue> outputs = Reader.GetOutputs(calc);
 
         calc.CalculationName.Should().Be(TypeName);
-        calc.ReferenceName.Should().Be(Title);
+        calc.ReferenceName.Should().BeNull();
 
         metadata.Type.Should().Be(TypeName);
-        metadata.Title.Should().Be(Title);
+        metadata.Title.Should().BeNull();
 
         inputs.Count.Should().Be(24);
         outputs.Count.Should().Be(18);

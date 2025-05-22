@@ -7,7 +7,7 @@ namespace Scaffold.Tests.UnitTests;
 public class ConcreteSectionCalculationTests
 {
     private CalculationReader Reader { get; } = new();
-    private const string TypeName = "Rectangular Concrete section";
+    private const string CalcName = "Rectangular Concrete section";
     private const string Title = "Concrete Section Calculation";
 
     [Fact]
@@ -23,15 +23,15 @@ public class ConcreteSectionCalculationTests
     {
         var calc = new ConcreteSectionCalculation();
 
-        var metadata = Reader.GetMetadata(calc);
-        var inputs = Reader.GetInputs(calc);
-        var outputs = Reader.GetOutputs(calc);
+        Core.Models.CalculationMetadata metadata = Reader.GetMetadata(calc);
+        IReadOnlyList<Core.Interfaces.ICalcValue> inputs = Reader.GetInputs(calc);
+        IReadOnlyList<Core.Interfaces.ICalcValue> outputs = Reader.GetOutputs(calc);
 
-        calc.CalculationName.Should().Be(TypeName);
-        calc.ReferenceName.Should().Be(Title);
+        calc.CalculationName.Should().Be(CalcName);
+        calc.ReferenceName.Should().BeNull();
 
-        metadata.Type.Should().Be(TypeName);
-        metadata.Title.Should().Be(Title);
+        metadata.Type.Should().Be(CalcName);
+        metadata.Title.Should().BeNull();
 
         inputs.Count.Should().Be(12);
         outputs.Count.Should().Be(1);

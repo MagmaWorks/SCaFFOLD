@@ -9,8 +9,8 @@ public class AssemblyImageReader : IAssemblyImageReader
 
     public AssemblyImageReader(string relativePathName, string folderPath)
     {
-        var fullFilePath = Path.Combine(folderPath, relativePathName);
-        using var stream = File.OpenRead(fullFilePath);
+        string fullFilePath = Path.Combine(folderPath, relativePathName);
+        using FileStream stream = File.OpenRead(fullFilePath);
 
         var memoryStream = new MemoryStream();
         stream.CopyTo(memoryStream);

@@ -24,8 +24,8 @@ public sealed class CalcStress : CalcQuantity<Stress>
     , IComparisonOperators<CalcStress, CalcStress, bool>
 #endif
 {
-    public CalcStress(Stress linearForce, string name, string symbol = "")
-        : base(linearForce, name, symbol) { }
+    public CalcStress(Stress stress, string name, string symbol = "")
+        : base(stress, name, symbol) { }
 
     public CalcStress(double value, StressUnit unit, string name, string symbol)
         : base(new Stress(value, unit), name, symbol) { }
