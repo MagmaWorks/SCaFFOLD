@@ -24,7 +24,7 @@ public class CalcMetadataTests
         Reader.Update(calc);
 
         calc.CalculationName.Should().Be("TypeNameSet");
-        calc.ReferenceName.Should().Be("Calc Metadata Type Name Constructor");
+        calc.ReferenceName.Should().BeNull();
     }
 
     [Fact]

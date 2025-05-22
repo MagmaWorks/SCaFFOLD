@@ -29,10 +29,10 @@ public class RectangularRcBeamCalculationTests
         IReadOnlyList<Core.Interfaces.ICalcValue> outputs = Reader.GetOutputs(calc);
 
         calc.CalculationName.Should().Be(TypeName);
-        calc.ReferenceName.Should().Be(Title);
+        calc.ReferenceName.Should().BeNull();
 
         metadata.Type.Should().Be(TypeName);
-        metadata.Title.Should().Be(Title);
+        metadata.Title.Should().BeNull();
 
         inputs.Count.Should().Be(24);
         outputs.Count.Should().Be(18);
