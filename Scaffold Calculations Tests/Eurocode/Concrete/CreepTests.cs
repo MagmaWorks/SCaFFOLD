@@ -76,7 +76,7 @@ public class ConcreteCreepTests
 
         // Assert
         Assert.Equal(expArea, calc.Area, 0);
-        Assert.Equal("mm�", calc.Area.Unit);
+        Assert.Equal("mm²", calc.Area.Unit);
     }
 
     [Theory]
