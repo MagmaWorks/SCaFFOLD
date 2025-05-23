@@ -27,6 +27,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MagmaWorks.Taxonomy.Materials" Version="0.1.0" />
+    <PackageReference Include="MagmaWorks.Taxonomy.Profiles" Version="0.1.0" />
+    <PackageReference Include="MagmaWorks.Taxonomy.Profiles.Catalogue" Version="0.1.0" />
+    <PackageReference Include="MagmaWorks.Taxonomy.Sections" Version="0.1.0" />
+    <PackageReference Include="MagmaWorks.Taxonomy.Serialization" Version="0.1.0" />
     <PackageReference Include="MinVer" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
