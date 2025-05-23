@@ -5,7 +5,7 @@ namespace Scaffold.Core.CalcValues;
 public class CalcString : CalcValue<string>
 {
     public CalcString(string value)
-        : base(value, null, string.Empty, string.Empty) { }
+        : base(value, string.Empty, string.Empty, string.Empty) { }
 
     public CalcString(string value, string name)
         : base(value, name, string.Empty, string.Empty) { }

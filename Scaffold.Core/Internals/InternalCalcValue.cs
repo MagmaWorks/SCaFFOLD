@@ -14,15 +14,14 @@ internal sealed class InternalCalcValue : ICalcValue
     public string UnitName => Unit?.QuantityInfo.Name ?? "";
     public CalcStatus Status { get; set; }
 
-    public InternalCalcValue(ICalculation calculation, Type valueType, string memberName)
+    internal InternalCalcValue(ICalculation calculation, Type valueType, string memberName)
     {
         Calculation = calculation;
         ValueType = valueType;
         MemberName = memberName;
     }
 
-
-    public object Value
+    internal object Value
     {
         get
         {
@@ -31,7 +30,7 @@ internal sealed class InternalCalcValue : ICalcValue
         }
     }
 
-    public IQuantity Unit { get; set; }
+    internal IQuantity Unit { get; set; }
 
     private object Convert(string input)
     {

@@ -5,7 +5,7 @@ namespace Scaffold.Core.CalcValues;
 public sealed class CalcInt : CalcValue<int>
 {
     public CalcInt(int value)
-        : base(value, null, string.Empty, string.Empty) { }
+        : base(value, string.Empty, string.Empty, string.Empty) { }
 
     public CalcInt(int value, string name)
         : base(value, name, string.Empty, string.Empty) { }

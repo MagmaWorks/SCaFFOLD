@@ -5,7 +5,7 @@ namespace Scaffold.Core.CalcValues;
 public class CalcBool : CalcValue<bool>
 {
     public CalcBool(bool value = false)
-        : base(value, null, string.Empty, string.Empty) { }
+        : base(value, string.Empty, string.Empty, string.Empty) { }
 
     public CalcBool(bool value, string name)
         : base(value, name, string.Empty, string.Empty) { }

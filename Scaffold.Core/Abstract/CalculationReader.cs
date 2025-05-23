@@ -57,7 +57,11 @@ public class CalculationReader
             calcValue = new InternalCalcValue(cacheItem.Calculation, propertyType, property.Name);
         }
 
-        calcValue.DisplayName ??= property.Name.SplitPascalCaseToString();
+        if (string.IsNullOrEmpty(calcValue.DisplayName))
+        {
+            calcValue.DisplayName = property.Name.SplitPascalCaseToString();
+        }
+
         return calcValue;
     }
 
