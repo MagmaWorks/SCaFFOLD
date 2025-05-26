@@ -11,7 +11,7 @@ public sealed class CalcParabolaRectangleMaterial : CalcTaxonomyObject<ParabolaR
     public CalcParabolaRectangleMaterial(ParabolaRectangleMaterial parabolarectanglematerial, string name, string symbol = "")
         : base(parabolarectanglematerial, name, symbol) { }
 
-    public CalcParabolaRectangleMaterial(MaterialType type, Pressure yieldStrength, Ratio yieldStrain, Ratio failureStrain, System.Double exponent, string name, string symbol = "")
+    public CalcParabolaRectangleMaterial(MaterialType type, Pressure yieldStrength, Ratio yieldStrain, Ratio failureStrain, double exponent, string name, string symbol = "")
         : base(new ParabolaRectangleMaterial(type, yieldStrength, yieldStrain, failureStrain, exponent), name, symbol) { }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcParabolaRectangleMaterial result)

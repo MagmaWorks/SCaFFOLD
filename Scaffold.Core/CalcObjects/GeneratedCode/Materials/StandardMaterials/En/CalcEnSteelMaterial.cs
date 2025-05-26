@@ -1,8 +1,9 @@
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Serialization;
+using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Core.Abstract;
 
-namespace Scaffold.Core.CalcObjects.Materials;
+namespace Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
 public sealed class CalcEnSteelMaterial : CalcTaxonomyObject<EnSteelMaterial>
 #if NET7_0_OR_GREATER
     , IParsable<CalcEnSteelMaterial>
@@ -11,7 +12,7 @@ public sealed class CalcEnSteelMaterial : CalcTaxonomyObject<EnSteelMaterial>
     public CalcEnSteelMaterial(EnSteelMaterial ensteelmaterial, string name, string symbol = "")
         : base(ensteelmaterial, name, symbol) { }
 
-    public CalcEnSteelMaterial(EnSteelGrade grade, MagmaWorks.Taxonomy.Standards.Eurocode.NationalAnnex nationalAnnex, string name, string symbol = "")
+    public CalcEnSteelMaterial(EnSteelGrade grade, NationalAnnex nationalAnnex, string name, string symbol = "")
         : base(new EnSteelMaterial(grade, nationalAnnex), name, symbol) { }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcEnSteelMaterial result)

@@ -2,7 +2,7 @@ using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Serialization;
 using Scaffold.Core.Abstract;
 
-namespace Scaffold.Core.CalcObjects.Materials;
+namespace Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
 public sealed class CalcEnSteelSpecification : CalcTaxonomyObject<EnSteelSpecification>
 #if NET7_0_OR_GREATER
     , IParsable<CalcEnSteelSpecification>
