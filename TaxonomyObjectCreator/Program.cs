@@ -11,8 +11,11 @@ namespace TaxonomyObjectCodeGenerator
             "MagmaWorks.Taxonomy.Profiles",
             "MagmaWorks.Taxonomy.Materials",
             "MagmaWorks.Taxonomy.Sections",
+            "MagmaWorks.Taxonomy.Sections.SectionProperties",
             "MagmaWorks.Taxonomy.Loads",
             "MagmaWorks.Taxonomy.Cases",
+            "MagmaWorks.Taxonomy.Profiles.Perimeter",
+
         };
 
         private static readonly List<string> _globalUsings = new() {
@@ -26,6 +29,11 @@ namespace TaxonomyObjectCodeGenerator
 
         private static readonly Dictionary<string, string> _renamings = new() {
             { "Angle", "MagmaWorks.Taxonomy.Profiles.Angle" },
+        };
+
+        private static readonly Dictionary<string, string> _nameSpaceChange = new() {
+            { "Scaffold.Core.CalcObjects.Sections.SectionProperties",
+                "Scaffold.Core.CalcObjects.Sections" },
         };
 
         private const string _namespace = "Scaffold.Core.CalcObjects";
@@ -74,7 +82,7 @@ namespace TaxonomyObjectCodeGenerator
             DirectoryInfo? directory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent;
             var paths = new List<string>()
             {
-                directory.FullName, "Scaffold.Core", "CalcObjects", "GeneratedCode"
+                directory.FullName, "Scaffold.Core", "CalcObjects"
             };
             paths.AddRange(assembly.Split('.'));
             return Path.Combine(paths.ToArray());
@@ -82,31 +90,46 @@ namespace TaxonomyObjectCodeGenerator
 
         private static void WriteClassToFile(Type type, string assemblyName)
         {
-            string assemblyBase = assemblyName.Replace(assemblyName.Split('.').LastOrDefault(), string.Empty);
+            string assemblyBase = "MagmaWorks.Taxonomy.";
             string assembly = type.Namespace.Replace(assemblyBase, string.Empty);
             string filePath = GetPath(assemblyName, assembly);
             string name = type.Name;
+            string nameSpace = $"{_namespace}.{assembly}";
+            if (_nameSpaceChange.ContainsKey(nameSpace))
+            {
+                nameSpace = _nameSpaceChange[nameSpace];
+            }
 
             var usings = new HashSet<string>();
             var sb = new StringBuilder();
             sb.AppendLine($@"
-namespace {_namespace}.{assembly};
-public sealed class Calc{name} : CalcTaxonomyObject<{name}>
+namespace {nameSpace};
+public sealed class Calc{name} : {name}, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<Calc{name}>
 #endif
 {{
-    public Calc{name}({name} {name.ToLower()}, string name, string symbol = """")
-        : base({name.ToLower()}, name, symbol) {{ }}");
+    public string DisplayName {{ get; set; }}
+    public string Symbol {{ get; set; }}
+    public CalcStatus Status {{ get; set; }} = CalcStatus.None;");
 
             ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
+            if (constructors.Length == 0)
+            {
+                return;
+            }
+
             foreach (ConstructorInfo constructor in constructors)
             {
                 ParameterInfo[] parameters = constructor.GetParameters();
                 string inputs = Inputs(parameters, type.Namespace, ref usings);
                 sb.AppendLine($@"
     public Calc{name}({inputs}string name, string symbol = """")
-        : base(new {name}({string.Join(", ", parameters.Select(s => s.Name).ToList())}), name, symbol) {{ }}");
+        : base({string.Join(", ", parameters.Select(s => s.Name).ToList())})
+    {{
+        DisplayName = name;
+        Symbol = symbol;
+    }}");
             }
             sb.Append($@"
     public static bool TryParse(string s, IFormatProvider provider, out Calc{name} result)
@@ -126,6 +149,19 @@ public sealed class Calc{name} : CalcTaxonomyObject<{name}>
     public static Calc{name} Parse(string s, IFormatProvider provider)
     {{
         return s.FromJson<Calc{name}>();
+    }}
+
+    public string ValueAsString() => this.ToJson();
+    public bool TryParse(string strValue)
+    {{
+        Calc{name} result = null;
+        if (TryParse(strValue, null, out result))
+        {{
+            result.CopyTo(this);
+            return true;
+        }}
+
+        return false;
     }}
 }}
 ");
@@ -189,7 +225,7 @@ public sealed class Calc{name} : CalcTaxonomyObject<{name}>
             var s = new List<string>()
             {
                 "using MagmaWorks.Taxonomy.Serialization;",
-                "using Scaffold.Core.Abstract;",
+                "using Scaffold.Core.Extensions;",
                 $"using {type.Namespace};",
             };
 
