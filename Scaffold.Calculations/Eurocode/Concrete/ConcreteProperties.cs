@@ -77,7 +77,7 @@ namespace Scaffold.Calculations.Eurocode.Concrete
 
         public void Calculate()
         {
-            ConcreteMaterialProperties = new ConcreteMaterialProperties(
+            ConcreteMaterialProperties = new Utility.ConcreteMaterialProperties(
                 ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_"));
         }
     }

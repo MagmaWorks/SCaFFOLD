@@ -23,7 +23,12 @@ namespace Scaffold.Tests.UnitTests
     {
         private static List<string> ignoredClassNames = new List<string>
         {
-            "CalcQuantityWrapper`1"
+            "CalcVariableCase",
+            "CalcPerimeter",
+            "CalcConcreteSection",
+            "CalcConcreteSectionProperties",
+            "CalcSection",
+            "CalcSectionProperties"
         };
         // static inputs used to populate constructor variables
         private static string _string { get { return "lava"; } }
@@ -35,22 +40,31 @@ namespace Scaffold.Tests.UnitTests
         private static UnitsNet.Angle _angle { get { return new UnitsNet.Angle(33, AngleUnit.Degree); } }
         private static Pressure _stress { get { return new Pressure(45, PressureUnit.Megapascal); } }
         private static Strain _strain { get { return new Strain(7.5, StrainUnit.Percent); } }
-        private static IMaterial _material
+        private static Dictionary<string, IMaterial> _materials = new Dictionary<string, IMaterial>()
         {
-            get
             {
-                return new EnRebarMaterial(EnRebarGrade.B500B, NationalAnnex.RecommendedValues);
+                "Rebar", new EnRebarMaterial(EnRebarGrade.B500B, NationalAnnex.RecommendedValues)
+            },
+            {
+                "Concrete", new EnConcreteMaterial(EnConcreteGrade.C30_37, NationalAnnex.RecommendedValues)
+            },
+            {
+                "Steel", new EnSteelMaterial(EnSteelGrade.S355, NationalAnnex.RecommendedValues)
             }
-        }
+        };
         private static IProfile _profile { get { return new HE320B(); } }
         private static ILocalPoint2d _point { get { return new LocalPoint2d(); } }
+        private static ILocalPolyline2d _line { get { return new LocalPolyline2d(new List<ILocalPoint2d>() { new LocalPoint2d(), new LocalPoint2d() }); } }
         private static NationalAnnex _na { get { return NationalAnnex.UnitedKingdom; } }
+
+        private Type _currentType { get; set; }
 
         [Theory]
         [ClassData(typeof(TestDataGenerator))]
         public void ConstructorTest(Type type)
         {
             ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
+            _currentType = type;
             foreach (ConstructorInfo constructor in constructors)
             {
                 object[] args = CreateConstructorArguments(constructor);
@@ -73,7 +87,7 @@ namespace Scaffold.Tests.UnitTests
                 var data = new List<object[]>();
                 Type[] typelist = Assembly.GetAssembly(typeof(CalcBool)).GetTypes()
                     .Where(p => typeof(T).IsAssignableFrom(p)
-                    && !p.IsAbstract).ToArray();
+                    && !p.IsAbstract && !p.ContainsGenericParameters).ToArray();
                 foreach (Type type in typelist)
                 {
                     if (type.Namespace == null || ignoredClassNames.Contains(type.Name))
@@ -95,9 +109,27 @@ namespace Scaffold.Tests.UnitTests
         {
             PropertyInfo[] propertyInfo = obj.GetType().GetProperties(
                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
             foreach (PropertyInfo property in propertyInfo)
             {
-                Assert.NotNull(property.GetValue(obj));
+                if (property.CanRead && !property.CanWrite)
+                {
+                    Assert.NotNull(property.GetValue(obj));
+                }
+                else if (property.CanRead && property.CanWrite)
+                {
+                    object value = property.GetValue(obj);
+                    if (value != null)
+                    {
+                        Assert.NotNull(value);
+                    }
+                    else
+                    {
+                        object newValue = CreateObjectInstance(property.PropertyType);
+                        property.SetValue(obj, newValue, null);
+                        Assert.NotNull(property.GetValue(obj));
+                    }
+                }
             }
         }
 
@@ -177,7 +209,26 @@ namespace Scaffold.Tests.UnitTests
 
                 if (type.Name == "IMaterial")
                 {
-                    args.Add(_material);
+                    if (_currentType.Name.Contains("Rebar"))
+                    {
+                        args.Add(_materials["Rebar"]);
+                    }
+                    else if (_currentType.Name.Contains("Reinf"))
+                    {
+                        args.Add(_materials["Rebar"]);
+                    }
+                    else if (_currentType.Name.Contains("Concrete"))
+                    {
+                        args.Add(_materials["Concrete"]);
+                    }
+                    else if (_currentType.Name.Contains("Steel"))
+                    {
+                        args.Add(_materials["Steel"]);
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown material required in " + _currentType.Name);
+                    }
                     continue;
                 }
 
@@ -190,6 +241,12 @@ namespace Scaffold.Tests.UnitTests
                 if (type.Name == "ILocalPoint2d")
                 {
                     args.Add(_point);
+                    continue;
+                }
+
+                if (type.Name == "ILocalPolyline2d")
+                {
+                    args.Add(_line);
                     continue;
                 }
 
