@@ -208,7 +208,8 @@ $@"    public static bool TryParse(string s, IFormatProvider provider, out Calc{
                     type = type.Split("List")[1].Split(',')[0].TrimEnd(' ');
                     type = type.Split('.').LastOrDefault();
                     type = $"{listType}List<{type.Trim('.')}>";
-                } else
+                }
+                else
                 {
                     type = type.Split('.').LastOrDefault();
                 }
@@ -242,7 +243,7 @@ $@"    public static bool TryParse(string s, IFormatProvider provider, out Calc{
                     s.Add($@"using {use};");
                 }
             }
-            
+
             s.Sort();
             if (_renamings.ContainsKey(type.Name))
             {
