@@ -109,9 +109,11 @@ public sealed class Calc{name} : {name}, ICalcValue
     , IParsable<Calc{name}>
 #endif
 {{
-    public string DisplayName {{ get; set; }}
-    public string Symbol {{ get; set; }}
-    public CalcStatus Status {{ get; set; }} = CalcStatus.None;");
+    public string DisplayName {{ get; set; }} = string.Empty;
+    public string Symbol {{ get; set; }} = string.Empty;
+    public CalcStatus Status {{ get; set; }} = CalcStatus.None;
+
+    [JsonConstructor]");
 
             ConstructorInfo[] constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
             if (constructors.Length == 0)
@@ -123,16 +125,18 @@ public sealed class Calc{name} : {name}, ICalcValue
             {
                 ParameterInfo[] parameters = constructor.GetParameters();
                 string inputs = Inputs(parameters, type.Namespace, ref usings);
-                sb.AppendLine($@"
-    public Calc{name}({inputs}string name, string symbol = """")
+                sb.AppendLine(
+$@"    public Calc{name}({inputs}string name, string symbol = """")
         : base({string.Join(", ", parameters.Select(s => s.Name).ToList())})
     {{
         DisplayName = name;
         Symbol = symbol;
-    }}");
+    }}
+");
             }
-            sb.Append($@"
-    public static bool TryParse(string s, IFormatProvider provider, out Calc{name} result)
+
+            sb.Append(
+$@"    public static bool TryParse(string s, IFormatProvider provider, out Calc{name} result)
     {{
         try
         {{
@@ -152,6 +156,7 @@ public sealed class Calc{name} : {name}, ICalcValue
     }}
 
     public string ValueAsString() => this.ToJson();
+
     public bool TryParse(string strValue)
     {{
         Calc{name} result = null;
@@ -226,6 +231,7 @@ public sealed class Calc{name} : {name}, ICalcValue
             {
                 "using MagmaWorks.Taxonomy.Serialization;",
                 "using Scaffold.Core.Extensions;",
+                "using Newtonsoft.Json;",
                 $"using {type.Namespace};",
             };
 
