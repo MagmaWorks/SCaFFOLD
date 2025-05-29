@@ -1,7 +1,7 @@
 ﻿using MagmaWorks.Taxonomy.Serialization;
 
 namespace Scaffold.Core.CalcObjects;
-public sealed class CalcObjectWrapper<T> : ICalcValue, ITaxonomySerializable
+public class CalcObjectWrapper<T> : ICalcValue, ITaxonomySerializable
 #if NET7_0_OR_GREATER
     , IParsable<CalcObjectWrapper<T>>
 #endif
@@ -10,6 +10,7 @@ public sealed class CalcObjectWrapper<T> : ICalcValue, ITaxonomySerializable
     public string Symbol { get; set; }
     public CalcStatus Status { get; set; } = CalcStatus.None;
     public T Value { get; set; }
+    public Type Type { get; set; } = typeof(T);
 
     public CalcObjectWrapper(T typeValue, string name, string symbol)
     {
