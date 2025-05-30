@@ -55,7 +55,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Scaffold.Calculations\Scaffold.Calculations.csproj" />
     <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
-    <ProjectReference Include="..\Scaffold.RcBeams\Scaffold.RcBeams.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Scaffold.Core.Static;
+﻿namespace Scaffold.Core.Utility;
 
 public static partial class UnitUtility
 {

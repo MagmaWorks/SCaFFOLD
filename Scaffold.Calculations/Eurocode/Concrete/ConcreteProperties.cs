@@ -12,7 +12,7 @@ namespace Scaffold.Calculations.Eurocode.Concrete
 {
     public class ConcreteProperties : ICalculation
     {
-        public string ReferenceName { get; set; } = "";
+        public string ReferenceName { get; set; }
         public string CalculationName { get; set; } = "Concrete Material Properties";
         public CalcStatus Status { get; set; } = CalcStatus.None;
 
@@ -77,7 +77,7 @@ namespace Scaffold.Calculations.Eurocode.Concrete
 
         public void Calculate()
         {
-            ConcreteMaterialProperties = new ConcreteMaterialProperties(
+            ConcreteMaterialProperties = new Utility.ConcreteMaterialProperties(
                 ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_"));
         }
     }

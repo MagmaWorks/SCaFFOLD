@@ -3,10 +3,10 @@ using Scaffold.Core.Abstract;
 
 namespace Scaffold.Tests.UnitTests
 {
-    public class CreepAndShrinkageTests
+    public class TestCalculationTests
     {
         [Fact]
-        public void CreepAndShrinkageTest1()
+        public void TestCalculationTest1()
         {
             var reader = new CalculationReader();
             var calculation = new TestCalculation();

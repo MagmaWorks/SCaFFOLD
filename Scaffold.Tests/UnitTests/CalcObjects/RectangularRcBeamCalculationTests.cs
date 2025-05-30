@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
-using Scaffold.Core.CalcObjects;
+using Scaffold.Core.CalcObjects.Profiles;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Scaffold.Tests.UnitTests;
 
@@ -37,30 +39,23 @@ public class RectangularRcBeamCalculationTests
         inputs.Count.Should().Be(24);
         outputs.Count.Should().Be(18);
 
-        inputs[0].DisplayName.Should().Be("500 × 800 mm");
+        inputs[0].DisplayName.Should().Be("Profile");
 
         calc.Calculate();
 
         calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0);
     }
 
-    public class Foo
-    {
-        public decimal Value1 { get; set; }
-        public decimal Value2 { get; set; }
-    }
-
-
-
     [Fact]
     public void Updated_FromUI_Ok()
     {
         var calc = new RectangularRcBeamCalculation();
         calc.Calculate();
+        var test = new CalcRectangle(new Length(800, LengthUnit.Millimeter),
+            new Length(500, LengthUnit.Millimeter), "", "");
+        string x = test.ValueAsString();
 
-        var profile = new CalcRectangularProfile();
-        profile.TryParse("800mm x 500mm");
-        calc.Profile = profile;
+        calc.Profile = CalcRectangle.Parse(x, null);
 
         calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0, because: "result has not changed yet through the update method.");
 

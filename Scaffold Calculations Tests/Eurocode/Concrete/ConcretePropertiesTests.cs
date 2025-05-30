@@ -18,7 +18,7 @@ public class ConcretePropertiesTests
         IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         // Assert
-        Assert.Equal("", calc.ReferenceName);
+        Assert.Equal("Concrete Properties", calc.ReferenceName);
         Assert.Equal("Concrete Material Properties", calc.CalculationName);
         Assert.Single(inputs);
         Assert.Equal(14, outputs.Count);
