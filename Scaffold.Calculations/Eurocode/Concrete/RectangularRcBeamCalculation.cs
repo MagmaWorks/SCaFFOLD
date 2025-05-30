@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using MagmaWorks.Taxonomy.Profiles;
 using Scaffold.Core.Attributes;
-using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcObjects.Profiles;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
@@ -16,7 +15,7 @@ namespace Scaffold.Core;
 [CalculationMetadata("Rectangular RC beam calculation")]
 public class RectangularRcBeamCalculation : ICalculation
 {
-    public string ReferenceName { get; set; }
+    public string ReferenceName { get; set; } = "";
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 

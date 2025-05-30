@@ -16,7 +16,7 @@ using UnitsNet.Units;
 namespace Scaffold.Calculations;
 public class Creep : ICalculation
 {
-    public string ReferenceName { get; set; } = "";
+    public string ReferenceName { get; set; }
     public string CalculationName { get; set; } = "Concrete Creep";
     public CalcStatus Status { get; set; } = CalcStatus.None;
 

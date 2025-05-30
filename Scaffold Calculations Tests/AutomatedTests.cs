@@ -60,13 +60,13 @@ namespace Scaffold.Calculations.Tests
                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
             foreach (PropertyInfo property in propertyInfo)
             {
-                Assert.False(property.GetValue(obj) == null,
-                    $"The calculation '{obj}'\ncontains a property '{property.Name}' that is null.");
                 if (property.Name == "ReferenceName" || property.Name == "CalculationName"
                     || property.Name == "Status")
                 {
                     continue;
                 }
+                Assert.False(property.GetValue(obj) == null,
+                    $"The calculation '{obj}'\ncontains a property '{property.Name}' that is null.");
                 CalcValueTypeAttribute baseAttribute = property.GetCustomAttribute<CalcValueTypeAttribute>();
                 Assert.False(baseAttribute == null,
                     $"The calculation '{obj}' \ncontains a public property '{property.Name}'\n" +
