@@ -43,6 +43,7 @@ namespace Scaffold.Tests.UnitTests.CalcObjects
             Assert.False(material.TryParse("invalid"));
             Assert.True(material.TryParse(json));
             Assert.Equal(EnConcreteGrade.C30_37, material.Grade);
+            
             Assert.Equal(StandardBody.EN, material.Standard.Body);
             Assert.Equal(MaterialType.Concrete, material.Type);
         }
