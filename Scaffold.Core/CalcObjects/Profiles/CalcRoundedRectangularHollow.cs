@@ -2,6 +2,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
 public sealed class CalcRoundedRectangularHollow : RoundedRectangularHollow, ICalcValue
@@ -21,6 +22,10 @@ public sealed class CalcRoundedRectangularHollow : RoundedRectangularHollow, ICa
         Symbol = symbol;
     }
 
+    public static CalcRoundedRectangularHollow CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcRoundedRectangularHollow>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcRoundedRectangularHollow result)
     {
         try

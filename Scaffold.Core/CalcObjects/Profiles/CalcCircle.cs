@@ -2,6 +2,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
 public sealed class CalcCircle : Circle, ICalcValue
@@ -21,6 +22,10 @@ public sealed class CalcCircle : Circle, ICalcValue
         Symbol = symbol;
     }
 
+    public static CalcCircle CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcCircle>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcCircle result)
     {
         try

@@ -2,6 +2,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 using Angle = MagmaWorks.Taxonomy.Profiles.Angle;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
@@ -22,6 +23,10 @@ public sealed class CalcAngle : Angle, ICalcValue
         Symbol = symbol;
     }
 
+    public static CalcAngle CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcAngle>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcAngle result)
     {
         try

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using MagmaWorks.Taxonomy.Profiles;
 
 namespace TaxonomyObjectCodeGenerator
 {
@@ -135,6 +135,16 @@ $@"    public Calc{name}({inputs}string name, string symbol = """")
 ");
             }
 
+            if (typeof(IProfile).IsAssignableFrom(type))
+            {
+                sb.Append(
+$@"    public static Calc{name} CreateFromDescription(string descripiton)
+    {{
+        return ProfileDescription.ProfileFromDescription<Calc{name}>(descripiton);
+    }}
+");
+            }
+
             sb.Append(
 $@"    public static bool TryParse(string s, IFormatProvider provider, out Calc{name} result)
     {{
@@ -235,6 +245,11 @@ $@"    public static bool TryParse(string s, IFormatProvider provider, out Calc{
                 "using Newtonsoft.Json;",
                 $"using {type.Namespace};",
             };
+
+            if (typeof(IProfile).IsAssignableFrom(type))
+            {
+                s.Add("using Scaffold.Core.Utility;");
+            }
 
             foreach (string use in usings)
             {

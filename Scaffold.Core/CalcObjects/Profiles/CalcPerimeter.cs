@@ -3,6 +3,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
 public sealed class CalcPerimeter : Perimeter, ICalcValue
@@ -57,6 +58,10 @@ public sealed class CalcPerimeter : Perimeter, ICalcValue
         Symbol = symbol;
     }
 
+    public static CalcPerimeter CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcPerimeter>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcPerimeter result)
     {
         try

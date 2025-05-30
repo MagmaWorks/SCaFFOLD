@@ -2,6 +2,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
 public sealed class CalcC : C, ICalcValue
@@ -21,6 +22,10 @@ public sealed class CalcC : C, ICalcValue
         Symbol = symbol;
     }
 
+    public static CalcC CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcC>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcC result)
     {
         try

@@ -2,6 +2,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
 public sealed class CalcRectangle : Rectangle, ICalcValue
@@ -21,6 +22,10 @@ public sealed class CalcRectangle : Rectangle, ICalcValue
         Symbol = symbol;
     }
 
+    public static CalcRectangle CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcRectangle>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcRectangle result)
     {
         try

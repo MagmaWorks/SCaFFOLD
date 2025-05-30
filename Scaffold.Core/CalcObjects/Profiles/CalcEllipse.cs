@@ -2,6 +2,7 @@ using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Serialization;
 using Newtonsoft.Json;
 using Scaffold.Core.Extensions;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
 public sealed class CalcEllipse : Ellipse, ICalcValue
@@ -21,6 +22,10 @@ public sealed class CalcEllipse : Ellipse, ICalcValue
         Symbol = symbol;
     }
 
+    public static CalcEllipse CreateFromDescription(string descripiton)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcEllipse>(descripiton);
+    }
     public static bool TryParse(string s, IFormatProvider provider, out CalcEllipse result)
     {
         try
