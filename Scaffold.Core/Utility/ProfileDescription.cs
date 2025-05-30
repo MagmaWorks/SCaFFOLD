@@ -50,7 +50,7 @@ namespace Scaffold.Core.Utility
             List<string> strings = SanitiseString(str);
             var values = new List<double>();
             var units = new List<LengthUnit>();
-            for(int i = 0; i < strings.Count; i++)
+            for (int i = 0; i < strings.Count; i++)
             {
                 double value = 0;
                 if (!double.TryParse(GetDigitsOnly(strings[i]), NumberStyles.Any, CultureInfo.CurrentCulture, out value))
@@ -66,7 +66,8 @@ namespace Scaffold.Core.Utility
                     {
                         units.Add(fallbackUnit);
                         continue;
-                    } else
+                    }
+                    else
                     {
                         unit = RemoveDigits(strings[i + 1]);
                     }
