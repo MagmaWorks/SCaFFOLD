@@ -1,5 +1,4 @@
-﻿using Scaffold.Core.CalcObjects.Profiles;
-
+﻿
 namespace Scaffold.Tests.UnitTests;
 
 public class ProfileFromDescriptionTests
