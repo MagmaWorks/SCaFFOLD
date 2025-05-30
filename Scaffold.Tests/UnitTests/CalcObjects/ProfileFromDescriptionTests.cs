@@ -1,5 +1,5 @@
-﻿using Scaffold.Core.Extensions;
-using Scaffold.Core.CalcObjects.Profiles;
+﻿using Scaffold.Core.CalcObjects.Profiles;
+using Scaffold.Core.Extensions;
 
 namespace Scaffold.Tests.UnitTests;
 
@@ -16,7 +16,7 @@ public class ProfileFromDescriptionTests
         CalcRectangularHollow profile = default;
 
         // Act
-        profile = profile.ProfileFromDescription(description); 
+        profile = profile.ProfileFromDescription(description);
 
         // Assert
         Assert.Equal(400, profile.Width.Millimeters);
