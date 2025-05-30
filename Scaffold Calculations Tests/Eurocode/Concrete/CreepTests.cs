@@ -18,7 +18,7 @@ public class ConcreteCreepTests
         IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         // Assert
-        Assert.Equal("", calc.ReferenceName);
+        Assert.Equal("Creep", calc.ReferenceName);
         Assert.Equal("Concrete Creep", calc.CalculationName);
         Assert.Equal(6, inputs.Count);
         Assert.Equal(5, outputs.Count);

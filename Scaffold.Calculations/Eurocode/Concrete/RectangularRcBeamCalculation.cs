@@ -15,7 +15,7 @@ namespace Scaffold.Core;
 [CalculationMetadata("Rectangular RC beam calculation")]
 public class RectangularRcBeamCalculation : ICalculation
 {
-    public string ReferenceName { get; set; } = "";
+    public string ReferenceName { get; set; }
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
