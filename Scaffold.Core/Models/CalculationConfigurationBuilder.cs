@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+using Scaffold.Core.Extensions;
 using Scaffold.Core.Internals;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.Models;
 
