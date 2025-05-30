@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using Scaffold.Core.Attributes;
+using Scaffold.Core.Extensions;
 using Scaffold.Core.Internals;
 using Scaffold.Core.Models;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.Abstract;
 

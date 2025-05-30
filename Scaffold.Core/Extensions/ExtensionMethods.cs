@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Scaffold.Core.Static;
+namespace Scaffold.Core.Extensions;
 
 public static class ExtensionMethods
 {
