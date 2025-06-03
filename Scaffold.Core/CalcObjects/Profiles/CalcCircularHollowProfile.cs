@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcChannel : Channel, ICalcValue
+public sealed class CalcCircularHollowProfile : CircularHollow, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcChannel>
+    , IParsable<CalcCircularHollowProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcChannel : Channel, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcChannel(Length height, Length width, Length webThickness, Length flangeThickness, string name, string symbol = "")
-        : base(height, width, webThickness, flangeThickness)
+    public CalcCircularHollowProfile(Length diameter, Length thickness, string name, string symbol = "")
+        : base(diameter, thickness)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcChannel CreateFromDescription(string descripiton)
+    public static CalcCircularHollowProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcChannel>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcCircularHollowProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcChannel result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcCircularHollowProfile result)
     {
         try
         {
-            result = s.FromJson<CalcChannel>();
+            result = s.FromJson<CalcCircularHollowProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcChannel : Channel, ICalcValue
         }
     }
 
-    public static CalcChannel Parse(string s, IFormatProvider provider)
+    public static CalcCircularHollowProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcChannel>();
+        return s.FromJson<CalcCircularHollowProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcChannel result = null;
+        CalcCircularHollowProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

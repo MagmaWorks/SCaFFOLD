@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcTee : Tee, ICalcValue
+public sealed class CalcIProfile : I, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcTee>
+    , IParsable<CalcIProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcTee : Tee, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcTee(Length height, Length width, Length flangeThickness, Length webThickness, string name, string symbol = "")
+    public CalcIProfile(Length height, Length width, Length flangeThickness, Length webThickness, string name, string symbol = "")
         : base(height, width, flangeThickness, webThickness)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcTee CreateFromDescription(string descripiton)
+    public static CalcIProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcTee>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcIProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcTee result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcIProfile result)
     {
         try
         {
-            result = s.FromJson<CalcTee>();
+            result = s.FromJson<CalcIProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcTee : Tee, ICalcValue
         }
     }
 
-    public static CalcTee Parse(string s, IFormatProvider provider)
+    public static CalcIProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcTee>();
+        return s.FromJson<CalcIProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcTee result = null;
+        CalcIProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

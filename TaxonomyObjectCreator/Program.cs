@@ -94,6 +94,11 @@ namespace TaxonomyObjectCodeGenerator
             string assembly = type.Namespace.Replace(assemblyBase, string.Empty);
             string filePath = GetPath(assemblyName, assembly);
             string name = type.Name;
+            if (typeof(IProfile).IsAssignableFrom(type))
+            {
+                name += "Profile";
+            }
+
             string nameSpace = $"{_namespace}.{assembly}";
             if (_nameSpaceChange.ContainsKey(nameSpace))
             {
@@ -104,7 +109,7 @@ namespace TaxonomyObjectCodeGenerator
             var sb = new StringBuilder();
             sb.AppendLine($@"
 namespace {nameSpace};
-public sealed class Calc{name} : {name}, ICalcValue
+public sealed class Calc{name} : {type.Name}, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<Calc{name}>
 #endif
@@ -142,6 +147,7 @@ $@"    public static Calc{name} CreateFromDescription(string descripiton)
     {{
         return ProfileDescription.ProfileFromDescription<Calc{name}>(descripiton);
     }}
+
 ");
             }
 

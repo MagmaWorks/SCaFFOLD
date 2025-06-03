@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcCruciform : Cruciform, ICalcValue
+public sealed class CalcCircleProfile : Circle, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcCruciform>
+    , IParsable<CalcCircleProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcCruciform : Cruciform, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcCruciform(Length height, Length width, Length flangeThickness, Length webThickness, string name, string symbol = "")
-        : base(height, width, flangeThickness, webThickness)
+    public CalcCircleProfile(Length diameter, string name, string symbol = "")
+        : base(diameter)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcCruciform CreateFromDescription(string descripiton)
+    public static CalcCircleProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcCruciform>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcCircleProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcCruciform result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcCircleProfile result)
     {
         try
         {
-            result = s.FromJson<CalcCruciform>();
+            result = s.FromJson<CalcCircleProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcCruciform : Cruciform, ICalcValue
         }
     }
 
-    public static CalcCruciform Parse(string s, IFormatProvider provider)
+    public static CalcCircleProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcCruciform>();
+        return s.FromJson<CalcCircleProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcCruciform result = null;
+        CalcCircleProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

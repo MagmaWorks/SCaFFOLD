@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcDoubleAngle : DoubleAngle, ICalcValue
+public sealed class CalcDoubleChannelProfile : DoubleChannel, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcDoubleAngle>
+    , IParsable<CalcDoubleChannelProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcDoubleAngle : DoubleAngle, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcDoubleAngle(Length height, Length width, Length webThickness, Length flangeThickness, Length backToBackDistance, string name, string symbol = "")
+    public CalcDoubleChannelProfile(Length height, Length width, Length webThickness, Length flangeThickness, Length backToBackDistance, string name, string symbol = "")
         : base(height, width, webThickness, flangeThickness, backToBackDistance)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcDoubleAngle CreateFromDescription(string descripiton)
+    public static CalcDoubleChannelProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcDoubleAngle>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcDoubleChannelProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcDoubleAngle result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcDoubleChannelProfile result)
     {
         try
         {
-            result = s.FromJson<CalcDoubleAngle>();
+            result = s.FromJson<CalcDoubleChannelProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcDoubleAngle : DoubleAngle, ICalcValue
         }
     }
 
-    public static CalcDoubleAngle Parse(string s, IFormatProvider provider)
+    public static CalcDoubleChannelProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcDoubleAngle>();
+        return s.FromJson<CalcDoubleChannelProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcDoubleAngle result = null;
+        CalcDoubleChannelProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcRoundedRectangularHollow : RoundedRectangularHollow, ICalcValue
+public sealed class CalcDoubleAngleProfile : DoubleAngle, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcRoundedRectangularHollow>
+    , IParsable<CalcDoubleAngleProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcRoundedRectangularHollow : RoundedRectangularHollow, ICa
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcRoundedRectangularHollow(Length width, Length height, Length flatWidth, Length flatHeight, Length thickness, string name, string symbol = "")
-        : base(width, height, flatWidth, flatHeight, thickness)
+    public CalcDoubleAngleProfile(Length height, Length width, Length webThickness, Length flangeThickness, Length backToBackDistance, string name, string symbol = "")
+        : base(height, width, webThickness, flangeThickness, backToBackDistance)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcRoundedRectangularHollow CreateFromDescription(string descripiton)
+    public static CalcDoubleAngleProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcRoundedRectangularHollow>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcDoubleAngleProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcRoundedRectangularHollow result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcDoubleAngleProfile result)
     {
         try
         {
-            result = s.FromJson<CalcRoundedRectangularHollow>();
+            result = s.FromJson<CalcDoubleAngleProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcRoundedRectangularHollow : RoundedRectangularHollow, ICa
         }
     }
 
-    public static CalcRoundedRectangularHollow Parse(string s, IFormatProvider provider)
+    public static CalcDoubleAngleProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcRoundedRectangularHollow>();
+        return s.FromJson<CalcDoubleAngleProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcRoundedRectangularHollow result = null;
+        CalcDoubleAngleProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

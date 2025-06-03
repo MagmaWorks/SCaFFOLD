@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcEllipse : Ellipse, ICalcValue
+public sealed class CalcRectangleProfile : Rectangle, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcEllipse>
+    , IParsable<CalcRectangleProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcEllipse : Ellipse, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcEllipse(Length width, Length height, string name, string symbol = "")
+    public CalcRectangleProfile(Length width, Length height, string name, string symbol = "")
         : base(width, height)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcEllipse CreateFromDescription(string descripiton)
+    public static CalcRectangleProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcEllipse>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcRectangleProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcEllipse result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcRectangleProfile result)
     {
         try
         {
-            result = s.FromJson<CalcEllipse>();
+            result = s.FromJson<CalcRectangleProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcEllipse : Ellipse, ICalcValue
         }
     }
 
-    public static CalcEllipse Parse(string s, IFormatProvider provider)
+    public static CalcRectangleProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcEllipse>();
+        return s.FromJson<CalcRectangleProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcEllipse result = null;
+        CalcRectangleProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

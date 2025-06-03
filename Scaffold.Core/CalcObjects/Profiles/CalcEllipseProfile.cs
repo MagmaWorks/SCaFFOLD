@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcCircle : Circle, ICalcValue
+public sealed class CalcEllipseProfile : Ellipse, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcCircle>
+    , IParsable<CalcEllipseProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcCircle : Circle, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcCircle(Length diameter, string name, string symbol = "")
-        : base(diameter)
+    public CalcEllipseProfile(Length width, Length height, string name, string symbol = "")
+        : base(width, height)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcCircle CreateFromDescription(string descripiton)
+    public static CalcEllipseProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcCircle>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcEllipseProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcCircle result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcEllipseProfile result)
     {
         try
         {
-            result = s.FromJson<CalcCircle>();
+            result = s.FromJson<CalcEllipseProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcCircle : Circle, ICalcValue
         }
     }
 
-    public static CalcCircle Parse(string s, IFormatProvider provider)
+    public static CalcEllipseProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcCircle>();
+        return s.FromJson<CalcEllipseProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcCircle result = null;
+        CalcEllipseProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcEllipseHollow : EllipseHollow, ICalcValue
+public sealed class CalcZProfile : Z, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcEllipseHollow>
+    , IParsable<CalcZProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,23 @@ public sealed class CalcEllipseHollow : EllipseHollow, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcEllipseHollow(Length width, Length height, Length thickness, string name, string symbol = "")
-        : base(width, height, thickness)
+    public CalcZProfile(Length height, Length topFlangeWidth, Length bottomFlangeWidth, Length thickness, Length topLip, Length bottomLip, string name, string symbol = "")
+        : base(height, topFlangeWidth, bottomFlangeWidth, thickness, topLip, bottomLip)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcEllipseHollow CreateFromDescription(string descripiton)
+    public static CalcZProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcEllipseHollow>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcZProfile>(descripiton);
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcEllipseHollow result)
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcZProfile result)
     {
         try
         {
-            result = s.FromJson<CalcEllipseHollow>();
+            result = s.FromJson<CalcZProfile>();
             return true;
         }
         catch
@@ -40,16 +41,16 @@ public sealed class CalcEllipseHollow : EllipseHollow, ICalcValue
         }
     }
 
-    public static CalcEllipseHollow Parse(string s, IFormatProvider provider)
+    public static CalcZProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcEllipseHollow>();
+        return s.FromJson<CalcZProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcEllipseHollow result = null;
+        CalcZProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);
