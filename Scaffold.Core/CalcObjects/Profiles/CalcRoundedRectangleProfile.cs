@@ -22,6 +22,13 @@ public sealed class CalcRoundedRectangleProfile : RoundedRectangle, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcRoundedRectangleProfile(double width, double height, double flatWidth, double flatHeight, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(width, unit), new Length(height, unit), new Length(flatWidth, unit), new Length(flatHeight, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcRoundedRectangleProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcRoundedRectangleProfile>(descripiton);

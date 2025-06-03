@@ -22,6 +22,13 @@ public sealed class CalcEllipseProfile : Ellipse, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcEllipseProfile(double width, double height, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(width, unit), new Length(height, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcEllipseProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcEllipseProfile>(descripiton);

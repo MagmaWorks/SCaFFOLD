@@ -22,6 +22,13 @@ public sealed class CalcDoubleAngleProfile : DoubleAngle, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcDoubleAngleProfile(double height, double width, double webThickness, double flangeThickness, double backToBackDistance, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(height, unit), new Length(width, unit), new Length(webThickness, unit), new Length(flangeThickness, unit), new Length(backToBackDistance, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcDoubleAngleProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcDoubleAngleProfile>(descripiton);

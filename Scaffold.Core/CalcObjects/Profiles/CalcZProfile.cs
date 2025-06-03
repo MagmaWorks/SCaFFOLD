@@ -22,6 +22,13 @@ public sealed class CalcZProfile : Z, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcZProfile(double height, double topFlangeWidth, double bottomFlangeWidth, double thickness, double topLip, double bottomLip, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(height, unit), new Length(topFlangeWidth, unit), new Length(bottomFlangeWidth, unit), new Length(thickness, unit), new Length(topLip, unit), new Length(bottomLip, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcZProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcZProfile>(descripiton);

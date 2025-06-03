@@ -22,6 +22,13 @@ public sealed class CalcRoundedRectangularHollowProfile : RoundedRectangularHoll
         Symbol = symbol;
     }
 
+    public CalcRoundedRectangularHollowProfile(double width, double height, double flatWidth, double flatHeight, double thickness, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(width, unit), new Length(height, unit), new Length(flatWidth, unit), new Length(flatHeight, unit), new Length(thickness, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcRoundedRectangularHollowProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcRoundedRectangularHollowProfile>(descripiton);

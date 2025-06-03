@@ -138,6 +138,23 @@ $@"    public Calc{name}({inputs}string name, string symbol = """")
         Symbol = symbol;
     }}
 ");
+                if (typeof(IProfile).IsAssignableFrom(type) && constructors.Length == 1)
+                {
+                    inputs = "double " + string.Join(", double ", parameters.Select(s => s.Name).ToList())
+                        + ", LengthUnit unit, ";
+                    string baseCall = "new Length(" + string.Join(", unit), new Length(", parameters.Select(s => s.Name).ToList())
+                        + ", unit)";
+                    sb.AppendLine(
+$@"    public Calc{name}({inputs}string name, string symbol = """")
+        : base({baseCall})
+    {{
+        DisplayName = name;
+        Symbol = symbol;
+    }}
+");
+                }
+
+
             }
 
             if (typeof(IProfile).IsAssignableFrom(type))

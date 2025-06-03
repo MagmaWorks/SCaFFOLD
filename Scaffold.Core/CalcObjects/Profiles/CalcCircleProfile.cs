@@ -22,6 +22,13 @@ public sealed class CalcCircleProfile : Circle, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcCircleProfile(double diameter, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(diameter, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcCircleProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcCircleProfile>(descripiton);

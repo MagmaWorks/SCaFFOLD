@@ -22,6 +22,13 @@ public sealed class CalcCircularHollowProfile : CircularHollow, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcCircularHollowProfile(double diameter, double thickness, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(diameter, unit), new Length(thickness, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcCircularHollowProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcCircularHollowProfile>(descripiton);

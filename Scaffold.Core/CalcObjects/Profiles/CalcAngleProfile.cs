@@ -23,6 +23,13 @@ public sealed class CalcAngleProfile : Angle, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcAngleProfile(double height, double width, double webThickness, double flangeThickness, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(height, unit), new Length(width, unit), new Length(webThickness, unit), new Length(flangeThickness, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcAngleProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcAngleProfile>(descripiton);

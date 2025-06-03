@@ -22,6 +22,13 @@ public sealed class CalcIProfile : I, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcIProfile(double height, double width, double flangeThickness, double webThickness, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(height, unit), new Length(width, unit), new Length(flangeThickness, unit), new Length(webThickness, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcIProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcIProfile>(descripiton);

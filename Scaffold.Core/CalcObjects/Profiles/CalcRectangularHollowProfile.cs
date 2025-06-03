@@ -22,6 +22,13 @@ public sealed class CalcRectangularHollowProfile : RectangularHollow, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcRectangularHollowProfile(double width, double height, double thickness, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(width, unit), new Length(height, unit), new Length(thickness, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcRectangularHollowProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcRectangularHollowProfile>(descripiton);

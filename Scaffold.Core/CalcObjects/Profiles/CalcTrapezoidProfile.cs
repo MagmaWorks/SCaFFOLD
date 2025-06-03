@@ -22,6 +22,13 @@ public sealed class CalcTrapezoidProfile : Trapezoid, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcTrapezoidProfile(double topWidth, double bottomWidth, double height, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(topWidth, unit), new Length(bottomWidth, unit), new Length(height, unit))
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static CalcTrapezoidProfile CreateFromDescription(string descripiton)
     {
         return ProfileDescription.ProfileFromDescription<CalcTrapezoidProfile>(descripiton);
