@@ -33,6 +33,8 @@ public sealed class CalcMoment : CalcQuantity<Moment>
     public CalcMoment(double value, string name, string symbol)
         : base(new Moment(value, MomentUnit.KilonewtonMeter), name, symbol) { }
 
+    public static implicit operator CalcMoment(Moment value) => new CalcMoment(value, string.Empty);
+
     #region AdditionOperators
     public static CalcMoment operator +(CalcMoment x, CalcMoment y)
     {

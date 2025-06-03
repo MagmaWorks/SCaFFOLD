@@ -33,6 +33,8 @@ public sealed class CalcLinearForce : CalcQuantity<ForcePerLength>
     public CalcLinearForce(double value, string name, string symbol)
         : base(new ForcePerLength(value, ForcePerLengthUnit.KilonewtonPerMeter), name, symbol) { }
 
+    public static implicit operator CalcLinearForce(ForcePerLength value) => new CalcLinearForce(value, string.Empty);
+
     #region AdditionOperators
     public static CalcLinearForce operator +(CalcLinearForce x, CalcLinearForce y)
     {

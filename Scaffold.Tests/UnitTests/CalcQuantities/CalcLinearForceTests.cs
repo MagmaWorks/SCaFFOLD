@@ -45,6 +45,21 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void ImplicitOperatorTest()
+        {
+            // Arrange
+            var calcLinearForce = new ForcePerLength(4.5, ForcePerLengthUnit.CentinewtonPerCentimeter);
+
+            // Act
+            CalcLinearForce value = calcLinearForce;
+
+            // Assert
+            Assert.Equal(4.5, value.Value);
+            Assert.Equal(string.Empty, value.DisplayName);
+            Assert.Equal(string.Empty, value.Symbol);
+        }
+
+        [Fact]
         public void ImplicitOperatorDoubleTest()
         {
             // Assemble

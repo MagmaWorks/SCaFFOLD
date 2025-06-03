@@ -45,6 +45,21 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void ImplicitOperatorTest()
+        {
+            // Arrange
+            var calcVolume = new Volume(4.5, VolumeUnit.CubicMeter);
+
+            // Act
+            CalcVolume value = calcVolume;
+
+            // Assert
+            Assert.Equal(4.5, value.Value);
+            Assert.Equal(string.Empty, value.DisplayName);
+            Assert.Equal(string.Empty, value.Symbol);
+        }
+
+        [Fact]
         public void ImplicitOperatorDoubleTest()
         {
             // Arrange

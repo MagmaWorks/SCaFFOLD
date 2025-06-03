@@ -34,6 +34,8 @@ public sealed class CalcForce : CalcQuantity<Force>
     public CalcForce(double value, string name, string symbol)
         : base(new Force(value, ForceUnit.Kilonewton), name, symbol) { }
 
+    public static implicit operator CalcForce(Force value) => new CalcForce(value, string.Empty);
+
     #region AdditionOperators
     public static CalcForce operator +(CalcForce x, CalcForce y)
     {

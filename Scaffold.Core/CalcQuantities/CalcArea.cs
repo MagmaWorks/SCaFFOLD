@@ -31,6 +31,8 @@ public sealed class CalcArea : CalcQuantity<Area>
     public CalcArea(double value, AreaUnit unit, string name, string symbol)
         : base(new Area(value, unit), name, symbol) { }
 
+    public static implicit operator CalcArea(Area value) => new CalcArea(value, string.Empty);
+
     #region AdditionOperators
     public static CalcArea operator +(CalcArea x, CalcArea y)
     {

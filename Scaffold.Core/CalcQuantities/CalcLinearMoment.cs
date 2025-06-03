@@ -32,6 +32,8 @@ public sealed class CalcLinearMoment : CalcQuantity<MomentPerLength>
     public CalcLinearMoment(double value, string name, string symbol)
         : base(new MomentPerLength(value, MomentPerLengthUnit.KilonewtonMeterPerMeter), name, symbol) { }
 
+    public static implicit operator CalcLinearMoment(MomentPerLength value) => new CalcLinearMoment(value, string.Empty);
+
     #region AdditionOperators
     public static CalcLinearMoment operator +(CalcLinearMoment x, CalcLinearMoment y)
     {
