@@ -22,7 +22,7 @@ public class SectionPropertiesTests
         // Assert
         Assert.Equal("Section Properties Calculation", calc.ReferenceName);
         Assert.Equal("Section Properties", calc.CalculationName);
-        Assert.Equal(1, inputs.Count);
+        Assert.Single(inputs);
         Assert.Equal(11, outputs.Count);
     }
 
