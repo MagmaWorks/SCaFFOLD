@@ -6,7 +6,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcPerimeterProfile : Perimeter, ICalcValue
+public sealed class CalcPerimeterProfile : Perimeter, ICalcProfile<CalcPerimeterProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcPerimeterProfile>
 #endif
@@ -58,9 +58,9 @@ public sealed class CalcPerimeterProfile : Perimeter, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcPerimeterProfile CreateFromDescription(string descripiton)
+    public static CalcPerimeterProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcPerimeterProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcPerimeterProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcPerimeterProfile result)

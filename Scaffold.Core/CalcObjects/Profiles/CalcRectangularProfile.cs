@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcRectangularProfile : Rectangle, ICalcValue
+public sealed class CalcRectangularProfile : Rectangle, ICalcProfile<CalcRectangularProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcRectangularProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcRectangularProfile : Rectangle, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcRectangularProfile CreateFromDescription(string descripiton)
+    public static CalcRectangularProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcRectangularProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcRectangularProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcRectangularProfile result)

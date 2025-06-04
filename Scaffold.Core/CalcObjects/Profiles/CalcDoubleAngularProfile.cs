@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcDoubleAngularProfile : DoubleAngle, ICalcValue
+public sealed class CalcDoubleAngularProfile : DoubleAngle, ICalcProfile<CalcDoubleAngularProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcDoubleAngularProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcDoubleAngularProfile : DoubleAngle, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcDoubleAngularProfile CreateFromDescription(string descripiton)
+    public static CalcDoubleAngularProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcDoubleAngularProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcDoubleAngularProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcDoubleAngularProfile result)

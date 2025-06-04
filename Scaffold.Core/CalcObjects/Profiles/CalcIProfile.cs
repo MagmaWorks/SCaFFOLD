@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcIProfile : I, ICalcValue
+public sealed class CalcIProfile : I, ICalcProfile<CalcIProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcIProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcIProfile : I, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcIProfile CreateFromDescription(string descripiton)
+    public static CalcIProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcIProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcIProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcIProfile result)

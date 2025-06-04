@@ -17,7 +17,7 @@ public class SectionPropertiesCalculation : ICalculation
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [InputCalcValue]
-    public IProfile Profile { get; set; }
+    public ICalcProfile Profile { get; set; }
         = new CalcRectangularProfile(new Length(400, LengthUnit.Millimeter), new Length(800, LengthUnit.Millimeter), "400 x 800mm");
 
     [OutputCalcValue("Section Properties", "SP")]

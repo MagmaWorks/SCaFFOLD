@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcCruciformProfile : Cruciform, ICalcValue
+public sealed class CalcCruciformProfile : Cruciform, ICalcProfile<CalcCruciformProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcCruciformProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcCruciformProfile : Cruciform, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcCruciformProfile CreateFromDescription(string descripiton)
+    public static CalcCruciformProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcCruciformProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcCruciformProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcCruciformProfile result)

@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcDoubleChannelProfile : DoubleChannel, ICalcValue
+public sealed class CalcDoubleChannelProfile : DoubleChannel, ICalcProfile<CalcDoubleChannelProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcDoubleChannelProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcDoubleChannelProfile : DoubleChannel, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcDoubleChannelProfile CreateFromDescription(string descripiton)
+    public static CalcDoubleChannelProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcDoubleChannelProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcDoubleChannelProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcDoubleChannelProfile result)

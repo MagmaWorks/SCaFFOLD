@@ -6,7 +6,7 @@ using Scaffold.Core.Utility;
 using Angle = MagmaWorks.Taxonomy.Profiles.Angle;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcAngularProfile : Angle, ICalcValue
+public sealed class CalcAngularProfile : Angle, ICalcProfile<CalcAngularProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcAngularProfile>
 #endif
@@ -30,9 +30,9 @@ public sealed class CalcAngularProfile : Angle, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcAngularProfile CreateFromDescription(string descripiton)
+    public static CalcAngularProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcAngularProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcAngularProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcAngularProfile result)

@@ -94,10 +94,12 @@ namespace TaxonomyObjectCodeGenerator
             string assembly = type.Namespace.Replace(assemblyBase, string.Empty);
             string filePath = GetPath(assemblyName, assembly);
             string name = type.Name;
+            string inheritName = type.Name;
             if (typeof(IProfile).IsAssignableFrom(type))
             {
                 name += "Profile";
                 name = name.Replace("ngle", "ngular").Replace("rcle", "cular");
+                inheritName = $"{type.Name}, ICalcProfile<Calc{name}>";
             }
 
             string nameSpace = $"{_namespace}.{assembly}";
@@ -110,7 +112,7 @@ namespace TaxonomyObjectCodeGenerator
             var sb = new StringBuilder();
             sb.AppendLine($@"
 namespace {nameSpace};
-public sealed class Calc{name} : {type.Name}, ICalcValue
+public sealed class Calc{name} : {inheritName}, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<Calc{name}>
 #endif
@@ -154,16 +156,14 @@ $@"    public Calc{name}({inputs}string name, string symbol = """")
     }}
 ");
                 }
-
-
             }
 
             if (typeof(IProfile).IsAssignableFrom(type))
             {
                 sb.Append(
-$@"    public static Calc{name} CreateFromDescription(string descripiton)
+$@"    public static Calc{name} CreateFromDescription(string description)
     {{
-        return ProfileDescription.ProfileFromDescription<Calc{name}>(descripiton);
+        return ProfileDescription.ProfileFromDescription<Calc{name}>(description);
     }}
 
 ");

@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcTrapezoidProfile : Trapezoid, ICalcValue
+public sealed class CalcTrapezoidProfile : Trapezoid, ICalcProfile<CalcTrapezoidProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcTrapezoidProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcTrapezoidProfile : Trapezoid, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcTrapezoidProfile CreateFromDescription(string descripiton)
+    public static CalcTrapezoidProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcTrapezoidProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcTrapezoidProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcTrapezoidProfile result)

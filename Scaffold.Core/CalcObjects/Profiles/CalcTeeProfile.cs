@@ -5,7 +5,7 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcTeeProfile : Tee, ICalcValue
+public sealed class CalcTeeProfile : Tee, ICalcProfile<CalcTeeProfile>, ICalcValue
 #if NET7_0_OR_GREATER
     , IParsable<CalcTeeProfile>
 #endif
@@ -29,9 +29,9 @@ public sealed class CalcTeeProfile : Tee, ICalcValue
         Symbol = symbol;
     }
 
-    public static CalcTeeProfile CreateFromDescription(string descripiton)
+    public static CalcTeeProfile CreateFromDescription(string description)
     {
-        return ProfileDescription.ProfileFromDescription<CalcTeeProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcTeeProfile>(description);
     }
 
     public static bool TryParse(string s, IFormatProvider provider, out CalcTeeProfile result)
