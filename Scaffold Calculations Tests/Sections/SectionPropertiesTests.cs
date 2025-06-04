@@ -27,7 +27,7 @@ public class SectionPropertiesTests
     }
 
     [Theory]
-    [InlineData("500 x 800 cm", typeof(CalcRectangleProfile), "40m²")]
+    [InlineData("500 x 800 cm", typeof(CalcRectangularProfile), "40m²")]
     public void AreaTests(string description, Type profileType, string expectedArea)
     {
         // Assemble

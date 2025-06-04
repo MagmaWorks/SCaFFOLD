@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcRectangleProfile : Rectangle, ICalcValue
+public sealed class CalcCicularProfile : Circle, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcRectangleProfile>
+    , IParsable<CalcCicularProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,30 +15,30 @@ public sealed class CalcRectangleProfile : Rectangle, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcRectangleProfile(Length width, Length height, string name, string symbol = "")
-        : base(width, height)
+    public CalcCicularProfile(Length diameter, string name, string symbol = "")
+        : base(diameter)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public CalcRectangleProfile(double width, double height, LengthUnit unit, string name, string symbol = "")
-        : base(new Length(width, unit), new Length(height, unit))
+    public CalcCicularProfile(double diameter, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(diameter, unit))
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcRectangleProfile CreateFromDescription(string descripiton)
+    public static CalcCicularProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcRectangleProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcCicularProfile>(descripiton);
     }
 
-    public static bool TryParse(string s, IFormatProvider provider, out CalcRectangleProfile result)
+    public static bool TryParse(string s, IFormatProvider provider, out CalcCicularProfile result)
     {
         try
         {
-            result = s.FromJson<CalcRectangleProfile>();
+            result = s.FromJson<CalcCicularProfile>();
             return true;
         }
         catch
@@ -48,16 +48,16 @@ public sealed class CalcRectangleProfile : Rectangle, ICalcValue
         }
     }
 
-    public static CalcRectangleProfile Parse(string s, IFormatProvider provider)
+    public static CalcCicularProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcRectangleProfile>();
+        return s.FromJson<CalcCicularProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcRectangleProfile result = null;
+        CalcCicularProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

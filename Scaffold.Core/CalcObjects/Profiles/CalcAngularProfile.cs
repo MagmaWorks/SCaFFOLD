@@ -6,9 +6,9 @@ using Scaffold.Core.Utility;
 using Angle = MagmaWorks.Taxonomy.Profiles.Angle;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcAngleProfile : Angle, ICalcValue
+public sealed class CalcAngularProfile : Angle, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcAngleProfile>
+    , IParsable<CalcAngularProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -16,30 +16,30 @@ public sealed class CalcAngleProfile : Angle, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcAngleProfile(Length height, Length width, Length webThickness, Length flangeThickness, string name, string symbol = "")
+    public CalcAngularProfile(Length height, Length width, Length webThickness, Length flangeThickness, string name, string symbol = "")
         : base(height, width, webThickness, flangeThickness)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public CalcAngleProfile(double height, double width, double webThickness, double flangeThickness, LengthUnit unit, string name, string symbol = "")
+    public CalcAngularProfile(double height, double width, double webThickness, double flangeThickness, LengthUnit unit, string name, string symbol = "")
         : base(new Length(height, unit), new Length(width, unit), new Length(webThickness, unit), new Length(flangeThickness, unit))
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcAngleProfile CreateFromDescription(string descripiton)
+    public static CalcAngularProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcAngleProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcAngularProfile>(descripiton);
     }
 
-    public static bool TryParse(string s, IFormatProvider provider, out CalcAngleProfile result)
+    public static bool TryParse(string s, IFormatProvider provider, out CalcAngularProfile result)
     {
         try
         {
-            result = s.FromJson<CalcAngleProfile>();
+            result = s.FromJson<CalcAngularProfile>();
             return true;
         }
         catch
@@ -49,16 +49,16 @@ public sealed class CalcAngleProfile : Angle, ICalcValue
         }
     }
 
-    public static CalcAngleProfile Parse(string s, IFormatProvider provider)
+    public static CalcAngularProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcAngleProfile>();
+        return s.FromJson<CalcAngularProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcAngleProfile result = null;
+        CalcAngularProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

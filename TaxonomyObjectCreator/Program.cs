@@ -97,6 +97,7 @@ namespace TaxonomyObjectCodeGenerator
             if (typeof(IProfile).IsAssignableFrom(type))
             {
                 name += "Profile";
+                name = name.Replace("ngle", "ngular").Replace("rcle", "cular");
             }
 
             string nameSpace = $"{_namespace}.{assembly}";

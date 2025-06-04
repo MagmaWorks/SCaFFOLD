@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcRoundedRectangleProfile : RoundedRectangle, ICalcValue
+public sealed class CalcRoundedRectangularProfile : RoundedRectangle, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcRoundedRectangleProfile>
+    , IParsable<CalcRoundedRectangularProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,30 +15,30 @@ public sealed class CalcRoundedRectangleProfile : RoundedRectangle, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcRoundedRectangleProfile(Length width, Length height, Length flatWidth, Length flatHeight, string name, string symbol = "")
+    public CalcRoundedRectangularProfile(Length width, Length height, Length flatWidth, Length flatHeight, string name, string symbol = "")
         : base(width, height, flatWidth, flatHeight)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public CalcRoundedRectangleProfile(double width, double height, double flatWidth, double flatHeight, LengthUnit unit, string name, string symbol = "")
+    public CalcRoundedRectangularProfile(double width, double height, double flatWidth, double flatHeight, LengthUnit unit, string name, string symbol = "")
         : base(new Length(width, unit), new Length(height, unit), new Length(flatWidth, unit), new Length(flatHeight, unit))
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcRoundedRectangleProfile CreateFromDescription(string descripiton)
+    public static CalcRoundedRectangularProfile CreateFromDescription(string descripiton)
     {
-        return ProfileDescription.ProfileFromDescription<CalcRoundedRectangleProfile>(descripiton);
+        return ProfileDescription.ProfileFromDescription<CalcRoundedRectangularProfile>(descripiton);
     }
 
-    public static bool TryParse(string s, IFormatProvider provider, out CalcRoundedRectangleProfile result)
+    public static bool TryParse(string s, IFormatProvider provider, out CalcRoundedRectangularProfile result)
     {
         try
         {
-            result = s.FromJson<CalcRoundedRectangleProfile>();
+            result = s.FromJson<CalcRoundedRectangularProfile>();
             return true;
         }
         catch
@@ -48,16 +48,16 @@ public sealed class CalcRoundedRectangleProfile : RoundedRectangle, ICalcValue
         }
     }
 
-    public static CalcRoundedRectangleProfile Parse(string s, IFormatProvider provider)
+    public static CalcRoundedRectangularProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcRoundedRectangleProfile>();
+        return s.FromJson<CalcRoundedRectangularProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcRoundedRectangleProfile result = null;
+        CalcRoundedRectangularProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);
