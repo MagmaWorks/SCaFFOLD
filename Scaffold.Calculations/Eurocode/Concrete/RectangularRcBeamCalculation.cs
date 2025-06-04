@@ -19,7 +19,7 @@ public class RectangularRcBeamCalculation : ICalculation
     public string CalculationName { get; set; }
     public CalcStatus Status { get; }
 
-    [InputCalcValue] public CalcRectangle Profile { get; set; }
+    [InputCalcValue] public CalcRectangularProfile Profile { get; set; }
 
     [InputCalcValue] public CalcDouble aggregateAdjustmentFactor { get; set; }
 
@@ -108,7 +108,7 @@ public class RectangularRcBeamCalculation : ICalculation
 
     public RectangularRcBeamCalculation()
     {
-        Profile = new CalcRectangle(new Length(500, LengthUnit.Millimeter),
+        Profile = new CalcRectangularProfile(new Length(500, LengthUnit.Millimeter),
             new Length(800, LengthUnit.Millimeter), "", "");
 
         bendingMom = new CalcDouble(100, "Bending moment", "M", "kNm");

@@ -15,7 +15,7 @@ public class ProfileFromDescriptionTests
     {
         // Assemble
         // Act
-        CalcRectangularHollow profile = CalcRectangularHollow.CreateFromDescription(description);
+        var profile = CalcRectangularHollowProfile.CreateFromDescription(description);
 
         // Assert
         Assert.Equal(400, profile.Width.Millimeters);

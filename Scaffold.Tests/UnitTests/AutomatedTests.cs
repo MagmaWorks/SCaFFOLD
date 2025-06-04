@@ -24,7 +24,7 @@ namespace Scaffold.Tests.UnitTests
         private static List<string> ignoredClassNames = new List<string>
         {
             "CalcVariableCase",
-            "CalcPerimeter",
+            "CalcPerimeterProfile",
             "CalcConcreteSection",
             "CalcConcreteSectionProperties",
             "CalcSection",

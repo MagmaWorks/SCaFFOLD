@@ -51,11 +51,11 @@ public class RectangularRcBeamCalculationTests
     {
         var calc = new RectangularRcBeamCalculation();
         calc.Calculate();
-        var test = new CalcRectangle(new Length(800, LengthUnit.Millimeter),
+        var test = new CalcRectangularProfile(new Length(800, LengthUnit.Millimeter),
             new Length(500, LengthUnit.Millimeter), "", "");
         string x = test.ValueAsString();
 
-        calc.Profile = CalcRectangle.Parse(x, null);
+        calc.Profile = CalcRectangularProfile.Parse(x, null);
 
         calc.rebarAsReqd.Value.Should().BeApproximately(327.6, 1.0, because: "result has not changed yet through the update method.");
 

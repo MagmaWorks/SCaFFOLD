@@ -3,9 +3,9 @@ using MagmaWorks.Taxonomy.Profiles;
 
 namespace Scaffold.Core.Utility
 {
-    public static class ProfileDescription
+    internal static class ProfileDescription
     {
-        public static T ProfileFromDescription<T>(string description) where T : IProfile
+        internal static T ProfileFromDescription<T>(string description) where T : IProfile
         {
             List<Length> lengths = GetLengths(description);
             Type t = typeof(T);

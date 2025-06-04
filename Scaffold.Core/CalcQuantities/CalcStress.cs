@@ -30,6 +30,8 @@ public sealed class CalcStress : CalcQuantity<Stress>
     public CalcStress(double value, StressUnit unit, string name, string symbol)
         : base(new Stress(value, unit), name, symbol) { }
 
+    public static implicit operator CalcStress(Stress value) => new CalcStress(value, string.Empty);
+
     #region AdditionOperators
     public static CalcStress operator +(CalcStress x, CalcStress y)
     {

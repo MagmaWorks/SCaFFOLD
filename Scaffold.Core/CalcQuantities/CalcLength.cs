@@ -30,6 +30,8 @@ public sealed class CalcLength : CalcQuantity<Length>
     public CalcLength(double value, LengthUnit unit, string name, string symbol)
         : base(new Length(value, unit), name, symbol) { }
 
+    public static implicit operator CalcLength(Length value) => new CalcLength(value, string.Empty);
+
     #region AdditionOperators
     public static CalcLength operator +(CalcLength x, CalcLength y)
     {

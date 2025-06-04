@@ -29,6 +29,8 @@ public sealed class CalcCurvature : CalcQuantity<ReciprocalLength>
     public CalcCurvature(double value, ReciprocalLengthUnit unit, string name, string symbol)
         : base(new ReciprocalLength(value, unit), name, symbol) { }
 
+    public static implicit operator CalcCurvature(ReciprocalLength value) => new CalcCurvature(value, string.Empty);
+
     #region AdditionOperators
     public static CalcCurvature operator +(CalcCurvature x, CalcCurvature y)
     {

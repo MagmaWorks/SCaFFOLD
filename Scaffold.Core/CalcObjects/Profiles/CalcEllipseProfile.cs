@@ -5,9 +5,9 @@ using Scaffold.Core.Extensions;
 using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcObjects.Profiles;
-public sealed class CalcEllipse : Ellipse, ICalcValue
+public sealed class CalcEllipseProfile : Ellipse, ICalcProfile<CalcEllipseProfile>, ICalcValue
 #if NET7_0_OR_GREATER
-    , IParsable<CalcEllipse>
+    , IParsable<CalcEllipseProfile>
 #endif
 {
     public string DisplayName { get; set; } = string.Empty;
@@ -15,22 +15,30 @@ public sealed class CalcEllipse : Ellipse, ICalcValue
     public CalcStatus Status { get; set; } = CalcStatus.None;
 
     [JsonConstructor]
-    public CalcEllipse(Length width, Length height, string name, string symbol = "")
+    public CalcEllipseProfile(Length width, Length height, string name, string symbol = "")
         : base(width, height)
     {
         DisplayName = name;
         Symbol = symbol;
     }
 
-    public static CalcEllipse CreateFromDescription(string descripiton)
+    public CalcEllipseProfile(double width, double height, LengthUnit unit, string name, string symbol = "")
+        : base(new Length(width, unit), new Length(height, unit))
     {
-        return ProfileDescription.ProfileFromDescription<CalcEllipse>(descripiton);
+        DisplayName = name;
+        Symbol = symbol;
     }
-    public static bool TryParse(string s, IFormatProvider provider, out CalcEllipse result)
+
+    public static CalcEllipseProfile CreateFromDescription(string description)
+    {
+        return ProfileDescription.ProfileFromDescription<CalcEllipseProfile>(description);
+    }
+
+    public static bool TryParse(string s, IFormatProvider provider, out CalcEllipseProfile result)
     {
         try
         {
-            result = s.FromJson<CalcEllipse>();
+            result = s.FromJson<CalcEllipseProfile>();
             return true;
         }
         catch
@@ -40,16 +48,16 @@ public sealed class CalcEllipse : Ellipse, ICalcValue
         }
     }
 
-    public static CalcEllipse Parse(string s, IFormatProvider provider)
+    public static CalcEllipseProfile Parse(string s, IFormatProvider provider)
     {
-        return s.FromJson<CalcEllipse>();
+        return s.FromJson<CalcEllipseProfile>();
     }
 
     public string ValueAsString() => this.ToJson();
 
     public bool TryParse(string strValue)
     {
-        CalcEllipse result = null;
+        CalcEllipseProfile result = null;
         if (TryParse(strValue, null, out result))
         {
             result.CopyTo(this);

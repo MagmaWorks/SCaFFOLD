@@ -27,6 +27,8 @@ public sealed class CalcStrain : CalcQuantity<Strain>
     public CalcStrain(double value, StrainUnit unit, string name, string symbol)
         : base(new Strain(value, unit), name, symbol) { }
 
+    public static implicit operator CalcStrain(Strain value) => new CalcStrain(value, string.Empty);
+
     #region AdditionOperators
     public static CalcStrain operator +(CalcStrain x, CalcStrain y)
     {
