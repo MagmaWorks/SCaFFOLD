@@ -48,4 +48,8 @@
       <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Eurocode\Steel\" />
+    </ItemGroup>
+
 </Project>
