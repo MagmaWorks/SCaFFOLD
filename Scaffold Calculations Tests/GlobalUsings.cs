@@ -2,7 +2,6 @@ global using System;
 global using System.Collections.Generic;
 global using System.Globalization;
 global using System.Linq;
-global using Scaffold.Calculations.Eurocode.Concrete.Utility;
 global using Scaffold.Core.Abstract;
 global using Scaffold.Core.CalcValues;
 global using Scaffold.Core.Enums;
