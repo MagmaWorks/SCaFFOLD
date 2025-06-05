@@ -35,11 +35,11 @@ namespace Scaffold.Calculations.Eurocode.Concrete
 
         [OutputCalcValue]
         public CalcStress fckcube => new CalcStress(
-            new Pressure(double.Parse(Material.Grade.ToString().Split('_')[1]), PressureUnit.Megapascal),
+            new Pressure(double.Parse(Material.Grade.ToString().Split('_')[1]), _unit),
             "Characteristic cube strength", "f_{ck,cube}");
 
         [OutputCalcValue]
-        public CalcStress fcm => new CalcStress(GetStrength() + new Pressure(8, PressureUnit.Megapascal),
+        public CalcStress fcm => new CalcStress(GetStrength() + new Pressure(8, _unit),
                 "Mean cylinder strength", "f_{cm}");
 
         [OutputCalcValue]
@@ -100,6 +100,8 @@ namespace Scaffold.Calculations.Eurocode.Concrete
                     : 3.5,
             RatioUnit.PartPerThousand, "Simplified ultimate strain", "ε_{cu3}");
 
+        private static PressureUnit _unit = PressureUnit.Megapascal;
+
         public ConcreteMaterialProperties()
         {
             Calculate();
@@ -119,6 +121,6 @@ namespace Scaffold.Calculations.Eurocode.Concrete
         public void Calculate() { }
 
         private Pressure GetStrength() => new Pressure(
-            double.Parse(Material.Grade.ToString().Split('C', '_')[1]), PressureUnit.Megapascal);
+            double.Parse(Material.Grade.ToString().Split('C', '_')[1]), _unit);
     }
 }
