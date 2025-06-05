@@ -5,7 +5,7 @@ namespace Scaffold.Core.CalcValues;
 public sealed class CalcDouble : CalcValue<double>
 {
     public CalcDouble(double value)
-        : base(value, null, string.Empty, string.Empty) { }
+        : base(value, string.Empty, string.Empty, string.Empty) { }
 
     public CalcDouble(double value, string name)
         : base(value, name, string.Empty, string.Empty) { }

@@ -44,6 +44,21 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void ImplicitOperatorTest()
+        {
+            // Arrange
+            var calcMoment = new Moment(4.5, MomentUnit.KilonewtonMeter);
+
+            // Act
+            CalcMoment value = calcMoment;
+
+            // Assert
+            Assert.Equal(4.5, value.Value);
+            Assert.Equal(string.Empty, value.DisplayName);
+            Assert.Equal(string.Empty, value.Symbol);
+        }
+
+        [Fact]
         public void ImplicitOperatorDoubleTest()
         {
             // Arrange

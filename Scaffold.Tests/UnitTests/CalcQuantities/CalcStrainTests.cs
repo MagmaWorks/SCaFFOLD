@@ -44,6 +44,21 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void ImplicitOperatorTest()
+        {
+            // Arrange
+            var calcStrain = new Strain(4.5, StrainUnit.DecimalFraction);
+
+            // Act
+            CalcStrain value = calcStrain;
+
+            // Assert
+            Assert.Equal(4.5, value.Value);
+            Assert.Equal(string.Empty, value.DisplayName);
+            Assert.Equal(string.Empty, value.Symbol);
+        }
+
+        [Fact]
         public void ImplicitOperatorDoubleTest()
         {
             // Arrange

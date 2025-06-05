@@ -1,6 +1,8 @@
 ﻿using MagmaWorks.Taxonomy.Materials;
+using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Standards;
-using Scaffold.Core.CalcObjects;
+using MagmaWorks.Taxonomy.Standards.Eurocode;
+using Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
 using Scaffold.Core.Enums;
 
 namespace Scaffold.Tests.UnitTests.CalcObjects
@@ -11,19 +13,14 @@ namespace Scaffold.Tests.UnitTests.CalcObjects
         public void ParseFromStringTest()
         {
             // Arrange
-            var standard = new CalcStandard() { Body = StandardBody.EN };
-
-            var material = new CalcMaterial()
-            {
-                DisplayName = "Foo",
-                Symbol = "M",
-                Status = CalcStatus.Fail,
-                Standard = standard,
-                Type = MaterialType.Concrete
-            };
-
-            const string json =
-                "{\r\n  \"DisplayName\": \"Foo\",\r\n  \"Symbol\": \"M\",\r\n  \"Status\": \"Fail\",\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"DisplayName\": null,\r\n    \"Symbol\": null,\r\n    \"Status\": \"None\",\r\n    \"Body\": \"EN\",\r\n    \"Title\": null\r\n  },\r\n  \"Type\": \"Concrete\"\r\n}";
+            var material = new CalcEnConcreteMaterial(EnConcreteGrade.C90_105, NationalAnnex.UnitedKingdom, "ConcreteMat", "C90/105");
+            string json = $@"
+{{
+  ""$type"": ""Scaffold.Core.CalcObjects.Materials.StandardMaterials.En.CalcEnConcreteMaterial, Scaffold.Core"",
+  ""DisplayName"": ""Foo"",
+  ""Symbol"": ""M"",
+  ""Status"": ""Fail"",
+}}";
 
             // Act & Assert
             Assert.False(material.TryParse("invalid"));
@@ -39,23 +36,14 @@ namespace Scaffold.Tests.UnitTests.CalcObjects
         public void ParseFromMinimalStringTest()
         {
             // Arrange
-            var standard = new CalcStandard() { Body = StandardBody.EN };
-
-            var material = new CalcMaterial()
-            {
-                DisplayName = "Foo",
-                Symbol = "M",
-                Status = CalcStatus.Fail,
-                Standard = standard,
-                Type = MaterialType.Concrete
-            };
-
-            const string json =
-                "{\r\n  \"Standard\": {\r\n    \"$type\": \"Scaffold.Core.CalcObjects.CalcStandard, Scaffold.Sections\",\r\n    \"Body\": \"EN\"  },\r\n  \"Type\": \"Concrete\"\r\n}";
+            var material = new CalcEnConcreteMaterial(EnConcreteGrade.C90_105, NationalAnnex.UnitedKingdom, "ConcreteMat", "C90/105");
+            string json = $@"{{""Grade"": ""C30_37""}}";
 
             // Act & Assert
             Assert.False(material.TryParse("invalid"));
             Assert.True(material.TryParse(json));
+            Assert.Equal(EnConcreteGrade.C30_37, material.Grade);
+
             Assert.Equal(StandardBody.EN, material.Standard.Body);
             Assert.Equal(MaterialType.Concrete, material.Type);
         }

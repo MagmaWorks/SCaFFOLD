@@ -3,7 +3,7 @@ using System.Numerics;
 #endif
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcQuantities;
 
@@ -30,6 +30,8 @@ public sealed class CalcInertia : CalcQuantity<AreaMomentOfInertia>
 
     public CalcInertia(double value, AreaMomentOfInertiaUnit unit, string name, string symbol)
         : base(new AreaMomentOfInertia(value, unit), name, symbol) { }
+
+    public static implicit operator CalcInertia(AreaMomentOfInertia value) => new CalcInertia(value, string.Empty);
 
     #region AdditionOperators
     public static CalcInertia operator +(CalcInertia x, CalcInertia y)
