@@ -1,5 +1,4 @@
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
-using Scaffold.Calculations.Tests;
 using Scaffold.Core.CalcQuantities;
 
 namespace Scaffold.Calculations.Eurocode.Steel;
