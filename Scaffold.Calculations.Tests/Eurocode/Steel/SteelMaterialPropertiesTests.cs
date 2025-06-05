@@ -188,7 +188,7 @@ public class SteelMaterialPropertiesTests
             calc.Calculate();
 
             // Assert
-            Assert.Equal(12*10^-6, (double)calc.alpha);
+            Assert.Equal(12 * 10 ^ -6, (double)calc.alpha);
         }
     }
 }
