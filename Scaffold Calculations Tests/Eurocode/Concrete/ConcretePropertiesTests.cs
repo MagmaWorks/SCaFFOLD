@@ -10,7 +10,7 @@ public class ConcretePropertiesTests
     public void CalculationBaseSetupTest()
     {
         // Assemble
-        var calc = new ConcreteProperties();
+        var calc = new ConcreteMaterialProperties();
 
         // Act
         CalculationMetadata metadata = Reader.GetMetadata(calc);
@@ -18,10 +18,10 @@ public class ConcretePropertiesTests
         IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         // Assert
-        Assert.Equal("Concrete Properties", calc.ReferenceName);
+        Assert.Equal("Concrete Material Properties", calc.ReferenceName);
         Assert.Equal("Concrete Material Properties", calc.CalculationName);
         Assert.Single(inputs);
-        Assert.Equal(14, outputs.Count);
+        Assert.Equal(15, outputs.Count);
     }
 
     [Theory]
@@ -29,7 +29,7 @@ public class ConcretePropertiesTests
     public void CalculationInputTests(int id, Type expectedType, string expectedSymbol, string expectedDisplayName)
     {
         // Assemble
-        var calc = new ConcreteProperties();
+        var calc = new ConcreteMaterialProperties();
 
         // Act
         IReadOnlyList<ICalcValue> inputs = Reader.GetInputs(calc);
@@ -77,7 +77,7 @@ public class ConcretePropertiesTests
         string grade, double expFck, double expFckCube, double expFcm)
     {
         // Assemble
-        var calc = new ConcreteProperties();
+        var calc = new ConcreteMaterialProperties();
 
         // Act
         calc.ConcreteGrade.Value = grade;
@@ -109,7 +109,7 @@ public class ConcretePropertiesTests
        string grade, double expFctm, double expfctk005, double expfctk095)
     {
         // Assemble
-        var calc = new ConcreteProperties();
+        var calc = new ConcreteMaterialProperties();
 
         // Act
         calc.ConcreteGrade.Value = grade;
@@ -140,7 +140,7 @@ public class ConcretePropertiesTests
     public void ConcretePropertiesYoungsModulusTests(string grade, double expEcm)
     {
         // Assemble
-        var calc = new ConcreteProperties();
+        var calc = new ConcreteMaterialProperties();
 
         // Act
         calc.ConcreteGrade.Value = grade;
@@ -171,7 +171,7 @@ public class ConcretePropertiesTests
         double expN, double expEpsc3, double expEpscu3)
     {
         // Assemble
-        var calc = new ConcreteProperties();
+        var calc = new ConcreteMaterialProperties();
 
         // Act
         calc.ConcreteGrade.Value = grade;
