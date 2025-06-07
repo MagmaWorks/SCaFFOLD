@@ -3,23 +3,87 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Scaffold.Core;
-
+using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLD_Quick_Desktop_Viewer
 {
-    internal class CalcViewModel
+    class CalcViewModel : ViewModelBase, ICalcViewParent
     {
         private ICalculation calculation { get; set; }
+        private CalculationReader reader { get; set; } = new CalculationReader();
+
+        ObservableCollection<FormulaeVM> _formulae;
+        public ObservableCollection<FormulaeVM> Formulae
+        {
+            get { return _formulae; }
+            set
+            {
+                _formulae = value;
+            }
+        }
+
+        ObservableCollection<IOValues> outputs;
+        public ObservableCollection<IOValues> Outputs
+        {
+            get
+            {
+                return outputs;
+            }
+            set
+            {
+                outputs = value;
+                RaisePropertyChanged(nameof(Outputs));
+            }
+        }
+
 
         CalcViewModel(ICalculation calculation)
         {
             this.calculation = calculation;
+            reader.GetFormulae(calculation);
         }
 
+        public void UpdateOutputs()
+        {
+            //Outputs = new ObservableCollection<IOValues>();
+            //foreach (var item in ICalculation.)
+            //{
+            //    Outputs.Add(new IOValues(item, calc, this));
+            //}
+            _formulae = new ObservableCollection<FormulaeVM>();
+            var outputs = reader.GetFormulae(calculation);
+            foreach (var item in outputs)
+            {
+                BitmapSource im = null;
+                if (item.Image != null)
+                {
+                    //im = item.Image.ToWriteableBitmap();
+                }
+                _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Reference, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image = im });
+            }
+            RaisePropertyChanged(nameof(Formulae));
+            //RaisePropertyChanged(nameof(TestGroup));
+            //if (this.calc.Get3DModels().Count > 0)
+            //{
+            //    makeModel(this.calc.Get3DModels()[0]);
+            //    RaisePropertyChanged(nameof(Model));
+        }
+        //RaisePropertyChanged(nameof(Status));
+
+        //foreach (var item in MainViews)
+        //{
+        //    if (item.ViewType == MainViewTypes.PLUGIN)
+        //    {
+        //        item.Plugin.Update();
+        //    }
+        //}
     }
+
 }

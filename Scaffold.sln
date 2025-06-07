@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCaFFOLD_Console", "SCaFFOL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Calculations.Tests", "Scaffold Calculations Tests\Scaffold.Calculations.Tests.csproj", "{36AE8C4E-43A0-4213-9DE5-B1242E25A455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCaFFOLD Quick Desktop Viewer", "SCaFFOLD Quick Desktop Viewer\SCaFFOLD Quick Desktop Viewer.csproj", "{657377D0-59FF-4E4B-B58E-2D8C611CCFF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCaFFOLD_Quick_Desktop_Viewer", "SCaFFOLD Quick Desktop Viewer\SCaFFOLD_Quick_Desktop_Viewer.csproj", "{657377D0-59FF-4E4B-B58E-2D8C611CCFF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

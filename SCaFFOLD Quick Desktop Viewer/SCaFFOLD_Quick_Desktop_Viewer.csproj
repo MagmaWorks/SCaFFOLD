@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="WpfMath" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Scaffold.Calculations\Scaffold.Calculations.csproj" />
     <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
   </ItemGroup>
