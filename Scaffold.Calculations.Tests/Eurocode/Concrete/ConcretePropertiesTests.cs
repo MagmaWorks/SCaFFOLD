@@ -2,7 +2,7 @@ using Scaffold.Calculations.Tests;
 
 namespace Scaffold.Calculations.Eurocode.Concrete;
 
-public class ConcretePropertiesTests
+public class ConcreteMaterialPropertiesTests
 {
     private static CalculationReader Reader { get; } = new();
 

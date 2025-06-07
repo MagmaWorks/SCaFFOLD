@@ -17,6 +17,8 @@ namespace Scaffold.Calculations.CalculationUtility
             .Select(v => v.ToString().Replace("_", "/")).ToList();
         internal static readonly List<string> RebarGrades = Enum.GetValues(typeof(EnRebarGrade)).Cast<EnRebarGrade>()
             .Select(v => v.ToString()).ToList();
+        internal static readonly List<string> SteelGrades = Enum.GetValues(typeof(EnSteelGrade)).Cast<EnSteelGrade>()
+            .Select(v => v.ToString()).ToList();
         internal static readonly List<string> NationalAnnexes = Enum.GetValues(typeof(NationalAnnex)).Cast<NationalAnnex>()
             .Select(v => SplitCamelCase(v.ToString())).ToList();
 

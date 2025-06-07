@@ -107,6 +107,16 @@ public sealed class CalcStress : CalcQuantity<Stress>
     {
         return new CalcStress(x.Value / y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }
+
+    public static CalcStress operator /(CalcStress x, int y)
+    {
+        return new CalcStress(x.Value / (double)y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator /(CalcStress x, CalcDouble y)
+    {
+        return new CalcStress(x.Value / y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
     #endregion
 
     #region ComparisonOperators

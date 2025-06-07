@@ -1,5 +1,3 @@
-using Scaffold.Core.CalcQuantities;
-
 namespace Scaffold.Calculations.Eurocode.Concrete;
 
 public class ConcreteCreepTests
