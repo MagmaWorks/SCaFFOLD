@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using MagmaWorks.Taxonomy.Materials;
-using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
-using MagmaWorks.Taxonomy.Standards.Eurocode;
+﻿using System.Collections.Generic;
+using MagmaWorks.Taxonomy.Profiles;
 using Scaffold.Calculations.CalculationUtility;
 using Scaffold.Core.Attributes;
-using Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
-using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
-using UnitsNet;
-using UnitsNet.Units;
 
 namespace Scaffold.Calculations.Eurocode.Steel
 {
@@ -23,31 +17,27 @@ namespace Scaffold.Calculations.Eurocode.Steel
 
         [InputCalcValue("Cat", "Catalogue")]
         public CalcSelectionList CatalogueType { get; set; }
-            = new CalcSelectionList("Catalogue", "HEB", CatalogueProfileSelectionList.Catalogues);
+            = new CalcSelectionList("Catalogue", "UB", CatalogueProfileSelectionList.Catalogues);
 
         [InputCalcValue]
-        public CalcLength Thickness { get; set; }
-            = new CalcLength(40, LengthUnit.Millimeter, "Nominal thickness of the element", "t");
+        public CalcSelectionList ProfileType => new CalcSelectionList("Profile", null,
+            CatalogueProfileSelectionList.GetCatalogueProfiles(CatalogueType.GetEnum<CatalogueType>()));
 
         [OutputCalcValue]
-        public CalcEnSteelMaterial Material =>
-            new CalcEnSteelMaterial(SteelGrade.GetEnum<EnSteelGrade>(),
-                                    NationalAnnex.RecommendedValues, "Steel", "S");
+        public CalcObjectWrapper<IEuropeanCatalogue> Profile =>
+            new((IEuropeanCatalogue)CatalogueFactory.CreateEuropean(ProfileType.GetEnum<European>()),
+                "Catalogue Profile", ProfileType.Value);
 
+        public SteelCatalogueProfile() { }
 
-        public SteelMaterialProperties()
+        public SteelCatalogueProfile(European profile)
         {
-            Calculate();
-        }
-
-        public SteelMaterialProperties(EnSteelGrade grade)
-        {
-            SteelGrade.Value = grade.ToString();
-            Calculate();
+            ProfileType.Value = profile.ToString();
         }
 
         public IList<IFormula> GetFormulae()
         {
+
             return new List<IFormula>();
         }
 
