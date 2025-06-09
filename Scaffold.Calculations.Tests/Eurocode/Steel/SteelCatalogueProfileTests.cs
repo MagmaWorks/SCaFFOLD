@@ -46,7 +46,7 @@ public class SteelCatalogueProfileTests
     }
 
     [Fact]
-    public void SteelCatalogueProfileTest()
+    public void ChangeCatalogueTest()
     {
         // Assemble
         var calc = new SteelCatalogueProfile();
@@ -56,6 +56,20 @@ public class SteelCatalogueProfileTests
 
         // Assert
         Assert.Equal("HE100B", calc.ProfileType.Value);
+    }
+
+    [Fact]
+    public void ChangeCatalogueAndProfileTest()
+    {
+        // Assemble
+        var calc = new SteelCatalogueProfile();
+
+        // Act
+        calc.CatalogueType.Value = "HEB";
+        calc.ProfileType.Value = "HE200B";
+
+        // Assert
+        Assert.IsType<HE200B>(calc.Profile.Value);
     }
 
     [Theory]
@@ -78,6 +92,7 @@ public class SteelCatalogueProfileTests
         {
             calc.ProfileType.Value = prfl;
             Assert.NotNull(calc.Profile);
+            Assert.Equal(prfl, calc.ProfileType.Value);
         }
     }
 
