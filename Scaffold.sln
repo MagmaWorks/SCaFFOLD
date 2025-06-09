@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold.Grasshopper", "Sca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCaFFOLD_Console", "SCaFFOLD_Console\SCaFFOLD_Console.csproj", "{5BE4AA93-E653-4F68-B172-C2ADABAD43DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Calculations.Tests", "Scaffold Calculations Tests\Scaffold.Calculations.Tests.csproj", "{36AE8C4E-43A0-4213-9DE5-B1242E25A455}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Calculations.Tests", "Scaffold.Calculations.Tests\Scaffold.Calculations.Tests.csproj", "{36AE8C4E-43A0-4213-9DE5-B1242E25A455}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxonomyObjectCodeGenerator", "TaxonomyObjectCreator\TaxonomyObjectCodeGenerator.csproj", "{5197FD54-4CDB-4D1E-9E05-E209AB9BF902}"
 EndProject

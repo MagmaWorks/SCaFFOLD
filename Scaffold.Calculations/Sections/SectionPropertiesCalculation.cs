@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MagmaWorks.Taxonomy.Profiles;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcObjects.Profiles;
 using Scaffold.Core.CalcObjects.Sections;
