@@ -18,7 +18,7 @@ public class DrawSteelSectionTests
         // Assert
         Assert.Equal("Draw Steel Section", calc.ReferenceName);
         Assert.Equal("Steel Section Drawing", calc.CalculationName);
-        Assert.Equal(1, inputs.Count); // todo - should be 2 whern another calc can act as input
+        Assert.Single(inputs); // todo - should be 2 whern another calc can act as input
         Assert.Single(outputs);
     }
 
