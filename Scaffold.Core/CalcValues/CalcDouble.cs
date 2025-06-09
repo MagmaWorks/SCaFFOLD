@@ -98,6 +98,11 @@ public sealed class CalcDouble : CalcValue<double>
         return y + x;
     }
 
+    public static CalcDouble operator +(int x, CalcDouble y)
+    {
+        return y + (double)x;
+    }
+
     public static CalcDouble operator -(CalcDouble x, CalcDouble y)
     {
         (string name, string symbol, string unit) = OperatorMetadataHelper(x, y, '-');

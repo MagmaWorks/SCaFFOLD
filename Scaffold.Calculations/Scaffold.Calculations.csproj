@@ -45,6 +45,7 @@
 	</ItemGroup>
 
     <ItemGroup>
+      <InternalsVisibleTo Include="Scaffold.Calculations.Tests" />
       <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
     </ItemGroup>
 
