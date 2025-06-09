@@ -25,7 +25,7 @@ public class SteelCatalogueProfileTests
         Assert.Equal("Steel Catalogue Profile", calc.ReferenceName);
         Assert.Equal("Steel Catalogue Profile", calc.CalculationName);
         Assert.Equal(2, inputs.Count);
-        Assert.Equal(1, outputs.Count);
+        Assert.Single(outputs);
     }
 
     [Theory]
