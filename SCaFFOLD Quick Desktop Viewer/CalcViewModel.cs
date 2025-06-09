@@ -14,10 +14,18 @@ using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLD_Quick_Desktop_Viewer
 {
-    class CalcViewModel : ViewModelBase, ICalcViewParent
+    public class CalcViewModel : ViewModelBase, ICalcViewParent
     {
         private ICalculation calculation { get; set; }
         private CalculationReader reader { get; set; } = new CalculationReader();
+
+        public string TestName
+        {
+            get
+            {
+                return "TEST";
+            }
+        }
 
         ObservableCollection<FormulaeVM> _formulae;
         public ObservableCollection<FormulaeVM> Formulae
@@ -44,10 +52,11 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         }
 
 
-        CalcViewModel(ICalculation calculation)
+        public CalcViewModel(ICalculation calculation)
         {
             this.calculation = calculation;
             reader.GetFormulae(calculation);
+            UpdateOutputs();
         }
 
         public void UpdateOutputs()
@@ -58,7 +67,7 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             //    Outputs.Add(new IOValues(item, calc, this));
             //}
             _formulae = new ObservableCollection<FormulaeVM>();
-            var outputs = reader.GetFormulae(calculation);
+            var outputs = calculation.GetFormulae();
             foreach (var item in outputs)
             {
                 BitmapSource im = null;

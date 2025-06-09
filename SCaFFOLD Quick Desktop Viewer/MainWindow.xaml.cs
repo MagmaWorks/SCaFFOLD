@@ -24,12 +24,16 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
     public partial class MainWindow : Window
     {
         ICalculation calc;
+        CalcViewModel viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
 
             calc = new TestCalculation();
+            calc.Calculate();
+            viewModel = new CalcViewModel(calc);
+            this.DataContext = viewModel;
         }
     }
 }

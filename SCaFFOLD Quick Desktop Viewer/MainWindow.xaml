@@ -6,7 +6,20 @@
         xmlns:local="clr-namespace:SCaFFOLD_Quick_Desktop_Viewer"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
 
+    <Window.Resources>
+        <DataTemplate x:Key="Formulae">
+            <local:FormulaeDisplay DataContext="{Binding}"/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{Binding TestName}"/>
+        <ContentControl Grid.Row="1" Content="{Binding}" ContentTemplate="{StaticResource Formulae}" />
     </Grid>
+
 </Window>

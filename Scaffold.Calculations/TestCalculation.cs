@@ -3,6 +3,7 @@ using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.Models;
 
 namespace Scaffold.Calculations
 {
@@ -21,14 +22,18 @@ namespace Scaffold.Calculations
         [OutputCalcValue(@"R", "Result")]
         public double Result { get; private set; } = 0;
 
+        IList<IFormula> _formulaList = new List<IFormula>();
+
         public IList<IFormula> GetFormulae()
         {
-            return new List<IFormula>();
+            return _formulaList;
         }
 
         public void Calculate()
         {
             Result = Force.Value * Multiplier;
+            _formulaList.Clear();
+            _formulaList.Add(new Formula("BS EN 1992", "This is a test calc in SCaFFOLD 2.0", "OK", @"\zeta = \eta / \kappa", CalcStatus.Pass));
         }
     }
 }
