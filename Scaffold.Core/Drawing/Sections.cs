@@ -27,8 +27,8 @@ namespace Scaffold.Core.Drawing
             strokeColour = strokeColour.Replace("#ff", "#");
 
             LengthUnit unit = perimeter.OuterEdge.Points.FirstOrDefault().Y.Unit;
-            ILocalDomain2d extends = GetExtends(perimeter.OuterEdge);
-            (int x, int y) = ImageExtends(extends, unit);
+            ILocalDomain2d domain = GetDomain(perimeter.OuterEdge);
+            (int x, int y) = GetExtents(domain, unit);
             var path = new SKPath();
             path.AddPoly(ConvertPoints(perimeter.OuterEdge));
             string svg = path.ToSvgPathData();
@@ -56,7 +56,7 @@ namespace Scaffold.Core.Drawing
             return pts;
         }
 
-        internal static ILocalDomain2d GetExtends(ILocalPolyline2d polyline)
+        internal static ILocalDomain2d GetDomain(ILocalPolyline2d polyline)
         {
             Length maxY = polyline.Points.Select(p => p.Y).Max();
             Length minY = polyline.Points.Select(p => p.Y).Min();
@@ -67,7 +67,7 @@ namespace Scaffold.Core.Drawing
             return new LocalDomain2d(max, min);
         }
 
-        internal static (int x, int y) ImageExtends(ILocalDomain2d domain, LengthUnit unit)
+        internal static (int x, int y) GetExtents(ILocalDomain2d domain, LengthUnit unit)
         {
             int x = (int)Math.Ceiling(domain.Max.Y.As(unit) - domain.Min.Y.As(unit));
             int y = (int)Math.Ceiling(domain.Max.Z.As(unit) - domain.Min.Z.As(unit));
