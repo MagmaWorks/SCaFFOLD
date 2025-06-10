@@ -37,6 +37,19 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             }
         }
 
+        List<IOValues> inputs;
+        public List<IOValues> Inputs
+        {
+            get
+            {
+                return inputs;
+            }
+            set
+            {
+                inputs = value;
+            }
+        }
+
         ObservableCollection<IOValues> outputs;
         public ObservableCollection<IOValues> Outputs
         {
@@ -51,11 +64,18 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             }
         }
 
-
         public CalcViewModel(ICalculation calculation)
         {
             this.calculation = calculation;
             reader.GetFormulae(calculation);
+
+            Inputs = new List<IOValues>();
+            foreach (var item in reader.GetInputs(calculation))
+            {
+                Inputs.Add(new IOValues(item, calculation, this));
+            }
+
+
             UpdateOutputs();
         }
 

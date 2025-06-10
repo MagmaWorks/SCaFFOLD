@@ -13,13 +13,14 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         ICalculation calc;
         ICalcViewParent calcVM;
 
-        //public string Type
-        //{
-        //    get
-        //    {
-        //        return calcValue.Type.ToString();
-        //    }
-        //}
+        public string Type
+        {
+            get
+            {
+                //return calcValue.Type.ToString();
+                return "IQuantity";
+            }
+        }
 
         //bool _sliderEntry = false;
         //public bool SliderEntry

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCaFFOLD_Quick_Desktop_Viewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1000">
 
     <Window.Resources>
         <DataTemplate x:Key="Formulae">
@@ -13,13 +13,40 @@
         </DataTemplate>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{Binding TestName}"/>
-        <ContentControl Grid.Row="1" Content="{Binding}" ContentTemplate="{StaticResource Formulae}" />
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" x:Name="IODisplay"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" Margin="15 0 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch"/>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <TextBlock Text="{Binding CalcTypeName}" Width="250"/>
+                        <TextBox Text="{Binding CalcInstanceName}" Width="250"/>
+                    </StackPanel>
+                </StackPanel>
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="INPUTS"/>
+                        <local:CalcInputs Grid.Row="1" Grid.Column="0" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+        <ContentControl Grid.Column="2" Content="{Binding}" ContentTemplate="{StaticResource Formulae}" />
     </Grid>
-
 </Window>

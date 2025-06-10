@@ -34,6 +34,7 @@ namespace Scaffold.Calculations
             Result = Force.Value * Multiplier;
             _formulaList.Clear();
             _formulaList.Add(new Formula("BS EN 1992", "This is a test calc in SCaFFOLD 2.0", "OK", @"\zeta = \eta / \kappa", CalcStatus.Pass));
+            _formulaList.Add(new Formula("", "Here's the result", "DF = " + Result , ""));
         }
     }
 }
