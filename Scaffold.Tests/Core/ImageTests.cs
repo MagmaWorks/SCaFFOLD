@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Scaffold.Core.Images.Models;
 using Scaffold.Tests.ExampleCalcsForTests;
+using SkiaSharp;
 
 namespace Scaffold.XUnitTests.Core;
 public class ImageTests
@@ -50,7 +51,9 @@ public class ImageTests
 </svg>
 ";
         var image = new ImageFromSkSvg(svgString);
-        SkiaSharp.SKBitmap result = image.GetImage();
+        SKBitmap result = image.GetImage();
         Assert.NotNull(result);
+        SKFileWStream fs = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "quickstart.jpg"));
+        result.Encode(fs, SKEncodedImageFormat.Jpeg, quality: 85);
     }
 }

@@ -12,6 +12,9 @@ public class ImageFromSkSvg : ICalcImage
     public SKBitmap Bitmap => GetImage();
     public SKBitmap GetImage()
     {
+        FileStream fs = new FileStream(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.svg"), FileMode.OpenOrCreate);
+        Svg.Save(fs, SKColor.Empty);
+
         return Svg.Picture.ToBitmap(
             SKColors.Empty, 100, 100, SKColorType.Unknown, SKAlphaType.Unknown, SKColorSpace.CreateSrgb());
     }
