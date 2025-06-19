@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Interfaces;
 
 namespace SCaFFOLD_Quick_Desktop_Viewer
@@ -13,12 +14,13 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         ICalculation calc;
         ICalcViewParent calcVM;
 
+        string _type = "IQuanity";
         public string Type
         {
             get
             {
                 //return calcValue.Type.ToString();
-                return "IQuantity";
+                return _type;
             }
         }
 
@@ -142,6 +144,10 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             switch (calcValue)
             {
                 case ICalcQuantity:
+                    break;
+                case CalcSelectionList:
+                    _selectionList = (calcValue as CalcSelectionList).SelectionList;
+                    this._type = "SELECTIONLIST";
                     break;
                 default:
                     break;

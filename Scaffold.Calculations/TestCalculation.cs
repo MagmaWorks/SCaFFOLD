@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
@@ -22,6 +23,9 @@ namespace Scaffold.Calculations
         [OutputCalcValue(@"R", "Result")]
         public double Result { get; private set; } = 0;
 
+        [InputCalcValue]
+        public CalcSelectionList Options { get; set; } = new CalcSelectionList("Options", "1", new List<string> { "1", "2"});
+
         IList<IFormula> _formulaList = new List<IFormula>();
 
         public IList<IFormula> GetFormulae()
@@ -35,6 +39,7 @@ namespace Scaffold.Calculations
             _formulaList.Clear();
             _formulaList.Add(new Formula("BS EN 1992", "This is a test calc in SCaFFOLD 2.0", "OK", @"\zeta = \eta / \kappa", CalcStatus.Pass));
             _formulaList.Add(new Formula("", "Here's the result", "", "DF = " + Result ));
+            _formulaList.Add(new Formula("", "Option selected is " + Options.Value, "", ""));
         }
     }
 }
