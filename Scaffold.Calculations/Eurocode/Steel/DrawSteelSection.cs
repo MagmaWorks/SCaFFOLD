@@ -7,7 +7,9 @@ using Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
 using Scaffold.Core.CalcObjects.Sections;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
+using Scaffold.Core.Images.Models;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.Models;
 
 namespace Scaffold.Calculations.Eurocode.Steel;
 public class DrawSteelSection : ICalculation
@@ -35,8 +37,16 @@ public class DrawSteelSection : ICalculation
         }
     }
 
-    public List<IFormula> Expressions = new List<IFormula>();
-    public IList<IFormula> GetFormulae() => Expressions;
+    public IList<IFormula> GetFormulae()
+    {
+        var image = new ImageFromSkSvg(Svg);
+        var formula = new Formula();
+        formula.SetImage(image);
+        return new List<IFormula>()
+        {
+            formula
+        };
+    }
 
     public DrawSteelSection()
     {
