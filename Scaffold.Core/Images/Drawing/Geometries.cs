@@ -10,7 +10,7 @@ namespace Scaffold.Core.Images.Drawing
         {
             return DrawFilledPolygon(polygon, outline, SKColor.Empty);
         }
-        public static string DrawFilledPolygon(ILocalPolyline2d polygon, SKColor outline, SKColor fill )
+        public static string DrawFilledPolygon(ILocalPolyline2d polygon, SKColor outline, SKColor fill)
         {
             string fillColour = fill.ToString().Replace("#ff", "#");
             string strokeColour = outline.ToString().Replace("#ff", "#");
