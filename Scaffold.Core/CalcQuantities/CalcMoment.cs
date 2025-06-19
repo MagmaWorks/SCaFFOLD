@@ -3,7 +3,7 @@ using System.Numerics;
 #endif
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcQuantities;
 
@@ -32,6 +32,8 @@ public sealed class CalcMoment : CalcQuantity<Moment>
 
     public CalcMoment(double value, string name, string symbol)
         : base(new Moment(value, MomentUnit.KilonewtonMeter), name, symbol) { }
+
+    public static implicit operator CalcMoment(Moment value) => new CalcMoment(value, string.Empty);
 
     #region AdditionOperators
     public static CalcMoment operator +(CalcMoment x, CalcMoment y)

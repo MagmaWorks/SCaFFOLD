@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Scaffold.Core.Images.Interfaces;
 
 namespace Scaffold.Core.Images.Models;
 

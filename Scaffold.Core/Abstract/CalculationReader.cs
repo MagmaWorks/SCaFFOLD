@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Scaffold.Core.Attributes;
+using Scaffold.Core.Extensions;
 using Scaffold.Core.Internals;
 using Scaffold.Core.Models;
-using Scaffold.Core.Static;
 
 namespace Scaffold.Core.Abstract;
 
@@ -57,7 +57,11 @@ public class CalculationReader
             calcValue = new InternalCalcValue(cacheItem.Calculation, propertyType, property.Name);
         }
 
-        calcValue.DisplayName ??= property.Name.SplitPascalCaseToString();
+        if (string.IsNullOrEmpty(calcValue.DisplayName))
+        {
+            calcValue.DisplayName = property.Name.SplitPascalCaseToString();
+        }
+
         return calcValue;
     }
 

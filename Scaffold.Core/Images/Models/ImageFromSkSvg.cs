@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text;
-using Scaffold.Core.Images.Interfaces;
 using SkiaSharp;
 using SKSvg = SkiaSharp.Extended.Svg.SKSvg;
 

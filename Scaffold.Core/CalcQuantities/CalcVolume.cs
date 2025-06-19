@@ -3,7 +3,7 @@ using System.Numerics;
 #endif
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcQuantities;
 
@@ -30,6 +30,8 @@ public sealed class CalcVolume : CalcQuantity<Volume>
 
     public CalcVolume(double value, VolumeUnit unit, string name, string symbol)
         : base(new Volume(value, unit), name, symbol) { }
+
+    public static implicit operator CalcVolume(Volume value) => new CalcVolume(value, string.Empty);
 
     #region AdditionOperators
     public static CalcVolume operator +(CalcVolume x, CalcVolume y)

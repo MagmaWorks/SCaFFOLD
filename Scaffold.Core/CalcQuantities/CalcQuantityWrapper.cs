@@ -46,6 +46,7 @@ public sealed class CalcQuantityWrapper<T> : ICalcQuantity, IEquatable<CalcQuant
 
     public static implicit operator T(CalcQuantityWrapper<T> value) => (T)value.Quantity;
     public static implicit operator double(CalcQuantityWrapper<T> value) => value.Value;
+    public static implicit operator CalcQuantityWrapper<T>(T value) => new CalcQuantityWrapper<T>(value, string.Empty, string.Empty);
 
     public static CalcQuantityWrapper<T> operator +(CalcQuantityWrapper<T> x, CalcQuantityWrapper<T> y)
     {

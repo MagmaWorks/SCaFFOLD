@@ -4,7 +4,6 @@ using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Sections.SectionProperties;
 using Scaffold.Calculations.CalculationUtility;
-using Scaffold.Calculations.Eurocode.Concrete.Utility;
 using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
@@ -13,10 +12,10 @@ using Scaffold.Core.Interfaces;
 using UnitsNet;
 using UnitsNet.Units;
 
-namespace Scaffold.Calculations;
+namespace Scaffold.Calculations.Eurocode.Concrete;
 public class Creep : ICalculation
 {
-    public string ReferenceName { get; set; } = "";
+    public string ReferenceName { get; set; }
     public string CalculationName { get; set; } = "Concrete Creep";
     public CalcStatus Status { get; set; } = CalcStatus.None;
 

@@ -1,6 +1,5 @@
 ﻿using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.CalcValues;
-using Scaffold.Core.Exceptions;
 using UnitsNet;
 using UnitsNet.Units;
 
@@ -43,6 +42,21 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
             // Assert
             Assert.False(CalcAngle.TryParse("two hundred horses", null, out calcQuantity));
             Assert.Null(calcQuantity);
+        }
+
+        [Fact]
+        public void ImplicitOperatorTest()
+        {
+            // Arrange
+            var calcAngle = new Angle(4.5, AngleUnit.Degree);
+
+            // Act
+            CalcAngle value = calcAngle;
+
+            // Assert
+            Assert.Equal(4.5, value.Value);
+            Assert.Equal(string.Empty, value.DisplayName);
+            Assert.Equal(string.Empty, value.Symbol);
         }
 
         [Fact]
