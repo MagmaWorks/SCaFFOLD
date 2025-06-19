@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace Scaffold.Core.Drawing
+namespace Scaffold.Core.Images.Drawing
 {
     public static class Colours
     {

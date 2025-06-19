@@ -1,22 +1,26 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 using MagmaWorks.Geometry;
 using MagmaWorks.Taxonomy.Materials;
 using MagmaWorks.Taxonomy.Profiles;
 using Scaffold.Core.CalcObjects.Sections;
 using SkiaSharp;
 
-namespace Scaffold.Core.Drawing
+namespace Scaffold.Core.Images.Drawing
 {
     public static class Sections
     {
         public static string DrawSection(CalcSection section)
         {
             var perimeter = new Perimeter(section.Profile);
-            string fillColour = Colours.ConcreteFill.ToString();
-            string strokeColour = Colours.ConcreteOutline.ToString();
+            string fillColour = Colours.BlueLight.ToString();
+            string strokeColour = Colours.BlueDark.ToString();
             switch (section.Material.Type)
             {
+                case MaterialType.Concrete:
+                    fillColour = Colours.ConcreteFill.ToString();
+                    strokeColour = Colours.ConcreteOutline.ToString();
+                    break;
+
                 case MaterialType.Steel:
                     fillColour = Colours.SteelFill.ToString();
                     strokeColour = Colours.SteelOutline.ToString();
@@ -39,8 +43,6 @@ namespace Scaffold.Core.Drawing
             sb.AppendLine($"<path d=\"{svg}\" fill=\"{fillColour}\" stroke=\"{strokeColour}\"/>");
 
             sb.AppendLine("</svg>");
-            //string file = @"C:\Users\k.nielsen\Desktop\svg-test.svg";
-            //File.WriteAllText(file, sb.ToString());
             return sb.ToString();
         }
 

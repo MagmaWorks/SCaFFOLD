@@ -31,7 +31,7 @@ public class DrawSteelSection : ICalculation
             var material = new CalcEnSteelMaterial(SteelGrade.GetEnum<EnSteelGrade>(),
                         NationalAnnex.RecommendedValues, "Steel", "S");
             CalcSection section = new CalcSection(Profile.Profile.Value, material, "Steel Section");
-            return Core.Drawing.Sections.DrawSection(section);
+            return Core.Images.Drawing.Sections.DrawSection(section);
         }
     }
 
