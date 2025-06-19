@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace Scaffold.Core.Images.Interfaces;
+namespace Scaffold.Core.Interfaces;
 
 public interface ICalcImage
 {

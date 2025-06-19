@@ -1,8 +1,5 @@
-using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Profiles;
 using Scaffold.Calculations.CalculationUtility;
-using Scaffold.Core.CalcQuantities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Scaffold.Calculations.Eurocode.Steel;
 
