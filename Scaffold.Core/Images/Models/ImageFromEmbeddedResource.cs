@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Scaffold.Core.Images.Interfaces;
 using SkiaSharp;
 
 namespace Scaffold.Core.Images.Models;

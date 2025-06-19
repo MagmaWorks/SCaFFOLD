@@ -7,8 +7,6 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
     <PackageReference Include="MagmaWorks.Taxonomy.Cases" Version="0.1.9" />
     <PackageReference Include="MagmaWorks.Taxonomy.Loads" Version="0.1.9" />
     <PackageReference Include="MagmaWorks.Taxonomy.Materials" Version="0.1.9" />
