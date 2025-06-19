@@ -3,7 +3,7 @@ using System.Numerics;
 #endif
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcQuantities;
 
@@ -29,6 +29,8 @@ public sealed class CalcStress : CalcQuantity<Stress>
 
     public CalcStress(double value, StressUnit unit, string name, string symbol)
         : base(new Stress(value, unit), name, symbol) { }
+
+    public static implicit operator CalcStress(Stress value) => new CalcStress(value, string.Empty);
 
     #region AdditionOperators
     public static CalcStress operator +(CalcStress x, CalcStress y)
@@ -102,6 +104,16 @@ public sealed class CalcStress : CalcQuantity<Stress>
     }
 
     public static CalcStress operator /(CalcStress x, double y)
+    {
+        return new CalcStress(x.Value / y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator /(CalcStress x, int y)
+    {
+        return new CalcStress(x.Value / (double)y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
+    }
+
+    public static CalcStress operator /(CalcStress x, CalcDouble y)
     {
         return new CalcStress(x.Value / y, (StressUnit)x.Quantity.Unit, x.DisplayName, x.Symbol);
     }

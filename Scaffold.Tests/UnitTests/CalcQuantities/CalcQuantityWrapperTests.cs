@@ -33,6 +33,21 @@ namespace Scaffold.Tests.UnitTests.CalcQuantities
         }
 
         [Fact]
+        public void ImplicitOperatorTest()
+        {
+            // Arrange
+            var calcQuantity = new RelativeHumidity(4.5, RelativeHumidityUnit.Percent);
+
+            // Act
+            CalcQuantityWrapper<RelativeHumidity> value = calcQuantity;
+
+            // Assert
+            Assert.Equal(4.5, value.Value);
+            Assert.Equal(string.Empty, value.DisplayName);
+            Assert.Equal(string.Empty, value.Symbol);
+        }
+
+        [Fact]
         public void TryParseFailureTest()
         {
             // Arrange

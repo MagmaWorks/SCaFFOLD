@@ -1,6 +1,4 @@
-﻿using Scaffold.Core.Images.Interfaces;
-
-namespace Scaffold.Core.Interfaces;
+﻿namespace Scaffold.Core.Interfaces;
 
 public interface IFormula : ICalculationStatus
 {

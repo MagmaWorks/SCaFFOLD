@@ -27,6 +27,8 @@ public sealed class CalcAngle : CalcQuantity<Angle>
     public CalcAngle(double value, AngleUnit unit, string name, string symbol)
         : base(new Angle(value, unit), name, symbol) { }
 
+    public static implicit operator CalcAngle(Angle value) => new CalcAngle(value, string.Empty);
+
     #region AdditionOperators
     public static CalcAngle operator +(CalcAngle x, CalcAngle y)
     {

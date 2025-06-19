@@ -3,7 +3,7 @@ using System.Numerics;
 #endif
 using Scaffold.Core.Abstract;
 using Scaffold.Core.CalcValues;
-using Scaffold.Core.Static;
+using Scaffold.Core.Utility;
 
 namespace Scaffold.Core.CalcQuantities;
 
@@ -33,6 +33,8 @@ public sealed class CalcForce : CalcQuantity<Force>
 
     public CalcForce(double value, string name, string symbol)
         : base(new Force(value, ForceUnit.Kilonewton), name, symbol) { }
+
+    public static implicit operator CalcForce(Force value) => new CalcForce(value, string.Empty);
 
     #region AdditionOperators
     public static CalcForce operator +(CalcForce x, CalcForce y)

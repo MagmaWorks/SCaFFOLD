@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
+using Scaffold.Core.Extensions;
 using Scaffold.Core.Internals;
-using Scaffold.Core.Static;
 
 namespace Scaffold.Core.Models;
 
@@ -92,7 +92,10 @@ public class CalculationConfigurationBuilder<T> : CalculationConfigurationBuilde
         foreach (ContextMember member in Members)
         {
             ICalcValue calcValue = GetCalcValue(member);
-            calcValue.DisplayName ??= member.Name.SplitPascalCaseToString();
+            if (string.IsNullOrEmpty(calcValue.DisplayName))
+            {
+                calcValue.DisplayName = member.Name.SplitPascalCaseToString();
+            }
 
             collection.InsertCalcValue(calcValue);
         }
