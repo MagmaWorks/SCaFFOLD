@@ -106,7 +106,7 @@ namespace SCaFFOLDForGrasshopper
                 }
                 else
                 {
-                    (item as ICalcValue).TryParse(inputVal);
+                    item.TryParse(inputVal);
                 }
             }
 

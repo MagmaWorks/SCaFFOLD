@@ -47,7 +47,7 @@ namespace Scaffold.Calculations.Eurocode.Steel
 
         [OutputCalcValue]
         public CalcObjectWrapper<IEuropeanCatalogue> Profile =>
-            new((IEuropeanCatalogue)CatalogueFactory.CreateEuropean(ProfileType.GetEnum<European>()),
+            new(CatalogueFactory.CreateEuropean(ProfileType.GetEnum<European>()),
                 "Catalogue Profile", ProfileType.Value);
 
         private CalcSelectionList _catalogueType;
