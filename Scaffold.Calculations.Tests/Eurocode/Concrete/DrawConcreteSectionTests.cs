@@ -1,6 +1,6 @@
 namespace Scaffold.Calculations.Eurocode.Steel;
 
-public class DrawSteelSectionTests
+public class DrawConcreteSectionTests
 {
     private static CalculationReader Reader { get; } = new();
 
@@ -8,7 +8,7 @@ public class DrawSteelSectionTests
     public void CalculationBaseSetupTest()
     {
         // Assemble
-        var calc = new DrawSteelSection();
+        var calc = new DrawConcreteSection();
 
         // Act
         CalculationMetadata metadata = Reader.GetMetadata(calc);
@@ -16,9 +16,9 @@ public class DrawSteelSectionTests
         IReadOnlyList<ICalcValue> outputs = Reader.GetOutputs(calc);
 
         // Assert
-        Assert.Equal("Draw Steel Section", calc.ReferenceName);
-        Assert.Equal("Steel Section Drawing", calc.CalculationName);
-        Assert.Single(inputs); // todo - should be 2 whern another calc can act as input
+        Assert.Equal("Draw Concrete Section", calc.ReferenceName);
+        Assert.Equal("Concrete Section Drawing", calc.CalculationName);
+        Assert.Equal(2, inputs.Count); // todo - should be 2 whern another calc can act as input
         Assert.Empty(outputs);
     }
 
@@ -26,13 +26,8 @@ public class DrawSteelSectionTests
     public void DrawSectionTests()
     {
         // Assemble
-        var calc = new DrawSteelSection();
-        var input = new SteelCatalogueProfile();
-
         // Act
-        input.CatalogueType.Value = "UB";
-        input.ProfileType.Value = "UB254x146x37";
-        calc.Profile = input;
+        var calc = new DrawConcreteSection();
 
         // Assert
         Assert.NotNull(calc.GetFormulae().FirstOrDefault());
