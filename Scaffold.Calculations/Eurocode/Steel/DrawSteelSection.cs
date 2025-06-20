@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Calculations.CalculationUtility;
@@ -7,7 +9,10 @@ using Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
 using Scaffold.Core.CalcObjects.Sections;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
+using Scaffold.Core.Images.Drawing;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.Models;
+using SkiaSharp;
 
 namespace Scaffold.Calculations.Eurocode.Steel;
 public class DrawSteelSection : ICalculation
@@ -23,20 +28,18 @@ public class DrawSteelSection : ICalculation
     [InputCalcValue] // todo - make another calc act as input
     public SteelCatalogueProfile Profile { get; set; } = new SteelCatalogueProfile();
 
-    [OutputCalcValue("Svg", "Svg image string")]
-    public CalcString Svg
+    public IList<IFormula> GetFormulae()
     {
-        get
-        {
-            var material = new CalcEnSteelMaterial(SteelGrade.GetEnum<EnSteelGrade>(),
+        var material = new CalcEnSteelMaterial(SteelGrade.GetEnum<EnSteelGrade>(),
                         NationalAnnex.RecommendedValues, "Steel", "S");
-            CalcSection section = new CalcSection(Profile.Profile.Value, material, "Steel Section");
-            return Core.Images.Drawing.Sections.DrawSection(section);
-        }
+        CalcSection section = new CalcSection(Profile.Profile.Value, material, "Steel Section");
+        ICalcImage image = Sections.DrawSection(section);
+        var formula = new Formula();
+        formula.SetImage(image);
+        DrawingUtiliy.Save(image, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SteelImage"),
+            SKEncodedImageFormat.Png);
+        return new List<IFormula>() { formula };
     }
-
-    public List<IFormula> Expressions = new List<IFormula>();
-    public IList<IFormula> GetFormulae() => Expressions;
 
     public DrawSteelSection()
     {
