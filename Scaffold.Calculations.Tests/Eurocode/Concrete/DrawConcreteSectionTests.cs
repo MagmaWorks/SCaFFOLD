@@ -8,7 +8,7 @@ public class DrawConcreteSectionTests
     public void CalculationBaseSetupTest()
     {
         // Assemble
-        var calc = new DrawSteelSection();
+        var calc = new DrawConcreteSection();
 
         // Act
         CalculationMetadata metadata = Reader.GetMetadata(calc);
@@ -18,8 +18,8 @@ public class DrawConcreteSectionTests
         // Assert
         Assert.Equal("Draw Concrete Section", calc.ReferenceName);
         Assert.Equal("Concrete Section Drawing", calc.CalculationName);
-        Assert.Single(inputs); // todo - should be 2 whern another calc can act as input
-        Assert.Single(outputs);
+        Assert.Equal(2, inputs.Count); // todo - should be 2 whern another calc can act as input
+        Assert.Empty(outputs);
     }
 
     [Fact]

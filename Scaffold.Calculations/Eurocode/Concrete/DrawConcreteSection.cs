@@ -46,10 +46,10 @@ public class DrawConcreteSection : ICalculation
         var rebar = new Rebar(rebarMaterial, diameter);
         var rebars = new List<ILongitudinalReinforcement>()
         {
-            new LongitudinalReinforcement(rebar, new LocalPoint2d(22, 47, LengthUnit.Millimeter)),
-            new LongitudinalReinforcement(rebar, new LocalPoint2d(-22, 47, LengthUnit.Millimeter)),
-            new LongitudinalReinforcement(rebar, new LocalPoint2d(-22, -47, LengthUnit.Millimeter)),
-            new LongitudinalReinforcement(rebar, new LocalPoint2d(22, -47, LengthUnit.Millimeter)),
+            new LongitudinalReinforcement(rebar, new LocalPoint2d(22, 47, LengthUnit.Centimeter)),
+            new LongitudinalReinforcement(rebar, new LocalPoint2d(-22, 47, LengthUnit.Centimeter)),
+            new LongitudinalReinforcement(rebar, new LocalPoint2d(-22, -47, LengthUnit.Centimeter)),
+            new LongitudinalReinforcement(rebar, new LocalPoint2d(22, -47, LengthUnit.Centimeter)),
         };
         var section = new CalcConcreteSection(Profile, material, link, new Length(8, LengthUnit.Millimeter), rebars, "Concrete Section");
         ICalcImage image = Sections.DrawSection(section);
