@@ -18,7 +18,7 @@ namespace Scaffold.Core.Images.Drawing
             path.AddPoly(ConvertPoints(polygon, unit));
             return path;
         }
-        
+
         internal static SKPoint[] ConvertPoints(ILocalPolyline2d polyline, LengthUnit unit = LengthUnit.Millimeter)
         {
             var pts = new SKPoint[polyline.Points.Count];
