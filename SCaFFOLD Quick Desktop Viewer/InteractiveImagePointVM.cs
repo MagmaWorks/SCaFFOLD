@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Scaffold.Core.CalcValues;
 using Scaffold.Core.Interfaces;
 using UnitsNet;
 
@@ -15,63 +16,65 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
 
     public class InteractiveImagePointVM : ViewModelBase
     {
-        double x, y;
+        public string GraphicType { get; private set; } = "POINT";
+
+        CalcDoubleMultiArray array;
 
         ICalcViewParent parent;
 
-        public double X
-        {
-            get
-            {
-                return _xValue.Value;
-            }
-            set
-            {
-                _xValue.TryParse(value.ToString());
-                parent.UpdateOutputs();
-                RaisePropertyChanged(nameof(X));
-            }
-        }
+        MagmaWorks.Geometry.Line2d line;
 
-        public double Y
+        public void Refresh()
         {
-            get
-            {
-                return _yValue.Value;
-            }
-            set
-            {
-                _yValue.TryParse(value.ToString());
-                parent.UpdateOutputs();
-                RaisePropertyChanged(nameof(Y));
-            }
+            RaisePropertyChanged(nameof(XY));
+            RaisePropertyChanged(nameof(LineStart));
+            RaisePropertyChanged(nameof(LineEnd));
         }
 
         public System.Windows.Point XY
         {
             get
             {
-                var pt = new System.Windows.Point((int)X, (int)Y);
+                var pt = new System.Windows.Point((int)array.Value[0][0], (int)array.Value[0][1]);
                 return pt;
             }
             set
             {
-                X = value.X;
-                Y = value.Y;
+                array.Value[0][0] = value.X;
+                array.Value[0][1] = value.Y;
+                parent.UpdateOutputs();
             }
-
         }
 
-
-
-        ICalcQuantity _xValue;
-        ICalcQuantity _yValue;
-
-        public InteractiveImagePointVM(ICalcQuantity xValue, ICalcQuantity yValue, ICalcViewParent parent)
+        public System.Windows.Point LineStart
         {
-            this._xValue = xValue;
-            this._yValue = yValue;
+            get
+            {
+                var pt = new System.Windows.Point(line.Start.U.Value, line.Start.V.Value);
+                return pt;
+            }
+        }
+        public System.Windows.Point LineEnd
+        {
+            get
+            {
+                var pt = new System.Windows.Point(line.End.U.Value, line.End.V.Value);
+                return pt;
+            }
+        }
+
+        public InteractiveImagePointVM(CalcDoubleMultiArray array, ICalcViewParent parent)
+        {
+            this.GraphicType = "POINT";
+            this.array = array;
             this.parent = parent;
+        }
+
+        public InteractiveImagePointVM(MagmaWorks.Geometry.Line2d line, ICalcViewParent parent)
+        {
+            this.GraphicType = "LINE";
+            this.parent = parent;
+            this.line = line;
         }
     }
 }

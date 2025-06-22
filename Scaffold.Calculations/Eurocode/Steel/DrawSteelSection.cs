@@ -44,4 +44,9 @@ public class DrawSteelSection : ICalculation
     }
 
     public void Calculate() { }
+
+    public IList<ICalcGraphic> GetGraphic()
+    {
+        return new List<ICalcGraphic>();
+    }
 }

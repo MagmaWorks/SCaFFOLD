@@ -16,5 +16,7 @@ public interface ICalculation : ICalculationStatus
 
     public IList<IFormula> GetFormulae();
 
+    public IList<ICalcGraphic> GetGraphic();
+
     public void Calculate();
 }

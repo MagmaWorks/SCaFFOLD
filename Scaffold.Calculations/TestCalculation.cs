@@ -41,5 +41,10 @@ namespace Scaffold.Calculations
             _formulaList.Add(new Formula("", "Here's the result", "", "DF = " + Result ));
             _formulaList.Add(new Formula("", "Option selected is " + Options.Value, "", ""));
         }
+
+        public IList<ICalcGraphic> GetGraphic()
+        {
+            return new List<ICalcGraphic>();
+        }
     }
 }

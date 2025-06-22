@@ -11,6 +11,24 @@
         <DataTemplate x:Key="Formulae">
             <local:FormulaeDisplay DataContext="{Binding}"/>
         </DataTemplate>
+        <DataTemplate x:Key="Points">
+            <Path Fill="Red">
+                <Path.Data>
+                    <EllipseGeometry
+                        Center="{Binding XY, Mode=TwoWay}"
+                        RadiusX="10"
+                        RadiusY="10"
+                        />
+                </Path.Data>
+            </Path>
+        </DataTemplate>
+        <DataTemplate x:Key="Lines">
+            <Path Stroke="DarkBlue" StrokeThickness="3">
+                <Path.Data>
+                    <LineGeometry StartPoint="{Binding LineStart}" EndPoint="{Binding LineEnd}" />
+                </Path.Data>
+            </Path>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid Grid.Row="1">
@@ -56,20 +74,29 @@
                                 Grid.Row="3"
                                 MouseDown="LeftButtonDown"
                                 MouseUp="LeftButtonUp"
+                                MouseMove="MouseOnTheMove"
+                                MouseLeave="MouseLeavesCanvas"
                                 />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate >
-                            <Path Fill="Red">
-                                <Path.Data>
-                                    <EllipseGeometry
-                                        Center="{Binding XY, Mode=TwoWay}"
-                                        RadiusX="10"
-                                        RadiusY="10"
-                                        />
-                                </Path.Data>
-                            </Path>
+                            <ContentControl Content="{Binding}">
+                                <ContentControl.Style>
+                                    <Style TargetType="{x:Type ContentControl}">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource Points}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding GraphicType}" Value="LINE">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource Lines}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+
+
+
+
 
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

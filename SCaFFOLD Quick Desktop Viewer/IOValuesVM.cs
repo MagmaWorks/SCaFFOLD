@@ -167,6 +167,9 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
                     _selectionList = (calcValue as CalcSelectionList).SelectionList;
                     this._type = "SELECTIONLIST";
                     break;
+                case CalcDoubleMultiArray:
+                    this._type = "DOUBLEMULTIARRAY";
+                    break;
                 default:
                     break;
             }

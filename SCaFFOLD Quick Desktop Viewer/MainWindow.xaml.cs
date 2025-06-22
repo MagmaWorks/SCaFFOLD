@@ -30,6 +30,7 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         //temp testing drag and move geometry
         Point pt;
         Path myShape;
+        bool isMoving = false;
 
         public MainWindow()
         {
@@ -47,13 +48,39 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             pt = args.GetPosition(canvas);
             HitTestResult result = VisualTreeHelper.HitTest(canvas, pt);
             myShape = result.VisualHit as Path;
+            if (myShape != null)
+            {
+                isMoving = true;
+            }
         }
 
         void LeftButtonUp(object sender, MouseButtonEventArgs args)
         {
+            if (!isMoving) return;
             var canvas = sender as Canvas;
             var pt2 = args.GetPosition(canvas);
             (myShape.Data as EllipseGeometry).Center = pt + (pt2 - pt);
+            isMoving = false;
         }
+
+        void MouseOnTheMove(object sender, MouseEventArgs args)
+        {
+            if (!isMoving) return;
+
+            var canvas = sender as Canvas;
+            var pt2 = args.GetPosition(canvas);
+            (myShape.Data as EllipseGeometry).Center = pt + (pt2 - pt);
+
+        }
+
+        void MouseLeavesCanvas(object sender, MouseEventArgs args)
+        {
+            if (!isMoving) return;
+
+            (myShape.Data as EllipseGeometry).Center = pt;
+            isMoving = false;
+
+        }
+
     }
 }

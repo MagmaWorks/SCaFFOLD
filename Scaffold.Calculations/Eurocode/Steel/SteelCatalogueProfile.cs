@@ -9,6 +9,7 @@ using Scaffold.Core.Interfaces;
 using Scaffold.Core.CalcQuantities;
 using Scaffold.Core.Models;
 using System;
+using MagmaWorks.Geometry;
 
 namespace Scaffold.Calculations.Eurocode.Steel
 {
@@ -49,15 +50,11 @@ namespace Scaffold.Calculations.Eurocode.Steel
         }
 
 
-        // for testing interactive image
+        //testing interactive graphic
         [InputCalcValue]
-        public CalcLength X1 { get; set; } = new CalcLength(50, UnitsNet.Units.LengthUnit.Millimeter, "X coordinate 1", "X1");
+        public CalcDoubleMultiArray Points { get; set; } = new CalcDoubleMultiArray(new List<double[]>() { new double[2] { 50, 50 } }, "Points");
         [InputCalcValue]
-        public CalcLength Y1 { get; set; } = new CalcLength(100, UnitsNet.Units.LengthUnit.Millimeter, "Y coordinate 1", "Y1");
-        [InputCalcValue]
-        public CalcLength X2 { get; set; } = new CalcLength(75, UnitsNet.Units.LengthUnit.Millimeter, "X coordinate 2", "X2");
-        [InputCalcValue]
-        public CalcLength Y2 { get; set; } = new CalcLength(200, UnitsNet.Units.LengthUnit.Millimeter, "Y coordinate 2", "Y2");
+        public CalcDoubleMultiArray Points2 { get; set; } = new CalcDoubleMultiArray(new List<double[]>() { new double[2] { 100, 50 } }, "Points2");
 
 
         [OutputCalcValue]
@@ -78,14 +75,35 @@ namespace Scaffold.Calculations.Eurocode.Steel
         public IList<IFormula> GetFormulae()
         {
             return new List<IFormula>() {
-                new Formula("", "", "", "X1 = " + X1.Value),
-                new Formula("", "", "", "Y1 = " + Y1.Value),
-                new Formula("", "", "", "X2 = " + X2.Value),
-                new Formula("", "", "", "Y2 = " + Y2.Value),
-                new Formula("", "Distance apart", "", Math.Sqrt(Math.Pow((X2.Value - X1.Value),2) + Math.Pow((Y2.Value-Y1.Value),2)).ToString())
+                new Formula("", "", "", "X1 = " + Points.Value[0][0]),
+                new Formula("", "", "", "Y1 = " + Points.Value[0][1]),
+                new Formula("", "", "", "X2 = " + Points2.Value[0][0]),
+                new Formula("", "", "", "Y2 = " + Points2.Value[0][1]),
+                new Formula("", "Distance apart", "", Math.Sqrt(Math.Pow((Points2.Value[0][0] - Points.Value[0][0]),2) + Math.Pow((Points2.Value[0][1] - Points.Value[0][1]),2)).ToString())
             };
         }
 
         public void Calculate() { }
+
+        public IList<ICalcGraphic> GetGraphic()
+        {
+            var returnValue = new List<ICalcGraphic>();
+            returnValue.Add(new CalcGraphic(
+                new List<MagmaWorks.Geometry.IGeometryBase>()
+                {
+                    new Line2d(new Point2d(25, 25, UnitsNet.Units.LengthUnit.Millimeter), new Point2d(100, 25, UnitsNet.Units.LengthUnit.Millimeter)),
+                    new Line2d(
+                        new Point2d(Points.Value[0][0], Points.Value[0][1], UnitsNet.Units.LengthUnit.Millimeter),
+                        new Point2d(Points2.Value[0][0], Points2.Value[0][1], UnitsNet.Units.LengthUnit.Millimeter))
+                },
+                new List<CalcDoubleMultiArray>()
+                {
+                    Points,
+                    Points2
+                })
+            );
+
+            return returnValue;
+        }
     }
 }

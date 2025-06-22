@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using MagmaWorks.Geometry;
 using Scaffold.Core;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Interfaces;
@@ -86,13 +87,28 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
 
             // testing interactive image logic
             _interactivePoints = new List<InteractiveImagePointVM>();
-            _interactivePoints.Add(new InteractiveImagePointVM(inputsList[2] as ICalcQuantity, inputsList[3] as ICalcQuantity, this));
-            _interactivePoints.Add(new InteractiveImagePointVM(inputsList[4] as ICalcQuantity, inputsList[5] as ICalcQuantity, this));
+            var graphics = calculation.GetGraphic();
+            foreach (var item in graphics[0].ControlPoints)
+            {
+                _interactivePoints.Add(new InteractiveImagePointVM(item, this));
+            }
+            foreach (var item in graphics[0].Geometry)
+            {
+                switch (item)
+                {
+                    case Line2d:
+                        _interactivePoints.Add(new InteractiveImagePointVM(item as Line2d, this));
+                        break;
+                    default:
+                        break;
 
-            UpdateOutputs();
+                }
+
+
+                UpdateOutputs();
+            }
+
         }
-
-
         public void UpdateOutputs()
         {
             //Outputs = new ObservableCollection<IOValues>();
@@ -117,6 +133,11 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             {
                 item.Refresh();
             }
+            foreach(var item in _interactivePoints)
+            {
+                item.Refresh();
+            }
+
             //RaisePropertyChanged(nameof(TestGroup));
             //if (this.calc.Get3DModels().Count > 0)
             //{

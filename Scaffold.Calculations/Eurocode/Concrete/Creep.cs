@@ -151,4 +151,9 @@ public class Creep : ICalculation
 
         CreepCoefficient = NotionalCreepCoefficient * CreepTimeCoefficient;
     }
+
+    public IList<ICalcGraphic> GetGraphic()
+    {
+        return new List<ICalcGraphic>();
+    }
 }

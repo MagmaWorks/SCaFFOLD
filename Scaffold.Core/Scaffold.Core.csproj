@@ -27,6 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MagmaWorks.Geometry" Version="0.1.0" />
     <PackageReference Include="MagmaWorks.Taxonomy.Cases" Version="0.1.8" />
     <PackageReference Include="MagmaWorks.Taxonomy.Loads" Version="0.1.8" />
     <PackageReference Include="MagmaWorks.Taxonomy.Materials" Version="0.1.8" />
