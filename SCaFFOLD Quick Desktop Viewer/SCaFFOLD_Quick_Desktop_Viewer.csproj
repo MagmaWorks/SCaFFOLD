@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>SCaFFOLD_Quick_Desktop_Viewer</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MagmaWorks.Geometry" Version="0.1.0" />
+    <PackageReference Include="WpfMath" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Scaffold.Calculations\Scaffold.Calculations.csproj" />
+    <ProjectReference Include="..\Scaffold.Core\Scaffold.Core.csproj" />
+  </ItemGroup>
+
+</Project>

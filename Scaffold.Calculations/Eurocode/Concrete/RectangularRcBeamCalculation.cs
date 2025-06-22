@@ -396,4 +396,9 @@ public class RectangularRcBeamCalculation : ICalculation
             new Dictionary<string, double> { { @"C30/40", 30 }, { @"C35/42", 35 }, { @"C40/50", 40 } };
         return concGradeToStrength[grade];
     }
+
+    public IList<ICalcGraphic> GetGraphic()
+    {
+        return new List<ICalcGraphic>();
+    }
 }

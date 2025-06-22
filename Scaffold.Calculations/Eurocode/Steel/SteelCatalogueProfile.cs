@@ -6,6 +6,10 @@ using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcValues;
 using Scaffold.Core.Enums;
 using Scaffold.Core.Interfaces;
+using Scaffold.Core.CalcQuantities;
+using Scaffold.Core.Models;
+using System;
+using MagmaWorks.Geometry;
 
 namespace Scaffold.Calculations.Eurocode.Steel
 {
@@ -45,6 +49,14 @@ namespace Scaffold.Calculations.Eurocode.Steel
             }
         }
 
+
+        //testing interactive graphic
+        [InputCalcValue]
+        public CalcDoubleMultiArray Points { get; set; } = new CalcDoubleMultiArray(new List<double[]>() { new double[2] { 50, 50 } }, "Points");
+        [InputCalcValue]
+        public CalcDoubleMultiArray Points2 { get; set; } = new CalcDoubleMultiArray(new List<double[]>() { new double[2] { 100, 50 } }, "Points2");
+
+
         [OutputCalcValue]
         public CalcObjectWrapper<IEuropeanCatalogue> Profile =>
             new((IEuropeanCatalogue)CatalogueFactory.CreateEuropean(ProfileType.GetEnum<European>()),
@@ -62,9 +74,36 @@ namespace Scaffold.Calculations.Eurocode.Steel
 
         public IList<IFormula> GetFormulae()
         {
-            return new List<IFormula>();
+            return new List<IFormula>() {
+                new Formula("", "", "", "X1 = " + Points.Value[0][0]),
+                new Formula("", "", "", "Y1 = " + Points.Value[0][1]),
+                new Formula("", "", "", "X2 = " + Points2.Value[0][0]),
+                new Formula("", "", "", "Y2 = " + Points2.Value[0][1]),
+                new Formula("", "Distance apart", "", Math.Sqrt(Math.Pow((Points2.Value[0][0] - Points.Value[0][0]),2) + Math.Pow((Points2.Value[0][1] - Points.Value[0][1]),2)).ToString())
+            };
         }
 
         public void Calculate() { }
+
+        public IList<ICalcGraphic> GetGraphic()
+        {
+            var returnValue = new List<ICalcGraphic>();
+            returnValue.Add(new CalcGraphic(
+                new List<MagmaWorks.Geometry.IGeometryBase>()
+                {
+                    new Line2d(new Point2d(25, 25, UnitsNet.Units.LengthUnit.Millimeter), new Point2d(100, 25, UnitsNet.Units.LengthUnit.Millimeter)),
+                    new Line2d(
+                        new Point2d(Points.Value[0][0], Points.Value[0][1], UnitsNet.Units.LengthUnit.Millimeter),
+                        new Point2d(Points2.Value[0][0], Points2.Value[0][1], UnitsNet.Units.LengthUnit.Millimeter))
+                },
+                new List<CalcDoubleMultiArray>()
+                {
+                    Points,
+                    Points2
+                })
+            );
+
+            return returnValue;
+        }
     }
 }

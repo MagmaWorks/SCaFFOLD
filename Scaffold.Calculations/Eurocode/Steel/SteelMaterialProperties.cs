@@ -85,5 +85,10 @@ namespace Scaffold.Calculations.Eurocode.Steel
         }
 
         public void Calculate() { }
+
+        public IList<ICalcGraphic> GetGraphic()
+        {
+            return new List<ICalcGraphic>();
+        }
     }
 }

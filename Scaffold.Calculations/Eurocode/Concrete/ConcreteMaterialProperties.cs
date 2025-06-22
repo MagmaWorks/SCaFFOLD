@@ -122,5 +122,10 @@ namespace Scaffold.Calculations.Eurocode.Concrete
 
         private Pressure GetStrength() => new Pressure(
             double.Parse(Material.Grade.ToString().Split('C', '_')[1]), _unit);
+
+        public IList<ICalcGraphic> GetGraphic()
+        {
+            return new List<ICalcGraphic>();
+        }
     }
 }
