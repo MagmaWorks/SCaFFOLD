@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Scaffold.Calculations;
+using Scaffold.Calculations.Eurocode.Steel;
 using Scaffold.Core;
 using Scaffold.Core.Interfaces;
 
@@ -26,14 +27,33 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         ICalculation calc;
         CalcViewModel viewModel;
 
+        //temp testing drag and move geometry
+        Point pt;
+        Path myShape;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            calc = new TestCalculation();
+            calc = new SteelCatalogueProfile();
             calc.Calculate();
             viewModel = new CalcViewModel(calc);
             this.DataContext = viewModel;
+        }
+
+        void LeftButtonDown(object sender, MouseButtonEventArgs args)
+        {
+            var canvas = sender as Canvas;
+            pt = args.GetPosition(canvas);
+            HitTestResult result = VisualTreeHelper.HitTest(canvas, pt);
+            myShape = result.VisualHit as Path;
+        }
+
+        void LeftButtonUp(object sender, MouseButtonEventArgs args)
+        {
+            var canvas = sender as Canvas;
+            var pt2 = args.GetPosition(canvas);
+            (myShape.Data as EllipseGeometry).Center = pt + (pt2 - pt);
         }
     }
 }

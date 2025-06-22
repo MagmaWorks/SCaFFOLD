@@ -50,6 +50,14 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             }
         }
 
+        // testing interactive image idea
+        List<InteractiveImagePointVM> _interactivePoints;
+        public List<InteractiveImagePointVM> InteractivePoints
+        {
+            get => _interactivePoints;
+            set { _interactivePoints = value; }
+        }
+
         ObservableCollection<IOValues> outputs;
         public ObservableCollection<IOValues> Outputs
         {
@@ -68,16 +76,22 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         {
             this.calculation = calculation;
             reader.GetFormulae(calculation);
+            var inputsList = reader.GetInputs(calculation);
 
             Inputs = new List<IOValues>();
-            foreach (var item in reader.GetInputs(calculation))
+            foreach (var item in inputsList)
             {
                 Inputs.Add(new IOValues(item, calculation, this));
             }
 
+            // testing interactive image logic
+            _interactivePoints = new List<InteractiveImagePointVM>();
+            _interactivePoints.Add(new InteractiveImagePointVM(inputsList[2] as ICalcQuantity, inputsList[3] as ICalcQuantity, this));
+            _interactivePoints.Add(new InteractiveImagePointVM(inputsList[4] as ICalcQuantity, inputsList[5] as ICalcQuantity, this));
 
             UpdateOutputs();
         }
+
 
         public void UpdateOutputs()
         {
@@ -98,6 +112,11 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
                 _formulae.Add(new FormulaeVM() { Expression = item.Expression, Ref = item.Reference, Conclusion = item.Conclusion, Narrative = item.Narrative, Status = item.Status, Image = im });
             }
             RaisePropertyChanged(nameof(Formulae));
+
+            foreach (var item in inputs)
+            {
+                item.Refresh();
+            }
             //RaisePropertyChanged(nameof(TestGroup));
             //if (this.calc.Get3DModels().Count > 0)
             //{

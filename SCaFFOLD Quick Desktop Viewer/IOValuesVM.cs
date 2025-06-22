@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
             {
                 calcValue.TryParse(value);
                 calc.Calculate();
-                //RaisePropertyChanged(nameof(Value));
+                RaisePropertyChanged(nameof(Value));
                 //RaisePropertyChanged(nameof(ValueRounded));
                 calcVM.UpdateOutputs();
             }
@@ -134,6 +135,23 @@ namespace SCaFFOLD_Quick_Desktop_Viewer
         //        return calcValue.Status;
         //    }
         //}
+
+        public void Refresh()
+        {
+            switch (calcValue)
+            {
+                case CalcSelectionList:
+                    _selectionList = (calcValue as CalcSelectionList).SelectionList;
+                    break;
+                default:
+                    break;
+            }
+
+
+
+            RaisePropertyChanged(nameof(SelectionList));
+            RaisePropertyChanged(nameof(Value));
+        }
 
         public IOValues(ICalcValue calcValue, ICalculation calc, ICalcViewParent calcVM)
         {
