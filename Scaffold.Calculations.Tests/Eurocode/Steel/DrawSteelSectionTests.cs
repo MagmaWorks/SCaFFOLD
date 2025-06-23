@@ -8,7 +8,7 @@ public class DrawSteelSectionTests
     public void CalculationBaseSetupTest()
     {
         // Assemble
-        var calc = new DrawSteelSection();
+        var calc = new SteelCatalogueSection();
 
         // Act
         CalculationMetadata metadata = Reader.GetMetadata(calc);
@@ -26,7 +26,7 @@ public class DrawSteelSectionTests
     public void DrawSectionTests()
     {
         // Assemble
-        var calc = new DrawSteelSection();
+        var calc = new SteelCatalogueSection();
         var input = new SteelCatalogueProfile();
 
         // Act

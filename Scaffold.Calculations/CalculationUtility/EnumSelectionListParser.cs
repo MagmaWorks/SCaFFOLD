@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
+using MagmaWorks.Taxonomy.Sections;
 using MagmaWorks.Taxonomy.Sections.Reinforcement;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Core.CalcValues;
@@ -15,12 +16,14 @@ namespace Scaffold.Calculations.CalculationUtility
         .Select(v => v.ToString().Replace("D", string.Empty)).ToList();
         internal static readonly List<string> ConcreteGrades = Enum.GetValues(typeof(EnConcreteGrade)).Cast<EnConcreteGrade>()
             .Select(v => v.ToString().Replace("_", "/")).ToList();
+        internal static readonly List<string> NationalAnnexes = Enum.GetValues(typeof(NationalAnnex)).Cast<NationalAnnex>()
+            .Select(v => SplitCamelCase(v.ToString())).ToList();
         internal static readonly List<string> RebarGrades = Enum.GetValues(typeof(EnRebarGrade)).Cast<EnRebarGrade>()
+            .Select(v => v.ToString()).ToList();
+        internal static readonly List<string> SectionFaces = Enum.GetValues(typeof(SectionFace)).Cast<SectionFace>()
             .Select(v => v.ToString()).ToList();
         internal static readonly List<string> SteelGrades = Enum.GetValues(typeof(EnSteelGrade)).Cast<EnSteelGrade>()
             .Select(v => v.ToString()).ToList();
-        internal static readonly List<string> NationalAnnexes = Enum.GetValues(typeof(NationalAnnex)).Cast<NationalAnnex>()
-            .Select(v => SplitCamelCase(v.ToString())).ToList();
 
         internal static T GetEnum<T>(this CalcSelectionList list,
             string replaceOld = "", string replaceNew = "",

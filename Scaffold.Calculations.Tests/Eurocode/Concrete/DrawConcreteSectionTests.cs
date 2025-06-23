@@ -1,3 +1,5 @@
+using Scaffold.Calculations.Sections.Concrete;
+
 namespace Scaffold.Calculations.Eurocode.Steel;
 
 public class DrawConcreteSectionTests
@@ -8,7 +10,7 @@ public class DrawConcreteSectionTests
     public void CalculationBaseSetupTest()
     {
         // Assemble
-        var calc = new DrawConcreteSection();
+        var calc = new ConcreteSection();
 
         // Act
         CalculationMetadata metadata = Reader.GetMetadata(calc);
@@ -27,7 +29,7 @@ public class DrawConcreteSectionTests
     {
         // Assemble
         // Act
-        var calc = new DrawConcreteSection();
+        var calc = new ConcreteSection();
 
         // Assert
         Assert.NotNull(calc.GetFormulae().FirstOrDefault());
