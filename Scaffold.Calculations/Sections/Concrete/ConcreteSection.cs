@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
-using MagmaWorks.Geometry;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
-using MagmaWorks.Taxonomy.Sections.Reinforcement;
-using MagmaWorks.Taxonomy.Sections.SectionProperties.Utility;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Calculations.CalculationUtility;
 using Scaffold.Calculations.Sections.Concrete.Reinforcement;
@@ -25,7 +21,7 @@ using UnitsNet;
 using UnitsNet.Units;
 
 namespace Scaffold.Calculations.Sections.Concrete;
-public class ConcreteSection : CalculationObjectInput<CalcConcreteSection>
+public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
 {
     [InputCalcValue("Grd", "Grade")]
     public CalcSelectionList ConcreteGrade { get; set; }
@@ -60,7 +56,7 @@ public class ConcreteSection : CalculationObjectInput<CalcConcreteSection>
         return new List<IFormula>() { formula };
     }
 
-    protected override CalcConcreteSection GetOutput()
+    protected override CalcConcreteSection InitialiseOutput()
     {
         var material = new CalcEnConcreteMaterial(ConcreteGrade.GetEnum<EnConcreteGrade>("/", "_"),
                                        NationalAnnex.RecommendedValues, "Concrete", "C");
@@ -72,5 +68,4 @@ public class ConcreteSection : CalculationObjectInput<CalcConcreteSection>
     }
 
     public ConcreteSection() { }
-
 }

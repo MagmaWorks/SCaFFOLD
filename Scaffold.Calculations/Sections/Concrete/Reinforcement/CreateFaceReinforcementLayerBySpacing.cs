@@ -8,7 +8,7 @@ using Scaffold.Core.CalcValues;
 using UnitsNet.Units;
 
 namespace Scaffold.Calculations.Sections.Concrete.Reinforcement;
-public class CreateFaceReinforcementLayerBySpacing : CalculationObjectInput<CalcFaceReinforcementLayer>
+public class CreateFaceReinforcementLayerBySpacing : CalcObjectInput<CalcFaceReinforcementLayer>
 {
     [InputCalcValue("Face", "Section Face")]
     public CalcSelectionList SectionFace { get; set; }
@@ -22,7 +22,7 @@ public class CreateFaceReinforcementLayerBySpacing : CalculationObjectInput<Calc
 
     public CreateFaceReinforcementLayerBySpacing() { }
 
-    protected override CalcFaceReinforcementLayer GetOutput()
+    protected override CalcFaceReinforcementLayer InitialiseOutput()
     {
         SectionFace face = SectionFace.GetEnum<SectionFace>();
         return new CalcFaceReinforcementLayer(face, Rebar, Spacing, ReferenceName ?? string.Empty);

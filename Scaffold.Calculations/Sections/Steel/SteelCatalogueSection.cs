@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
-using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Calculations.CalculationUtility;
 using Scaffold.Calculations.Sections.Steel.Catalogue;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Attributes;
-using Scaffold.Core.CalcObjects;
 using Scaffold.Core.CalcObjects.Materials.StandardMaterials.En;
 using Scaffold.Core.CalcObjects.Sections;
 using Scaffold.Core.CalcValues;
@@ -17,16 +15,17 @@ using Scaffold.Core.Interfaces;
 using Scaffold.Core.Models;
 using SkiaSharp;
 
-namespace Scaffold.Calculations.Eurocode.Steel;
-public class SteelCatalogueSection : CalculationObjectInput<CalcSection>
+namespace Scaffold.Calculations.Sections.Steel;
+public class SteelCatalogueSection : CalcObjectInput<CalcSection>
 {
+    public override string CalculationName { get; set; } = "Steel Catalogue Section";
 
     [InputCalcValue("Grd", "Steel Grade")]
     public CalcSelectionList SteelGrade { get; set; }
-        = new CalcSelectionList("Catalogue", "UB", EnumSelectionListParser.SteelGrades);
+        = new CalcSelectionList("Steel Grade", "S355", EnumSelectionListParser.SteelGrades);
 
     [InputCalcValue]
-    public CalcObjectWrapper<IEuropeanCatalogue> Profile { get; set; } = new CreateEuropeanCatalogueProfile();
+    public CreateEuropeanCatalogueProfile Profile { get; set; } = new CreateEuropeanCatalogueProfile();
 
     public override IList<IFormula> GetFormulae()
     {
@@ -40,10 +39,10 @@ public class SteelCatalogueSection : CalculationObjectInput<CalcSection>
 
     public SteelCatalogueSection() { }
 
-    protected override CalcSection GetOutput()
+    protected override CalcSection InitialiseOutput()
     {
         var material = new CalcEnSteelMaterial(SteelGrade.GetEnum<EnSteelGrade>(),
                         NationalAnnex.RecommendedValues, "Steel", "S");
-       return new CalcSection(Profile.Value, material, "Steel Section");
+       return new CalcSection(Profile.Output.Value, material, "Steel Section");
     }
 }

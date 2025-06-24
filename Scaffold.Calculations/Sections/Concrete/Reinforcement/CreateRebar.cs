@@ -9,20 +9,19 @@ using Scaffold.Core.CalcValues;
 using UnitsNet;
 
 namespace Scaffold.Calculations.Sections.Concrete.Reinforcement;
-public class CreateRebar : CalculationObjectInput<CalcRebar>
+public class CreateRebar : CalcObjectInput<CalcRebar>
 {
-
     [InputCalcValue("Grd", "Grade")]
     public CalcSelectionList RebarGrade { get; set; }
             = new CalcSelectionList("Rebar Grade", "B500B", EnumSelectionListParser.RebarGrades);
 
-    [InputCalcValue]
+    [InputCalcValue("Ø", "Diameter")]
     public CalcSelectionList BarDiameter { get; set; }
-            = new CalcSelectionList("Rebar Grade", "12", EnumSelectionListParser.BarDiameters);
+            = new CalcSelectionList("Bar Diameter", "12", EnumSelectionListParser.BarDiameters);
 
-    protected override CalcRebar GetOutput()
+    protected override CalcRebar InitialiseOutput()
     {
-        EnRebarGrade grade = RebarGrade.GetEnum<EnRebarGrade>(string.Empty, string.Empty, "D");
+        EnRebarGrade grade = RebarGrade.GetEnum<EnRebarGrade>();
         var material = new EnRebarMaterial(grade, NationalAnnex.UnitedKingdom);
         Length diameter = Length.Parse($"{BarDiameter.Value}mm");
         return new CalcRebar(material, diameter, ReferenceName ?? string.Empty);
