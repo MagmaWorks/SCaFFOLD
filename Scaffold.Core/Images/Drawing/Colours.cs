@@ -4,11 +4,11 @@ namespace Scaffold.Core.Images.Drawing
 {
     public static class Colours
     {
-        public static SKColor ConcreteFill => GreyMedium;
-        public static SKColor ConcreteOutline => GreyDark;
-        public static SKColor RebarFill => GreyDark;
-        public static SKColor SteelFill => new SKColor(216, 190, 189);
-        public static SKColor SteelOutline => Red;
+        public static SKColor ConcreteFill { get; set; } = GreyMedium;
+        public static SKColor ConcreteOutline { get; set; } = GreyDark;
+        public static SKColor RebarFill { get; set; } = GreyDark;
+        public static SKColor SteelFill { get; set; } = new SKColor(216, 190, 189);
+        public static SKColor SteelOutline { get; set; } = Red;
 
         public static SKColor Green => new SKColor(72, 166, 95);
         public static SKColor Red => new SKColor(237, 61, 59);
