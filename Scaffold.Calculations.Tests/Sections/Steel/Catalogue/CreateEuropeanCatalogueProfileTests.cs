@@ -27,7 +27,7 @@ public class CreateEuropeanCatalogueProfileTests
 
     [Theory]
     [InlineData(0, typeof(CalcSelectionList), "Prfl", "Profile")]
-    public void CalculationInputTests(int id, Type expectedType, string expectedSymbol, string expectedDisplayName)
+    public void CalculationInputTests(string expectedDisplayName)
     {
         // Assemble
         var calc = new CreateEuropeanCatalogueProfile();
