@@ -49,10 +49,10 @@ public class SteelCatalogueSectionTests
         var calc = new SteelCatalogueSection();
 
         // Act
-        calc.Profile.ProfileType.CatalogueType.Value = "HEB";
+        calc.Profile.Profile.CatalogueType.Value = "HEB";
 
         //// Assert
-        Assert.Equal("HE100B", calc.Profile.ProfileType.Output.Value);
+        Assert.Equal("HE100B", calc.Profile.Profile.Output.Value);
     }
 
     [Fact]
@@ -62,8 +62,8 @@ public class SteelCatalogueSectionTests
         var calc = new SteelCatalogueSection();
 
         // Act
-        calc.Profile.ProfileType.CatalogueType.Value = "HEB";
-        calc.Profile.ProfileType.Output.Value = "HE200B";
+        calc.Profile.Profile.CatalogueType.Value = "HEB";
+        calc.Profile.Profile.Output.Value = "HE200B";
 
         // Assert
         Assert.IsType<HE200B>(calc.Output.Profile);
@@ -77,19 +77,19 @@ public class SteelCatalogueSectionTests
         var calc = new SteelCatalogueSection();
 
         // Act
-        calc.Profile.ProfileType.CatalogueType.Value = catalogue;
+        calc.Profile.Profile.CatalogueType.Value = catalogue;
 
         // Assert
-        Assert.Equal(catalogue, calc.Profile.ProfileType.CatalogueType.Value);
-        Assert.True(calc.Profile.ProfileType.Output.SelectionList.Count > 10);
+        Assert.Equal(catalogue, calc.Profile.Profile.CatalogueType.Value);
+        Assert.True(calc.Profile.Profile.Output.SelectionList.Count > 10);
         Assert.NotNull(calc.Profile);
 
         // select each profile in catalogue type
-        foreach (string prfl in calc.Profile.ProfileType.Output.SelectionList)
+        foreach (string prfl in calc.Profile.Profile.Output.SelectionList)
         {
-            calc.Profile.ProfileType.Output.Value = prfl;
+            calc.Profile.Profile.Output.Value = prfl;
             Assert.NotNull(calc.Profile);
-            Assert.Equal(prfl, calc.Profile.ProfileType.Output.Value);
+            Assert.Equal(prfl, calc.Profile.Profile.Output.Value);
         }
     }
 

@@ -7,16 +7,18 @@ using Scaffold.Core.CalcObjects;
 namespace Scaffold.Calculations.Sections.Steel.Catalogue;
 public class CreateEuropeanCatalogueProfile : CalcObjectInput<CalcObjectWrapper<IEuropeanCatalogue>>
 {
-    [InputCalcValue("Cat", "Catalogue")]
+    public override string CalculationName { get; set; } = "European Catalogue Profile";
+
+    [InputCalcValue("Prfl", "Profile")]
     // this is a CalcSelectionsList (ProfileType) but needs to be passed as a type so maintain access
     // to the underlying CalcSelectionList (CatalogueType)
-    public CreateEuropeanCatalogues ProfileType { get; set; } = new CreateEuropeanCatalogues();
+    public CreateEuropeanCatalogueProfileType Profile { get; set; } = new CreateEuropeanCatalogueProfileType();
 
     public CreateEuropeanCatalogueProfile() { }
 
     protected override CalcObjectWrapper<IEuropeanCatalogue> InitialiseOutput()
     {
-        return new(CatalogueFactory.CreateEuropean(ProfileType.Output.GetEnum<European>()),
-                   "Catalogue Profile", ProfileType.Output);
+        return new(CatalogueFactory.CreateEuropean(Profile.Output.GetEnum<European>()),
+                   "Catalogue Profile", Profile.Output);
     }
 }

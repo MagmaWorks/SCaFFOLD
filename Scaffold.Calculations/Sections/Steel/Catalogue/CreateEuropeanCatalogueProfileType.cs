@@ -4,13 +4,15 @@ using Scaffold.Core.Attributes;
 using Scaffold.Core.CalcValues;
 
 namespace Scaffold.Calculations.Sections.Steel.Catalogue;
-public class CreateEuropeanCatalogues : CalcObjectInput<CalcSelectionList>
+public class CreateEuropeanCatalogueProfileType : CalcObjectInput<CalcSelectionList>
 {
-    [InputCalcValue("Cat", "Catalogue")]
-    public CalcSelectionList CatalogueType { get; set; }
-            = new CalcSelectionList("Catalogue", "UB", CatalogueProfileSelectionList.Catalogues);
+    public override string CalculationName { get; set; } = "European Catalogue Profile Type";
 
-    public CreateEuropeanCatalogues() { }
+    [InputCalcValue("Typ", "Profile Type")]
+    public CalcSelectionList CatalogueType { get; set; }
+            = new CalcSelectionList("Profile Type", "UB", CatalogueProfileSelectionList.Catalogues);
+
+    public CreateEuropeanCatalogueProfileType() { }
 
     protected override CalcSelectionList InitialiseOutput()
     {
