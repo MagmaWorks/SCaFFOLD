@@ -43,6 +43,6 @@ public class SteelCatalogueSection : CalcObjectInput<CalcSection>
     {
         var material = new CalcEnSteelMaterial(SteelGrade.GetEnum<EnSteelGrade>(),
                         NationalAnnex.RecommendedValues, "Steel", "S");
-       return new CalcSection(Profile.Output.Value, material, "Steel Section");
+        return new CalcSection(Profile.Output.Value, material, "Steel Section");
     }
 }
