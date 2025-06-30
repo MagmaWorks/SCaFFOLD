@@ -1,17 +1,16 @@
-﻿using MagmaWorks.Taxonomy.Materials;
-using MagmaWorks.Taxonomy.Profiles;
-using MagmaWorks.Taxonomy.Sections;
+﻿using MagmaWorks.Taxonomy.Profiles;
 using SkiaSharp;
 
 namespace Scaffold.Core.Images.Drawing
 {
     public static class Profiles
     {
-        public static ICalcImage DrawProfile(this IProfile profile, SKColor fillColour, SKColor strokeColour)
+        public static ICalcImage DrawProfile(this IProfile profile, SKColor stroke, SKColor fill)
         {
             var path = new SKPath();
             path.AddProfile(profile);
-            return path.DrawFilledPath(strokeColour, fillColour);
+            var styledPath = new StyledPath(path, stroke, fill);
+            return styledPath.DrawFilledPath();
         }
 
         public static void AddProfile(this SKPath path, IProfile profile, LengthUnit unit = LengthUnit.Millimeter)

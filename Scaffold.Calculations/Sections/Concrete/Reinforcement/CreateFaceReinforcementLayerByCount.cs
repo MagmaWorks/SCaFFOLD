@@ -22,6 +22,11 @@ public class CreateFaceReinforcementLayerByCount : CalcObjectInput<CalcFaceReinf
 
     public CreateFaceReinforcementLayerByCount() { }
 
+    public CreateFaceReinforcementLayerByCount(SectionFace face)
+    {
+        SectionFace.Value = face.ToString();
+    }
+
     protected override CalcFaceReinforcementLayer InitialiseOutput()
     {
         SectionFace face = SectionFace.GetEnum<SectionFace>();

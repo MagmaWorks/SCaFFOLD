@@ -1,5 +1,7 @@
 ﻿using MagmaWorks.Taxonomy.Materials;
+using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Sections;
+using MagmaWorks.Taxonomy.Sections.Reinforcement;
 using SkiaSharp;
 
 namespace Scaffold.Core.Images.Drawing
@@ -19,23 +21,49 @@ namespace Scaffold.Core.Images.Drawing
             path.AddProfile(section.Profile);
 
             (SKColor stroke, SKColor fill) = GetMaterialColours(section.Material);
-            return path.DrawFilledPath(stroke, fill);
+            var styledPath = new StyledPath(path, stroke, fill);
+            return styledPath.DrawFilledPath();
         }
 
         public static ICalcImage DrawConcreteSection(this IConcreteSection section)
         {
             var path = new SKPath();
             path.AddProfile(section.Profile);
+            (SKColor stroke, SKColor fill) = GetMaterialColours(section.Material);
+            var edge = new StyledPath(path, stroke, fill);
+            var internals = new List<StyledPath>();
 
-            var rebarPath = new SKPath();
-            foreach (var rebar in section.Rebars)
+            if (section.Link != null)
             {
-                rebarPath.AddCircle((float)rebar.Position.Y.As(Unit), (float)rebar.Position.Z.As(Unit),
-                    (float)rebar.Rebar.Diameter.As(Unit) / 2);
+                var perimeter = new Perimeter(section.Profile);
+                var outerPath = new SKPath();
+                outerPath.AddPath(perimeter.OuterEdge.Offset(-section.Cover));
+                double mandrelFactor = section.Link.Diameter.Millimeters > 16
+                    ? 7
+                    : 4;
+                internals.Add(new StyledPath(outerPath, stroke) {
+                    Fillet = (mandrelFactor + 0.5) * section.Link.Diameter.Millimeters
+                });
+                var innerPath = new SKPath();
+                innerPath.AddPath(perimeter.OuterEdge.Offset(-section.Cover - section.Link.Diameter));
+                internals.Add(new StyledPath(innerPath, stroke) {
+                    Fillet = (mandrelFactor - 0.5) * section.Link.Diameter.Millimeters
+                });
             }
 
-            (SKColor stroke, SKColor fill) = GetMaterialColours(section.Material);
-            return DrawingUtiliy.DrawFilledPaths(path, stroke, fill, rebarPath, stroke, Colours.RebarFill);
+            if (section.Rebars != null && section.Rebars.Count > 0)
+            {
+                var rebarPath = new SKPath();
+                foreach (ILongitudinalReinforcement rebar in section.Rebars)
+                {
+                    rebarPath.AddCircle((float)rebar.Position.Y.As(Unit), (float)rebar.Position.Z.As(Unit),
+                        (float)rebar.Rebar.Diameter.As(Unit) / 2);
+                }
+
+                internals.Add(new StyledPath(rebarPath, stroke, Colours.RebarFill));
+            }
+
+            return StyledPath.DrawFilledPaths(edge, internals);
         }
 
         private static (SKColor Stroke, SKColor Fill) GetMaterialColours(IMaterial material)

@@ -63,4 +63,19 @@ public class CreateFaceReinforcementLayerBySpacingTests
         Assert.Equal((double)BarDiameter.D40, calc.Output.Layout.Rebar.Diameter.Millimeters);
         Assert.Equal(150, ((ReinforcementLayoutBySpacing)calc.Output.Layout).MaximumSpacing.Millimeters);
     }
+
+    [Theory]
+    [InlineData(SectionFace.Bottom)]
+    [InlineData(SectionFace.Top)]
+    [InlineData(SectionFace.Left)]
+    [InlineData(SectionFace.Right)]
+    public void AdditionalConstructorTest(SectionFace face)
+    {
+        // Assemble
+        // Act
+        var calc = new CreateFaceReinforcementLayerBySpacing(face);
+
+        // Assert
+        Assert.Equal(face, calc.Output.Face);
+    }
 }

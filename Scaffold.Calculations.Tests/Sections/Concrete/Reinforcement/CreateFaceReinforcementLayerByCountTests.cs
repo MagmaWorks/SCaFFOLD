@@ -63,4 +63,19 @@ public class CreateFaceReinforcementLayerByCountTests
         Assert.Equal((double)BarDiameter.D16, calc.Output.Layout.Rebar.Diameter.Millimeters);
         Assert.Equal(6, ((ReinforcementLayoutByCount)calc.Output.Layout).NumberOfBars);
     }
+
+    [Theory]
+    [InlineData(SectionFace.Bottom)]
+    [InlineData(SectionFace.Top)]
+    [InlineData(SectionFace.Left)]
+    [InlineData(SectionFace.Right)]
+    public void AdditionalConstructorTest(SectionFace face)
+    {
+        // Assemble
+        // Act
+        var calc = new CreateFaceReinforcementLayerByCount(face);
+
+        // Assert
+        Assert.Equal(face, calc.Output.Face);
+    }
 }

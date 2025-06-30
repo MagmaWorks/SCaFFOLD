@@ -12,6 +12,12 @@ namespace Scaffold.Core.Images.Drawing
             return path;
         }
 
+        public static SKPath AddPath(this SKPath path, ILocalPolyline2d polygon, LengthUnit unit = LengthUnit.Millimeter)
+        {
+            path.AddPoly(ConvertPoints(polygon, unit));
+            return path;
+        }
+
         public static SKPath ConvertToPath(this IPolyline2d polygon, LengthUnit unit = LengthUnit.Millimeter)
         {
             var path = new SKPath();

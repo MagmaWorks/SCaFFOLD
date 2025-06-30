@@ -25,6 +25,11 @@ public class CreateFaceReinforcementLayerBySpacing : CalcObjectInput<CalcFaceRei
 
     public CreateFaceReinforcementLayerBySpacing() { }
 
+    public CreateFaceReinforcementLayerBySpacing(SectionFace face)
+    {
+        SectionFace.Value = face.ToString();
+    }
+
     protected override CalcFaceReinforcementLayer InitialiseOutput()
     {
         SectionFace face = SectionFace.GetEnum<SectionFace>();

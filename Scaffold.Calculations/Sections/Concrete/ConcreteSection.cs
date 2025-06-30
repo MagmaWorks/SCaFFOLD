@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
+using MagmaWorks.Taxonomy.Sections;
 using MagmaWorks.Taxonomy.Standards.Eurocode;
 using Scaffold.Calculations.CalculationUtility;
 using Scaffold.Calculations.Sections.Concrete.Reinforcement;
@@ -23,7 +24,9 @@ using UnitsNet.Units;
 namespace Scaffold.Calculations.Sections.Concrete;
 public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
 {
-    [InputCalcValue("Grd", "Grade")]
+    public override string CalculationName { get; set; } = "Concrete Section";
+
+    [InputCalcValue("Grd", "Concrete Grade")]
     public CalcSelectionList ConcreteGrade { get; set; }
             = new CalcSelectionList("Concrete Grade", "C30/37", EnumSelectionListParser.ConcreteGrades);
 
@@ -37,14 +40,17 @@ public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
     [InputCalcValue("Lnk", "Link rebar")]
     public CalcRebar Link { get; set; } = new CreateRebar();
 
-    [InputCalcValue("Top", "Top rebars")]
-    public CalcFaceReinforcementLayer Top { get; set; } = new CreateFaceReinforcementLayerByCount();
+    [InputCalcValue("T", "Top rebars")]
+    public CalcFaceReinforcementLayer Top { get; set; } = new CreateFaceReinforcementLayerByCount(SectionFace.Top);
 
-    [InputCalcValue("Btm", "Bottom rebars")]
-    public CalcFaceReinforcementLayer Bottom { get; set; } = new CreateFaceReinforcementLayerByCount();
+    [InputCalcValue("B", "Bottom rebars")]
+    public CalcFaceReinforcementLayer Bottom { get; set; } = new CreateFaceReinforcementLayerByCount(SectionFace.Bottom);
 
-    [InputCalcValue("Sds", "Side rebars")]
-    public CalcFaceReinforcementLayer Sides { get; set; } = new CreateFaceReinforcementLayerBySpacing();
+    [InputCalcValue("L", "Left side rebars")]
+    public CalcFaceReinforcementLayer Left { get; set; } = new CreateFaceReinforcementLayerBySpacing(SectionFace.Left);
+
+    [InputCalcValue("R", "Right side rebars")]
+    public CalcFaceReinforcementLayer Right { get; set; } = new CreateFaceReinforcementLayerBySpacing(SectionFace.Right);
 
     public override IList<IFormula> GetFormulae()
     {
@@ -63,7 +69,8 @@ public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
         var section = new CalcConcreteSection(Profile, material, Link, Cover, "Concrete Section");
         section.AddRebarLayer(Top);
         section.AddRebarLayer(Bottom);
-        section.AddRebarLayer(Sides);
+        section.AddRebarLayer(Left);
+        section.AddRebarLayer(Right);
         return section;
     }
 
