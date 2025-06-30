@@ -8,6 +8,8 @@ using Scaffold.Core.CalcValues;
 namespace Scaffold.Calculations.Sections.Concrete.Reinforcement;
 public class CreateFaceReinforcementLayerByCount : CalcObjectInput<CalcFaceReinforcementLayer>
 {
+    public override string CalculationName { get; set; } = "Create Face Reinforcement Layer By Count";
+
     [InputCalcValue("Face", "Section Face")]
     public CalcSelectionList SectionFace { get; set; }
             = new CalcSelectionList("Section Face", "Bottom", EnumSelectionListParser.SectionFaces);
@@ -15,14 +17,14 @@ public class CreateFaceReinforcementLayerByCount : CalcObjectInput<CalcFaceReinf
     [InputCalcValue("Bar", "Rebar")]
     public CalcRebar Rebar { get; set; } = new CreateRebar();
 
-    [InputCalcValue("Count", "Number of Bars")]
-    public int Count { get; set; } = 4;
+    [InputCalcValue("No.", "Number of Bars")]
+    public CalcInt Count { get; set; } = 4;
 
     public CreateFaceReinforcementLayerByCount() { }
 
     protected override CalcFaceReinforcementLayer InitialiseOutput()
     {
         SectionFace face = SectionFace.GetEnum<SectionFace>();
-        return new CalcFaceReinforcementLayer(face, Rebar, Count, ReferenceName ?? string.Empty);
+        return new CalcFaceReinforcementLayer(face, Rebar, Count, ReferenceName ?? $"{SectionFace.Value} {Rebar.DisplayName} {Count}No.");
     }
 }
