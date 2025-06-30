@@ -25,7 +25,7 @@ public class CreateEuropeanCatalogueProfileTests
         Assert.Equal("Catalogue Profile", outputs.FirstOrDefault().DisplayName);
     }
 
-    [Fact]
+    [Theory]
     [InlineData(0, typeof(CalcSelectionList), "Prfl", "Profile")]
     public void CalculationInputTests()
     {
