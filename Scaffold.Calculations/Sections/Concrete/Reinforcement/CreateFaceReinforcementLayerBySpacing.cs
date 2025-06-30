@@ -1,4 +1,5 @@
-﻿using MagmaWorks.Taxonomy.Sections;
+﻿using System.Diagnostics;
+using MagmaWorks.Taxonomy.Sections;
 using Scaffold.Calculations.CalculationUtility;
 using Scaffold.Core.Abstract;
 using Scaffold.Core.Attributes;
@@ -10,6 +11,8 @@ using UnitsNet.Units;
 namespace Scaffold.Calculations.Sections.Concrete.Reinforcement;
 public class CreateFaceReinforcementLayerBySpacing : CalcObjectInput<CalcFaceReinforcementLayer>
 {
+    public override string CalculationName { get; set; } = "Create Face Reinforcement Layer By Spacing";
+
     [InputCalcValue("Face", "Section Face")]
     public CalcSelectionList SectionFace { get; set; }
             = new CalcSelectionList("Section Face", "Bottom", EnumSelectionListParser.SectionFaces);
@@ -17,7 +20,7 @@ public class CreateFaceReinforcementLayerBySpacing : CalcObjectInput<CalcFaceRei
     [InputCalcValue("Bar", "Rebar")]
     public CalcRebar Rebar { get; set; } = new CreateRebar();
 
-    [InputCalcValue("a", "Min. rebar spacing")]
+    [InputCalcValue("a", "Max. rebar spacing")]
     public CalcLength Spacing { get; set; } = new CalcLength(200, LengthUnit.Millimeter, "Spacing", "a");
 
     public CreateFaceReinforcementLayerBySpacing() { }
@@ -25,6 +28,6 @@ public class CreateFaceReinforcementLayerBySpacing : CalcObjectInput<CalcFaceRei
     protected override CalcFaceReinforcementLayer InitialiseOutput()
     {
         SectionFace face = SectionFace.GetEnum<SectionFace>();
-        return new CalcFaceReinforcementLayer(face, Rebar, Spacing, ReferenceName ?? string.Empty);
+        return new CalcFaceReinforcementLayer(face, Rebar, Spacing, ReferenceName ?? $"{SectionFace.Value} {Rebar.DisplayName} @ {Spacing} c/c");
     }
 }

@@ -1,5 +1,4 @@
 ﻿using MagmaWorks.Taxonomy.Materials.StandardMaterials.En;
-using MagmaWorks.Taxonomy.Profiles;
 using MagmaWorks.Taxonomy.Sections.Reinforcement;
 using Scaffold.Core.CalcObjects.Sections.Reinforcement;
 
