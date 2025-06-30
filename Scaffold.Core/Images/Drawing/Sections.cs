@@ -41,12 +41,14 @@ namespace Scaffold.Core.Images.Drawing
                 double mandrelFactor = section.Link.Diameter.Millimeters > 16
                     ? 7
                     : 4;
-                internals.Add(new StyledPath(outerPath, stroke) {
+                internals.Add(new StyledPath(outerPath, stroke)
+                {
                     Fillet = (mandrelFactor + 0.5) * section.Link.Diameter.Millimeters
                 });
                 var innerPath = new SKPath();
                 innerPath.AddPath(perimeter.OuterEdge.Offset(-section.Cover - section.Link.Diameter));
-                internals.Add(new StyledPath(innerPath, stroke) {
+                internals.Add(new StyledPath(innerPath, stroke)
+                {
                     Fillet = (mandrelFactor - 0.5) * section.Link.Diameter.Millimeters
                 });
             }
