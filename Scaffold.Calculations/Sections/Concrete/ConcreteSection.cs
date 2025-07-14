@@ -40,18 +40,15 @@ public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
     [InputCalcValue("Lnk", "Link rebar")]
     public CalcRebar Link { get; set; } = new CreateRebar();
 
-    [InputCalcValue("T", "Top rebars")]
+    [InputCalcValue("Top", "Top rebars")]
     public CalcFaceReinforcementLayer Top { get; set; } = new CreateFaceReinforcementLayerByCount(SectionFace.Top);
 
-    [InputCalcValue("B", "Bottom rebars")]
+    [InputCalcValue("Btm", "Bottom rebars")]
     public CalcFaceReinforcementLayer Bottom { get; set; } = new CreateFaceReinforcementLayerByCount(SectionFace.Bottom);
 
-    [InputCalcValue("L", "Left side rebars")]
-    public CalcFaceReinforcementLayer Left { get; set; } = new CreateFaceReinforcementLayerBySpacing(SectionFace.Left);
-
-    [InputCalcValue("R", "Right side rebars")]
-    public CalcFaceReinforcementLayer Right { get; set; } = new CreateFaceReinforcementLayerBySpacing(SectionFace.Right);
-
+    [InputCalcValue("Sds", "Side rebars")]
+    public CalcFaceReinforcementLayer Sides { get; set; } = new CreateFaceReinforcementLayerBySpacing(SectionFace.Sides);
+    
     public override IList<IFormula> GetFormulae()
     {
         ICalcImage image = Core.Images.Drawing.Sections.DrawSection(Output);
@@ -69,8 +66,7 @@ public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
         var section = new CalcConcreteSection(Profile, material, Link, Cover, "Concrete Section");
         section.AddRebarLayer(Top);
         section.AddRebarLayer(Bottom);
-        section.AddRebarLayer(Left);
-        section.AddRebarLayer(Right);
+        section.AddRebarLayer(Sides);
         return section;
     }
 
