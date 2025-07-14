@@ -31,10 +31,9 @@ public class ConcreteSectionTests
     [InlineData(1, typeof(CalcRectangularProfile), "", "500 x 1000mm")]
     [InlineData(2, typeof(CalcLength), "Cvr", "Concrete Cover")]
     [InlineData(3, typeof(CalcRebar), "Lnk", "Link rebar")]
-    [InlineData(4, typeof(CalcFaceReinforcementLayer), "T", "Top rebars")]
-    [InlineData(5, typeof(CalcFaceReinforcementLayer), "B", "Bottom rebars")]
-    [InlineData(6, typeof(CalcFaceReinforcementLayer), "L", "Left side rebars")]
-    [InlineData(7, typeof(CalcFaceReinforcementLayer), "R", "Right side rebars")]
+    [InlineData(4, typeof(CalcFaceReinforcementLayer), "Top", "Top rebars")]
+    [InlineData(5, typeof(CalcFaceReinforcementLayer), "Btm", "Bottom rebars")]
+    [InlineData(6, typeof(CalcFaceReinforcementLayer), "Sds", "Side rebars")]
     public void CalculationInputTests(int id, Type expectedType, string expectedSymbol, string expectedDisplayName)
     {
         // Assemble
