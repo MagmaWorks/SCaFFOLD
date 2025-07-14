@@ -25,7 +25,7 @@ public class CreateEuropeanCatalogueProfileTests
         Assert.Equal("Catalogue Profile", outputs.FirstOrDefault().DisplayName);
     }
 
-    [Theory]
+    [Fact]
     [InlineData]
     public void CalculationInputTests()
     {
