@@ -38,16 +38,13 @@ namespace Scaffold.Core.Images.Drawing
                 var perimeter = new Perimeter(section.Profile);
                 var outerPath = new SKPath();
                 outerPath.AddPath(perimeter.OuterEdge.Offset(-section.Cover));
-                double mandrelFactor = section.Link.Diameter.Millimeters > 16
-                    ? 7
-                    : 4;
                 internals.Add(new StyledPath(outerPath, stroke) {
-                    Fillet = (mandrelFactor + 0.5) * section.Link.Diameter.Millimeters
+                    Fillet = section.Link.Diameter.Millimeters + section.Link.MinimumMandrelDiameter.Millimeters / 2
                 });
                 var innerPath = new SKPath();
                 innerPath.AddPath(perimeter.OuterEdge.Offset(-section.Cover - section.Link.Diameter));
                 internals.Add(new StyledPath(innerPath, stroke) {
-                    Fillet = (mandrelFactor - 0.5) * section.Link.Diameter.Millimeters
+                    Fillet = section.Link.MinimumMandrelDiameter.Millimeters / 2
                 });
             }
 

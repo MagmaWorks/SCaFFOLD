@@ -1,4 +1,3 @@
-using Scaffold.Calculations.CalculationUtility;
 using Scaffold.Core.CalcObjects.Profiles;
 using Scaffold.Core.CalcObjects.Sections.Reinforcement;
 using Scaffold.Core.CalcQuantities;
