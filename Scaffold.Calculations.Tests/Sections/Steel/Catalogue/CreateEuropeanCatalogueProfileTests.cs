@@ -26,7 +26,6 @@ public class CreateEuropeanCatalogueProfileTests
     }
 
     [Fact]
-    [InlineData]
     public void CalculationInputTests()
     {
         // Assemble
