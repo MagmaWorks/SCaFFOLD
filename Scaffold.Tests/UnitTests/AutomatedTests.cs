@@ -207,7 +207,7 @@ namespace Scaffold.Tests.UnitTests
 
                 if (type.Name == "IMaterial")
                 {
-                    if (_currentType.Name.Contains("Rebar"))
+                    if (_currentType.Name.Contains("Rebar") || _currentType.Name.Contains("Link"))
                     {
                         args.Add(_materials["Rebar"]);
                     }
