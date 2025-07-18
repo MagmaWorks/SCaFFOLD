@@ -45,6 +45,27 @@ public sealed class CalcConcreteSection : ConcreteSection, ICalcValue
         Symbol = symbol;
     }
 
+    public CalcConcreteSection(IProfile profile, IMaterial material, ILink link, string name, string symbol = "")
+        : base(profile, material, link)
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
+    public CalcConcreteSection(IProfile profile, IMaterial material, ILink link, Length cover, string name, string symbol = "")
+        : base(profile, material, link, cover)
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
+    public CalcConcreteSection(IProfile profile, IMaterial material, ILink link, Length cover, IList<ILongitudinalReinforcement> rebars, string name, string symbol = "")
+        : base(profile, material, link, cover, rebars)
+    {
+        DisplayName = name;
+        Symbol = symbol;
+    }
+
     public static bool TryParse(string s, IFormatProvider provider, out CalcConcreteSection result)
     {
         try
