@@ -32,8 +32,6 @@ public class SteelCatalogueSection : CalcObjectInput<CalcSection>
         ICalcImage image = Core.Images.Drawing.Sections.DrawSection(Output);
         var formula = new Formula();
         formula.SetImage(image);
-        DrawingUtiliy.Save(image, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SteelImage"),
-            SKEncodedImageFormat.Png);
         return new List<IFormula>() { formula };
     }
 

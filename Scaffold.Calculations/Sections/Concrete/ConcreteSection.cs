@@ -54,8 +54,6 @@ public class ConcreteSection : CalcObjectInput<CalcConcreteSection>
         ICalcImage image = Core.Images.Drawing.Sections.DrawSection(Output);
         var formula = new Formula();
         formula.SetImage(image);
-        DrawingUtiliy.Save(image, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "ConcreteImage"),
-            SKEncodedImageFormat.Png);
         return new List<IFormula>() { formula };
     }
 
